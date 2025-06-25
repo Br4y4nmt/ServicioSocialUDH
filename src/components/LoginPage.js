@@ -43,9 +43,7 @@ function LoginPage() {
       };
 
       login(userData);
-      // Verificar si el usuario tiene el rol de docente supervisor
     if (rol === 'docente supervisor') {
-      // Guardar el id_docente en localStorage solo si el rol es docente supervisor
       localStorage.setItem('id_docente', id_docente);
     }
 
@@ -54,7 +52,7 @@ function LoginPage() {
         title: '¡Bienvenido!',
         text: `Hola ${nombre_completo}, acceso exitoso.`,
         confirmButtonColor: '#28a745',
-        timer: 2000,
+        timer: 1000,
         showConfirmButton: false,
       });
 

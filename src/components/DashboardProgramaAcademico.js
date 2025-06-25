@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import SidebarProgramaAcademico from './SidebarProgramaAcademico';
 import './DashboardGestor.css';
 import InformePDF from '../components/InformefinalProgramaPDF'; 
-import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import Swal from 'sweetalert2';
 import { useUser } from '../UserContext';
 function DashboardProgramaAcademico() {
@@ -131,10 +131,12 @@ const eliminarDocente = (id_docente) => {
     }
   };
 
-  useEffect(() => {
-    fetchDocentes();
-    fetchInformesFinales();
-  }, []);
+ useEffect(() => {
+  fetchDocentes();
+  fetchInformesFinales();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   
 const fetchInformesFinales = async () => {

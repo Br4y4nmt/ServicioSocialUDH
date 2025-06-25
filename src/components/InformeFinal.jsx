@@ -46,9 +46,9 @@ const InformeFinal = ({
 }) => {
   const refInstitucion = useRef(null);
   const refResponsable = useRef(null);
-  const [documentoAprobado, setDocumentoAprobado] = useState(true);
+  //const [documentoAprobado, setDocumentoAprobado] = useState(true);
   const [pdfFinalBlob, setPdfFinalBlob] = useState(null);
-  const [solicitudEnviada, setSolicitudEnviada] = useState(false);
+  //const [solicitudEnviada, setSolicitudEnviada] = useState(false);
   const refPeriodo = useRef(null);
   const yaSeEnvio = !!planSeleccionado?.informe_final_pdf;
   const refAntecedentes = useRef(null);
@@ -967,7 +967,6 @@ if (!recomendacionesInforme.trim()) {
     Aquí encontrarás los documentos oficiales de tu servicio social. Haz clic en ver para abrir el documento.
   </div>
 </div>
-
 
   </div>
 

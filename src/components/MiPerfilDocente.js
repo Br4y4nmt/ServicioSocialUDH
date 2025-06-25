@@ -4,8 +4,8 @@ import SidebarDocente from '../components/SidebarDocente';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './DashboardAlumno.css';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../UserContext';
+//import { useNavigate } from 'react-router-dom';
+//import { useUser } from '../UserContext';
 
 
 function MiPerfilDocente() {

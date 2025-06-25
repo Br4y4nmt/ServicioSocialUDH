@@ -12,7 +12,7 @@ import { useUser } from '../UserContext';
 function SeguimientoServicioDocente() {
   const [collapsed, setCollapsed] = useState(false);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  const [cronogramas, setCronogramas] = useState([]);
+  //const [cronogramas, setCronogramas] = useState([]);
   const [activeSection, setActiveSection] = useState('seguimiento');
   const [modalVisible, setModalVisible] = useState(false);
   const [cronogramaSeleccionado, setCronogramaSeleccionado] = useState([]);
@@ -21,8 +21,8 @@ function SeguimientoServicioDocente() {
   const [observacion, setObservacion] = useState('');
   const [actividadSeleccionadaId, setActividadSeleccionadaId] = useState(null);
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
-  const [planPDF, setPlanPDF] = useState(null);
-  const [fechaPDF, setFechaPDF] = useState('');
+  const [planPDF] = useState(null);
+  const [fechaPDF] = useState('');
   const { user } = useUser();  
   const token = user?.token; 
   const [firmaDocente, setFirmaDocente] = useState('');
@@ -192,21 +192,21 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
     const usuarioId = localStorage.getItem('id_usuario');
 
     axios.get(`http://localhost:5000/api/docentes/usuario/${usuarioId}`, {
-  headers: { Authorization: `Bearer ${token}` }
-})
-  .then(async response => {
-    const docenteId = response.data.id_docente;
-    const firmaBase64 = await convertirImagenABase64(`http://localhost:5000/uploads/firmas/${response.data.firma}`);
-    setFirmaDocente(firmaBase64);
+    headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(async response => {
+      const docenteId = response.data.id_docente;
+      const firmaBase64 = await convertirImagenABase64(`http://localhost:5000/uploads/firmas/${response.data.firma}`);
+      setFirmaDocente(firmaBase64);
 
-    axios.get(`http://localhost:5000/api/trabajo-social/docente/${docenteId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => setTrabajosSociales(res.data))
-      .catch(err => console.error('Error obteniendo trabajos sociales:', err));
-  })
-  .catch(err => console.error('Error obteniendo ID de docente:', err));
-  }, []);
+      axios.get(`http://localhost:5000/api/trabajo-social/docente/${docenteId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => setTrabajosSociales(res.data))
+        .catch(err => console.error('Error obteniendo trabajos sociales:', err));
+    })
+    .catch(err => console.error('Error obteniendo ID de docente:', err));
+    }, [token]);
 
 
 const handleVerSeguimiento = (trabajoId) => {

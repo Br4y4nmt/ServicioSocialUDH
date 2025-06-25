@@ -60,14 +60,17 @@ const verCartasMiembros = async (trabajoId) => {
   }
 };
 
-useEffect(() => {
-  if (solicitudEnviada && trabajoId) {
-    verCartasMiembros(trabajoId);
-  }
-}, [solicitudEnviada, trabajoId]);
-  const laboresFiltradas = labores.filter(
-  (labor) => labor.linea_accion_id === parseInt(lineaSeleccionada)
-);
+  useEffect(() => {
+    if (solicitudEnviada && trabajoId) {
+      verCartasMiembros(trabajoId);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [solicitudEnviada, trabajoId]);
+
+
+  //const laboresFiltradas = labores.filter(
+  //(labor) => labor.linea_accion_id === parseInt(lineaSeleccionada)
+//);
   return (
     <>
       <div className="step-header">

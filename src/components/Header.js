@@ -1,7 +1,7 @@
 // src/components/Header.js
 import React, { useEffect, useState, useRef } from 'react';
 import './Header.css';
-import { FaBars, FaSun } from 'react-icons/fa';
+import { FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 function Header({ onToggleSidebar }) {
@@ -56,7 +56,14 @@ function Header({ onToggleSidebar }) {
      <div className="guia-btn-container">
 
       <span className="ver-float-label">¡Ver!</span>
-      <button className="guia-btn">
+      <button className="guia-btn"
+       onClick={() => {
+        window.open(
+          'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing',
+          '_blank'
+        );
+      }}>
+       
     <span className="pdf-icon">
   <svg
     width="22"

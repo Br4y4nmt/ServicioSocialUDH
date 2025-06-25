@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -6,7 +6,7 @@ function DocumentosTrabajo() {
   const { id } = useParams();
  const token = localStorage.getItem('token');
   useEffect(() => {
-    // Obtener el nombre del archivo PDF desde el backend
+
     axios.get(`http://localhost:5000/api/trabajo-social/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -34,7 +34,7 @@ function DocumentosTrabajo() {
         console.error("Error al obtener datos:", err);
         alert('Error al obtener el documento.');
       });
-  }, [id]);
+  }, [id, token])
 
 }
 
