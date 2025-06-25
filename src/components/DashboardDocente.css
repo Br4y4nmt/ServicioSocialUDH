@@ -1,0 +1,533 @@
+/* Estilos para el modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+    display: flex; /* Asegura que sea visible con flexbox */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10000; /* Asegúrate de que el contenido esté encima del fondo */
+  }
+  
+  .modal-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  .modal button {
+    margin-left: 10px;
+  }
+  /* ===== REVISIÓN DEL DOCENTE ===== */
+.revision-container-d {
+  padding: 20px;
+}
+
+.revision-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.revision-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #003366;
+}
+
+.revision-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en móviles */
+}
+.revision-table {
+  min-width: 700px; /* O el ancho que necesites según tus columnas */
+  border-collapse: collapse;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+}
+.revision-table-thead {
+  background-color: transparent !important;
+}
+
+.revision-table thead tr {
+  background-color: transparent !important;
+}
+.btn-ver-documento {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
+  color: #263238;
+  border: 1.8px solid #cfd8dc;
+  border-radius: 8px;
+  padding: 4px 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-ver-documento:hover {
+  background-color: #eceff1;
+  border-color: #90a4ae;
+}
+
+.revision-table thead th {
+  color: #333;
+  font-weight: 600;
+  background-color: transparent !important;
+  border-bottom: 1px solid #ddd;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.revision-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  vertical-align: middle; /* ✅ Añade esto */
+}
+
+.btn-ver-ojo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f5f5f5;
+  border: 1px solid #cbd5e0;
+  color: #0b1f46;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-ver-ojo:hover {
+  background-color: #e2e8f0;
+}
+
+.revision-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  margin-right: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  color: white;
+}
+
+.revision-btn.editar {
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 6px 4px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.revision-btn.editar:hover {
+  background-color: #115293;
+}
+.revision-btn.siguiente {
+  background-color: #39b49e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.revision-btn.siguiente:hover {
+  background-color: #2e9c89;
+}
+
+.revision-footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.revision-no-data {
+  padding: 20px;
+  font-size: 16px;
+  color: #777;
+}
+
+/* ===== MODAL ===== */
+.revision-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.revision-modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.revision-modal-content h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.revision-modal-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.revision-modal-select:focus {
+  border-color: #1a237e;
+}
+
+.revision-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.revision-btn.guardar {
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.revision-btn.cancelar {
+  background-color: #9e9e9e;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.revision-btn.guardar:hover {
+  background-color: #0f164a;
+}
+
+.revision-btn.cancelar:hover {
+  background-color: #7e7e7e;
+}
+.estado-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: white;
+  text-transform: capitalize;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.estado-badge.aceptado {
+  background-color: #38a169; /* verde */
+}
+
+.estado-badge.pendiente {
+  background-color: #7f8c8d; /* gris */
+}
+
+.estado-badge.rechazado {
+  background-color: #e74c3c; /* rojo */
+}
+.boton-declinar {
+  background-color: #0b1f46 ; /* azul oscuro */
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-declinar:hover {
+  background-color: #142e68;
+}
+
+.modal-declinar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999 !important;
+}
+
+.modal-declinar-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  width: 440px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-declinar-content h3 {
+  font-size: 15px;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.textarea-declinar {
+  width: 100%;
+  height: 100px;
+  padding: 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2d3748;
+}
+
+.textarea-declinar::placeholder {
+  color: #a0aec0;
+}
+
+.modal-declinar-char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #718096;
+  margin-top: 4px;
+}
+
+.modal-declinar-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  border-top: 1px solid #edf2f7;
+  padding-top: 16px;
+}
+
+.btn-cancelar {
+  background-color: #1a202c;
+  color: white;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-enviar {
+  background-color: #38a169;
+  color: white;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-enviar:hover,
+.btn-cancelar:hover {
+  opacity: 0.9;
+}
+.modal-grupo-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000 !important;
+}
+
+.modal-grupo-content {
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 14px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-grupo-title {
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0b1f46;
+  text-align: center;
+}
+
+.modal-grupo-lista {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.modal-grupo-lista li {
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.modal-grupo-vacio {
+  color: #777;
+  font-style: italic;
+  text-align: center;
+}
+
+.modal-grupo-actions {
+  text-align: center;
+}
+
+.modal-grupo-btn.cerrar {
+  padding: 8px 15px;
+  background-color: #0b1f46;
+  color: white;
+  border: none;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-grupo-btn.cerrar:hover {
+  background-color: #132f6b;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reglas base para el contenedor principal */
+.main-content {
+  transition: background-color 0.3s ease, margin-left 0.3s ease !important;
+  background-color: transparent !important;
+  margin-left: 270px; /* Cambia según lo que prefieras */
+}
+
+/* Fondo transparente cuando el sidebar está colapsado */
+.main-content.collapsed {
+  background-color: transparent !important; /* Fondo transparente */
+  margin-left: 0px !important; /* Esto hará que el contenido ocupe toda la pantalla */
+}
+/* Puedes poner esto en SidebarDocente.css o en el CSS del componente principal */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.18);
+  z-index: 9998;
+}
+/* Reglas en dispositivos pequeños */
+@media screen and (max-width: 768px) {
+  .main-content {
+    background-color: transparent !important; /* Fondo transparente en pantallas pequeñas */
+    margin-left: 0 !important; /* Aseguramos que se mantenga */
+  }
+.main-content.collapsed {
+  background-color: transparent !important;
+  margin-left: 0px !important;
+  /* border: 2px dashed red !important; */ /* Elimina o comenta esta línea */
+}
+}
+@media (max-width: 768px) {
+  .revision-container-d {
+    padding: 0 8px;
+    margin-top: 18px;
+  }
+  .revision-card {
+    padding: 12px 6px;
+  }
+  .revision-title {
+    font-size: 1.5rem !important; /* Aumenta el tamaño en responsive */
+    text-align: center;
+  }
+  .revision-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en móviles */
+}
+
+.revision-table {
+  min-width: 700px; /* Ajusta según tus columnas */
+}
+  .revision-footer {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .revision-card {
+    padding: 6px 2px;
+  }
+ .revision-title {
+    font-size: 1.2rem; /* Ajusta para móviles muy pequeños */
+    text-align: center;
+  }
+  .revision-table {
+    font-size: 0.9rem;
+    min-width: 340px;
+  }
+}

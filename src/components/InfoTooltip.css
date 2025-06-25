@@ -1,0 +1,49 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.info-icon {
+  padding: 3px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.tooltip-container:hover .info-icon {
+  background-color: #EDF2F7;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 260px;
+  background-color: white;
+  color: #2D3748;
+  text-align: left;
+  border-radius: 8px;
+  padding: 12px;
+  position: absolute;
+  z-index: 20;
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Flechita */
+.tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+}

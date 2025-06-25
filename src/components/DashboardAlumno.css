@@ -1,0 +1,1560 @@
+/* src/components/DashboardAlumno.css */
+.main-content {
+    margin-left: 250px;
+    padding: 100px 30px 30px; /* 🔽 reduce de 90px a 70px */
+    background-color: #f3f4f6 !important;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+  }
+
+
+  .main-content {
+    position: relative;
+    z-index: 1; /* asegúrate que sea menor que el header */
+    overflow: visible !important; /* 👈 este es clave */
+  }
+  .main-content.collapsed {
+    margin-left: 0;
+  }
+  .bold-text {
+    font-weight: 540 !important; /* Grosor de la fuente más delgado que bold */
+    font-size: 16px; /* Tamaño de la fuente (por defecto en 16px) */
+    color: var(--font-color, #3a3939); /* Color de la fuente (por defecto en negro) */
+  }
+  
+  .boton-anterior {
+
+    margin-right: 20px;
+    margin-top: 20px;
+
+    padding: 8px 15px;
+    background-color: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.boton-anterior:hover {
+  background-color: #2D3748;
+}
+  .dashboard-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  }
+  
+  .dashboard-title {
+    font-size: 35px;
+    font-weight: 700;
+    color: #011b4b;
+    text-align: center; /* Asegura que el texto se alinee en el centro */
+    margin-bottom: 30px;
+    display: flex; /* Hacemos uso de flexbox */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    height: 100%; /* Asegura que ocupe todo el alto disponible si es necesario */
+}
+  
+  .card-section {
+    padding: 20px;
+    background-color: #ffffff;
+
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+.step-icon {
+  width: 30px;
+  height: 30px;
+  background-color: #2EBAA1;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* 🔧 ESTO ES CLAVE */
+}
+.step-icon::before {
+  content: '✓'; /* O usa '\2713' */
+  font-size: 16px;
+  display: block;
+  line-height: 1; /* 🔧 ALINEA el check verticalmente */
+}
+.step-header h3 {
+
+  margin: 0;
+  padding: 0;
+  line-height: 1; /* 🔧 Asegura que no se baje */
+}
+.info-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.info-icon-svg {
+  width: 20px;
+  height: 20px;
+  color: #0b1f46;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: 260px;
+  background-color: #fff;
+  color: #333;
+  text-align: left;
+  padding: 10px;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.icono-pdf-svg {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.info-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.step-header h3 {
+    font-weight: 640;  /* 🔄 antes: bold */
+    font-size: 24px;
+    color: #2d2d2d;
+    margin: 0;
+}
+  .info-icon {
+    margin-left: auto;
+    cursor: pointer;
+  }
+  .checkmark {
+    display: none; /* Se oculta por defecto */
+    color: green;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  input, select {
+    flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
+    padding-right: 30px; /* Añade espacio para el checkmark */
+  }
+  .input-completo + .checkmark {
+    display: inline; /* Muestra el check cuando el campo está completo */
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group .input-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    justify-content: space-between; /* Espacia los elementos a la izquierda y a la derecha */
+  }
+  label {
+    display: block; /* Hace que el label ocupe toda la línea */
+    margin-bottom: 5px; /* Agrega un pequeño espacio debajo del label */
+  }
+  .form-group label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .texto-cursiva {
+    font-style: italic; /* Aplica el estilo cursiva */
+  }
+  .input-disabled {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+  }
+.input-editable {
+  width: 100%;
+  background-color: #fff; /* Fondo blanco para campos editables */
+  color: #333; /* Texto oscuro */
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border-radius: 4px; /* Opcional: para bordes redondeados */
+}
+
+
+  .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #5f5f5f; /* 👈 Esto hace que el texto sea plomo claro */
+    transition: border-color 0.3s ease;
+    appearance: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .form-group select {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='5' viewBox='0 0 10 5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px 5px;
+    padding-right: 36px;
+  }
+  .form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  }
+  .btn-solicitar-aprobacion {
+    background-color: #2EBAA1; /* Color de fondo */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor de puntero */
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+  }
+  
+  .btn-solicitar-aprobacion:hover {
+    background-color: #26a78d; /* Color al pasar el mouse */
+    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+  }
+  
+  .btn-solicitar-aprobacion:active {
+    background-color: #209c80; /* Color cuando se hace clic */
+    transform: translateY(1px); /* Efecto de pulsación */
+  }
+  
+/* Container for the button to center it */
+.button-container {
+  display: flex;
+  justify-content: center;  /* Center the button horizontally */
+  align-items: center;      /* Center the button vertically (if needed) */
+  width: 100%;              /* Full width of the parent container */
+  margin-top: 20px;         /* Optional: add space above the button */
+}
+
+.btn-completar-perfil {
+  background-color: #2EBAA1; /* Color de fondo */
+  color: white; /* Texto blanco */
+  padding: 10px 20px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  /* Elegant font */
+  font-size: 16px; /* Tamaño de fuente */
+  cursor: pointer; /* Cursor de puntero */
+  transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+}
+
+.btn-completar-perfil:hover {
+  background-color: #26a78d; /* Color al pasar el mouse */
+  transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+}
+
+.btn-completar-perfil:active {
+  background-color: #209c80; /* Color cuando se hace clic */
+  transform: translateY(1px); /* Efecto de pulsación */
+}
+
+  
+  .respuesta-acciones {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto; /* los lleva al lado derecho */
+  }
+
+  .respuesta-asesor-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  }
+.respuesta-asesor-cardss {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 5px 16px;         /* ↓ Menos espacio vertical y lateral */
+  margin-top: 100px;           /* ↓ Menor separación del elemento anterior */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+  .respuesta-asesor-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start !important; /* Asegura que el texto y el ícono estén alineados a la izquierda */
+    font-weight: bold;
+    font-size: 16px;
+    color: #2d2d2d;
+    gap: 10px; /* Espacio entre el ícono y el texto */
+    width: 100%; /* Asegura que el encabezado ocupe el 100% del ancho */
+  }
+  .respuesta-asesor-body h4 {
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    font-weight: bold; /* Si deseas que se mantenga en negrita */
+    color: #2d2d2d; /* Color del texto */
+  }
+  .respuesta-asesor-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start !important;
+    font-weight: 600;  /* 🔄 antes: bold */
+    font-size: 18px;
+    color: #2d2d2d;
+    gap: 10px;
+    width: 100%;
+  }
+
+  body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden; /* 👈 clave para evitar que el header se expanda fuera */
+}
+  .respuesta-asesor-body {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+  .solicitar-revision-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icono-azul {
+  color: #3b82f6; /* Azul similar al de la captura */
+  font-size: 18px;
+}
+
+  
+  .respuesta-asesor-body p {
+    color: #3d7f6f; /* Color de texto similar al de la segunda captura */
+    margin-bottom: 0px;     /* 🔽 Menor separación entre líneas */
+    line-height: 1.4;        /* 🔽 Altura de línea más compacta */
+  }
+  .texto-revision-supervisor p {
+  margin-bottom: 4px;
+  line-height: 1.4;
+  font-size: 14.2px; /* opcional: si deseas ajustarlo un poco */
+}
+
+  .respuesta-asesor-btn {
+    background-color: #38a169 ; /* Color del botón */
+    color: white;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: auto; /* Mueve el botón hacia la derecha */
+    display: block; /* Asegura que el botón ocupe el espacio completo disponible */
+  }
+  .botones-acciones-docente {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 12px;
+  }
+
+.boton-ver-pdf-conf {
+  background-color: #011b4b;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease;
+}
+
+.boton-ver-pdf-conf:hover {
+  background-color: #233876;
+}
+
+.boton-ver-pdf-conf:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+  .btn-ver-documento-inline:hover {
+    background-color: #e2e8f0;
+  }
+
+  .texto-cursiva {
+    font-style: italic;
+    color: #3d7f6f;
+    margin: 0;
+  }
+  .input-fecha-fin {
+  padding: 3px 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  width: 100px;
+}
+.oculto {
+  display: none !important;
+}
+.aviso-importante {
+  border: 1.5px solid #E53E3E;        /* rojo suave */
+  background-color: #FFF5F5;          /* fondo rosado muy claro */
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-style: italic;
+  color: #C53030;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 100%;
+  line-height: 1.5;
+  animation: bounceAviso 2.0s ease-in-out infinite;
+}
+/* Efecto rebote */
+@keyframes bounceAviso {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+.btn-ver-documento-inline {
+  background-color: white;
+  border: 1px solid #CBD5E0;
+  color: #1A202C;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  }
+  .respuesta-aprobacion-contenido {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-ver-documento:hover {
+    background-color: #e2e8f0;
+  }
+  
+  .respuesta-asesor-btn:hover {
+    background-color: #26a78d; /* Efecto hover */
+  }
+  
+  .respuesta-asesor-btn:active {
+    background-color: #209c80; /* Color al hacer clic */
+    transform: translateY(1px); /* Efecto de clic */
+  }
+  
+  /* Agregar al archivo DashboardAlumno.css */
+.boton-siguiente {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    display: block;
+    padding: 8px 15px;
+    background-color: #39b49e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .texto-mayuscula {
+    text-transform: uppercase;
+  }
+  
+  .boton-siguiente:hover {
+    background-color: #147760;
+  }
+  .respuesta-asesor-btn.pendiente {
+    background-color: gray;
+    color: white;
+  }
+  .universidad-readonly {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px;
+    width: 100%;
+    font-size: 15px;
+    resize: none;
+    border-radius: 6px;
+    overflow: hidden;
+    line-height: 1.4;
+  }
+  
+  
+  .respuesta-asesor-btn.aceptado {
+    background-color: #38A169;
+    color: white;
+  }
+  
+  .respuesta-asesor-btn.rechazado {
+    background-color: red;
+    color: white;
+  }
+  /* Contenedor principal de la sección */
+  .conformidad-plan {
+    display: block; /* Cambiar de flex a block */
+    margin: 0 0 40px 0; /* Eliminar cualquier margen automático y asegurarse de que esté alineado a la izquierda */
+    padding: 20px;
+    background-color: #f6f6f6;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Contenedor para la información del plan */
+  .plan-info {
+    display: flex;
+    justify-content: flex-start; /* Asegura que los cards se alineen a la izquierda */
+    align-items: flex-start;  /* Ajuste vertical */
+    gap: 20px;  /* Espacio entre los cards */
+    width: 100%;  /* Asegura que ocupe todo el espacio disponible */
+   margin-left: 100px; 
+  }
+  
+  /* Icono de la persona */
+  .plan-icon {
+    width: 350px;  /* Ajustamos el tamaño del contenedor */
+    height: 350px; /* Ajustamos el tamaño del contenedor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .plan-icon img {
+    width: 330px;           /* antes 100% */
+    height: 330px;          /* antes 100% */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 70px; /* Ajusta el valor de margin-top para mover la imagen hacia abajo */
+}
+.texto-instrucciones {
+    font-size: 14px;
+    color: #757575;  /* Gris claro */
+    margin-top: 10px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    font-family: 'Arial', sans-serif;
+    margin-left: 0px; /* Elimina cualquier margen adicional desde la izquierda */
+    padding-left: 10px; /* Añade algo de espacio desde el borde izquierdo */
+  }
+  
+  
+  /* Contenedor de detalles del plan */
+  .plan-details {
+    flex: 3;
+    margin-left: -40px;
+  }
+  
+  /* Títulos y subtítulos */
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1d3557;
+  }
+  
+  h4 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  .conformidad-plan-modern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f6f6f6;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .info-card h4 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #004d40;
+    margin-bottom: 5px;
+  }
+  
+.info-card p {
+    font-size: 16px;
+    color: #004d40;
+  }
+  .conformidad-img img {
+    width: 200px;
+    max-width: 100%;
+  }
+  .info-card .icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .info-card {
+    background-color: #b2dfdb;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  .conformidad-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  .plan-icon i {
+    font-size: 40px; /* Reducir el tamaño del ícono */
+    color: #011B4B; /* Color verde del ícono */
+    margin-bottom: 5px; /* Reducir el espacio debajo del ícono */
+  }
+  
+  /* Caja de información */
+  .plan-info-box {
+    background-color: #a0d6c9; /* Fondo azul claro */
+    padding: 5px 10px; /* Reducir el padding en todas las direcciones */
+    margin-bottom: 10px; /* Reducir el margen inferior */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido dentro del card */
+    justify-content: flex-start; /* Cambiar de 'center' a 'flex-start' para alinear hacia arriba */
+    width: 400px !important; /* Establecer un ancho fijo para el card */
+    height: 160px; /* Ajuste automático en altura, ahora más pequeño */
+    margin-top: 40px;
+}
+.plan-info-box .plan-icon {
+    margin-bottom: -20px !important; /* Reduce el espacio entre el icono y el texto */
+}
+  .plan-info-box h4 {
+    font-size: 17px; /* Reducir el tamaño de la fuente del título */
+    font-weight: bold;
+    color: #1d3557;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    margin-top: -15px; /* Menos margen arriba para moverlo hacia arriba */
+    margin-bottom: 5px; /* Espaciado entre el título y el contenido */
+    
+}
+@keyframes slideFadeDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.select-filled {
+  
+  background-color: #f3f4f6 !important; /* Fondo celeste claro */
+  font-weight: 500;
+  border: 1px solid #CBD5E0; /* borde más definido opcional */
+  transition: background-color 0.3s ease;
+}
+
+
+.plan-icon img {
+  animation: slideFadeDown 1s ease-out;
+}
+.plan-info-box p {
+  font-size: 14px; /* un poco más legible que 12px */
+  color: #4a4e55; /* tono elegante verde oscuro */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /* fuente moderna y limpia */
+  margin-top: 2px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4; /* mejora la legibilidad */
+  text-transform: uppercase;
+}
+
+  /* Botón de abrir proyecto */
+  .abrir-proyecto-btn {
+    padding: 10px 20px;
+    background-color: #006f8e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  
+  .abrir-proyecto-btn:hover {
+    background-color: #00576d;
+  }
+  .solicitar-revision-card {
+    margin: 30px auto;
+    padding: 25px 40px;
+    background-color: #f9fbfd;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1000px; /* más ancho */
+  }
+  
+  .solicitar-revision-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .solicitar-revision-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .info-icon {
+    font-size: 16px;
+    color: #007bff;
+    margin-left: 10px;
+  }
+  
+  .enlace-revision {
+    color: #209c80;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .btn-revision {
+    background-color: #39B49E;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-revision i {
+    margin-left: 6px;
+  }
+  /* CENTRAR EL BOTÓN */
+.solicitar-revision-card .btn-revision {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .solicitar-revision-card p {
+    font-size: 15px;
+    color: #5e5d5d;
+    line-height: 1.6;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  }
+  .btn-revision:hover {
+    background-color: #29A790; /* color al hacer hover */
+    transform: scale(1.03);
+  }
+  .subir-proyecto-btn {
+    background-color: #011b4b; /* azul oscuro */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 550;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  
+  .subir-proyecto-btn:hover {
+    background-color: #214a85;
+  }
+  
+  .subir-proyecto-btn i {
+    font-size: 16px;
+  }
+  .alerta-importante {
+    padding: 8px 16px;
+    border: 2px solid #f28b82;
+    border-radius: 1rem;
+    color: #b71c1c;
+    background-color: #fff5f5;
+    font-style: italic;
+    font-size: 14px;
+    animation: bounce 1.8s infinite;
+    max-width: 300px;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  .input-estilo-select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13.7px !important;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    appearance: none; 
+    background-color: white;
+  }
+  .tabla-cronograma {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .tabla-cronograma th,
+  .tabla-cronograma td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .tabla-cronograma th {
+    background-color: #f7f7f7;
+    color: #333;
+  }
+  .btn-evidencia-camara {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-evidencia-camara:hover {
+    background-color: #edf2f7; /* gris claro al hacer hover */
+  }
+  
+  .btn-agregar-alumno {
+    background-color: #38a169;
+    color: white;
+    border: none;
+    padding: 5px 10px;         /* Menor espacio interno */
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;           /* Letra más pequeña */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;                  /* Menor separación entre ícono y texto */
+    transition: background-color 0.3s ease;
+  }
+  .btn-agregar:hover {
+    background-color: #011b4b; /* Color al pasar el mouse */
+    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+  }
+  .btn-agregar i {
+    font-size: 14px;
+  }
+  .btn-ver-evidencia {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    border: 1px solid #adafb1;
+    border-radius: 5px;
+    background: white;
+    color: #2D3748;
+    font-weight: 450;
+    font-size: 12.5px; /* ↓ levemente más pequeño */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-ver-evidencia:hover {
+    background-color: #dadbdd;
+  }
+  
+ 
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-8px);
+    }
+    60% {
+      transform: translateY(4px);
+    }
+  }
+  .btn-cerrar-modal-cronogramasss {
+  background-color: #011B4B;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.alerta-boton-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.btn-cerrar-modal-cronogramasss:hover {
+  background-color: #003366;
+  transform: translateY(-1px);
+}
+
+.btn-cerrar-modal-cronogramasss:active {
+  transform: scale(0.97);
+}
+.texto-observacion {
+  color: #e67e22;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.texto-sin-observacion {
+  color: #bbb;
+  font-size: 12px;
+}
+/* Fondo oscuro translúcido */
+.modal-observacion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Contenedor del modal */
+.modal-observacion-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.3s ease-out;
+}
+.btn-enviar-evidenciasss {
+  background-color: #39b49e;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-enviar-evidenciasss:hover {
+  background-color: #2e9e8c;
+}
+
+/* Título */
+.modal-observacion-content h3 {
+  font-size: 20px;
+  color: #2d3748;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Texto de la observación */
+.modal-observacion-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a5568;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+
+/* Botones */
+.modal-observacion-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-observacion-btn-cancelar {
+  background-color: #e53e3e;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.modal-observacion-btn-cancelar:hover {
+  background-color: #c53030;
+}
+
+/* Animación suave al mostrar */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.btn-carta-termino {
+  background-color: #051d4a;
+  color: #fff;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.btn-carta-termino:hover {
+  background-color: #1e429f;
+  transform: translateY(-2px);
+}
+
+
+.btn-carta-termino:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-title-animada {
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  color: #011b4b;
+  margin-bottom: 20px;
+}
+
+.dashboard-title-animada span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: aparecerLetra 0.4s forwards;
+}
+
+@keyframes aparecerLetra {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.boton-ver-carta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    border: 1px solid #adafb1;
+    border-radius: 5px;
+    background: white;
+    color: #2D3748;
+    font-weight: 450;
+    font-size: 12.5px; /* ↓ levemente más pequeño */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.boton-ver-carta:hover {
+    background-color: #dadbdd;
+ }
+.contenedor-boton-ver {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.contenedores-boton-ver {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  margin-left: auto; 
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* oscurecer */
+  z-index: 1100; /* Debe estar justo debajo del sidebar */
+}
+.respuesta-icono-titulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.respuesta-textos {
+  display: flex;
+  flex-direction: column;
+}
+.titulo-aceptacion {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600; /* 🔄 antes: bold */
+  color: #333;
+}
+.check-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #10b981;
+  color: white;
+  font-size: 13px;
+  border: 2px solid #10b981;
+  flex-shrink: 0;
+  align-self: flex-start; /* ← sube el ícono */
+  margin-top: 2px;         /* ← ajuste fino opcional */
+}
+
+.seccion-documentos-designacion {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 22px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* sombra suave */
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s ease;
+  margin-top: 20px;
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 17px;
+  color: #1a202c;
+  margin-bottom: 20px;
+}
+.seccion-header h3 {
+ 
+    font-weight: 630;  /* 🔄 antes: bold */
+    font-size: 20px;
+    color: #2d2d2d;
+    margin: 0;
+}
+
+.seccion-check {
+  background: #16a34a;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 9px;
+  border-radius: 50%;
+}
+
+.info-icono {
+  font-size: 16px;
+  color: #64748b;
+  margin-left: auto;
+}
+
+.documento-card {
+  display: flex;
+  justify-content: space-between; /* separa el contenido e íconos de acciones */
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff !important;
+  gap: 16px;
+  flex-wrap: wrap; /* por si en responsive necesitas que salte */
+}
+.documento-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1; /* ocupa todo el espacio disponible */
+  min-width: 200px;
+}
+.icono-pdf {
+  width: 28px;
+  height: auto;
+}
+
+.titulo-pdf {
+  flex: 1;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.acciones-doc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0; /* evita que se comprima demasiado */
+}
+@keyframes fadeInSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.persona-img {
+  animation: fadeInSlideLeft 1s ease-out;
+}
+
+.btn-ver-ojo {
+  background: #fff;
+  border: 1px solid #cbd5e0;
+  color: #1a202c;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.plan-icon-img {
+  display: flex;
+  justify-content: flex-start;   /* 👈 alinea hacia la izquierda */
+  margin-left: -80px;            /* 👈 mueve más a la izquierda (ajusta el valor) */
+}
+.btn-ver-ojo:hover {
+  background: #edf2f7;
+}
+.main-content,
+.main-content.collapsed,
+.main-content.sidebar-open {
+  background-color: #f3f4f6 !important;
+}
+.estado-tramitado {
+  background: #38a169;
+  color: white;
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.respuesta-icono-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* En móviles, el main nunca se debe mover */
+@media screen and (max-width: 768px) {
+  html, body, #root, .main-content {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 80px 12px 20px !important;
+  }
+
+  .dashboard-container {
+    max-width: 100% !important;
+    padding: 16px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .respuesta-asesor-header {
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    gap: 8px;             
+    flex-wrap: wrap;     
+  }
+
+  .respuesta-acciones {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+    .btn-ver-documento-inline,
+    .respuesta-asesor-btn {
+    width: auto;
+    justify-content: center;
+  }
+  .respuesta-icono-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .respuesta-asesor-title {
+    font-size: 15px; /* 🔽 más pequeño en móviles */
+  }
+  .titulo-aceptacion {
+    font-size: 0.85rem; /* 🔽 un poco más pequeño también */
+  }
+  .step-icon {
+    min-width: 24px;    /* ✅ Fija el mínimo para evitar deformación */
+    min-height: 24px;
+    width: 26px;         /* Puedes ajustar según se vea mejor */
+    height: 26px;
+    font-size: 14px;
+  }
+
+  .step-icon::before {
+    font-size: 14px;
+  }
+
+  .step-header {
+    font-size: 16px;     /* Disminuye el tamaño del texto si deseas */
+    gap: 8px;
+  }
+
+  .step-header h3 {
+    font-size: 16px;
+    line-height: 1.2;
+    margin: 0;
+  }
+}
+@media screen and (max-width: 568px) {
+    .plan-info {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+.plan-icon-img {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 80px !important;  /* ✅ Mueve ligeramente a la derecha */
+  width: 100%;
+}
+
+  .plan-icon-img img {
+    max-width: 340px; /* Ajusta si deseas reducir su ancho */
+    height: auto;
+    display: block;
+    margin: 0 !important; /* 👈 Elimina margen extra */
+  }
+  .plan-details {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+  }
+
+ .plan-info-box {
+    width: 90% !important;           /* 🔽 reduce el ancho total */
+    max-width: 300px !important;     /* ✅ límite máximo para que no se extienda mucho */
+    margin: 0 auto 20px auto;        /* sigue centrado */
+    padding: 20px 12px;
+  }
+ .plan-info-box .plan-icon {
+    justify-content: center;  /* ✅ Centra el ícono */
+    margin-bottom: 10px !important;
+  }
+
+  .plan-info-box h4,
+  .plan-info-box p {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  input[type="file"]::file-selector-button {
+    width: 100%;
+  }
+
+  input[type="file"] {
+    font-size: 0; /* Oculta el texto "Sin archivos seleccionados" */
+  }
+
+  input[type="file"]::file-selector-button {
+    font-size: 14px; /* Mantiene visible el botón */
+    background-color: #b5b5b6;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-title-animada {
+    white-space: normal !important;   /* ✅ permite salto de línea */
+    overflow: visible !important;     /* ✅ permite que todo el contenido se muestre */
+    text-overflow: unset !important;  /* ✅ elimina los "..." */
+    font-size: 20px;
+    text-align: center;
+    padding: 0 10px;
+    margin-top: 40px !important;
+    word-break: break-word;           /* 🔧 si es necesario cortar palabras largas */
+  }
+
+  .dashboard-title-animada span {
+    font-size: 32px !important;       /* reduce también los spans */
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .documento-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .titulo-pdf {
+    text-align: left;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .acciones-doc {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .btn-ver-documento-inline {
+    width: auto;
+    padding: 6px 14px;
+  }
+
+  .estado-tramitado {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+  .documento-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.respuesta-icono-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+}
+@media screen and (max-width: 768px) {
+  .tabla-cronograma {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-cronograma table {
+    width: 800px; /* o el ancho que necesites */
+    border-collapse: collapse;
+  }
+
+  .tabla-cronograma th,
+  .tabla-cronograma td {
+    white-space: nowrap;      /* evita que se rompan líneas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+@media (max-width: 768px) {
+  .step-header h3 {
+    font-size: 22px !important; /* o ajusta a tu gusto */
+  }
+
+  .step-header {
+    gap: 10px;
+  }
+
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 668px) {
+  .alerta-boton-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-solicitar-aprobacion {
+    align-self: center; /* ← Esto centra el botón */
+  }
+}
+@media (max-width: 480px) {
+  .btn-cerrar-modal-cronogramasss {
+    padding: 8px 10px;
+    font-size: 10px;
+    border-radius: 6px;
+  }
+
+}
+

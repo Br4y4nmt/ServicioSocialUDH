@@ -1,0 +1,195 @@
+.perfil-docente-container {
+    padding: 24px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f5fa;
+  }
+  
+  .perfil-docente-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .perfil-docente-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    padding: 24px 32px;
+    max-width: 800px; /* antes estaba limitado a menos */
+    margin: 0 auto;    /* centrado horizontal */
+  }
+  .perfil-docente-subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .perfil-docente-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+  
+  .perfil-docente-field label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+  .input-minuscula {
+    text-transform: lowercase !important; /* Sobrescribe la regla general */
+  }
+  
+  .perfil-docente-field input,
+  .perfil-docente-field select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    text-transform: uppercase; /* ← convierte texto a mayúsculas */
+  }
+  .editable-hint {
+  font-size: 12px;
+  color: #6c757d; /* gris suave */
+  margin-top: 4px;
+  display: block;
+}
+
+  .perfil-docente-field input::placeholder {
+    text-transform: none;
+    color: #aaa;
+  }
+  
+  /* Botones */
+  .perfil-docente-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: white;
+  }
+  
+  .perfil-docente-btn.guardar {
+    display: block;
+    margin: 30px auto 10px auto;  /* centrado y espaciado */
+    padding: 10px 20px;
+    background-color: #1a237e;
+    color: white;
+    font-weight: 500;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .perfil-docente-btn.guardar:hover {
+    background-color: #0f164a;
+  }
+  
+  .perfil-docente-btn.siguiente {
+    background-color: #39b49e;
+    margin-top: 20px;
+  }
+  
+  .perfil-docente-btn.siguiente:hover {
+    background-color: #2e9886;
+  }
+  
+  .perfil-docente-footer {
+    margin-top: 24px;
+    text-align: right;
+  }
+  .firma-section {
+  text-align: center;
+  margin: 2rem auto;
+}
+
+.firma-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.firma-alert {
+  border: 1px solid #c34b4b;   /* línea un poco más fina   */
+  border-radius: 20px;         /* curvatura más discreta   */
+  padding: 6px 12px;           /* menos alto y ancho       */
+  margin: 0 auto 1rem;         /* reduce la separación     */
+  max-width: 380px;            /* hace el cuadro más corto */
+  background-color: #fff4f4;
+  color: #a22b2b;
+  font-size: 0.85rem;          /* texto ligeramente menor  */
+  font-style: italic;
+  text-align: center;          /* centra el texto          */
+}
+
+.firma-alert strong {
+  font-weight: 600;
+  margin-right: 4px;
+  /* font-style: normal; <-- ❌ ELIMINA o comenta esta línea */
+}
+
+
+.firma-preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;  /* 👈 Ajusta la imagen dentro del contenedor sin deformarla */
+  pointer-events: none;
+  user-select: none;
+}
+
+.firma-upload-box {
+  width: 100%;
+  max-width: 400px; /* o el tamaño exacto que desees */
+  height: 180px;     /* Altura fija */
+  background-color: #f7f9fa;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  overflow: hidden; /* 👈 Evita que la imagen se desborde */
+}
+
+
+.firma-upload-box:hover {
+  background-color: #eef2f3;
+}
+.firma-upload-box svg {
+  margin-bottom: 0.5rem;
+}
+.firma-upload-box p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+.firma-upload-box p span {
+  font-size: 12px;
+  color: #888;
+}
+.upload-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.firma-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}

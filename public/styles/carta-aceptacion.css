@@ -1,0 +1,107 @@
+.carta-aceptacion {
+  padding: 40px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #000;
+}
+.carta-firma-docente {
+  margin-top: -20px; /* Puedes ajustar este valor (ej. 70px, 100px) según lo que necesites */
+}
+.carta-cuerpo {
+  margin-top: 70px; /* Puedes aumentar a 60px o 80px si deseas más espacio */
+}
+
+.carta-encabezado {
+  display: flex;
+  justify-content: space-between; /* Se asegura que los elementos se distribuyan de forma equitativa */
+  align-items: center;
+  margin-bottom: 15px; /* Espaciado ajustado */
+}
+
+.carta-logo {
+  width: 160px; /* Reduce the size of the logo */
+  height: auto; /* Maintain the aspect ratio */
+}
+
+
+.carta-institucion {
+  text-align: center; /* Centrado del texto */
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+.carta-fecha {
+  text-align: right;
+  margin-top: 10px;
+}
+.separador-vertical {
+  border-left: 2px solid #585757; /* Color de la línea de separación */
+  height: 60px; /* Ajuste de altura */
+  margin: 0 20px; /* Espaciado ajustado */
+}
+.carta-titulo {
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 20px;
+}
+
+.carta-asunto {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.carta-body {
+  text-align: justify;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.carta-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+.encabezado-udh {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+}
+
+.logo-container {
+  width: 90px;
+}
+
+.logo-udh {
+  width: 150%;
+  height: auto;
+}
+
+.separador-vertical {
+  width: 1px;
+  background-color: #000;
+  height: 50px;
+  margin: 0 15px;
+}
+
+.facultad-container, .programa-container {
+  flex: 1;
+  text-align: center;
+}
+
+.texto-facultad,
+.texto-programa {
+  font-weight: bold;
+  font-size: 14px; /* Aumento en el tamaño del texto */
+  text-transform: uppercase;
+  color: #333; /* Color oscuro para que se vea claro */
+  text-align: center; /* Centrado del texto */
+  margin: 0;
+}
+
+.linea-separadora {
+  width: 100%; /* Se asegura que la línea de separación ocupe todo el ancho */
+  height: 1px;
+  background-color: #585757;
+  margin: 10px 0;
+}

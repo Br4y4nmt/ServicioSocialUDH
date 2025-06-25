@@ -1,38 +1,114 @@
-.App {
-  text-align: center;
+
+.header-time {
+  font-size: 14px;
+  color: #333;
+  margin-left: 20px;
+  vertical-align: middle;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.header-social {
+  display: flex;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header-social a {
+  margin-left: 10px;
+  color: #333;
+  font-size: 16px;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Fondo azul degradado para la cabecera */
+.header-gradient {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  padding: 50px 0;
+  color: white;
+  text-align: left;
+  margin-bottom: 35px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: flex-start;
 }
 
-.App-link {
-  color: #61dafb;
+.header-gradient h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  color: #faeeee !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header-gradient p {
+  font-size: 16px;
+  margin-bottom: 0;
+  margin-left: 20px;
+}
+
+/* Ajuste para que los formularios entren en el cuadro azul */
+.consultas-container {
+  margin-top: -75px;
+}
+
+/* Estilo para las tarjetas de consulta */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.card h5 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.form-control {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+button.btn-primary, button.btn-danger {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+/* Tabla de resultados */
+.table {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.table th, .table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.no-resultados {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
+
+.btn-custom {
+  width: 120px;
+}
+
+.dropdown-item:last-child {
+  margin-bottom: 0; /* Sin margen en el último elemento */
+}
+.swal2-container {
+  z-index: 100000 !important;
 }

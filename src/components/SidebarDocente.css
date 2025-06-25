@@ -1,0 +1,137 @@
+.sidebar-docente {
+    width: 270px;
+    background-color: #ffffff;
+    color: #333;
+    min-height: 100vh;
+    border-right: 1px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar-docente.collapsed {
+    width: 0;
+    padding: 0;
+    border: none;
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .toggle-btn-docente {
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    background: #d8dee8;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar-header-docente {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .profile-pic-docente {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid #2e9e7f;
+  }
+  
+  .nombre-docente {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #2d2d2d;
+    margin-bottom: 5px;
+  }
+  
+  .rol-docente {
+    color: #2e9e7f;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  .rol-docente::after {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 2px;
+    background-color: #2e9e7f;
+    margin: 10px auto;
+  }
+  
+  .sidebar-nav-docente {
+    width: 100%;
+  }
+  
+  .sidebar-nav-docente ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+  
+  .menu-item-docente {
+    margin-bottom: 15px;
+    padding: 10px 0;
+  }
+  
+  .menu-title-docente {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-title-docente:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .submenu-docente {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 5px;
+    font-size: 0.85rem;
+  }
+  
+  .submenu-docente li {
+    padding: 8px 10px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .submenu-docente li.selected-docente {
+    background-color: #003366;
+    color: white;
+  }
+  /* Estilos solo para pantallas responsive (móviles y tabletas) */
+/* Para el fondo transparente en modo responsive */
+
