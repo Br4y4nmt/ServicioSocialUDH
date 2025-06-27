@@ -124,10 +124,10 @@ const eliminarDocente = (id_docente) => {
     } catch (error) {
       console.error('Error al registrar docente:', error);
       Swal.fire({
-  icon: 'error',
-  title: 'Error al registrar',
-  text: error.response?.data?.message || 'Error al registrar docente. Intenta nuevamente.',
-});
+      icon: 'error',
+      title: 'Error al registrar',
+      text: error.response?.data?.message || 'Error al registrar docente. Intenta nuevamente.',
+    });
     }
   };
 
@@ -438,13 +438,20 @@ const rechazarInforme = async (id) => {
                 value={nuevoDocenteEmail}
                 onChange={(e) => setNuevoDocenteEmail(e.target.value)}
               />
-              <input
-                type="text"
-                className="docentes-modal-input"
-                placeholder="DNI del docente"
-                value={nuevoDocenteDni}
-                onChange={(e) => setNuevoDocenteDni(e.target.value)}
-              />
+                <input
+                  type="text"
+                  className="docentes-modal-input"
+                  placeholder="DNI del docente"
+                  value={nuevoDocenteDni}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // Solo permitir números y limitar a 8 caracteres
+                    if (value.length <= 8 && /^\d*$/.test(value)) {
+                      setNuevoDocenteDni(value);
+                    }
+                  }}
+                />
               <input
                 type="text"
                 className="docentes-modal-input"
@@ -464,9 +471,20 @@ const rechazarInforme = async (id) => {
                 >
                   Cancelar
                 </button>
-                <button
+                 <button
                   className="docentes-btn guardar"
                   onClick={() => {
+                    // Validación de DNI
+                    if (nuevoDocenteDni.length < 8) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'El DNI debe tener al menos 8 dígitos.',
+                      });
+                      return;
+                    }
+
+                    // Si el DNI es válido, proceder con la creación del docente
                     crearDocente();
                     setModalDocenteVisible(false);
                   }}

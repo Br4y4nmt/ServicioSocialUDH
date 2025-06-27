@@ -1,4 +1,4 @@
-// CartaTerminoPDF.jsx
+
 import React from 'react';
 import {
   Page,
@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
 const CartaTerminoPDF = ({ estudiante, programa, facultad, labor, fecha, firmaBase64 }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      {/* Encabezado con logo y facultad */}
       <View style={styles.encabezado}>
         <Image style={styles.logo} src="/images/logonuevo.png" />
         <View>

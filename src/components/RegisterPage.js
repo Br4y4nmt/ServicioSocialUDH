@@ -92,7 +92,7 @@ function RegisterPage() {
   return (
     <div className="register-page">
   <div className="image-container">
-    <img src="/SERVICIOSOCIAL1.PNG" alt="Fondo UDHLabor Social" />
+    <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDHLabor Social" />
   </div>
   <div className="form-container">
     <div className="register-card">

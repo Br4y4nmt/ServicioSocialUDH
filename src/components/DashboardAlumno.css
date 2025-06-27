@@ -762,7 +762,12 @@
     cursor: pointer;
     font-weight: 500;
   }
-  
+  .text-muted {
+    color: #d9534f;  /* Rojo similar al error */
+    font-size: 0.875rem;  /* Un tamaño más pequeño */
+    margin-top: 5px;  /* Un poco de espacio encima */
+  }
+
   .btn-revision {
     background-color: #39B49E;
     color: white;
@@ -793,11 +798,11 @@
     font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
   }
   .btn-revision:hover {
-    background-color: #29A790; /* color al hacer hover */
+    background-color: #29A790; 
     transform: scale(1.03);
   }
   .subir-proyecto-btn {
-    background-color: #011b4b; /* azul oscuro */
+    background-color: #011b4b; 
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -873,26 +878,26 @@
   }
 
   .btn-evidencia-camara:hover {
-    background-color: #edf2f7; /* gris claro al hacer hover */
+    background-color: #edf2f7; 
   }
   
   .btn-agregar-alumno {
     background-color: #38a169;
     color: white;
     border: none;
-    padding: 5px 10px;         /* Menor espacio interno */
+    padding: 5px 10px;        
     border-radius: 6px;
     font-weight: 600;
-    font-size: 13px;           /* Letra más pequeña */
+    font-size: 13px;           
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 4px;                  /* Menor separación entre ícono y texto */
+    gap: 4px;                  
     transition: background-color 0.3s ease;
   }
   .btn-agregar:hover {
-    background-color: #011b4b; /* Color al pasar el mouse */
-    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+    background-color: #011b4b;
+    transform: translateY(-2px); 
   }
   .btn-agregar i {
     font-size: 14px;
@@ -907,7 +912,7 @@
     background: white;
     color: #2D3748;
     font-weight: 450;
-    font-size: 12.5px; /* ↓ levemente más pequeño */
+    font-size: 12.5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -936,7 +941,7 @@
   font-weight: 500;
   border: none;
   border-radius: 8px;
-  margin-top: 10px;
+  margin-top: 0px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -967,7 +972,7 @@
   color: #bbb;
   font-size: 12px;
 }
-/* Fondo oscuro translúcido */
+
 .modal-observacion-overlay {
   position: fixed;
   top: 0;
@@ -981,7 +986,6 @@
   z-index: 9999;
 }
 
-/* Contenedor del modal */
 .modal-observacion-content {
   background-color: #ffffff;
   border-radius: 12px;
@@ -1006,7 +1010,7 @@
   background-color: #2e9e8c;
 }
 
-/* Título */
+
 .modal-observacion-content h3 {
   font-size: 20px;
   color: #2d3748;
@@ -1014,7 +1018,7 @@
   text-align: center;
 }
 
-/* Texto de la observación */
+
 .modal-observacion-content p {
   font-size: 16px;
   line-height: 1.6;
@@ -1023,7 +1027,7 @@
   margin-bottom: 20px;
 }
 
-/* Botones */
+
 .modal-observacion-actions {
   display: flex;
   justify-content: flex-end;
@@ -1110,7 +1114,7 @@
     background: white;
     color: #2D3748;
     font-weight: 450;
-    font-size: 12.5px; /* ↓ levemente más pequeño */
+    font-size: 12.5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -1136,8 +1140,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4); /* oscurecer */
-  z-index: 1100; /* Debe estar justo debajo del sidebar */
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1100; 
 }
 .respuesta-icono-titulo {
   display: flex;
@@ -1152,7 +1156,7 @@
 .titulo-aceptacion {
   margin: 0;
   font-size: 0.95rem;
-  font-weight: 600; /* 🔄 antes: bold */
+  font-weight: 600; 
   color: #333;
 }
 .check-circle {
@@ -1167,15 +1171,15 @@
   font-size: 13px;
   border: 2px solid #10b981;
   flex-shrink: 0;
-  align-self: flex-start; /* ← sube el ícono */
-  margin-top: 2px;         /* ← ajuste fino opcional */
+  align-self: flex-start; 
+  margin-top: 2px;        
 }
 
 .seccion-documentos-designacion {
   background: #fff;
   border-radius: 10px;
   padding: 18px 22px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* sombra suave */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); 
   border: 1px solid #e5e7eb;
   transition: box-shadow 0.2s ease;
   margin-top: 20px;
@@ -1192,7 +1196,7 @@
 }
 .seccion-header h3 {
  
-    font-weight: 630;  /* 🔄 antes: bold */
+    font-weight: 630;  
     font-size: 20px;
     color: #2d2d2d;
     margin: 0;
@@ -1214,7 +1218,7 @@
 
 .documento-card {
   display: flex;
-  justify-content: space-between; /* separa el contenido e íconos de acciones */
+  justify-content: space-between; 
   align-items: center;
   padding: 16px;
   margin-bottom: 16px;
@@ -1222,13 +1226,13 @@
   border: 1px solid #e2e8f0;
   background-color: #ffffff !important;
   gap: 16px;
-  flex-wrap: wrap; /* por si en responsive necesitas que salte */
+  flex-wrap: wrap; 
 }
 .documento-info {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1; /* ocupa todo el espacio disponible */
+  flex: 1; 
   min-width: 200px;
 }
 .icono-pdf {
@@ -1247,7 +1251,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0; /* evita que se comprima demasiado */
+  flex-shrink: 0; 
 }
 @keyframes fadeInSlideLeft {
   0% {
@@ -1280,8 +1284,8 @@
 }
 .plan-icon-img {
   display: flex;
-  justify-content: flex-start;   /* 👈 alinea hacia la izquierda */
-  margin-left: -80px;            /* 👈 mueve más a la izquierda (ajusta el valor) */
+  justify-content: flex-start;  
+  margin-left: -80px;           
 }
 .btn-ver-ojo:hover {
   background: #edf2f7;
@@ -1305,7 +1309,7 @@
   align-items: center;
   gap: 8px;
 }
-/* En móviles, el main nunca se debe mover */
+
 @media screen and (max-width: 768px) {
   html, body, #root, .main-content {
     overflow-x: hidden !important;
@@ -1349,15 +1353,15 @@
     gap: 8px;
   }
   .respuesta-asesor-title {
-    font-size: 15px; /* 🔽 más pequeño en móviles */
+    font-size: 15px; 
   }
   .titulo-aceptacion {
-    font-size: 0.85rem; /* 🔽 un poco más pequeño también */
+    font-size: 0.85rem; 
   }
   .step-icon {
-    min-width: 24px;    /* ✅ Fija el mínimo para evitar deformación */
+    min-width: 24px;    
     min-height: 24px;
-    width: 26px;         /* Puedes ajustar según se vea mejor */
+    width: 26px;         
     height: 26px;
     font-size: 14px;
   }
@@ -1367,7 +1371,7 @@
   }
 
   .step-header {
-    font-size: 16px;     /* Disminuye el tamaño del texto si deseas */
+    font-size: 16px;     
     gap: 8px;
   }
 
@@ -1389,15 +1393,15 @@
 .plan-icon-img {
   display: flex;
   justify-content: flex-start;
-  padding-left: 80px !important;  /* ✅ Mueve ligeramente a la derecha */
+  padding-left: 80px !important; 
   width: 100%;
 }
 
   .plan-icon-img img {
-    max-width: 340px; /* Ajusta si deseas reducir su ancho */
+    max-width: 340px; 
     height: auto;
     display: block;
-    margin: 0 !important; /* 👈 Elimina margen extra */
+    margin: 0 !important; 
   }
   .plan-details {
     padding-left: 0 !important;
@@ -1407,13 +1411,13 @@
   }
 
  .plan-info-box {
-    width: 90% !important;           /* 🔽 reduce el ancho total */
-    max-width: 300px !important;     /* ✅ límite máximo para que no se extienda mucho */
-    margin: 0 auto 20px auto;        /* sigue centrado */
+    width: 90% !important;           
+    max-width: 300px !important;     
+    margin: 0 auto 20px auto;        
     padding: 20px 12px;
   }
  .plan-info-box .plan-icon {
-    justify-content: center;  /* ✅ Centra el ícono */
+    justify-content: center; 
     margin-bottom: 10px !important;
   }
 
@@ -1430,11 +1434,11 @@
   }
 
   input[type="file"] {
-    font-size: 0; /* Oculta el texto "Sin archivos seleccionados" */
+    font-size: 0; 
   }
 
   input[type="file"]::file-selector-button {
-    font-size: 14px; /* Mantiene visible el botón */
+    font-size: 14px; 
     background-color: #b5b5b6;
     color: white;
     padding: 6px 12px;
@@ -1445,18 +1449,18 @@
 }
 @media (max-width: 768px) {
   .dashboard-title-animada {
-    white-space: normal !important;   /* ✅ permite salto de línea */
-    overflow: visible !important;     /* ✅ permite que todo el contenido se muestre */
-    text-overflow: unset !important;  /* ✅ elimina los "..." */
+    white-space: normal !important;  
+    overflow: visible !important;     
+    text-overflow: unset !important; 
     font-size: 20px;
     text-align: center;
     padding: 0 10px;
     margin-top: 40px !important;
-    word-break: break-word;           /* 🔧 si es necesario cortar palabras largas */
+    word-break: break-word;          
   }
 
   .dashboard-title-animada span {
-    font-size: 32px !important;       /* reduce también los spans */
+    font-size: 32px !important;       
   }
 }
 
@@ -1510,13 +1514,13 @@
   }
 
   .tabla-cronograma table {
-    width: 800px; /* o el ancho que necesites */
+    width: 800px; 
     border-collapse: collapse;
   }
 
   .tabla-cronograma th,
   .tabla-cronograma td {
-    white-space: nowrap;      /* evita que se rompan líneas */
+    white-space: nowrap;     
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 120px;
@@ -1526,7 +1530,7 @@
 }
 @media (max-width: 768px) {
   .step-header h3 {
-    font-size: 22px !important; /* o ajusta a tu gusto */
+    font-size: 22px !important;
   }
 
   .step-header {
@@ -1546,7 +1550,7 @@
   }
 
   .btn-solicitar-aprobacion {
-    align-self: center; /* ← Esto centra el botón */
+    align-self: center; 
   }
 }
 @media (max-width: 480px) {

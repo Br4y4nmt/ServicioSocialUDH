@@ -106,13 +106,12 @@ function ConformidadPlan({
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
      <div id="esquema-plan-pdf">
      <div className="solicitar-revision-card">
-   
-       {/* Título centrado */}
+
        <h2 style={{
          textAlign: 'center',
          marginTop: '10px',
          marginBottom: '20px',
-         color: '#2D3748', // gris oscuro profesional
+         color: '#2D3748',
          fontSize: '24px',
          fontWeight: '700',
          letterSpacing: '1px'
@@ -413,7 +412,7 @@ function ConformidadPlan({
          setNuevaFecha(item.fecha);
          setNuevaFechaFin(item.fechaFin); 
          setNuevaJustificacion(item.justificacion);
-         setNuevosResultados(item.resultados); // 👈 esta línea es la que faltaba
+         setNuevosResultados(item.resultados); 
          setEditIndex(index);
          setModalActividadVisible(true);
        }}
@@ -563,7 +562,7 @@ function ConformidadPlan({
          <label className="bold-text">Convenio de Cooperación Institucional</label>
          <input 
            type="file" 
-           accept="application/pdf"  // Acepta solo archivos PDF
+           accept="application/pdf"
            onChange={(e) => handleFileChange(e, 'cartaAceptacion')}
          />
        </div>
@@ -583,7 +582,7 @@ function ConformidadPlan({
           style={{
             marginRight: '6px',
             position: 'relative',
-            top: '-2px', // 👈 levanta el SVG ligeramente
+            top: '-2px', 
             verticalAlign: 'middle'
           }}
         >
@@ -604,8 +603,8 @@ function ConformidadPlan({
   <div className="solicitar-revision-card">
    <div className="solicitar-revision-header">
   <div className="solicitar-revision-titulo">
-    <i className="fas fa-info-circle icono-azul" /> {/* Ícono */}
-    <h3>Solicitar revisión al supervisor:</h3>      {/* Título */}
+    <i className="fas fa-info-circle icono-azul" /> 
+    <h3>Solicitar revisión al supervisor:</h3>      
   </div>
 
   {archivoYaEnviado && (
@@ -632,7 +631,7 @@ function ConformidadPlan({
       El docente supervisor ha aceptado tu solicitud, continúa al siguiente paso para poder confirmar tu plan de trabajo.
     </div>
 
-    {/* ✅ Ahora el aviso importante aparece abajo */}
+   
     <div className="aviso-importante">
       <strong>¡Importante!</strong> Si el tiempo establecido en el plan del servicio social es excedido, este se reiniciará automáticamente y tendra que iniciar nuevamente su servicio social
     </div>

@@ -199,6 +199,7 @@ const handleGuardar = async () => {
                         setPerfil((prev) => ({ ...prev, celular: e.target.value }))
                     }
                     />
+                    <small className="text-muted">Puedes modificar este campo</small>
             </div>
             <div className="form-group">
           <label className="bold-text">Facultad</label>

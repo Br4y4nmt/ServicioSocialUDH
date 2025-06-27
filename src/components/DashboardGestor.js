@@ -269,35 +269,49 @@ const crearPrograma = async () => {
     }
   };
 
+
   const crearDocente = async () => {
+    // Verificar si faltan campos
     if (!nuevoDocenteEmail || !nuevoDocenteDni || !nuevoDocenteWhatsapp) {
-      alert('Por favor completa todos los campos del docente');
+      Swal.fire({
+        icon: 'warning',
+        title: '¡Faltan campos!',
+        text: 'Por favor completa todos los campos del docente.',
+      });
       return;
     }
-  
+
     try {
       await axios.post('http://localhost:5000/api/auth/register-docente', {
-      email: nuevoDocenteEmail,
-      dni: nuevoDocenteDni,
-      whatsapp: nuevoDocenteWhatsapp,
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-  
+        email: nuevoDocenteEmail,
+        dni: nuevoDocenteDni,
+        whatsapp: nuevoDocenteWhatsapp,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       // Limpiar campos del modal
       setNuevoDocenteEmail('');
       setNuevoDocenteDni('');
       setNuevoDocenteWhatsapp('');
-  
-      alert('Docente registrado exitosamente.');
-      fetchDocentes(); // Recargar lista
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Docente registrado exitosamente.',
+      });
+
+      fetchDocentes();
     } catch (error) {
       console.error('Error al registrar docente:', error);
-      alert(
-        error.response?.data?.message || 'Error al registrar docente. Intenta nuevamente.'
-      );
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: error.response?.data?.message || 'Error al registrar docente. Intenta nuevamente.',
+      });
     }
   };
+
   
   const guardarEdicionPrograma = async () => {
     if (!programaEditado.trim() || !facultadEditada) return;
@@ -1011,9 +1025,9 @@ const rechazarInforme = async (id) => {
       <div className="docentes-header">
         <div className="docentes-header-left">
           <h2>Docentes</h2>
-          <button className="docentes-btn-agregar" onClick={() => setModalDocenteVisible(true)}>
-          Agregar
-        </button>
+          {/*<button className="docentes-btn-agregar" onClick={() => setModalDocenteVisible(true)}>
+            Agregar
+          </button> */}
         </div>
         <div className="docentes-header-right">
     <label className="docentes-search-label">
@@ -1200,7 +1214,12 @@ const rechazarInforme = async (id) => {
         className="docentes-modal-input"
         placeholder="DNI del docente"
         value={nuevoDocenteDni}
-        onChange={(e) => setNuevoDocenteDni(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (value.length <= 8 && /^\d*$/.test(value)) {
+            setNuevoDocenteDni(value);
+          }
+        }}
       />
       <input
         type="text"
@@ -1227,7 +1246,15 @@ const rechazarInforme = async (id) => {
         <button
           className="docentes-btn guardar"
           onClick={() => {
-            crearDocente(); // asegúrate de que esta función ya no dependa de los selects eliminados
+            if (nuevoDocenteDni.length !== 8) {
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'El DNI INCOMPLETO.',
+              });
+              return;
+            }
+            crearDocente(); // Asegúrate de que esta función ya no dependa de los selects eliminados
             setModalDocenteVisible(false);
           }}
         >

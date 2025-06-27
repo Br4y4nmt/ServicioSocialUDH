@@ -7,7 +7,6 @@ import axios from 'axios';
 import './DashboardAlumno.css';
 import DesignacionDocente from './DesignacionDocente';
 import './ModalGlobal.css';
-import Documentos from './Documentos';
 import Swal from 'sweetalert2';
 import InformeFinal from './InformeFinal'; // porque estás en /src/components
 import SeguimientoActividades from './SeguimientoActividades'
@@ -295,8 +294,6 @@ useEffect(() => {
     fetchFacultades();
   }
 }, [user]);
-
-
 
 
   const toggleSidebar = () => {
@@ -1197,11 +1194,7 @@ useEffect(() => {
       ))}
     </h1>
   
-   {activeSection === 'documentos' && (
-  <div className="dashboard-container">
-    <Documentos />
-  </div>
-)}
+   
 {activeSection === 'reglamento' && (
   <div className="dashboard-container">
     <Reglamento />
@@ -1410,7 +1403,7 @@ useEffect(() => {
 {modalObservacionEstudianteVisible && (
   <div className="modal-observacion-overlay">
     <div className="modal-observacion-content">
-      <h3 style={{ marginBottom: '10px' }}>Observación del Docente</h3>
+      <h3 style={{ marginBottom: '10px' }}>Observaciónes del Docente</h3>
       <p style={{ color: '#4A5568' }}>{observacionSeleccionada}</p>
       <div className="modal-observacion-actions">
         <button
@@ -1669,17 +1662,17 @@ useEffect(() => {
 {modalVisible && (
   <div className="modal-evidencia-overlay">
     <div className="modal-evidencia-content">
-      <img src={imagenModal} alt="Evidencia" style={{ maxWidth: '100%', borderRadius: '8px' }} />
+      <img src={imagenModal} alt="Evidencia" className="modal-evidencia-image" />
       <button
-      onClick={() => setModalVisible(false)}
-      className="btn-cerrar-modal-cronogramasss"
-    >
-      Cerrar
-    </button>
-
+        onClick={() => setModalVisible(false)}
+        className="btn-cerrar-modal-cronogramasss"
+      >
+        Cerrar
+      </button>
     </div>
   </div>
 )}
+
 
 {modalProyectoVisible && (
   <div className="modal-overlay-alumno">

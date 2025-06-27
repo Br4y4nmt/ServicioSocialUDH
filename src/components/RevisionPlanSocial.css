@@ -288,13 +288,6 @@
 }
 
 /* Asegúrate de que el contenedor esté centrado */
-.modal-cronograma-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;  /* Centrado verticalmente */
-  align-items: center;  /* Centrado horizontalmente */
-  height: 100%;  /* Asegura que el contenedor ocupe toda la altura */
-}
 
 .modal-evidencia-overlay {
   position: fixed;
@@ -509,8 +502,7 @@
   font-size: 13px;
   cursor: default;
 }
-/* Puedes ajustar el selector según tu estructura */
-/* Añade esto a tu CSS */
+
 .main-content.sidebar-open .conformidad-card {
   background: transparent !important;
   box-shadow: none !important;
@@ -519,8 +511,6 @@
   background: rgba(0,0,0,0.18) !important;
   min-height: 100vh;
   transition: background 0.3s;
-  /* Puedes agregar blur si quieres */
-  /* backdrop-filter: blur(2px); */
 }
 .sidebar-docente {
   z-index: 9999 !important;
@@ -538,14 +528,15 @@
 }
 @media (max-width: 768px) {
   .revision-title {
-    font-size: 1.5rem; /* Aumenta el tamaño en responsive */
+    font-size: 1.5rem; 
     text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .revision-title {
-    font-size: 1.2rem; /* Ajusta para móviles muy pequeños */
+    font-size: 1.2rem; 
     text-align: center;
   }
+
 }

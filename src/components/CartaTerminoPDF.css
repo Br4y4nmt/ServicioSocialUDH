@@ -4,7 +4,7 @@
   width: 600px;
   color: #333;
   font-size: 12pt;
-  margin: 0 auto; /* ✅ centrado */
+  margin: 0 auto; 
   text-align: justify;
 }
 .bloque-firma {
@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 100px; /* más ancho para cada bloque */
+  min-width: 100px;
 }
 
 .titulo-documento {
@@ -60,24 +60,23 @@
   gap: 30px;
   padding: 0;
   margin-top: -40px;
-  margin-left: -20px; /* ✅ Mueve todo el encabezado hacia la izquierda */
+  margin-left: -20px; 
   width: 100%;
   box-sizing: border-box;
   flex-wrap: wrap;
 }
 
-
 .logo-container {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  max-width: 100%;  /* Asegura que el contenedor sea flexible */
+  max-width: 100%; 
 }
 
 .logo-udh {
-  max-width: 350px;  /* Permite que el logo se expanda hasta un tamaño más grande */
-  width: 100%;  /* Se adapta al contenedor */
-  height: auto;  /* Mantiene la proporción */
+  max-width: 350px; 
+  width: 100%;  
+  height: auto;  
 }
 
 .texto-udh {

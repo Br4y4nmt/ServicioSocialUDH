@@ -248,26 +248,38 @@
   .modal-grupo-elegante-btn.cancelar:hover {
     background-color: #718096;
   }
-  .modal-evidencia-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2147483647 !important; /* valor máximo seguro para estar al frente */
-  }
-  .modal-evidencia-content {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 90%;
-    text-align: center;
-  }
+.modal-evidencia-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483647 !important; /* Valor máximo seguro para estar al frente */
+}
+.modal-evidencia-image {
+  width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del contenedor */
+  height: 92%; /* Asegura que la imagen ocupe el 100% del alto disponible */
+  object-fit: contain; /* Ajuste de la imagen, para que mantenga su proporción sin cortarse */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-bottom: 20px; /* Espacio entre la imagen y el botón */
+}
+.modal-evidencia-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 90%; /* Usa un máximo del 90% del ancho de la pantalla */
+  max-height: 80vh; /* Limita la altura máxima al 80% de la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Evita que la imagen sobresalga */
+  position: relative;
+}
   @keyframes fadeIn {
     from {
       opacity: 0;

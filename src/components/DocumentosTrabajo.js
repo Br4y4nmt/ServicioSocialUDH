@@ -4,8 +4,8 @@ import axios from 'axios';
 
 function DocumentosTrabajo() {
   const { id } = useParams();
- const token = localStorage.getItem('token');
-  useEffect(() => {
+  const token = localStorage.getItem('token');
+    useEffect(() => {
 
     axios.get(`http://localhost:5000/api/trabajo-social/${id}`, {
     headers: { Authorization: `Bearer ${token}` }

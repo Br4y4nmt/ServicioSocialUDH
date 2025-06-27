@@ -85,7 +85,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                 </li>
                       <li className={activeSection === 'docentes' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('docentes')}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Docentes: Persona */}
+                     
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
                       <circle cx="12" cy="7" r="4" />
                       <path d="M5.5 21a8.38 8.38 0 0113 0" />

@@ -5,8 +5,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-    display: flex; /* Asegura que sea visible con flexbox */
+    background: rgba(0, 0, 0, 0.5);
+    display: flex; 
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -21,7 +21,7 @@
     max-width: 90%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: relative;
-    z-index: 10000; /* Asegúrate de que el contenido esté encima del fondo */
+    z-index: 10000; 
   }
   
   .modal-actions {
@@ -32,7 +32,7 @@
   .modal button {
     margin-left: 10px;
   }
-  /* ===== REVISIÓN DEL DOCENTE ===== */
+
 .revision-container-d {
   padding: 20px;
 }
@@ -54,10 +54,10 @@
 .revision-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en móviles */
+  -webkit-overflow-scrolling: touch; 
 }
 .revision-table {
-  min-width: 700px; /* O el ancho que necesites según tus columnas */
+  min-width: 700px; 
   border-collapse: collapse;
   font-size: 14px;
   color: #333;
@@ -458,19 +458,18 @@
   }
 }
 
-/* Reglas base para el contenedor principal */
 .main-content {
   transition: background-color 0.3s ease, margin-left 0.3s ease !important;
   background-color: transparent !important;
-  margin-left: 270px; /* Cambia según lo que prefieras */
+  margin-left: 270px; 
 }
 
-/* Fondo transparente cuando el sidebar está colapsado */
+
 .main-content.collapsed {
-  background-color: transparent !important; /* Fondo transparente */
-  margin-left: 0px !important; /* Esto hará que el contenido ocupe toda la pantalla */
+  background-color: transparent !important;
+  margin-left: 0px !important; 
 }
-/* Puedes poner esto en SidebarDocente.css o en el CSS del componente principal */
+
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -480,16 +479,15 @@
   background: rgba(0,0,0,0.18);
   z-index: 9998;
 }
-/* Reglas en dispositivos pequeños */
+
 @media screen and (max-width: 768px) {
   .main-content {
-    background-color: transparent !important; /* Fondo transparente en pantallas pequeñas */
-    margin-left: 0 !important; /* Aseguramos que se mantenga */
+    background-color: transparent !important; 
+    margin-left: 0 !important; 
   }
 .main-content.collapsed {
   background-color: transparent !important;
   margin-left: 0px !important;
-  /* border: 2px dashed red !important; */ /* Elimina o comenta esta línea */
 }
 }
 @media (max-width: 768px) {
@@ -501,17 +499,17 @@
     padding: 12px 6px;
   }
   .revision-title {
-    font-size: 1.5rem !important; /* Aumenta el tamaño en responsive */
+    font-size: 1.5rem !important; 
     text-align: center;
   }
   .revision-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en móviles */
+  -webkit-overflow-scrolling: touch; 
 }
 
 .revision-table {
-  min-width: 700px; /* Ajusta según tus columnas */
+  min-width: 700px;
 }
   .revision-footer {
     justify-content: center;
@@ -523,7 +521,7 @@
     padding: 6px 2px;
   }
  .revision-title {
-    font-size: 1.2rem; /* Ajusta para móviles muy pequeños */
+    font-size: 1.2rem; 
     text-align: center;
   }
   .revision-table {

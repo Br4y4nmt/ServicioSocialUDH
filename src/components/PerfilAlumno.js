@@ -303,20 +303,22 @@ useEffect(() => {
                 disabled
               />
             </div>
+
             <div className="form-group">
-              <label className="bold-text">Número Celular</label>
-              <input
-                name="celular"
-                className="input-editable" 
-                value={perfil.celular}
-                onChange={handleCelularChange}
-                maxLength={9}
-                pattern="\d*"
-                inputMode="numeric"
-              />
+            <label className="bold-text">Número Celular</label>
+            <input
+              name="celular"
+              className="input-editable"
+              value={perfil.celular}
+              onChange={handleCelularChange}
+              maxLength={9}
+              pattern="\d*"
+              inputMode="numeric"
+            />
+            <small className="text-muted">Campo obligatorio</small>
+          </div>
 
 
-            </div>
             <div className="form-group">
               <label className="bold-text">Facultad</label>
               <select

@@ -9,8 +9,6 @@ import DashboardAlumno from './components/DashboardAlumno';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DocumentosTrabajo from './components/DocumentosTrabajo';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
 import MiPerfilDocente from './components/MiPerfilDocente';
 import SeguimientoServicioDocente from './components/SeguimientoServicioDocente';
 import DashboardGestor from './components/DashboardGestor';
@@ -74,9 +72,8 @@ function App() {
           <DashboardAlumno />
         </ProtectedRoute>
       } />
-        <Route path="/forgot-password" element={<ForgotPassword />} />       
+     
         <Route path="/documentos-trabajo/:id" element={<DocumentosTrabajo />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/dashboard-gestor" element={
           <ProtectedRoute allowedRoles={['gestor-udh']}>
           <DashboardGestor />
