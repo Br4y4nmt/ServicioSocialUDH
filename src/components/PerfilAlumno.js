@@ -46,46 +46,58 @@ const removerAcentos = (texto) => {
 };
 
   useEffect(() => {
-    setNombre(localStorage.getItem('nombre_usuario') || 'NOMBRE DEL ALUMNO');
+  setNombre(localStorage.getItem('nombre_usuario') || 'NOMBRE DEL ALUMNO');
 
-    // Cargar facultades al inicio
-    const fetchFacultades = async () => {
-      try {
-        const res = await axios.get('/api/facultades', {
+  // Cargar facultades al inicio
+  const fetchFacultades = async () => {
+    try {
+      const res = await axios.get('/api/facultades', {
         headers: { Authorization: `Bearer ${token}` }
-
       });
+
+      // Asegurarse de que las facultades sean un array válido
+      if (Array.isArray(res.data)) {
         setFacultades(res.data);
-      } catch (error) {
-        console.error('Error al obtener facultades:', error);
+      } else {
+        setFacultades([]); // En caso de que no sea un array, asignamos un array vacío
       }
-    };
+    } catch (error) {
+      console.error('Error al obtener facultades:', error);
+    }
+  };
 
-    fetchFacultades();
-  }, [token]);
+  fetchFacultades();
+}, [token]);
 
-  useEffect(() => {
-    const fetchProgramas = async () => {
-      if (!perfil.facultad) {
-        setProgramas([]);
-        return;
+
+useEffect(() => {
+  const fetchProgramas = async () => {
+    if (!perfil.facultad) {
+      setProgramas([]);  // Si no se ha seleccionado facultad, limpiamos los programas
+      return;
+    }
+    try {
+      // Solicita los programas de la facultad seleccionada
+      const res = await axios.get(`/api/programas/facultad/${perfil.facultad}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Verificamos si res.data es un array válido
+      if (Array.isArray(res.data)) {
+        setProgramas(res.data);  // Actualizamos los programas con la respuesta
+      } else {
+        setProgramas([]);  // Si no es un array válido, limpiamos el estado
       }
-      try {
-        const res = await axios.get(
-        `/api/programas/facultad/${perfil.facultad}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
+    } catch (error) {
+      console.error('Error al obtener programas:', error);
+    }
+  };
 
-        }
-      );
-        setProgramas(res.data);
-      } catch (error) {
-        console.error('Error al obtener programas:', error);
-      }
-    };
+  fetchProgramas();
+}, [perfil.facultad, token]);
 
-    fetchProgramas();
-  }, [perfil.facultad, token]);
+
+
 
   const toggleSidebar = () => {
     setCollapsed((prev) => !prev);
@@ -129,16 +141,16 @@ const handleGuardar = async () => {
       dni,
       email: correo,
       celular,
-      facultad,
-      programa_academico_id: programa,
+      facultad, // Enviar el ID de la facultad
+      programa_academico_id: programa, // Enviar el ID del programa
       id_usuario: usuario_id,
       codigo,
     };
 
     await axios.post('/api/estudiantes', body, {
-    headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-  });
     Swal.fire({
       icon: 'success',
       title: 'Perfil guardado',
@@ -162,64 +174,53 @@ const handleGuardar = async () => {
 };
 
 useEffect(() => {
+  const correoDesdeLocalStorage = localStorage.getItem('correo_institucional') || '';  // Traemos el correo desde localStorage
+  const codigoDesdeCorreo = correoDesdeLocalStorage.split('@')[0]; 
   const correo = localStorage.getItem('correo_institucional') || '';
-  const codigoDesdeCorreo = correo.split('@')[0]; // solo para buscar
-
-  const fetchPerfilDesdeUDH = async () => {
+  const fetchPerfilDesdeBackend = async () => {
     try {
-      const res = await axios.get(`http://www.udh.edu.pe/websauh/secretaria_general/gradosytitulos/datos_estudiante_json.aspx?_c_3456=${codigoDesdeCorreo}`);
-      const data = res.data[0];
+      const res = await axios.get(`/api/estudiantes/perfil-estudiante/${codigoDesdeCorreo}`);
+      const data = res.data;
 
-      const nombre_completo = `${data.stu_nombres || ''} ${data.stu_apellido_paterno || ''} ${data.stu_apellido_materno || ''}`.trim();
+      const nombre_completo = data.nombre_completo;
+      const dni = data.dni;
+      const codigo = data.codigo;
+      const correoCompleto = correo;  
+      const facultad = data.facultad;
+      const programa = data.programa;
 
-      // Buscar ID de facultad por nombre
+      // 1. Buscar el ID de la facultad por el nombre
       const facultadEncontrada = facultades.find(
-        (fac) => removerAcentos(fac.nombre_facultad.toLowerCase().trim()) === removerAcentos(data.stu_facultad.toLowerCase().trim())
-
+        (fac) => removerAcentos(fac.nombre_facultad.toLowerCase().trim()) === removerAcentos(facultad.toLowerCase().trim())
       );
+      const idFacultad = facultadEncontrada?.id_facultad || '';
 
-      let idFacultad = facultadEncontrada?.id_facultad || '';
+      // 2. Buscar el ID del programa por el nombre
+      const programaEncontrado = programas.find(
+        (prog) => removerAcentos(prog.nombre_programa.toLowerCase().trim()) === removerAcentos(programa.toLowerCase().trim())
+      );
+      const idPrograma = programaEncontrado?.id_programa || '';
 
-      let idPrograma = '';
-      if (idFacultad) {
-        // Buscar programas solo si se encontró la facultad
-        const resProgramas = await axios.get(
-          `/api/programas/facultad/${idFacultad}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-
-          }
-        );
-        const listaProgramas = resProgramas.data;
-
-        setProgramas(listaProgramas); // para mostrar en el select
-
-        const programaEncontrado = listaProgramas.find(
-          (prog) => removerAcentos(prog.nombre_programa.toLowerCase().trim()) === removerAcentos(data.stu_programa.toLowerCase().trim())
-
-        );
-
-        idPrograma = programaEncontrado?.id_programa || '';
-      }
-
-      setPerfil((prev) => ({
+      // 3. Actualizar el estado del perfil con los IDs de facultad y programa
+      setPerfil(prev => ({
         ...prev,
         nombre_completo,
-        dni: data.stu_dni || '',
-        codigo: data.stu_codigo || '',
-        facultad: idFacultad,
-        programa: idPrograma,
-        correo,
+        dni,
+        codigo,
+        correo: correoCompleto,  
+        facultad: idFacultad, 
+        programa: idPrograma,  
       }));
+
     } catch (error) {
-      console.error('Error al obtener datos del estudiante:', error);
+      console.error('Error al obtener los datos del perfil:', error);
     }
   };
 
-  if (correo && facultades.length > 0) {
-    fetchPerfilDesdeUDH();
+  if (correoDesdeLocalStorage && facultades.length > 0) {
+    fetchPerfilDesdeBackend();
   }
-}, [facultades, token]);
+}, [facultades, programas, token]);
 
 const handleCelularChange = (e) => {
   const value = e.target.value;
@@ -319,40 +320,40 @@ useEffect(() => {
           </div>
 
 
-            <div className="form-group">
+           <div className="form-group">
               <label className="bold-text">Facultad</label>
               <select
-                  name="facultad"
-                  value={perfil.facultad}
-                  onChange={handleChange}
-                  disabled 
-                >
-
+                name="facultad"
+                value={perfil.facultad}
+                onChange={handleChange}
+                disabled // Actualiza el valor seleccionado cuando el usuario cambia
+              >
                 <option value="">Seleccione Facultad</option>
                 {facultades.map((fac) => (
                   <option key={fac.id_facultad} value={fac.id_facultad}>
-                    {fac.nombre_facultad}
+                    {fac.nombre_facultad}  
                   </option>
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label className="bold-text">Programa Académico</label>
-              <select
-                  name="programa"
-                  value={perfil.programa}
-                  onChange={handleChange}
-                  disabled 
-                >
 
-                <option value="">Seleccione Programa</option>
-                {programas.map((prog) => (
-                  <option key={prog.id_programa} value={prog.id_programa}>
-                    {prog.nombre_programa}
-                  </option>
-                ))}
-              </select>
-            </div>
+
+            <div className="form-group">
+          <label className="bold-text">Programa Académico</label>
+          <select
+            name="programa"
+            value={perfil.programa}
+            onChange={handleChange}
+            disabled // Actualiza el valor seleccionado cuando el usuario cambia
+          >
+            <option value="">Seleccione Programa</option>
+            {programas.map((prog) => (
+              <option key={prog.id_programa} value={prog.id_programa}>
+                {prog.nombre_programa}  
+              </option>
+            ))}
+          </select>
+        </div>
 
             <div className="button-container">
               <button className="btn-completar-perfil" onClick={handleGuardar}>
