@@ -37,14 +37,14 @@ function RevisionPlanSocial() {
     }
 
     // Solicitar los datos del docente
-    axios.get(`http://localhost:5000/api/docentes/usuario/${usuarioId}`, {
+    axios.get(`/api/docentes/usuario/${usuarioId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
         const docenteId = response.data.id_docente;
 
         // Solicitar los trabajos sociales del docente
-        axios.get(`http://localhost:5000/api/trabajo-social/docente/${docenteId}`, {
+        axios.get(`/api/trabajo-social/docente/${docenteId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
           .then(res => {
@@ -77,7 +77,7 @@ function RevisionPlanSocial() {
   const handleSave = () => {
     if (selectedTrabajo) {
       axios.put(
-        `http://localhost:5000/api/trabajo-social/${selectedTrabajo.id}`,
+        `/api/trabajo-social/${selectedTrabajo.id}`,
         {
           ...selectedTrabajo,
           conformidad_plan_social: nuevoEstado,
@@ -165,7 +165,7 @@ function RevisionPlanSocial() {
                         <td>
   {plan.archivo_plan_social ? (
     <a
-  href={`http://localhost:5000/uploads/planes_labor_social/${plan.archivo_plan_social}`}
+  href={`/uploads/planes_labor_social/${plan.archivo_plan_social}`}
   target="_blank"
   rel="noreferrer"
   className="btn-ojo-ver-plan-docente"

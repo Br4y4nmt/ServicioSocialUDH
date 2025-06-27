@@ -7,13 +7,13 @@ function DocumentosTrabajo() {
   const token = localStorage.getItem('token');
     useEffect(() => {
 
-    axios.get(`http://localhost:5000/api/trabajo-social/${id}`, {
+    axios.get(`/api/trabajo-social/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
       .then(res => {
         const archivo = res.data.carta_aceptacion_pdf;
         if (archivo) {
-          const url = `http://localhost:5000/uploads/planes_labor_social/${archivo}`;
+          const url = `/uploads/planes_labor_social/${archivo}`;
 
           // Abrir en nueva pestaña
           window.open(url, '_blank');

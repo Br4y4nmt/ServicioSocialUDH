@@ -11,11 +11,11 @@ import './LoginPage.css';
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useUser();
-  const GOOGLE_CLIENT_ID = '497036889492-inreil77morni6uqbdtmesjurnj4kefs.apps.googleusercontent.com';
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   const handleCredentialResponse = useCallback(async (response) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/google', {
+      const res = await axios.post('/api/auth/google', {
         token: response.credential,
       });
 
@@ -134,7 +134,7 @@ function LoginPage() {
   return (
     <div className="login-page">
       <div className="image-container">
-        <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDHLabor Social" />
+        <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDH Labor Social" />
       </div>
       <div className="form-container">
         <div className="login-card">

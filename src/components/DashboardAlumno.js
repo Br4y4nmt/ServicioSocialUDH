@@ -116,7 +116,7 @@ const obtenerIntegrantesDelGrupo = async () => {
   if (!usuario_id || !token) return;
 
   try {
-    const response = await axios.get(`http://localhost:5000/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`, {
+    const response = await axios.get(`/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -160,7 +160,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchLineas = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/lineas', {
+      const res = await axios.get('/api/lineas', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setLineas(res.data);
@@ -208,7 +208,7 @@ const handleSolicitarRevision = async () => {
 
   try {
     // Paso 1: Guardar cronograma en la BD
-    await axios.post(`http://localhost:5000/api/cronograma/${usuario_id}`, {
+    await axios.post(`/api/cronograma/${usuario_id}`, {
       actividades
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -219,7 +219,7 @@ const handleSolicitarRevision = async () => {
     formData.append('archivo_plan_social', proyectoFile);
     formData.append('usuario_id', usuario_id);
 
-    await axios.post('http://localhost:5000/api/trabajo-social/subir-plan-social', formData, {
+    await axios.post('/api/trabajo-social/subir-plan-social', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`
@@ -281,7 +281,7 @@ const handleEvidencia = (actividadId, index) => {
 useEffect(() => {
   const fetchFacultades = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/facultades', {
+      const res = await axios.get('/api/facultades', {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setFacultades(res.data);
@@ -312,7 +312,7 @@ useEffect(() => {
 
   const verificarPrimeraVez = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/usuarios/${usuario_id}/primera-vez`, {
+      const res = await axios.get(`/api/usuarios/${usuario_id}/primera-vez`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -357,7 +357,7 @@ useEffect(() => {
     if (!usuario_id || !token) return;
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/estudiantes/datos/usuario/${usuario_id}`, {
+      const res = await axios.get(`/api/estudiantes/datos/usuario/${usuario_id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const estudiante = res.data;
@@ -368,7 +368,7 @@ useEffect(() => {
       setNombreCompleto(estudiante.nombre_estudiante);
       setCodigoUniversitario(estudiante.codigo);
 
-      const resProg = await axios.get(`http://localhost:5000/api/programas/facultad/${estudiante.facultad_id}`, {
+      const resProg = await axios.get(`/api/programas/facultad/${estudiante.facultad_id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProgramas(resProg.data);
@@ -392,7 +392,7 @@ useEffect(() => {
     if (!token) return;
 
     try {
-      const res = await axios.get('http://localhost:5000/api/programas', {
+      const res = await axios.get('/api/programas', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProgramas(res.data);
@@ -422,7 +422,7 @@ useEffect(() => {
   if (!usuario_id || !token) return;
 
   try {
-    const res = await axios.get(`http://localhost:5000/api/trabajo-social/usuario/${usuario_id}`, {
+    const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -472,7 +472,7 @@ useEffect(() => {
     if (!usuario_id || !token) return;
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/trabajo-social/usuario/${usuario_id}`, {
+      const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -496,7 +496,7 @@ useEffect(() => {
   if (programaSeleccionado && token) {
     const fetchDocentes = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/docentes/programa/${programaSeleccionado}`, {
+        const res = await axios.get(`/api/docentes/programa/${programaSeleccionado}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setDocentes(res.data);
@@ -556,7 +556,7 @@ useEffect(() => {
   if (lineaSeleccionada && token) {
     const fetchLaboresPorLinea = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/labores/linea/${lineaSeleccionada}`, {
+        const res = await axios.get(`/api/labores/linea/${lineaSeleccionada}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setLabores(res.data);
@@ -601,7 +601,7 @@ const handleSolicitarAprobacion = async () => {
     };
 
     // 1. Guardar la solicitud principal
-    const response = await axios.post('http://localhost:5000/api/trabajo-social', datos, {
+    const response = await axios.post('/api/trabajo-social', datos, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
@@ -615,7 +615,7 @@ const handleSolicitarAprobacion = async () => {
         return;
       }
 
-      await axios.post('http://localhost:5000/api/integrantes', {
+      await axios.post('/api/integrantes', {
         trabajo_social_id: trabajoSocialId,
         correos: correosGrupo.filter(c => c.trim() !== '')
       }, {
@@ -682,7 +682,7 @@ useEffect(() => {
 
   const obtenerActividades = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/cronograma/${usuario_id}`, {
+      const res = await axios.get(`/api/cronograma/${usuario_id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       if (Array.isArray(res.data)) {
@@ -1101,7 +1101,7 @@ const solicitarCartaTermino = async () => {
 
   try {
     // Obtener trabajo social del alumno
-    const { data } = await axios.get(`http://localhost:5000/api/trabajo-social/usuario/${usuario_id}`, {
+    const { data } = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -1111,7 +1111,7 @@ const solicitarCartaTermino = async () => {
     }
 
     // Solicitar carta de término
-    await axios.patch(`http://localhost:5000/api/trabajo-social/${trabajoId}/solicitar-carta-termino`, {}, {
+    await axios.patch(`/api/trabajo-social/${trabajoId}/solicitar-carta-termino`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -1144,7 +1144,7 @@ useEffect(() => {
 
   const fetchPlan = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/trabajo-social/usuario/${usuarioId}`, {
+      const res = await axios.get(`/api/trabajo-social/usuario/${usuarioId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPlanSeleccionado(res.data);

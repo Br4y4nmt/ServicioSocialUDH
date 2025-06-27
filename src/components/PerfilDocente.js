@@ -39,7 +39,7 @@ useEffect(() => {
   const fetchPerfilDocente = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/api/docentes/perfil',
+        '/api/docentes/perfil',
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -109,9 +109,9 @@ useEffect(() => {
     formData.append('programa_academico_id', programaAcademico);
     formData.append('celular', celular);
     formData.append('id_usuario', id_usuario);
-    formData.append('firma_digital', firma); // ✅ Correcto
+    formData.append('firma_digital', firma); 
 
-     await axios.put('http://localhost:5000/api/docentes', formData, {
+     await axios.put('/api/docentes', formData, {
   headers: {
     'Content-Type': 'multipart/form-data',
     Authorization: `Bearer ${token}`

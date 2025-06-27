@@ -48,7 +48,7 @@ function MiPerfil() {
 
       // 2. API interna (correo y celular)
     const resInterno = await axios.get(
-          `http://localhost:5000/api/estudiantes/datos/usuario/${usuario_id}`,
+          `/api/estudiantes/datos/usuario/${usuario_id}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -94,7 +94,7 @@ const handleGuardar = async () => {
   try {
     const usuario_id = localStorage.getItem('id_usuario');
     await axios.put(
-      `http://localhost:5000/api/estudiantes/actualizar-celular/${usuario_id}`,
+      `/api/estudiantes/actualizar-celular/${usuario_id}`,
       { celular: perfil.celular },
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -126,7 +126,7 @@ const handleGuardar = async () => {
     const fetchProgramas = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/programas/facultad/${perfil.facultad}`,
+          `/api/programas/facultad/${perfil.facultad}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }

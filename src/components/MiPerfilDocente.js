@@ -4,8 +4,8 @@ import SidebarDocente from '../components/SidebarDocente';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './DashboardAlumno.css';
-//import { useNavigate } from 'react-router-dom';
-//import { useUser } from '../UserContext';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext';
 
 
 function MiPerfilDocente() {
@@ -37,7 +37,7 @@ function MiPerfilDocente() {
    const fetchPerfil = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/docentes/datos/usuario/${usuario_id}`,
+          `/api/docentes/datos/usuario/${usuario_id}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -62,7 +62,7 @@ function MiPerfilDocente() {
 
    const fetchFacultades = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/facultades', {
+        const res = await axios.get('/api/facultades', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setFacultades(res.data);
@@ -81,7 +81,7 @@ function MiPerfilDocente() {
     const fetchProgramas = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/programas/facultad/${perfil.facultad_id}`,
+          `/api/programas/facultad/${perfil.facultad_id}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -113,7 +113,7 @@ function MiPerfilDocente() {
   try {
     const usuario_id = localStorage.getItem('id_usuario');
     await axios.put(
-      `http://localhost:5000/api/docentes/actualizar-celular/${usuario_id}`,
+      `/api/docentes/actualizar-celular/${usuario_id}`,
       { celular: perfil.celular },
       {
         headers: { Authorization: `Bearer ${token}` }

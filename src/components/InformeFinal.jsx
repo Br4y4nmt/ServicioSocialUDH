@@ -370,7 +370,7 @@ if (!recomendacionesInforme.trim()) {
     formData.append('trabajo_id', planSeleccionado.id);
 
     try {
-      await axios.post('http://localhost:5000/api/trabajo-social/guardar-informe-final', formData, {
+      await axios.post('/api/trabajo-social/guardar-informe-final', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -572,7 +572,7 @@ if (!recomendacionesInforme.trim()) {
           {item.evidencia ? (
             <button
               onClick={() => {
-                setImagenModal(`http://localhost:5000/uploads/evidencias/${item.evidencia}`);
+                setImagenModal(`/uploads/evidencias/${item.evidencia}`);
                 setModalVisible(true);
               }}
               className="btn-ver-evidencia"
@@ -1023,7 +1023,7 @@ if (!recomendacionesInforme.trim()) {
     className="btn-ver-documento-inline"
     onClick={() =>
       window.open(
-        `http://localhost:5000/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
+        `/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
         '_blank'
       )
     }

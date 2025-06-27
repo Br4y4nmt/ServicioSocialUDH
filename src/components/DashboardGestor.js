@@ -71,14 +71,14 @@ function DashboardGestor() {
       formData.append('archivo', blob, `certificado_final_${id}.pdf`);
       formData.append('trabajo_id', id);
   
-      await axios.post('http://localhost:5000/api/trabajo-social/guardar-certificado-final', formData, {
+      await axios.post('/api/trabajo-social/guardar-certificado-final', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
         },
       });
   
-      await axios.patch(`http://localhost:5000/api/trabajo-social/estado/${id}`, {
+      await axios.patch(`/api/trabajo-social/estado/${id}`, {
         nuevo_estado: 'aprobado',
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -104,7 +104,7 @@ function DashboardGestor() {
   };
 const fetchInformesFinales = async () => {
   try {
-    const res = await axios.get('http://localhost:5000/api/trabajo-social/informes-finales', {
+    const res = await axios.get('/api/trabajo-social/informes-finales', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setInformesFinales(res.data);
@@ -115,7 +115,7 @@ const fetchInformesFinales = async () => {
 
   const fetchLineas = async () => {
   try {
-    const res = await axios.get('http://localhost:5000/api/lineas', {
+    const res = await axios.get('/api/lineas', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setLineas(res.data);
@@ -127,7 +127,7 @@ const fetchInformesFinales = async () => {
 const crearLinea = async () => {
   if (!nuevaLinea.trim()) return;
   try {
-    await axios.post('http://localhost:5000/api/lineas', {
+    await axios.post('/api/lineas', {
       nombre_linea: nuevaLinea
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -141,7 +141,7 @@ const crearLinea = async () => {
 
 const guardarEdicionLinea = async (id) => {
   try {
-    await axios.put(`http://localhost:5000/api/lineas/${id}`, {
+    await axios.put(`/api/lineas/${id}`, {
       nombre_linea: nombreLineaEditado
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -156,7 +156,7 @@ const guardarEdicionLinea = async (id) => {
 
 const eliminarLinea = async (id) => {
   try {
-   await axios.delete(`http://localhost:5000/api/lineas/${id}`, {
+   await axios.delete(`/api/lineas/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     fetchLineas();
@@ -167,7 +167,7 @@ const eliminarLinea = async (id) => {
 
   const fetchProgramas = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/programas', {
+      const res = await axios.get('/api/programas', {
       headers: { Authorization: `Bearer ${token}` }
     });
       setProgramas(res.data);
@@ -182,7 +182,7 @@ const eliminarLinea = async (id) => {
 const crearPrograma = async () => {
   if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) return;
   try {
-    await axios.post('http://localhost:5000/api/programas', {
+    await axios.post('/api/programas', {
       nombre_programa: nuevoPrograma,
       id_facultad: facultadPrograma,
       email: emailPrograma,
@@ -228,7 +228,7 @@ const crearPrograma = async () => {
   
   const guardarEdicionFacultad = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/facultades/${id}`, {
+      await axios.put(`/api/facultades/${id}`, {
       nombre_facultad: nombreEditado,
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -243,7 +243,7 @@ const crearPrograma = async () => {
   
   const eliminarPrograma = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/programas/${id}`, {
+      await axios.delete(`/api/programas/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
       fetchProgramas();
@@ -260,7 +260,7 @@ const crearPrograma = async () => {
 
   const fetchDocentes = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/docentes', {
+      const res = await axios.get('/api/docentes', {
       headers: { Authorization: `Bearer ${token}` }
     });
       setDocentes(res.data);
@@ -282,7 +282,7 @@ const crearPrograma = async () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register-docente', {
+      await axios.post('/api/auth/register-docente', {
         email: nuevoDocenteEmail,
         dni: nuevoDocenteDni,
         whatsapp: nuevoDocenteWhatsapp,
@@ -317,7 +317,7 @@ const crearPrograma = async () => {
     if (!programaEditado.trim() || !facultadEditada) return;
   
     try {
-       await axios.put(`http://localhost:5000/api/programas/${idEditandoPrograma}`, {
+       await axios.put(`/api/programas/${idEditandoPrograma}`, {
       nombre_programa: programaEditado,
       id_facultad: facultadEditada,
         }, {
@@ -341,7 +341,7 @@ const crearPrograma = async () => {
   
   const eliminarDocente = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/docentes/${id}`, {
+      await axios.delete(`/api/docentes/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
       fetchDocentes();
@@ -353,7 +353,7 @@ const crearPrograma = async () => {
 
   const guardarEdicionDocente = async (id) => {
     try {
-       await axios.put(`http://localhost:5000/api/docentes/${id}`, {
+       await axios.put(`/api/docentes/${id}`, {
       nombre_docente: nombreDocenteEditado,
       programa_academico_id: programaDocenteEditado,
       facultad_id: facultadDocenteEditada,
@@ -370,7 +370,7 @@ const crearPrograma = async () => {
   // ====================== FUNCIONES LABORES SOCIALES ======================
   const fetchLabores = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/labores', {
+      const res = await axios.get('/api/labores', {
       headers: { Authorization: `Bearer ${token}` }
     });
       setLabores(res.data);
@@ -382,7 +382,7 @@ const crearPrograma = async () => {
   const crearLabor = async () => {
     if (!nuevaLabor.trim() || !lineaLabor) return;
     try {
-      await axios.post('http://localhost:5000/api/labores', {
+      await axios.post('/api/labores', {
       nombre_labores: nuevaLabor,
       linea_id: lineaLabor
     }, {
@@ -397,7 +397,7 @@ const crearPrograma = async () => {
 
   const eliminarLabor = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/labores/${id}`, {
+      await axios.delete(`/api/labores/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
       fetchLabores();
@@ -409,7 +409,7 @@ const crearPrograma = async () => {
 
   const guardarEdicionLabor = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/labores/${id}`, {
+      await axios.put(`/api/labores/${id}`, {
       nombre_labores: nombreLaborEditado,
       linea_id: lineaLabor
       }, {
@@ -425,7 +425,7 @@ const crearPrograma = async () => {
   // ====================== FUNCIONES FACULTADES ======================
   const fetchFacultades = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/facultades', {
+      const res = await axios.get('/api/facultades', {
       headers: { Authorization: `Bearer ${token}` }
     });
       setFacultades(res.data);
@@ -437,7 +437,7 @@ const crearPrograma = async () => {
   const crearFacultad = async () => {
     if (!nuevaFacultad.trim()) return;
     try {
-       await axios.post('http://localhost:5000/api/facultades', {
+       await axios.post('/api/facultades', {
       nombre_facultad: nuevaFacultad,
         }, {
           headers: { Authorization: `Bearer ${token}` }
@@ -451,7 +451,7 @@ const crearPrograma = async () => {
 
   const eliminarFacultad = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/facultades/${id}`, {
+      await axios.delete(`/api/facultades/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
       fetchFacultades();
@@ -461,7 +461,7 @@ const crearPrograma = async () => {
   };
 const rechazarInforme = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/trabajo-social/estado/${id}`, {
+      await axios.patch(`/api/trabajo-social/estado/${id}`, {
         nuevo_estado: 'rechazado',
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -935,7 +935,7 @@ const rechazarInforme = async (id) => {
                   <td>
                     {inf.informe_final_pdf ? (
                       <a
-                        href={`http://localhost:5000/uploads/informes_finales/${inf.informe_final_pdf}`}
+                        href={`/uploads/informes_finales/${inf.informe_final_pdf}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-ver-pdf"
@@ -959,7 +959,7 @@ const rechazarInforme = async (id) => {
                   <td>
                     {inf.certificado_final ? (
                       <a
-                        href={`http://localhost:5000/uploads/certificados_finales/${inf.certificado_final}`}
+                        href={`/uploads/certificados_finales/${inf.certificado_final}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-ver-pdf"

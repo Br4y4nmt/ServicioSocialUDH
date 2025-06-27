@@ -72,7 +72,6 @@ function App() {
           <DashboardAlumno />
         </ProtectedRoute>
       } />
-     
         <Route path="/documentos-trabajo/:id" element={<DocumentosTrabajo />} />
         <Route path="/dashboard-gestor" element={
           <ProtectedRoute allowedRoles={['gestor-udh']}>

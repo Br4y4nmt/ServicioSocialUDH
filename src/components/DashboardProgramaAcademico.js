@@ -43,7 +43,7 @@ const eliminarDocente = (id_docente) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/docentes/${id_docente}`, {
+        await axios.delete(`/api/docentes/${id_docente}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         fetchDocentes(); 
@@ -67,7 +67,7 @@ const eliminarDocente = (id_docente) => {
     const fetchDocentes = async () => {
     try {
       const id_usuario = localStorage.getItem('id_usuario');
-      const res = await axios.get(`http://localhost:5000/api/docentes/por-programa/${id_usuario}`, {
+      const res = await axios.get(`/api/docentes/por-programa/${id_usuario}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDocentes(res.data);
@@ -78,7 +78,7 @@ const eliminarDocente = (id_docente) => {
   
    const guardarEdicionDocente = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/docentes/${editandoDocenteId}`, {
+      await axios.put(`/api/docentes/${editandoDocenteId}`, {
         nombre_docente: nombreDocenteEditado
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -103,7 +103,7 @@ const eliminarDocente = (id_docente) => {
 }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register-docente-nuevo', {
+      await axios.post('/api/auth/register-docente-nuevo', {
         email: nuevoDocenteEmail,
         dni: nuevoDocenteDni,
         whatsapp: nuevoDocenteWhatsapp,
@@ -142,7 +142,7 @@ const eliminarDocente = (id_docente) => {
 const fetchInformesFinales = async () => {
     try {
       const programaId = localStorage.getItem('programa_academico_id');
-      const res = await axios.get(`http://localhost:5000/api/trabajo-social/informes-finales/programa/${programaId}`, {
+      const res = await axios.get(`/api/trabajo-social/informes-finales/programa/${programaId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setInformesFinales(res.data);
@@ -163,14 +163,14 @@ const aceptarInforme = async (id) => {
     formData.append('archivo', blob, `certificado_final_${id}.pdf`);
     formData.append('trabajo_id', id);
 
-    await axios.post('http://localhost:5000/api/trabajo-social/guardar-certificado-final', formData, {
+    await axios.post('/api/trabajo-social/guardar-certificado-final', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`
       },
     });
 
-    await axios.patch(`http://localhost:5000/api/trabajo-social/estado/${id}`, {
+    await axios.patch(`/api/trabajo-social/estado/${id}`, {
       nuevo_estado: 'aprobado',
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -197,7 +197,7 @@ const aceptarInforme = async (id) => {
 
 const rechazarInforme = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/trabajo-social/estado/${id}`, {
+      await axios.patch(`/api/trabajo-social/estado/${id}`, {
         nuevo_estado: 'rechazado',
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -346,7 +346,7 @@ const rechazarInforme = async (id) => {
       <td>
   {inf.informe_final_pdf ? (
     <a
-  href={`http://localhost:5000/uploads/informes_finales/${inf.informe_final_pdf}`}
+  href={`/uploads/informes_finales/${inf.informe_final_pdf}`}
   target="_blank"
   rel="noopener noreferrer"
   className="btn-ver-pdf"
@@ -370,7 +370,7 @@ const rechazarInforme = async (id) => {
 <td>
   {inf.certificado_final ? (
     <a
-      href={`http://localhost:5000/uploads/certificados_finales/${inf.certificado_final}`}
+      href={`/uploads/certificados_finales/${inf.certificado_final}`}
       target="_blank"
       rel="noopener noreferrer"
       className="btn-ver-pdf"

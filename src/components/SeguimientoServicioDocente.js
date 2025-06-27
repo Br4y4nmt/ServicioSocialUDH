@@ -32,7 +32,7 @@ function SeguimientoServicioDocente() {
 
   const handleVerGrupo = async (trabajoId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/integrantes/${trabajoId}`, {
+      const response = await axios.get(`/api/integrantes/${trabajoId}`, {
         headers: { Authorization: `Bearer ${token}` }  // Usamos el token del contexto
       });
       setIntegrantesGrupo(response.data);
@@ -119,7 +119,7 @@ const toggleSidebar = () => {
 };
 const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
   try {
-    await axios.patch(`http://localhost:5000/api/trabajo-social/${trabajoId}/respuesta-carta-termino`, {
+    await axios.patch(`/api/trabajo-social/${trabajoId}/respuesta-carta-termino`, {
       solicitud_termino: nuevoEstado
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -139,7 +139,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
   if (plan.tipo_servicio_social === 'grupal') {
     await generarYSubirCartaTermino(plan, firmaDocente);
 
-    const { data: integrantes } = await axios.get(`http://localhost:5000/api/integrantes/${plan.id}`);
+    const { data: integrantes } = await axios.get(`/api/integrantes/${plan.id}`);
 
     for (const integrante of integrantes) {
       if (integrante.usuario_id === plan.usuario_id) continue;
@@ -167,7 +167,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
         formData.append('trabajo_id', plan.id);
         formData.append('codigo_universitario', codigo);
 
-        await axios.post('http://localhost:5000/api/cartas-termino', formData);
+        await axios.post('/api/cartas-termino', formData);
       } catch (error) {
         console.error(`❌ Error al procesar integrante ${codigo}:`, error);
       }
@@ -191,15 +191,15 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
   useEffect(() => {
     const usuarioId = localStorage.getItem('id_usuario');
 
-    axios.get(`http://localhost:5000/api/docentes/usuario/${usuarioId}`, {
+    axios.get(`/api/docentes/usuario/${usuarioId}`, {
     headers: { Authorization: `Bearer ${token}` }
     })
     .then(async response => {
       const docenteId = response.data.id_docente;
-      const firmaBase64 = await convertirImagenABase64(`http://localhost:5000/uploads/firmas/${response.data.firma}`);
+      const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${response.data.firma}`);
       setFirmaDocente(firmaBase64);
 
-      axios.get(`http://localhost:5000/api/trabajo-social/docente/${docenteId}`, {
+      axios.get(`/api/trabajo-social/docente/${docenteId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => setTrabajosSociales(res.data))
@@ -210,7 +210,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
 
 
 const handleVerSeguimiento = (trabajoId) => {
-  axios.get(`http://localhost:5000/api/cronograma/trabajo/${trabajoId}`, {
+  axios.get(`/api/cronograma/trabajo/${trabajoId}`, {
     headers: { Authorization: `Bearer ${token}` } // Incluimos el encabezado con el token
   })
     .then(res => {
@@ -222,7 +222,7 @@ const handleVerSeguimiento = (trabajoId) => {
 
 
 const handleVerEvidencia = (nombreArchivo) => {
-  setImagenEvidencia(`http://localhost:5000/uploads/evidencias/${nombreArchivo}`);
+  setImagenEvidencia(`/uploads/evidencias/${nombreArchivo}`);
   setModalEvidenciaVisible(true);
 };
 
@@ -246,7 +246,7 @@ const handleAprobar = (actividadId) => {
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.isConfirmed) {
-     axios.patch(`http://localhost:5000/api/cronograma/${actividadId}/estado`, { estado: 'aprobado' }, {
+     axios.patch(`/api/cronograma/${actividadId}/estado`, { estado: 'aprobado' }, {
   headers: { Authorization: `Bearer ${token}` }
 })
         .then(() => {
@@ -270,7 +270,7 @@ const handleAbrirObservacion = (actividadId) => {
 };
 
 const handleEnviarObservacion = () => {
- axios.patch(`http://localhost:5000/api/cronograma/${actividadSeleccionadaId}/observacion`, {
+ axios.patch(`/api/cronograma/${actividadSeleccionadaId}/observacion`, {
   observacion
 }, {
   headers: { Authorization: `Bearer ${token}` }
@@ -383,7 +383,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   formData.append('archivo', blob, `Carta_Termino_${plan.Estudiante?.nombre_estudiante || 'estudiante'}.pdf`);
   formData.append('trabajo_id', plan.id);
 
- await axios.post('http://localhost:5000/api/trabajo-social/guardar-carta-termino-html', formData, {
+ await axios.post('/api/trabajo-social/guardar-carta-termino-html', formData, {
   headers: { Authorization: `Bearer ${token}` }
 });
 };

@@ -56,7 +56,7 @@ useEffect(() => {
   }
 
   // Verificar si es la primera vez que ingresa el docente
-  axios.get(`http://localhost:5000/api/usuarios/${usuarioId}/primera-vez`, {
+  axios.get(`/api/usuarios/${usuarioId}/primera-vez`, {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => {
@@ -75,7 +75,7 @@ useEffect(() => {
         });
       } else {
         // Si no es primera vez, obtener la firma del docente
-        axios.get(`http://localhost:5000/api/docentes/usuario/${usuarioId}`, {
+        axios.get(`/api/docentes/usuario/${usuarioId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
@@ -110,7 +110,7 @@ const generarYSubirPDF = async (trabajo) => {
       }
 
       const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
-      const firmaBase64 = await convertirImagenABase64(`http://localhost:5000/uploads/firmas/${firmaDocente}`);
+      const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${firmaDocente}`);
 
     const contenido = `
       <html>
@@ -170,7 +170,7 @@ const generarYSubirPDF = async (trabajo) => {
       formData.append('archivo', blob, `carta_aceptacion_${trabajo.id}.pdf`);
       formData.append('trabajo_id', trabajo.id);
 
-      const response = await axios.post('http://localhost:5000/api/trabajo-social/guardar-pdf-html', formData, {
+      const response = await axios.post('/api/trabajo-social/guardar-pdf-html', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -194,7 +194,7 @@ const generarYSubirPDF = async (trabajo) => {
   const usuario_id = localStorage.getItem('id_usuario');
 if (!usuario_id) return;
 
- axios.get(`http://localhost:5000/api/usuarios/${usuario_id}/primera-vez`)
+ axios.get(`/api/usuarios/${usuario_id}/primera-vez`)
     .then(res => {
       if (res.data.primera_vez) {
         Swal.fire({
@@ -232,7 +232,7 @@ useEffect(() => {
   }
 
   // Verificar si es la primera vez del docente
-  axios.get(`http://localhost:5000/api/usuarios/${usuarioId}/primera-vez`, {
+  axios.get(`/api/usuarios/${usuarioId}/primera-vez`, {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => {
@@ -253,14 +253,14 @@ useEffect(() => {
       }
 
       // Si no es la primera vez, continuar con la lógica
-      axios.get(`http://localhost:5000/api/docentes/usuario/${usuarioId}`, {
+      axios.get(`/api/docentes/usuario/${usuarioId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
           const docenteId = response.data.id_docente;
           setFirmaDocente(response.data.firma); // <-- si estás usando la firma
 
-          axios.get(`http://localhost:5000/api/trabajo-social/docente/${docenteId}`, {
+          axios.get(`/api/trabajo-social/docente/${docenteId}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
             .then(res => {
@@ -302,7 +302,7 @@ useEffect(() => {
   };
 const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
-  const firmaBase64 = await convertirImagenABase64(`http://localhost:5000/uploads/firmas/${firmaDocente}`);
+  const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${firmaDocente}`);
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
 
   const contenido = `
@@ -381,7 +381,7 @@ const handleSave = async () => {
   try {
     // 1. Actualizar el estado del trabajo
      await axios.put(
-      `http://localhost:5000/api/trabajo-social/${selectedTrabajo.id}`,
+      `/api/trabajo-social/${selectedTrabajo.id}`,
       {
         estado_plan_labor_social: nuevoEstado,
       },
@@ -397,7 +397,7 @@ const handleSave = async () => {
         await generarYSubirPDF(selectedTrabajo); // 👉 se guarda en la tabla principal
 
         // 2.2 Obtener integrantes del grupo
-        const res = await axios.get(`http://localhost:5000/api/integrantes/${selectedTrabajo.id}`);
+        const res = await axios.get(`/api/integrantes/${selectedTrabajo.id}`);
         const integrantes = res.data;
 
         // 2.3 Procesar cada integrante (excluyendo al principal)
@@ -435,7 +435,7 @@ const handleSave = async () => {
             formData.append('trabajo_id', selectedTrabajo.id);
             formData.append('codigo_universitario', codigo);
 
-            await axios.post('http://localhost:5000/api/cartas-aceptacion', formData, {
+            await axios.post('/api/cartas-aceptacion', formData, {
               headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -490,7 +490,7 @@ const handleSave = async () => {
 const handleVerGrupo = async (trabajoId) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/integrantes/${trabajoId}`,
+      `/api/integrantes/${trabajoId}`,
       {
         headers: { Authorization: `Bearer ${token}` }
       }
@@ -523,7 +523,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   }
   try {
     // 1. Actualizar estado en la base de datos
-   await axios.put(`http://localhost:5000/api/trabajo-social/${trabajo.id}`, {
+   await axios.put(`/api/trabajo-social/${trabajo.id}`, {
     estado_plan_labor_social: nuevoEstado
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -534,7 +534,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       if (trabajo.tipo_servicio_social === 'grupal') {
         await generarYSubirPDF(trabajo);
 
-       const res = await axios.get(`http://localhost:5000/api/integrantes/${trabajo.id}`, {
+       const res = await axios.get(`/api/integrantes/${trabajo.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
         const integrantes = res.data;
@@ -571,7 +571,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
             formData.append('trabajo_id', trabajo.id);
             formData.append('codigo_universitario', codigo);
 
-            await axios.post('http://localhost:5000/api/cartas-aceptacion', formData, {
+            await axios.post('/api/cartas-aceptacion', formData, {
               headers: { 'Content-Type': 'multipart/form-data' }
             });
           } catch (err) {
@@ -721,7 +721,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   {trabajo.estado_plan_labor_social === 'aceptado' ? (
     <button
       className="btn-ver-documento"
-      onClick={() => window.open(`http://localhost:5000/api/trabajo-social/documentos-trabajo/${trabajo.id}`, '_blank')}
+      onClick={() => window.open(`/api/trabajo-social/documentos-trabajo/${trabajo.id}`, '_blank')}
     >
       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="18" height="18" viewBox="0 0 24 24">
         <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 
@@ -811,7 +811,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
             }
 
             try {
-              await axios.post(`http://localhost:5000/api/trabajo-social/declinar`, {
+              await axios.post(`/api/trabajo-social/declinar`, {
                 trabajo_id: selectedTrabajo.id,
                 observacion: observacionDeclinar
               }, {

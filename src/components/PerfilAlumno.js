@@ -51,7 +51,7 @@ const removerAcentos = (texto) => {
     // Cargar facultades al inicio
     const fetchFacultades = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/facultades', {
+        const res = await axios.get('/api/facultades', {
         headers: { Authorization: `Bearer ${token}` }
 
       });
@@ -72,7 +72,7 @@ const removerAcentos = (texto) => {
       }
       try {
         const res = await axios.get(
-        `http://localhost:5000/api/programas/facultad/${perfil.facultad}`,
+        `/api/programas/facultad/${perfil.facultad}`,
         {
           headers: { Authorization: `Bearer ${token}` }
 
@@ -135,7 +135,7 @@ const handleGuardar = async () => {
       codigo,
     };
 
-    await axios.post('http://localhost:5000/api/estudiantes', body, {
+    await axios.post('/api/estudiantes', body, {
     headers: { Authorization: `Bearer ${token}` }
 
   });
@@ -184,7 +184,7 @@ useEffect(() => {
       if (idFacultad) {
         // Buscar programas solo si se encontró la facultad
         const resProgramas = await axios.get(
-          `http://localhost:5000/api/programas/facultad/${idFacultad}`,
+          `/api/programas/facultad/${idFacultad}`,
           {
             headers: { Authorization: `Bearer ${token}` }
 
@@ -235,7 +235,7 @@ useEffect(() => {
 
     try {
      const res = await axios.get(
-        `http://localhost:5000/api/programas/facultad/${perfil.facultad}`,
+        `/api/programas/facultad/${perfil.facultad}`,
         {
           headers: { Authorization: `Bearer ${token}` }
 

@@ -20,9 +20,8 @@ function RegisterPage() {
 
  const handleRegister = async (e) => {
   e.preventDefault();
-  //setError('');
-  //setSuccess('');
 
+  // Validación del número de WhatsApp
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({
       icon: 'error',
@@ -34,37 +33,15 @@ function RegisterPage() {
   }
 
   try {
-    // ✅ Verificar ciclo con API UDH
-    const resUDH = await axios.get(`http://www.udh.edu.pe/websauh/secretaria_general/gradosytitulos/datos_estudiante_json.aspx?_c_3456=${codigo}`);
-    const data = resUDH.data[0];
-
-    if (!data) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Código inválido',
-        text: 'No se encontró ningún estudiante con ese código.',
-        confirmButtonColor: '#d33',
-      });
-      return;
-    }
-
-    if (data.stu_ciclo < 7) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Registro denegado',
-        text: 'Solo pueden registrarse estudiantes del ciclo 7 o superior.',
-        confirmButtonColor: '#d33',
-      });
-      return;
-    }
-
-    // ✅ Si pasa el filtro, proceder con el registro
-    await axios.post('http://localhost:5000/api/auth/register', {
-      email: emailFinal,
+    // Enviar los datos al back-end para registrar al usuario
+    const res = await axios.post('/api/auth/register', {
+      email: emailFinal,  // Generamos el correo como `${codigo}@udh.edu.pe`
       dni,
       whatsapp,
+      codigo,  // El código institucional que se pasa al back-end
     });
 
+    // Mostrar mensaje de éxito y redirigir al inicio de sesión
     Swal.fire({
       icon: 'success',
       title: '¡Registro Exitoso!',
@@ -74,12 +51,13 @@ function RegisterPage() {
       showConfirmButton: false,
     });
 
-    //setSuccess('Registro exitoso. Redirigiendo al inicio de sesión...');
+    // Redirigir al usuario al login después de 2 segundos
     setTimeout(() => navigate('/login'), 2000);
 
   } catch (error) {
     console.error('Error en el registro:', error.response ? error.response.data : error.message);
 
+    // Mostrar mensaje de error si algo salió mal
     Swal.fire({
       icon: 'error',
       title: 'Error en el registro',
