@@ -34,7 +34,7 @@ const verCartasMiembros = async (trabajoId) => {
 
     try {
       const response = await fetch(
-        `/api/cartas-termino/grupo/${trabajoId}`,
+        `${process.env.REACT_APP_API_URL}/api/cartas-termino/grupo/${trabajoId}`,
         {
           headers: { Authorization: `Bearer ${token}` }  
         }
@@ -147,7 +147,7 @@ const verCartasMiembros = async (trabajoId) => {
                                             </span>
                                             <button
                                                 onClick={() => {
-                                                    setImagenModal(`/uploads/evidencias/${item.evidencia}`);
+                                                    setImagenModal(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${item.evidencia}`);
                                                     setModalVisible(true);
                                                 }}
                                                 className="btn-ver-evidencia"
@@ -372,7 +372,7 @@ const verCartasMiembros = async (trabajoId) => {
                                 <button
                                     onClick={() => {
                                         window.open(
-                                            `/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
+                                            `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
                                             '_blank'
                                         );
                                     }}
@@ -478,7 +478,7 @@ const verCartasMiembros = async (trabajoId) => {
           className="btn-ver-documento-inline"
           onClick={() => {
                                         window.open(
-                                            `/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
+                                            `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
                                             '_blank'
                                         );
                                     }}
@@ -527,7 +527,7 @@ const verCartasMiembros = async (trabajoId) => {
           <button
             className="btn-ver-documento-inline"
             onClick={() =>
-          window.open(`/uploads/cartas_termino_integrantes/${carta.nombre_archivo_pdf}`, '_blank')
+          window.open(`${process.env.REACT_APP_API_URL}/uploads/cartas_termino_integrantes/${carta.nombre_archivo_pdf}`, '_blank')
         }
       >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">

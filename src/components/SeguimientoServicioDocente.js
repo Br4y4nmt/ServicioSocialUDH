@@ -196,7 +196,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
     })
     .then(async response => {
       const docenteId = response.data.id_docente;
-      const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${response.data.firma}`);
+      const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${response.data.firma}`);
       setFirmaDocente(firmaBase64);
 
       axios.get(`/api/trabajo-social/docente/${docenteId}`, {
@@ -222,7 +222,7 @@ const handleVerSeguimiento = (trabajoId) => {
 
 
 const handleVerEvidencia = (nombreArchivo) => {
-  setImagenEvidencia(`/uploads/evidencias/${nombreArchivo}`);
+  setImagenEvidencia(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${nombreArchivo}`);
   setModalEvidenciaVisible(true);
 };
 

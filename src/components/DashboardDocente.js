@@ -110,7 +110,7 @@ const generarYSubirPDF = async (trabajo) => {
       }
 
       const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
-      const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${firmaDocente}`);
+      const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
 
     const contenido = `
       <html>
@@ -721,7 +721,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   {trabajo.estado_plan_labor_social === 'aceptado' ? (
     <button
       className="btn-ver-documento"
-      onClick={() => window.open(`/api/trabajo-social/documentos-trabajo/${trabajo.id}`, '_blank')}
+      onClick={() => window.open(`${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`, '_blank')}
     >
       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="18" height="18" viewBox="0 0 24 24">
         <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 

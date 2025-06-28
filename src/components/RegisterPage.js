@@ -15,10 +15,7 @@ function RegisterPage() {
  
   const emailFinal = `${codigo}@udh.edu.pe`;
 
-
-
-
- const handleRegister = async (e) => {
+const handleRegister = async (e) => {
   e.preventDefault();
 
   // Validación del número de WhatsApp
@@ -35,7 +32,7 @@ function RegisterPage() {
   try {
     // Enviar los datos al back-end para registrar al usuario
     const res = await axios.post('/api/auth/register', {
-      email: emailFinal,  // Generamos el correo como `${codigo}@udh.edu.pe`
+      email: `${codigo}@udh.edu.pe`,  // Generamos el correo como `${codigo}@udh.edu.pe`
       dni,
       whatsapp,
       codigo,  // El código institucional que se pasa al back-end

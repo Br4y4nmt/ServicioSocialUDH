@@ -100,6 +100,18 @@ function MiPerfilDocente() {
   };
 
  const handleGuardar = async () => {
+  // Validar que tenga exactamente 9 dígitos
+  if (!/^\d{9}$/.test(perfil.celular)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Número inválido',
+      text: 'El número celular debe tener exactamente 9 dígitos.',
+      confirmButtonColor: '#3085d6'
+    });
+    return;
+  }
+
+  // Validar si no se han realizado cambios
   if (perfil.celular === celularOriginal) {
     Swal.fire({
       icon: 'info',
@@ -112,6 +124,7 @@ function MiPerfilDocente() {
 
   try {
     const usuario_id = localStorage.getItem('id_usuario');
+
     await axios.put(
       `/api/docentes/actualizar-celular/${usuario_id}`,
       { celular: perfil.celular },
@@ -119,6 +132,7 @@ function MiPerfilDocente() {
         headers: { Authorization: `Bearer ${token}` }
       }
     );
+
     setCelularOriginal(perfil.celular); // Actualiza el valor original
 
     Swal.fire({
@@ -137,6 +151,7 @@ function MiPerfilDocente() {
     });
   }
 };
+
 
 
   return (
@@ -168,10 +183,16 @@ function MiPerfilDocente() {
             <div className="form-group">
               <label className="bold-text">Número Celular</label>
               <input
-                className="input-disabled"
-                value={perfil.celular}
-                onChange={(e) => setPerfil((prev) => ({ ...prev, celular: e.target.value }))}
-              />
+                  className="input-disabled"
+                  value={perfil.celular}
+                  maxLength={9} // <- Límite visual en el input
+                  onChange={(e) => {
+                    const soloNumeros = e.target.value.replace(/\D/g, ''); // Elimina letras
+                    if (soloNumeros.length <= 9) {
+                      setPerfil((prev) => ({ ...prev, celular: soloNumeros }));
+                    }
+                  }}
+                />
             </div>
             <div className="form-group">
               <label className="bold-text">Facultad</label>

@@ -452,12 +452,17 @@ const rechazarInforme = async (id) => {
                     }
                   }}
                 />
-              <input
+             <input
                 type="text"
                 className="docentes-modal-input"
                 placeholder="WhatsApp del docente"
                 value={nuevoDocenteWhatsapp}
-                onChange={(e) => setNuevoDocenteWhatsapp(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,9}$/.test(value)) {
+                    setNuevoDocenteWhatsapp(value);
+                  }
+                }}
               />
               <div className="docentes-modal-actions">
                 <button
@@ -472,25 +477,35 @@ const rechazarInforme = async (id) => {
                   Cancelar
                 </button>
                  <button
-                  className="docentes-btn guardar"
-                  onClick={() => {
-                    // Validación de DNI
-                    if (nuevoDocenteDni.length < 8) {
-                      Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: 'El DNI debe tener al menos 8 dígitos.',
-                      });
-                      return;
-                    }
+              className="docentes-btn guardar"
+              onClick={() => {
+                // Validación de DNI
+                if (nuevoDocenteDni.length < 8) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'El DNI debe tener al menos 8 dígitos.',
+                  });
+                  return;
+                }
 
-                    // Si el DNI es válido, proceder con la creación del docente
-                    crearDocente();
-                    setModalDocenteVisible(false);
-                  }}
-                >
-                  Guardar
-                </button>
+                // ✅ Validación de número WhatsApp: exactamente 9 dígitos
+                if (!/^\d{9}$/.test(nuevoDocenteWhatsapp)) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: '¡Número inválido!',
+                    text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+                  });
+                  return;
+                }
+
+                // Si ambas validaciones pasan
+                crearDocente();
+                setModalDocenteVisible(false);
+              }}
+            >
+              Guardar
+            </button>
               </div>
             </div>
           </div>

@@ -37,7 +37,7 @@ const verCartasMiembros = async (trabajoId) => {
   if (!trabajoId) return;
 
   try {
-    const response = await fetch(`/api/cartas-aceptacion/grupo/${trabajoId}`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/cartas-aceptacion/grupo/${trabajoId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -279,7 +279,7 @@ const verCartasMiembros = async (trabajoId) => {
               className="btn-ver-documento-inline"
               onClick={() =>
                 window.open(
-                  `/uploads/planes_labor_social/${cartaAceptacionPdf}`,
+                  `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
                   '_blank'
                 )
               }
@@ -395,7 +395,7 @@ const verCartasMiembros = async (trabajoId) => {
         className="btn-ver-documento-inline"
         onClick={() =>
           window.open(
-            `/uploads/planes_labor_social/${cartaAceptacionPdf}`,
+            `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
             '_blank'
           )
         }
@@ -453,7 +453,7 @@ const verCartasMiembros = async (trabajoId) => {
         className="btn-ver-documento-inline"
         onClick={() =>
           window.open(
-            `/uploads/cartas_aceptacion/${carta.nombre_archivo_pdf}`,
+            `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${carta.nombre_archivo_pdf}`,
             '_blank'
           )
         }

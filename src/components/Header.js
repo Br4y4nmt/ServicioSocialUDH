@@ -8,6 +8,7 @@ function Header({ onToggleSidebar }) {
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const menuRef = useRef();
+  const rolUsuario = localStorage.getItem('id_rol');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +46,10 @@ function Header({ onToggleSidebar }) {
       alert('Rol no autorizado o desconocido.');
     }
   };
+  const enlaceGuia = rolUsuario === 'docente supervisor'
+  ? 'https://drive.google.com/file/d/1b1ecTv9eRWmvgt-q82q9rbee-z03Wkwe/view?usp=sharing' // ← Link para docentes
+  : 'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing'; // ← Link para alumnos
+
   return (
     <header className="custom-header">
       <div className="left-section">
@@ -57,12 +62,7 @@ function Header({ onToggleSidebar }) {
 
       <span className="ver-float-label">¡Ver!</span>
       <button className="guia-btn"
-       onClick={() => {
-        window.open(
-          'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing',
-          '_blank'
-        );
-      }}>
+       onClick={() => window.open(enlaceGuia, '_blank')}>
        
     <span className="pdf-icon">
   <svg

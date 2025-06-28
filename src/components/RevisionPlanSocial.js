@@ -165,7 +165,7 @@ function RevisionPlanSocial() {
                         <td>
   {plan.archivo_plan_social ? (
     <a
-  href={`/uploads/planes_labor_social/${plan.archivo_plan_social}`}
+  href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${plan.archivo_plan_social}`}
   target="_blank"
   rel="noreferrer"
   className="btn-ojo-ver-plan-docente"
