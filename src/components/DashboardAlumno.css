@@ -255,6 +255,34 @@
     transform: translateY(1px); /* Efecto de pulsación */
   }
   
+
+
+
+
+
+ .btn-solicitar-aprobaciones {
+  background-color: #2EBAA1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 20px auto 0 auto; /* Centrado horizontal + margen superior */
+  display: block; /* Necesario para que 'margin: auto' funcione en inline elements */
+  transition: background-color 0.3s, transform 0.2s;
+}
+  
+  .btn-solicitar-aprobaciones:hover {
+    background-color: #26a78d; /* Color al pasar el mouse */
+    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+  }
+  
+  .btn-solicitar-aprobaciones:active {
+    background-color: #209c80; /* Color cuando se hace clic */
+    transform: translateY(1px); /* Efecto de pulsación */
+  }
+
 /* Container for the button to center it */
 .button-container {
   display: flex;
@@ -1096,6 +1124,7 @@
   text-align: center;
   color: #011b4b;
   margin-bottom: 20px;
+  white-space: normal;
 }
 
 .dashboard-title-animada span {
@@ -1104,13 +1133,21 @@
   transform: translateY(-10px);
   animation: aparecerLetra 0.4s forwards;
 }
-
+.mobile-line-break {
+  display: none;
+}
 @keyframes aparecerLetra {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+@media (max-width: 400px) {
+  .mobile-line-break {
+    display: block;
+  }
+}
+
 .boton-ver-carta {
     display: flex;
     align-items: center;
@@ -1454,6 +1491,23 @@
     cursor: pointer;
   }
 }
+
+@media (max-width: 420px) {
+  .dashboard-title-animada {
+    font-size: 26px;
+    margin-top: 40px !important;
+    padding: 0 10px;
+    word-break: break-word;
+  }
+
+  .dashboard-title-animada span {
+    font-size: 30px !important;
+  }
+
+  .mobile-line-break {
+    display: block;
+  }
+}
 @media (max-width: 768px) {
   .dashboard-title-animada {
     white-space: normal !important;  
@@ -1556,8 +1610,10 @@
     align-items: stretch;
   }
 
-  .btn-solicitar-aprobacion {
-    align-self: center; 
+   .btn-solicitar-aprobacion {
+    width: 80%;            /* opcional para mejor presentación */
+    margin: 20px auto 0 auto;
+    display: block;
   }
 }
 @media (max-width: 480px) {

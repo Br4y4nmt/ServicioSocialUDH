@@ -18,8 +18,6 @@ import autoTable from 'jspdf-autotable';
 import { useUser } from '../UserContext';
 function DashboardAlumno() {
   const { user } = useUser();
-  
-
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [pdfDescargado, setPdfDescargado] = useState(false);
   const [nombre, setNombre] = useState('');
@@ -108,7 +106,34 @@ function DashboardAlumno() {
       }));
     }
   };
+useEffect(() => {
+  const mostrarBienvenida = localStorage.getItem('showBienvenida');
+  const nombre = localStorage.getItem('nombre_usuario');
 
+  if (mostrarBienvenida === 'true') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end', // 👈 parte inferior derecha
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      icon: 'success',
+      customClass: {
+        popup: 'swal2-toast-custom' // opcional: por si quieres estilos extra
+      },
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+
+    Toast.fire({
+      title: `Bienvenido ${nombre}`,
+    });
+
+    localStorage.removeItem('showBienvenida');
+  }
+}, []);
 const obtenerIntegrantesDelGrupo = async () => {
   const usuario_id = user?.id;
   const token = user?.token;
@@ -1174,25 +1199,52 @@ useEffect(() => {
       )}
 
       <main className={`main-content ${collapsed ? 'collapsed' : ''}`}>
-      <h1
-      className="dashboard-title-animada"
-      style={{ marginBottom: '40px' }}
-      key={activeSection}
-    >
-      {Array.from(
-        activeSection === 'seguimiento'
-          ? 'Seguimiento del Servicio Social'
-          : activeSection === 'conformidad'
-          ? 'Conformidad De Servicio Social'
-          : activeSection === 'informe-final'
-          ? 'Informe Final'
-          : 'Servicio Social UDH'
-      ).map((letra, index) => (
-        <span key={index} style={{ animationDelay: `${index * 0.05}s` }}>
-          {letra === ' ' ? '\u00A0' : letra}
-        </span>
-      ))}
-    </h1>
+   <h1
+  className="dashboard-title-animada"
+  style={{ marginBottom: '40px' }}
+  key={activeSection}
+>
+  {(() => {
+    const width = window.innerWidth;
+
+    const titulo =
+      activeSection === 'seguimiento'
+        ? 'Seguimiento del Servicio Social'
+        : activeSection === 'conformidad'
+        ? 'Conformidad De Servicio Social'
+        : activeSection === 'informe-final'
+        ? 'Informe Final'
+        : 'Servicio Social UDH';
+
+    let partes = [titulo];
+
+    if (activeSection === 'conformidad') {
+      if (width <= 400) {
+        partes = ['Conformidad De', 'Servicio Social'];
+      } else if (width <= 420) {
+        partes = ['Conformidad De Servicio', 'Social'];
+      }
+    }
+
+    const delayFactor = width < 768 ? 0.02 : 0.05; // velocidad móvil vs escritorio
+
+    return partes.map((linea, i) =>
+      Array.from(linea).map((letra, index) => (
+        <span
+            key={`${i}-${index}`}
+            style={{ animationDelay: `${(i * 100 + index) * delayFactor}s` }}
+          >
+            {letra === ' ' ? (
+              <span style={{ width: '0.4em', display: 'inline-block' }}>{'\u00A0'}</span>
+            ) : (
+              letra
+            )}
+          </span>
+      )).concat(i < partes.length - 1 ? [<br key={`br-${i}`} className="mobile-line-break" />] : [])
+    );
+  })()}
+</h1>
+
   
    
 {activeSection === 'reglamento' && (

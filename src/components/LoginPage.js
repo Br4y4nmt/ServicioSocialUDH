@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../UserContext';
 import Swal from 'sweetalert2';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginPage.css';
 
@@ -12,8 +12,19 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login } = useUser();
   const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const isProcessing = useRef(false);
+  const unmounted = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      unmounted.current = true;
+    };
+  }, []);
 
   const handleCredentialResponse = useCallback(async (response) => {
+    if (isProcessing.current) return;
+    isProcessing.current = true;
+
     try {
       const res = await axios.post('/api/auth/google', {
         token: response.credential,
@@ -43,19 +54,10 @@ function LoginPage() {
       };
 
       login(userData);
-    if (rol === 'docente supervisor') {
-      localStorage.setItem('id_docente', id_docente);
-    }
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Bienvenido!',
-        text: `Hola ${nombre_completo}, acceso exitoso.`,
-        confirmButtonColor: '#28a745',
-        timer: 1000,
-        showConfirmButton: false,
-      });
-
+      if (rol === 'docente supervisor') {
+        localStorage.setItem('id_docente', id_docente);
+      }
 
       localStorage.setItem('id_usuario', id_usuario);
       localStorage.setItem('id_rol', rol);
@@ -64,72 +66,89 @@ function LoginPage() {
       localStorage.setItem('correo_institucional', email);
       localStorage.setItem('codigo_estudiante', codigo_estudiante);
       localStorage.setItem('programa_academico_id', programa_academico_id);
-      console.log('Token obtenido:', token);
-      setTimeout(() => {
-        
-        if (rol === 'alumno') {
-          navigate('/dashboard-alumno', { replace: true });
-        } else if (rol === 'docente supervisor') {
-          navigate('/dashboard-docente', { replace: true });
-        } else if (rol === 'gestor-udh') {
-          navigate('/dashboard-gestor', { replace: true });
-        } else if (rol === 'programa-academico') {
-          navigate('/dashboard-programa-academico', { replace: true });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Rol no válido',
-            confirmButtonColor: '#d33',
-            timer: 2500,
-          });
-        }
-      }, 500); // Delay breve
+
+      if (rol === 'alumno') {
+        localStorage.setItem('showBienvenida', 'true');
+        navigate('/dashboard-alumno', { replace: true });
+      } else if (rol === 'docente supervisor') {
+        navigate('/dashboard-docente', { replace: true });
+      } else if (rol === 'gestor-udh') {
+        navigate('/dashboard-gestor', { replace: true });
+      } else if (rol === 'programa-academico') {
+        navigate('/dashboard-programa-academico', { replace: true });
+      } else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Rol no válido',
+          confirmButtonColor: '#d33',
+          timer: 2500,
+        });
+      }
+
     } catch (error) {
-      console.error('❌ Error en login Google:', error.response ? error.response.data : error.message);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al iniciar sesión con Google',
-        text: error.response?.data?.message || 'No se pudo iniciar sesión',
-        confirmButtonColor: '#d33',
-        timer: 2500,
-      });
-    }
+  console.error('❌ Error en login Google:', error.response ? error.response.data : error.message);
+  console.log('Mostrando alerta de usuario no registrado');
+
+  if (window.google?.accounts?.id) {
+    google.accounts.id.cancel();
+    google.accounts.id.disableAutoSelect();
+  }
+
+  Swal.fire({
+    icon: 'error',
+    title: 'Usuario no registrado',
+    text: error.response?.data?.message || 'Tu cuenta no está registrada.',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Cerrar',
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  });
+}
   }, [login, navigate]);
 
-  useEffect(() => {
-    const loadGoogleSDK = () => {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        if (window.google && !window.__gsi_initialized__) {
-          google.accounts.id.initialize({
-            client_id: GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse,
-          });
-
-          window.__gsi_initialized__ = true;
-
-          google.accounts.id.renderButton(
-            document.getElementById('google-signin-button'),
-            {
-              theme: 'outline',
-              size: 'large',
-              shape: 'pill',
-              text: 'continue_with',
-              width: 300,
-            }
-          );
-        }
-      };
-      document.body.appendChild(script);
+useEffect(() => {
+  const loadGoogleSDK = () => {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      initGoogleButton();
     };
+    document.body.appendChild(script);
+  };
 
-    if (!window.google?.accounts?.id) {
-      loadGoogleSDK();
+  const initGoogleButton = () => {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      const container = document.getElementById('google-signin-button');
+      if (container) {
+        container.innerHTML = ''; // 🔁 Limpiar el contenedor por si ya existe un botón anterior
+        google.accounts.id.renderButton(container, {
+          theme: 'outline',
+          size: 'large',
+          shape: 'pill',
+          text: 'continue_with',
+          width: 300,
+        });
+      }
     }
-  }, [handleCredentialResponse]);
+  };
+
+  // Si el SDK no está cargado, lo carga; si ya está, renderiza igual el botón
+  if (!window.google?.accounts?.id) {
+    loadGoogleSDK();
+  } else {
+    initGoogleButton();
+  }
+}, [handleCredentialResponse, GOOGLE_CLIENT_ID]);
+
 
   return (
     <div className="login-page">

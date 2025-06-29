@@ -164,8 +164,11 @@ function MiPerfilDocente() {
         activeSection={'mi-perfil'}
         setActiveSection={() => {}}
       />
+      {!collapsed && window.innerWidth <= 768 && (
+  <div className="sidebar-overlay" onClick={toggleSidebar} />
+)}
       <main className={`main-content ${collapsed ? 'collapsed' : ''}`}>
-        <div className="dashboard-container">
+        
           <h1 className="dashboard-title">Mi Perfil</h1>
           <div className="card-section">
             <div className="form-group">
@@ -225,7 +228,7 @@ function MiPerfilDocente() {
             </button>
           </div>
           </div>
-        </div>
+        
       </main>
     </>
   );

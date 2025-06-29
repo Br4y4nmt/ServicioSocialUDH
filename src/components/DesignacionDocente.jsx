@@ -235,26 +235,26 @@ const verCartasMiembros = async (trabajoId) => {
                         {laborSeleccionada && !solicitudEnviada && (
                           <div className="form-group">
                             <button 
-        className="btn-solicitar-aprobacion"
-        onClick={() => {
-          Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, enviar',
-            cancelButtonText: 'Cancelar'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              handleSolicitarAprobacion();
-            }
-          });
-        }}
-      >
-        Solicitar Aprobación
-      </button>
+                      className="btn-solicitar-aprobaciones"
+                      onClick={() => {
+                        Swal.fire({
+                          title: '¿Estás seguro?',
+                          text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados.',
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Sí, enviar',
+                          cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            handleSolicitarAprobacion();
+                          }
+                        });
+                      }}
+                    >
+                      Solicitar Aprobación
+                    </button>
       
                           </div>
                         )}

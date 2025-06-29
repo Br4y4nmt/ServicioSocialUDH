@@ -2,14 +2,16 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-// Configura la URL base si usas una API externa
-axios.defaults.baseURL = 'http://localhost:5000'; // <-- adapta si es necesario
+axios.defaults.baseURL = 'https://serviciosocialback.sistemasudh.com'; // ajusta si es necesario
 
 // Interceptor para respuestas
 axios.interceptors.response.use(
   response => response,
   error => {
-    if (error.response && error.response.status === 401) {
+    const requestUrl = error?.config?.url;
+    const isGoogleAuth = requestUrl?.includes('/api/auth/google');
+
+    if (error.response && error.response.status === 401 && !isGoogleAuth) {
       Swal.fire({
         icon: 'warning',
         title: 'Sesión expirada',
@@ -21,6 +23,7 @@ axios.interceptors.response.use(
         window.location.href = '/login';
       });
     }
+
     return Promise.reject(error);
   }
 );
