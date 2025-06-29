@@ -56,11 +56,16 @@ html, body, #root {
   color: #333;
   font-size: 15px;
 }
-
-.subtitle a {
-  color: #0bb88e;
+.login-link {
+  color: #0bb88e;         /* o el color que estés usando */
   text-decoration: none;
+  transition: all 0.3s ease;
 }
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
 
 .form-group {
   margin-bottom: 20px;
@@ -183,7 +188,7 @@ input.form-control {
 .register-button {
   width: 100%;
   padding: 12px;
-  background-color: #26c4b6 !important;
+  background-color: #26c4b6 ;
   border: none;
   border-radius: 10px;
   color: white;
@@ -195,7 +200,7 @@ input.form-control {
 }
 
 .register-button:hover {
-  background-color: #1fa89d;
+  background-color: #011B4B;
 }
 
 

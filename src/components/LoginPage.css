@@ -23,6 +23,7 @@ body, html, #root {
   background-color: #ffffff; /* Aseguramos blanco */
   overflow: hidden;
   position: relative;
+  transform: translateX(-30px);
 }
 .image-container img {
   width: 100%;
@@ -41,35 +42,65 @@ body, html, #root {
     justify-content: center;
     background-color: #ffffff;
   }
-  
+  #google-signin-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
   .login-card {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
+  position: relative; /* ✅ NECESARIO para los bordes */
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: hidden; /* Opcional si hay problemas de desbordamiento */
+  width: 440px; 
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 16px;              /* Más hacia adentro */
+  left: 16px;
+  width: 28px;            /* Más grande */
+  height: 28px;
+  border-top: 3px solid #39B49E;
+  border-left: 3px solid #39B49E;
+  border-top-left-radius: 8px;
+}
+
+.login-card::after {
+  content: '';
+  position: absolute;
+  bottom: 16px;           /* Más hacia adentro */
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  border-bottom: 3px solid #39B49E;
+  border-right: 3px solid #39B49E;
+  border-bottom-right-radius: 8px;
+}
+
+
   .login-logo {
     width: 180px;
     margin-bottom: 20px;
   }
   
-  h2 {
+  .login-title {
     margin-bottom: 10px;
-    font-weight: 600;
+    font-weight: 450 !important;       /* menos grueso */
+    font-size: 25px !important;        /* 🔽 tamaño reducido */
   }
-  
-  .subtitle {
+  .subtitle-login {
     margin-bottom: 20px;
+    margin-top: 20px !important;
     color: #666666;
     font-size: 16px;
   }
   
-  /* Botón de Google */
-  #google-signin-button {
-    margin-top: 20px;
-  }
+
   .register-text {
     font-size: 15px;
     color: #555;
@@ -91,7 +122,31 @@ body, html, #root {
   .register-text a:hover {
     text-decoration: underline;
   }
-  
+.link-no-style {
+  text-decoration: none;
+  color: inherit;
+}
+.register-button-login {
+  width: auto;
+  padding: 10px 38px; /* 🔽 Menor altura */
+  background-color: #39B49E ;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px auto;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  display: block;
+}
+
+
+.register-button-login:hover {
+  background-color: #057A55 ;
+}
+
+
   /* Adaptable en dispositivos pequeños */
 /* ✅ Responsive styles */
 @media screen and (max-width: 768px) {

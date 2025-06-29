@@ -151,22 +151,28 @@ useEffect(() => {
 
 
   return (
-    <div className="login-page">
-      <div className="image-container">
-        <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDH Labor Social" />
-      </div>
-      <div className="form-container">
-        <div className="login-card">
-          <h2>Iniciar sesión</h2>
-          <p className="register-text">
-            ¿Aún no tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-          </p>
-          <p className="subtitle">Inicia sesión con tu cuenta de Google</p>
-          <div id="google-signin-button"></div>
-        </div>
+  <div className="login-page">
+    <div className="image-container">
+      <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDH Labor Social" />
+    </div>
+    <div className="form-container">
+      <div className="login-card">
+        <h2 className="login-title">Iniciar sesión</h2>
+
+
+        <p className="register-text">¿Aún no tienes una cuenta?</p>
+
+        <Link to="/register" style={{ textDecoration: 'none' }} className="link-no-style">
+          <button className="register-button-login">REGÍSTRATE AQUÍ</button>
+        </Link>
+
+        <p className="subtitle-login">Inicia sesión con tu cuenta de Google</p>
+        <div id="google-signin-button"></div>
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default LoginPage;

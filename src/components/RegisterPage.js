@@ -72,7 +72,9 @@ const handleRegister = async (e) => {
   <div className="form-container">
     <div className="register-card">
       <h2>Regístrate</h2>
-      <p className="subtitle">¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a></p>
+      <p className="subtitle">
+      ¿Ya tienes una cuenta? <a href="/login" className="login-link">Inicia sesión aquí</a>
+    </p>
       <form onSubmit={handleRegister}>
       <div className="form-group">
   <label>Código (10 dígitos)</label>

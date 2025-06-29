@@ -1545,9 +1545,13 @@
   }
 
   .btn-ver-documento-inline {
-    width: auto;
-    padding: 6px 14px;
+    width: fit-content;
+    max-width: 80px;          /* 👈 Limita el ancho máximo */
+    padding: 4px 10px;         /* 👈 Reduce el relleno */
+    font-size: 12px;           /* 👈 Letra un poco más chica */
+    justify-content: center;
   }
+
 
   .estado-tramitado {
     font-size: 12px;
