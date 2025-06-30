@@ -270,6 +270,30 @@
   text-align: center; 
   margin-top: 16px;
 }
+.btn-accion {
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-accion.aceptar {
+  background-color: #43a047;
+}
+
+.btn-accion.aceptar:hover {
+  background-color: #388e3c;
+}
+
+.btn-accion.rechazar {
+  background-color: #e53935;
+}
+
+.btn-accion.rechazar:hover {
+  background-color: #c62828;
+}
 
 .modal-cronograma-btn-cerrar {
   background-color: #9e9e9e;
@@ -519,6 +543,95 @@
   top: 0;
   height: 100vh;
 }
+.btn-accion.declinar {
+  background-color: #0b1f46 ; /* azul oscuro */
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-accion.declinar:hover {
+ background-color: #142e68;
+}
+.modal-observacion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 455225556999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-observacion-content {
+  background-color: #fff;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+
+.modal-observacion-content h3 {
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.modal-observacion-content textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  resize: none;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.modal-observacion-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+.enviar-btn{
+  background-color: #38a169;
+  color: white;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.cancelar-btn{
+ background-color: #011b4b;
+  color: white;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.cancelar-btn:hover {
+  opacity: 0.9;
+}
+.enviar-btn:hover {
+  opacity: 0.9;
+}
+.estado-texto-normal {
+  text-transform: none !important;
+}
+
 @media (min-width: 769px) {
   .main-content.sidebar-open {
     background: none;
@@ -540,3 +653,4 @@
   }
 
 }
+

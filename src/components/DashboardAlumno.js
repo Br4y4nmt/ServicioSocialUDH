@@ -18,6 +18,7 @@ import autoTable from 'jspdf-autotable';
 import { useUser } from '../UserContext';
 function DashboardAlumno() {
   const { user } = useUser();
+  const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [pdfDescargado, setPdfDescargado] = useState(false);
   const [nombre, setNombre] = useState('');
@@ -1159,6 +1160,32 @@ const solicitarCartaTermino = async () => {
     });
   }
 };
+const handleVolverASubir = async (actividad) => {
+  if (!actividad) {
+    Swal.fire('Error', 'No hay actividad seleccionada para eliminar la evidencia.', 'error');
+    return;
+  }
+
+  try {
+    const res = await axios.delete(`/api/cronograma/evidencia/${actividad.id}`, {
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+
+    Swal.fire('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.', 'success');
+
+    // Refresca datos locales
+    const actualizadas = actividadesSeguimiento.map((a) =>
+      a.id === actividad.id
+        ? { ...a, evidencia: null, estado: 'pendiente', archivoTemporalEvidencia: null }
+        : a
+    );
+    setActividadesSeguimiento(actualizadas);
+    setModalObservacionEstudianteVisible(false);
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudo eliminar la evidencia.', 'error');
+  }
+};
 
 
 useEffect(() => {
@@ -1384,6 +1411,10 @@ useEffect(() => {
     setObservacionSeleccionada={setObservacionSeleccionada}
     setModalObservacionEstudianteVisible={setModalObservacionEstudianteVisible}
     setActividadesSeguimiento={setActividadesSeguimiento}
+    actividadSeleccionada={actividadSeleccionada}
+    setActividadSeleccionada={setActividadSeleccionada}
+    handleVolverASubir={handleVolverASubir}
+
   />
 )}
 
@@ -1449,17 +1480,22 @@ useEffect(() => {
 
 </div>
       </main>
-
-     
-
 {modalObservacionEstudianteVisible && (
   <div className="modal-observacion-overlay">
     <div className="modal-observacion-content">
-      <h3 style={{ marginBottom: '10px' }}>Observaciónes del Docente</h3>
+      <h3 style={{ marginBottom: '10px' }}>Observación del Docente</h3>
       <p style={{ color: '#4A5568' }}>{observacionSeleccionada}</p>
+
       <div className="modal-observacion-actions">
         <button
-          className="modal-observacion-btn-cancelar"
+          className="modal-observacion-btn-volver-subir"
+          onClick={() => handleVolverASubir(actividadSeleccionada)}
+          disabled={!actividadSeleccionada}
+        >
+          Volver a subir
+        </button>
+        <button
+          className="modal-observacion-btn-cerrar-estudiante"
           onClick={() => setModalObservacionEstudianteVisible(false)}
         >
           Cerrar
@@ -1468,6 +1504,7 @@ useEffect(() => {
     </div>
   </div>
 )}
+
 
   {modalActividadVisible && (
   <div className="modal-overlay-alumno">

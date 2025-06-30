@@ -32,6 +32,42 @@ function DesignacionDocente({
   const token = user?.token;
 
   const [cartasMiembros, setCartasMiembros] = useState([]);
+const eliminarEleccion = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/trabajo-social/seleccionado/${trabajoId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar elección');
+    }
+
+    Swal.fire('Eliminado', 'La elección fue eliminada correctamente.', 'success');
+
+    // Limpiar estados del formulario
+    setTipoServicio('');
+    setDocenteSeleccionado('');
+    setNombreDocente('');
+    setLineaSeleccionada('');
+    setLaborSeleccionada('');
+    setNombreLaborSocial('');
+    localStorage.removeItem('trabajo_id');
+
+    // O recargar página o notificar que se reinició
+    window.location.reload();
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudo eliminar la elección.', 'error');
+  }
+};
 
 const verCartasMiembros = async (trabajoId) => {
   if (!trabajoId) return;
@@ -253,7 +289,7 @@ const verCartasMiembros = async (trabajoId) => {
                         });
                       }}
                     >
-                      Solicitar Aprobación
+                      Solicitar asesoría 
                     </button>
       
                           </div>
@@ -313,14 +349,38 @@ const verCartasMiembros = async (trabajoId) => {
                 El docente aún no revisa su propuesta.
               </p>
             ) : estadoPlan === "rechazado" ? (
+              <>
               <p className="texto-cursiva" style={{ color: "#d32f2f" }}>
                 El docente ha rechazado tu solicitud. Por favor revisa los datos y vuelve a intentarlo o contacta a tu docente asesor.
               </p>
+              <div className="contenedor-eliminar">
+              <button
+              className="btn-eliminar-eleccion"
+              onClick={() => {
+                Swal.fire({
+                  title: '¿Eliminar elección?',
+                  text: 'Esto eliminará tu elección y podrás comenzar de nuevo. Se recomienda conversar previamente con el docente supervisor antes de realizar una nueva elección',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Sí, eliminar',
+                  cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    eliminarEleccion(); // función que llamamos
+                  }
+                });
+              }}
+            >
+              Seleccionar nuevo asesor
+            </button>
+            </div>
+            </>
             ) : (
               <p className="texto-cursiva">
                 El docente ha aceptado tu solicitud, continúa al siguiente paso para
                 poder confirmar tu plan de trabajo.
               </p>
+              
             )}
           </div>
           

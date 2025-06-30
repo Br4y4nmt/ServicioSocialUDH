@@ -34,6 +34,7 @@
 .carta-fecha {
   text-align: right;
   margin-top: 10px;
+  font-size: 15px;
 }
 .separador-vertical {
   border-left: 2px solid #585757; /* Color de la línea de separación */
@@ -49,12 +50,14 @@
 .carta-asunto {
   font-weight: bold;
   margin-top: 15px;
+  font-size: 17px;
 }
 
 .carta-body {
   text-align: justify;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 15px;
 }
 
 .carta-footer {

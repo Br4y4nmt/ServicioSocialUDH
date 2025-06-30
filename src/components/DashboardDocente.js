@@ -96,6 +96,18 @@ useEffect(() => {
     });
 }, [user, navigate]);
 
+function formatearFechaExtendida(fecha) {
+  const meses = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
+  
+  const dia = fecha.getDate();
+  const mes = meses[fecha.getMonth()];
+  const anio = fecha.getFullYear();
+  
+  return `${dia} de ${mes} de ${anio}`;
+}
 
 
 const generarYSubirPDF = async (trabajo) => {
@@ -132,16 +144,23 @@ const generarYSubirPDF = async (trabajo) => {
             <h1 style="text-align: center; font-size: 20px; margin: 20px 0; font-weight: bold;">
               CARTA DE ACEPTACIÓN
             </h1>
-            <p class="carta-fecha">Huánuco, ${new Date().toLocaleDateString()}</p>
+           <p class="carta-fecha">Huánuco, ${formatearFechaExtendida(new Date())}</p>
             <div class="carta-cuerpo">
-              <p class="carta-asunto">ASUNTO: <span class="asunto-texto">ACEPTACIÓN DE SUPERVISIÓN DE SERVICIO SOCIAL</span></p>
+              <p class="carta-asunto">
+              <strong style="display: inline-block; width: 120px;">ASUNTO:</strong>
+              <span class="asunto-texto">ACEPTACIÓN DE SUPERVISIÓN DE SERVICIO SOCIAL</span>
+            </p>
               <p class="carta-body">De mi consideración:</p>
-              <p class="carta-body">Tengo el agrado de dirigirme a usted para expresarle un cordial saludo y a la vez comunicarle que he aceptado supervisar el desarrollo de su servicio social al:</p>
-              <p><strong>ESTUDIANTE:</strong> ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}</p>
+              <p class="carta-body" style="text-indent: 40px;">Tengo el agrado de dirigirme a usted para expresarle un cordial saludo y a la vez comunicarle que he aceptado supervisar el desarrollo de su servicio social al:</p>
+              <p class="carta-asunto">
+              <span style="display: inline-block; width: 150px;"><strong>ESTUDIANTE:</strong></span>
+              ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}
+            </p>
+
               <p class="carta-body">Sin otro particular, me despido recordándole las muestras de mi especial consideración y estima personal.</p>
               <div class="carta-footer">
-                <p>Atentamente,</p>
-                <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 100px;" />
+                <p style="margin-top: 100px;">Atentamente,</p>
+                <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
                 <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
               </div>
             </div>
@@ -153,7 +172,7 @@ const generarYSubirPDF = async (trabajo) => {
         margin: 10,
         filename: `carta_aceptacion_${trabajo.id}.pdf`,
         image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { scale: 3 },
+        html2canvas: { scale: 4 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -323,7 +342,7 @@ const generarPDFBlob = async (trabajo) => {
           <h1 style="text-align: center; font-size: 20px; margin: 20px 0; font-weight: bold;">
             CARTA DE ACEPTACIÓN
           </h1>
-          <p class="carta-fecha">Huánuco, ${new Date().toLocaleDateString()}</p>
+          <p class="carta-fecha">Huánuco, ${formatearFechaExtendida(new Date())}</p>
 
           <div class="carta-cuerpo">
             <p>
@@ -333,22 +352,26 @@ const generarPDFBlob = async (trabajo) => {
               Universidad de Huánuco
             </p>
             <p class="carta-asunto">
-              ASUNTO: <span class="asunto-texto">ACEPTACIÓN DE SUPERVISIÓN DE SERVICIO SOCIAL</span>
+              <strong style="display: inline-block; width: 120px;">ASUNTO:</strong>
+              <span class="asunto-texto">ACEPTACIÓN DE SUPERVISIÓN DE SERVICIO SOCIAL</span>
             </p>
             <p class="carta-body">De mi consideración:</p>
-            <p class="carta-body">
+            <p class="carta-body" style="text-indent: 40px;">
               Tengo el agrado de dirigirme a usted para expresarle un cordial saludo y a la vez comunicarle que he aceptado supervisar el desarrollo de su servicio social a:
             </p>
-            <p><strong>ESTUDIANTE:</strong> ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}</p>
+             <p class="carta-asunto">
+              <span style="display: inline-block; width: 150px;"><strong>ESTUDIANTE:</strong></span>
+              ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}
+            </p>
             <p class="carta-body">
               Sin otro particular, me despido recordándole las muestras de mi especial consideración y estima personal.
             </p>
 
-            <div class="carta-footer">
-              <p>Atentamente,</p>
-              <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 100px;" />
-              <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
-            </div>
+             <div class="carta-footer">
+                <p style="margin-top: 100px;">Atentamente,</p>
+                <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
+                <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
+              </div>
           </div>
         </div>
       </body>
@@ -359,7 +382,7 @@ const generarPDFBlob = async (trabajo) => {
     margin: 10,
     filename: `temp.pdf`,
     image: { type: 'jpeg', quality: 1.0 },
-    html2canvas: { scale: 3 },
+    html2canvas: { scale: 4 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 

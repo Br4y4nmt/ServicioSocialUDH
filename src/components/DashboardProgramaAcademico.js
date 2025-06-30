@@ -512,7 +512,6 @@ const rechazarInforme = async (id) => {
         )}
 
 
-
 {modalEditarDocenteVisible && (
   <div className="docentes-modal show">
     <div className="docentes-modal-content">

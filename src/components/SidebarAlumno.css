@@ -225,9 +225,7 @@
   }
 
   .toggle-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1300;
+    left: auto;
+    right: 16px;
   }
 }

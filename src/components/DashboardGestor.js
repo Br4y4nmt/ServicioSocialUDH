@@ -538,12 +538,12 @@ const rechazarInforme = async (id) => {
           <tbody>
           {facultades
           .filter(f =>
-            f.nombre_facultad.toLowerCase().includes(busquedaFacultad.toLowerCase())
-          )
+              (f.nombre_facultad || '').toLowerCase().includes(busquedaFacultad.toLowerCase())
+            )
           .map((f) => (
               <tr key={f.id_facultad}>
                 <td>
-                {f.nombre_facultad.toUpperCase()}
+                {(f.nombre_facultad || '').toUpperCase()}
                 </td>
                 <td>
                   <span className="facultades-badge-activo">Activo</span>
@@ -692,13 +692,13 @@ const rechazarInforme = async (id) => {
         <tbody>
   {programas
     .filter((prog) =>
-      prog.nombre_programa.toLowerCase().includes(busquedaPrograma.toLowerCase())
-    )
+        (prog.nombre_programa || '').toLowerCase().includes(busquedaPrograma.toLowerCase())
+      )
     .map((prog) => (
       <tr key={prog.id_programa}>
         <td>{prog.id_programa}</td>
-        <td>{prog.nombre_programa.toUpperCase()}</td>
-        <td>{prog.Facultade?.nombre_facultad?.toUpperCase() || 'SIN FACULTAD'}</td>
+        <td>{(prog.nombre_programa || '').toUpperCase()}</td>
+        <td>{(prog.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
         <td>{prog.email || 'SIN CORREO'}</td>
         <td>
           <button
@@ -921,16 +921,14 @@ const rechazarInforme = async (id) => {
               : true;  // Si no se seleccionó un programa, mostrar todos los informes
           })
           .filter((inf) =>
-            inf.Estudiante?.nombre_estudiante
-              ?.toLowerCase()
-              .includes(busquedaDocente.toLowerCase())  // Filtro por el nombre del estudiante
+            (inf.Estudiante?.nombre_estudiante || '').toLowerCase().includes(busquedaDocente.toLowerCase())
           )
               .map((inf) => (
                 <tr key={inf.id}>
                   <td>{inf.id}</td>
-                  <td>{inf.Estudiante?.nombre_estudiante?.toUpperCase() || 'SIN NOMBRE'}</td>
-                  <td>{inf.ProgramasAcademico?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
-                  <td>{inf.Facultad?.nombre_facultad?.toUpperCase() || 'SIN FACULTAD'}</td>
+                  <td>{(inf.Estudiante?.nombre_estudiante || 'SIN NOMBRE').toUpperCase()}</td>
+                  <td>{(inf.ProgramasAcademico?.nombre_programa || 'SIN PROGRAMA').toUpperCase()}</td>
+                  <td>{(inf.Facultad?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
                   <td>{new Date(inf.createdAt).toLocaleDateString()}</td>
                   <td>
                     {inf.informe_final_pdf ? (
@@ -1058,7 +1056,7 @@ const rechazarInforme = async (id) => {
           <tbody>
           {docentes
           .filter((doc) =>
-            doc.nombre_docente.toLowerCase().includes(busquedaDocente.toLowerCase())
+            (doc.nombre_docente || '').toLowerCase().includes(busquedaDocente.toLowerCase())
           )
           .map((doc) => (
 
@@ -1073,11 +1071,12 @@ const rechazarInforme = async (id) => {
                       onChange={(e) => setNombreDocenteEditado(e.target.value)}
                     />
                   ) : (
-                    doc.nombre_docente.toUpperCase()
+                    (doc.nombre_docente || 'SIN NOMBRE').toUpperCase()
+
                   )}
                 </td>
                 <td>
-                  {doc.Facultade?.nombre_facultad?.toUpperCase() || 'SIN FACULTAD'}
+                  {(doc.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}
                 </td>
                 <td>
                   {editandoDocenteId === doc.id_docente ? (
@@ -1093,7 +1092,8 @@ const rechazarInforme = async (id) => {
                       ))}
                     </select>
                   ) : (
-                    doc.ProgramaDelDocente?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'
+                    (doc.ProgramaDelDocente?.nombre_programa || 'SIN PROGRAMA').toUpperCase()
+
 
                   )}
                 </td>
@@ -1308,7 +1308,8 @@ const rechazarInforme = async (id) => {
           <tbody>
           {labores
   .filter((labor) =>
-    labor.nombre_labores.toLowerCase().includes(busquedaLabor.toLowerCase())
+    (labor.nombre_labores || '').toLowerCase().includes(busquedaLabor.toLowerCase())
+
   )
   .map((labor) => (
               <tr key={labor.id_labores}>
@@ -1412,11 +1413,11 @@ const rechazarInforme = async (id) => {
           </thead>
           <tbody>
             {lineas
-              .filter((l) => l.nombre_linea.toLowerCase().includes(busquedaLinea.toLowerCase()))
+              .filter((l) => (l.nombre_linea || '').toLowerCase().includes(busquedaLinea.toLowerCase()))
               .map((l) => (
                 <tr key={l.id_linea}>
                   <td>{l.id_linea}</td>
-                  <td>{l.nombre_linea.toUpperCase()}</td>
+                  <td>{(l.nombre_linea || 'SIN NOMBRE').toUpperCase()}</td>
                   <td>
                     <button
                       className="labores-btn editar"

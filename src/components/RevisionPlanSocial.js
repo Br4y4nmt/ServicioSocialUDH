@@ -10,13 +10,13 @@ import Swal from 'sweetalert2';
 function RevisionPlanSocial() {
   const [collapsed, setCollapsed] = useState(false);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false); // Control del modal
-  const [selectedTrabajo, setSelectedTrabajo] = useState(null); // Trabajo seleccionado para edición
-  const [nuevoEstado, setNuevoEstado] = useState(''); // Estado editable
   const [activeSection, setActiveSection] = useState('conformidad');
-  const { user } = useUser();  // Obtener el contexto del usuario
-  const token = user?.token;   // El token debe provenir de user.context
-  
+  const { user } = useUser(); 
+  const token = user?.token;   
+  const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
+  const [observacionTexto, setObservacionTexto] = useState('');
+  const [trabajoADeclinar, setTrabajoADeclinar] = useState(null);
+
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -24,31 +24,29 @@ function RevisionPlanSocial() {
   };
 
  useEffect(() => {
-    // Verificar que el token y usuario estén disponibles
     if (!token) {
       console.error('Falta el token');
-      return; // Si falta el token, no hacer nada
+      return; 
     }
 
     const usuarioId = localStorage.getItem('id_usuario');
     if (!usuarioId) {
       console.error('Falta el ID del usuario');
-      return; // Si falta el ID de usuario, no hacer nada
+      return; 
     }
 
-    // Solicitar los datos del docente
+
     axios.get(`/api/docentes/usuario/${usuarioId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
         const docenteId = response.data.id_docente;
 
-        // Solicitar los trabajos sociales del docente
         axios.get(`/api/trabajo-social/docente/${docenteId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
           .then(res => {
-            setTrabajosSociales(res.data);  // Guarda los trabajos sociales en el estado
+            setTrabajosSociales(res.data);  
           })
           .catch(error => {
             console.error('Error al obtener los trabajos sociales:', error);
@@ -67,55 +65,71 @@ function RevisionPlanSocial() {
           text: 'No se pudo obtener la información del docente.',
         });
       });
-  }, [token]);  // Asegúrate de observar cambios en el token
+  }, [token]); 
 
-  const handleEdit = (trabajo) => {
-    setSelectedTrabajo(trabajo);
-    setNuevoEstado(trabajo.conformidad_plan_social);
-    setModalVisible(true);
-  };
-  const handleSave = () => {
-    if (selectedTrabajo) {
-      axios.put(
-        `/api/trabajo-social/${selectedTrabajo.id}`,
-        {
-          ...selectedTrabajo,
-          conformidad_plan_social: nuevoEstado,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-        .then(() => {
-          setTrabajosSociales(prev =>
-            prev.map(trabajo =>
-              trabajo.id === selectedTrabajo.id ? { ...trabajo, conformidad_plan_social: nuevoEstado } : trabajo
-            )
-          );
-          setModalVisible(false); // Cierra el modal después de guardar
+const cambiarConformidad = async (idTrabajo, nuevoEstado) => {
+  const accion = nuevoEstado === 'aceptado' ? 'aceptar' : 'rechazar';
+  const confirmacion = await Swal.fire({
+    title: `¿Estás seguro de ${accion} este trabajo?`,
+    text: `Esta acción marcará el trabajo como ${nuevoEstado}.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: nuevoEstado === 'aceptado' ? '#28a745' : '#d33',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: `Sí, ${accion}`,
+    cancelButtonText: 'Cancelar'
+  });
 
-          // Agregar el SweetAlert2 si el estado es "aceptado"
-          if (nuevoEstado === 'aceptado') {
-            Swal.fire({
-              icon: 'success',
-              title: '¡Trabajo Aceptado!',
-              text: 'El trabajo social ha sido aceptado exitosamente.',
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Entendido'
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error al actualizar el estado:', error);
+  if (confirmacion.isConfirmed) {
+    try {
+      await axios.put(`/api/trabajo-social/${idTrabajo}`, {
+        conformidad_plan_social: nuevoEstado
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Actualizar el estado local
+      setTrabajosSociales(prev =>
+        prev.map(trabajo =>
+          trabajo.id === idTrabajo ? { ...trabajo, conformidad_plan_social: nuevoEstado } : trabajo
+        )
+      );
+
+      // Mostrar alerta final
+      if (nuevoEstado === 'aceptado') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Trabajo aceptado',
+          text: 'Has aceptado el plan de servicio social.',
+          timer: 2500,
+          showConfirmButton: false
         });
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Trabajo rechazado',
+          text: 'Has rechazado el plan de servicio social.',
+          timer: 2500,
+          showConfirmButton: false
+        });
+      }
+
+    } catch (error) {
+      console.error('❌ Error al cambiar estado de conformidad:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo cambiar el estado del trabajo.'
+      });
     }
+  }
 };
 
-  
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-  };
+const capitalizarPrimeraLetra = (texto) =>
+  texto ? texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase() : '';
+
+
   return (
     <>
       <Header onToggleSidebar={toggleSidebar} />
@@ -157,47 +171,69 @@ function RevisionPlanSocial() {
                         <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
                         <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
                         <td>
-                          <span className={`estado-badge ${plan.conformidad_plan_social}`}>
-                            {plan.conformidad_plan_social?.toUpperCase() || 'NO DEFINIDO'}
+                          <span className={`estado-badge ${plan.conformidad_plan_social} estado-texto-normal`}>
+                            {capitalizarPrimeraLetra(plan.conformidad_plan_social) || 'No definido'}
+
+
                           </span>
                         </td>
 
                         <td>
-  {plan.archivo_plan_social ? (
-    <a
-  href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${plan.archivo_plan_social}`}
-  target="_blank"
-  rel="noreferrer"
-  className="btn-ojo-ver-plan-docente"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
-      12c-2.761 0-5-2.239-5-5s2.239-5 
-      5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-      3 3 0 0 0 0-6z" />
-  </svg>
-  <span className="texto-ver-docente">&nbsp;Ver</span>
-</a>
+                        {plan.archivo_plan_social ? (
+                          <a
+                        href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${plan.archivo_plan_social}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-ojo-ver-plan-docente"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
+                            12c-2.761 0-5-2.239-5-5s2.239-5 
+                            5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
+                            3 3 0 0 0 0-6z" />
+                        </svg>
+                        <span className="texto-ver-docente">&nbsp;Ver</span>
+                      </a>
 
-  ) : (
-    <span style={{ color: '#999', fontSize: '12px' }}>No subido</span>
-  )}
-</td>
+                        ) : (
+                          <span style={{ color: '#999', fontSize: '12px' }}>No subido</span>
+                        )}
+                      </td>
 
                         <td>
-                          <button className="btn-editar-plan-social" onClick={() => handleEdit(plan)}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="14" height="14">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                          </svg>
-                        </button>
-
-                        </td>
+                        {plan.conformidad_plan_social === 'pendiente' ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            <button
+                              className="btn-accion aceptar"
+                              onClick={() => cambiarConformidad(plan.id, 'aceptado')}
+                            >
+                              Aceptar
+                            </button>
+                            <button
+                              className="btn-accion rechazar"
+                              onClick={() => cambiarConformidad(plan.id, 'rechazado')}
+                            >
+                              Rechazar
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                        className="btn-accion declinar"
+                        onClick={() => {
+                          setTrabajoADeclinar(plan);
+                          setModalObservacionVisible(true);
+                        }}
+                      >
+                        Declinar
+                      </button>
+                        )}
+                      </td>
                       </tr>
                     ))}
                   </tbody>
@@ -216,33 +252,36 @@ function RevisionPlanSocial() {
             </div>
         </div>
       </main>
-  
-      {modalVisible && (
-        <div className="conformidad-modal">
-          <div className="conformidad-modal-content">
-            <h3>Editar Estado</h3>
-            <label htmlFor="estado">Estado:</label>
-            <select
-              id="estado"
-              value={nuevoEstado}
-              onChange={(e) => setNuevoEstado(e.target.value)}
-              className="conformidad-modal-select"
-            >
-              <option value="pendiente">Pendiente</option>
-              <option value="aceptado">Aceptado</option>
-              <option value="rechazado">Rechazado</option>
-            </select>
-            <div className="conformidad-modal-actions">
-              <button className="conformidad-btn guardar" onClick={handleSave}>
-                Guardar
-              </button>
-              <button className="conformidad-btn cancelar" onClick={handleCloseModal}>
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  {modalObservacionVisible && (
+  <div className="modal-observacion-overlay">
+    <div className="modal-observacion-content">
+      <h3>ESCRIBA EL MOTIVO DE SU DECISIÓN</h3>
+      <textarea
+        placeholder="Escriba aquí su observación..."
+        maxLength={300}
+        value={observacionTexto}
+        onChange={(e) => setObservacionTexto(e.target.value)}
+      />
+      <div className="modal-observacion-actions">
+        <button onClick={() => setModalObservacionVisible(false)} className="cancelar-btn">
+          Cancelar
+        </button>
+        <button
+          onClick={() => {
+            cambiarConformidad(trabajoADeclinar.id, 'pendiente');
+            setModalObservacionVisible(false);
+            setObservacionTexto('');
+            setTrabajoADeclinar(null);
+          }}
+          className="enviar-btn"
+        >
+          Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+      
     </>
   );
   

@@ -41,6 +41,7 @@ function LoginPage() {
         email,
         programa_academico_id,
       } = res.data;
+  console.log('✅ TOKEN JWT del usuario:', token);
 
       const userData = {
         token,

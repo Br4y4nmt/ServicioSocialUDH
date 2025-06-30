@@ -17,7 +17,10 @@ const SeguimientoActividades = ({
   planSeleccionado,
   setObservacionSeleccionada,
   setModalObservacionEstudianteVisible,
-  setActividadesSeguimiento
+  setActividadesSeguimiento,
+  actividadSeleccionada,
+  setActividadSeleccionada,
+  handleVolverASubir
 }) => {
 
 const [cartasMiembros, setCartasMiembros] = useState([]);
@@ -26,6 +29,7 @@ const solicitudEnviada = planSeleccionado !== null;
 const trabajoId = planSeleccionado?.id;
 const { user } = useUser(); 
 const token = user?.token;  
+
 
 
 
@@ -224,6 +228,13 @@ const verCartasMiembros = async (trabajoId) => {
                                         >
                                             Aprobado
                                         </button>
+                                    ) :  item.evidencia && item.estado === 'observado' ? (
+                                    <button
+                                        className="btn-estado-observado-actividad"
+                                        disabled
+                                    >
+                                        Observado
+                                    </button>
                                     ) : (
                                         
                                         <button
@@ -321,7 +332,9 @@ const verCartasMiembros = async (trabajoId) => {
                                                 className="btn-ver-evidencia"
                                                 onClick={() => {
                                                     setObservacionSeleccionada(item.observacion);
+                                                    setActividadSeleccionada(item); 
                                                     setModalObservacionEstudianteVisible(true);
+
                                                 }}
                                                 title="Ver observación"
                                             >
