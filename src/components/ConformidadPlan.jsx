@@ -96,13 +96,11 @@ function ConformidadPlan({
     <i className="fas fa-upload"></i> Subir Proyecto
   </button>
 )}
-         </div>
-       </div>
-   )}
+ </div>
+</div>
+)}
      
-   
-     
-   
+
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
      <div id="esquema-plan-pdf">
      <div className="solicitar-revision-card">

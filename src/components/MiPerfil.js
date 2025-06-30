@@ -180,9 +180,11 @@ function MiPerfil() {
             <div className="alerta-importante bounce">
               <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
             </div>
+            <div className="contenedor-boton-centro">
             <button className="btn-solicitar-aprobacion" onClick={handleGuardar}>
               Guardar Cambios
             </button>
+          </div>
           </div>
         </div>
       </main>

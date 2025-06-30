@@ -232,32 +232,28 @@
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
   }
-  .btn-solicitar-aprobacion {
-    background-color: #2EBAA1; /* Color de fondo */
-    color: white; /* Texto blanco */
-    padding: 10px 20px; /* Espaciado interno */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de fuente */
-    cursor: pointer; /* Cursor de puntero */
-    margin-left: 50px;
-    margin-top: 20px;
-    transition: background-color 0.3s, transform 0.2s; /* Transición suave */
-  }
-  
+.btn-solicitar-aprobacion {
+  background-color: #2EBAA1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
   .btn-solicitar-aprobacion:hover {
-    background-color: #26a78d; /* Color al pasar el mouse */
-    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+    background-color: #26a78d;
+    transform: translateY(-2px);
   }
-  
+
   .btn-solicitar-aprobacion:active {
-    background-color: #209c80; /* Color cuando se hace clic */
-    transform: translateY(1px); /* Efecto de pulsación */
+    background-color: #209c80;
+    transform: translateY(1px);
   }
+
   
-
-
-
 
 
  .btn-solicitar-aprobaciones {
@@ -580,14 +576,17 @@
   }
   
   /* Contenedor para la información del plan */
-  .plan-info {
+ .plan-info {
     display: flex;
-    justify-content: flex-start; /* Asegura que los cards se alineen a la izquierda */
-    align-items: flex-start;  /* Ajuste vertical */
-    gap: 20px;  /* Espacio entre los cards */
-    width: 100%;  /* Asegura que ocupe todo el espacio disponible */
-   margin-left: 100px; 
-  }
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;       /* Limita el ancho en pantallas grandes */
+    margin: 0 auto;          /* Centra el contenedor horizontalmente */
+    padding: 0 20px;         /* Espacio horizontal en móviles o pantallas más pequeñas */
+    box-sizing: border-box;  /* Asegura que el padding no rompa el ancho */
+}
   
   /* Icono de la persona */
   .plan-icon {
@@ -983,12 +982,21 @@
 }
 .alerta-boton-wrapper {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  justify-content: flex-start; /* todos alineados al inicio */
+  gap: 2rem;
   flex-wrap: wrap;
+  width: 100%;
   margin-top: 1rem;
 }
+.contenedor-boton-centro {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-left: -380px;
+}
+
 .btn-cerrar-modal-cronogramasss:hover {
   background-color: #003366;
   transform: translateY(-1px);
@@ -1665,16 +1673,26 @@
     font-size: 14px;
   }
 }
+@media (max-width: 768px) {
+  .contenedor-boton-centro {
+    justify-content: center; /* O flex-start si lo quieres a la izquierda */
+    padding: 0 15px;
+    margin-left: 0; /* Elimina el desplazamiento negativo */
+  }
+}
+
 @media (max-width: 668px) {
   .alerta-boton-wrapper {
     flex-direction: column;
     align-items: stretch;
   }
 
-   .btn-solicitar-aprobacion {
-    width: 80%;            /* opcional para mejor presentación */
+    .btn-solicitar-aprobacion {
+    width: 100%;
+    max-width: 200px; /* evita que se haga muy grande */
     margin: 20px auto 0 auto;
     display: block;
+    box-sizing: border-box;
   }
 }
 @media (max-width: 480px) {
@@ -1686,3 +1704,13 @@
 
 }
 
+@media (min-width: 1440px) {
+  .plan-info {
+    transform: translateX(140px); /* Ajusta visualmente hacia la derecha */
+  }
+}
+@media (min-width: 1440px) {
+  .contenedor-boton-centro {
+    transform: translateX(20px); /* mueve el botón un poco más a la derecha */
+  }
+}
