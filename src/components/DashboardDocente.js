@@ -13,9 +13,9 @@ function RevisionDocente() {
   const token = user?.token;
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false); // Control del modal
-  const [selectedTrabajo, setSelectedTrabajo] = useState(null); // Trabajo seleccionado para edición
-  const [nuevoEstado, setNuevoEstado] = useState(''); // Estado editable
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [selectedTrabajo, setSelectedTrabajo] = useState(null); 
+  const [nuevoEstado, setNuevoEstado] = useState(''); 
   const [activeSection, setActiveSection] = useState('revision');
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
@@ -321,7 +321,7 @@ useEffect(() => {
   };
 const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
-  const firmaBase64 = await convertirImagenABase64(`/uploads/firmas/${firmaDocente}`);
+  const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
 
   const contenido = `
@@ -402,8 +402,8 @@ const handleSave = async () => {
   if (!selectedTrabajo) return;
 
   try {
-    // 1. Actualizar el estado del trabajo
-     await axios.put(
+    // 1. Actualizar el estado del trabajo en la BD
+    await axios.put(
       `/api/trabajo-social/${selectedTrabajo.id}`,
       {
         estado_plan_labor_social: nuevoEstado,
@@ -413,66 +413,55 @@ const handleSave = async () => {
       }
     );
 
-    // 2. Si el estado es 'aceptado', generar los PDFs
+    // 2. Si el estado es 'aceptado', generar cartas PDF
     if (nuevoEstado === 'aceptado') {
       if (selectedTrabajo.tipo_servicio_social === 'grupal') {
-        // 2.1 Generar PDF del estudiante principal
-        await generarYSubirPDF(selectedTrabajo); // 👉 se guarda en la tabla principal
+        // 2.1 PDF del estudiante principal
+        await generarYSubirPDF(selectedTrabajo); // se guarda en tabla principal
 
-        // 2.2 Obtener integrantes del grupo
-        const res = await axios.get(`/api/integrantes/${selectedTrabajo.id}`);
-        const integrantes = res.data;
+ 
+        const { data: integrantes } = await axios.get(
+          `/api/integrantes/${selectedTrabajo.id}/enriquecido`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        // 2.3 Procesar cada integrante (excluyendo al principal)
+        // 2.3 Generar y subir PDF para cada integrante
         for (const integrante of integrantes) {
-          if (integrante.usuario_id === selectedTrabajo.usuario_id) continue; // omitir principal
-
-          const codigo = integrante.correo_institucional.split('@')[0];
-
-          try {
-            const { data } = await axios.get(
-              `http://www.udh.edu.pe/websauh/secretaria_general/gradosytitulos/datos_estudiante_json.aspx?_c_3456=${codigo}`
-            );
-            const info = data[0];
-
-            const trabajoFake = {
+          const trabajoFake = {
             ...selectedTrabajo,
             Estudiante: {
-              nombre_estudiante: `${info.stu_nombres} ${info.stu_apellido_paterno} ${info.stu_apellido_materno}`
+              nombre_estudiante: integrante.nombre_completo
             },
             Facultad: {
-              nombre_facultad: info.stu_facultad
+              nombre_facultad: integrante.facultad
             },
             ProgramasAcademico: {
-              nombre_programa: info.stu_programa
+              nombre_programa: integrante.programa
             },
-            id: `${selectedTrabajo.id}_${codigo}`
+            id: `${selectedTrabajo.id}_${integrante.codigo_universitario}`
           };
 
-            // 🧠 Generar el PDF como blob
-            const pdfBlob = await generarPDFBlob(trabajoFake);
+          const pdfBlob = await generarPDFBlob(trabajoFake);
 
-            // 📨 Subirlo a la tabla secundaria
-            const formData = new FormData();
-            formData.append('archivo', pdfBlob, `carta_aceptacion_${selectedTrabajo.id}_${codigo}.pdf`);
-            formData.append('trabajo_id', selectedTrabajo.id);
-            formData.append('codigo_universitario', codigo);
+          const formData = new FormData();
+          formData.append('archivo', pdfBlob, `carta_aceptacion_${selectedTrabajo.id}_${integrante.codigo_universitario}.pdf`);
+          formData.append('trabajo_id', selectedTrabajo.id);
+          formData.append('codigo_universitario', integrante.codigo_universitario);
 
-            await axios.post('/api/cartas-aceptacion', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            });
-
-          } catch (err) {
-            console.error(`❌ Error al procesar integrante ${codigo}:`, err);
+          await axios.post('/api/cartas-aceptacion', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
           }
+        });
         }
 
       } else {
-        // ✅ Individual
+        // ✅ Servicio individual
         await generarYSubirPDF(selectedTrabajo);
       }
 
-      // 3. Confirmación
+      // 3. Mostrar confirmación
       Swal.fire({
         icon: 'success',
         title: '¡Trabajo aceptado!',
@@ -482,7 +471,7 @@ const handleSave = async () => {
       });
     }
 
-    // 4. Actualizar UI
+    // 4. Actualizar estado en la UI
     setTrabajosSociales(prev =>
       prev.map(trabajo =>
         trabajo.id === selectedTrabajo.id
@@ -531,7 +520,7 @@ const cerrarModalGrupo = () => {
   setIntegrantesGrupo([]);
 };
 const handleCambiarEstado = async (trabajo, nuevoEstado) => {
-   if (nuevoEstado === 'aceptado') {
+  if (nuevoEstado === 'aceptado') {
     const result = await Swal.fire({
       title: '¿Estás seguro de aceptar al estudiante?',
       text: 'Esta acción generará la carta de aceptación y no podrá ser revertida.',
@@ -542,66 +531,87 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       confirmButtonText: 'Sí, aceptar',
       cancelButtonText: 'Cancelar'
     });
+
     if (!result.isConfirmed) return;
   }
+
   try {
     // 1. Actualizar estado en la base de datos
-   await axios.put(`/api/trabajo-social/${trabajo.id}`, {
-    estado_plan_labor_social: nuevoEstado
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    await axios.put(
+      `/api/trabajo-social/${trabajo.id}`,
+      { estado_plan_labor_social: nuevoEstado },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-    // 2. Si se aceptó, generar y subir PDF(s)
+    // 2. Si se aceptó, generar carta(s)
     if (nuevoEstado === 'aceptado') {
       if (trabajo.tipo_servicio_social === 'grupal') {
+        let integrantes = [];
+
+        try {
+          const response = await axios.get(
+            `/api/integrantes/${trabajo.id}/enriquecido`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          integrantes = response.data;
+
+          if (!Array.isArray(integrantes) || integrantes.length === 0) {
+            await Swal.fire({
+              icon: 'warning',
+              title: 'Sin datos de grupo',
+              text: 'No se encontraron integrantes del grupo. Intenta nuevamente más tarde.',
+              confirmButtonText: 'Aceptar'
+            });
+            return;
+          }
+
+        } catch (err) {
+          console.error('❌ Error al obtener datos enriquecidos:', err);
+          await Swal.fire({
+            icon: 'error',
+            title: 'Servidor de UDH no disponible',
+            text: 'No se pudo contactar con el servidor de datos académicos. Inténtalo más tarde.',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // ⛔ Detiene toda la generación
+        }
+
+        // ✅ Solo si todo fue bien, generar PDF del estudiante principal
         await generarYSubirPDF(trabajo);
 
-       const res = await axios.get(`/api/integrantes/${trabajo.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-        const integrantes = res.data;
-
+        // 2.3 Procesar cada integrante
         for (const integrante of integrantes) {
-          if (integrante.usuario_id === trabajo.usuario_id) continue;
-
-          const codigo = integrante.correo_institucional.split('@')[0];
-
-          try {
-            const { data } = await axios.get(
-              `http://www.udh.edu.pe/websauh/secretaria_general/gradosytitulos/datos_estudiante_json.aspx?_c_3456=${codigo}`
-            );
-            const info = data[0];
-
-            const trabajoFake = {
+          const trabajoFake = {
             ...trabajo,
             Estudiante: {
-              nombre_estudiante: `${info.stu_nombres} ${info.stu_apellido_paterno} ${info.stu_apellido_materno}`
+              nombre_estudiante: integrante.nombre_completo
             },
             Facultad: {
-              nombre_facultad: info.stu_facultad
+              nombre_facultad: integrante.facultad
             },
             ProgramasAcademico: {
-              nombre_programa: info.stu_programa
+              nombre_programa: integrante.programa
             },
-            id: `${trabajo.id}_${codigo}`
+            id: `${trabajo.id}_${integrante.codigo_universitario}`
           };
 
-            const pdfBlob = await generarPDFBlob(trabajoFake);
+          const pdfBlob = await generarPDFBlob(trabajoFake);
 
-            const formData = new FormData();
-            formData.append('archivo', pdfBlob, `carta_aceptacion_${trabajo.id}_${codigo}.pdf`);
-            formData.append('trabajo_id', trabajo.id);
-            formData.append('codigo_universitario', codigo);
+          const formData = new FormData();
+          formData.append('archivo', pdfBlob, `carta_aceptacion_${trabajo.id}_${integrante.codigo_universitario}.pdf`);
+          formData.append('trabajo_id', trabajo.id);
+          formData.append('codigo_universitario', integrante.codigo_universitario);
 
-            await axios.post('/api/cartas-aceptacion', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            });
-          } catch (err) {
-            console.error(`❌ Error al procesar integrante ${codigo}:`, err);
-          }
+          await axios.post('/api/cartas-aceptacion', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`
+            }
+          });
         }
+
       } else {
+        // Individual
         await generarYSubirPDF(trabajo);
       }
     }
@@ -613,7 +623,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       )
     );
 
-    // 4. Mensaje
+    // 4. Confirmación
     Swal.fire({
       icon: 'success',
       title: `Trabajo ${nuevoEstado === 'aceptado' ? 'aceptado' : 'rechazado'}`,
@@ -633,7 +643,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
     });
   }
 };
-
 
   return (
     <>

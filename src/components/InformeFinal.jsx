@@ -1,8 +1,8 @@
 // src/components/alumno/InformeFinal.jsx
-import React, { useRef, useState } from 'react';
 import './DashboardAlumno.css';
 import axios from 'axios';
 import './ModalGlobal.css';
+import React, { useRef, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { pdf } from '@react-pdf/renderer';
 import InformeFinalPDF from './InformeFinalPDF';
@@ -52,6 +52,7 @@ const InformeFinal = ({
   const refPeriodo = useRef(null);
   const yaSeEnvio = !!planSeleccionado?.informe_final_pdf;
   const refAntecedentes = useRef(null);
+  const [certificadosGrupo, setCertificadosGrupo] = useState([]);
   const refObjetivoGeneral = useRef(null);
   const refObjetivosEspecificos = useRef(null);
   const refActividades = useRef(null);
@@ -72,6 +73,26 @@ const InformeFinal = ({
   const { user } = useUser();
   const token = user?.token;
 
+
+
+useEffect(() => {
+  const fetchCertificadosGrupo = async () => {
+    if (planSeleccionado?.estado_informe_final === 'aprobado' && planSeleccionado.tipo_servicio_social === 'grupal') {
+      try {
+        const { data } = await axios.get(`/api/certificados-final/grupo/${planSeleccionado.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setCertificadosGrupo(data); // ← array con { nombre_archivo_pdf, codigo_universitario }
+      } catch (error) {
+        console.error('❌ Error al obtener certificados del grupo:', error);
+      }
+    }
+  };
+
+  fetchCertificadosGrupo();
+}, [planSeleccionado, token]);
 
 const handleFileChangeLocal = (e, tipo) => {
   const archivo = e.target.files[0];
@@ -572,7 +593,7 @@ if (!recomendacionesInforme.trim()) {
           {item.evidencia ? (
             <button
               onClick={() => {
-                setImagenModal(`/uploads/evidencias/${item.evidencia}`);
+                setImagenModal(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${item.evidencia}`);
                 setModalVisible(true);
               }}
               className="btn-ver-evidencia"
@@ -1023,7 +1044,7 @@ if (!recomendacionesInforme.trim()) {
     className="btn-ver-documento-inline"
     onClick={() =>
       window.open(
-        `/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
+        `${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
         '_blank'
       )
     }
@@ -1047,7 +1068,6 @@ if (!recomendacionesInforme.trim()) {
 ) : (
   <span style={{ color: '#A0AEC0', fontSize: '14px' }}>No disponible</span>
 )}
-
       <span
         style={{
           backgroundColor: '#38A169',
@@ -1063,6 +1083,61 @@ if (!recomendacionesInforme.trim()) {
     </div>
   </div>
 </div>
+)}
+{planSeleccionado?.estado_informe_final === 'aprobado' &&
+ certificadosGrupo.length > 0 && (
+  <div
+    style={{
+      marginTop: '24px',
+      border: '1px solid #CBD5E0',
+      borderRadius: '10px',
+      padding: '16px 20px',
+      backgroundColor: '#ffffff',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+    }}
+  >
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#3182CE" viewBox="0 0 24 24">
+        <path d="M20.285 2L9 13.567l-5.285-5.278L2 9.993 9 17l13-13z" />
+      </svg>
+      <strong style={{ fontSize: '15px', color: '#2D3748' }}>
+        Certificados de integrantes del grupo
+      </strong>
+    </div>
+
+    {certificadosGrupo.map((cert, index) => (
+      <div
+        key={index}
+        style={{
+          border: '1px solid #E2E8F0',
+          borderRadius: '8px',
+          padding: '12px 16px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: '12px'
+        }}
+      >
+        <span style={{ fontWeight: '600', fontSize: '14px' }}>
+          Certificado - {cert.codigo_universitario || 'Integrante'}
+        </span>
+        <button
+          className="btn-ver-documento-inline"
+          onClick={() =>
+            window.open(
+              `${process.env.REACT_APP_API_URL}/uploads/certificados_finales_miembros/${cert.nombre_archivo_pdf}`,
+              '_blank'
+            )
+          }
+        >
+          Ver
+        </button>
+      </div>
+    ))}
+  </div>
 )}
     </>
     

@@ -60,48 +60,160 @@ function DashboardGestor() {
   const [informesFinales, setInformesFinales] = useState([]);
   const { user } = useUser();
   const token = user?.token;
-  const aceptarInforme = async (id) => {
-    try {
-      const informe = informesFinales.find((i) => i.id === id);
-      if (!informe) return;
-  
-      const blob = await pdf(<InformePDF informe={informe} />).toBlob();
-  
-      const formData = new FormData();
-      formData.append('archivo', blob, `certificado_final_${id}.pdf`);
-      formData.append('trabajo_id', id);
-  
-      await axios.post('/api/trabajo-social/guardar-certificado-final', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        },
-      });
-  
-      await axios.patch(`/api/trabajo-social/estado/${id}`, {
-        nuevo_estado: 'aprobado',
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-  
-      fetchInformesFinales();
-  
-      Swal.fire({
-        icon: 'success',
-        title: 'Informe aprobado',
-        text: 'El PDF fue generado y guardado exitosamente.',
-        confirmButtonText: 'Aceptar',
-      });
-  
-    } catch (error) {
-      console.error('Error al aceptar informe:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo procesar el informe.',
-      });
+const aceptarInforme = async (id) => {
+  try {
+    const informe = informesFinales.find((i) => i.id === id);
+    if (!informe) {
+      console.warn('⚠️ Informe no encontrado para el ID:', id);
+      return;
     }
-  };
+
+    const tipoServicio = (
+      informe.trabajo_social?.tipo_servicio_social ||
+      informe.tipo_servicio_social ||
+      null
+    );
+
+    const trabajoId = informe.trabajo_social_id || informe.id;
+
+    // 🧪 Bloqueo completo si el servicio es grupal y hay un fallo en la API UDH
+    if (tipoServicio === 'grupal') {
+      let estudiantes = [];
+
+      try {
+        const response = await axios.get(`/api/integrantes/${trabajoId}/enriquecido`, {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 7000
+        });
+
+        estudiantes = response.data;
+
+        if (!Array.isArray(estudiantes) || estudiantes.length === 0) {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Servidor UDH sin respuesta',
+            text: 'No se pudieron obtener los integrantes del grupo. Intenta nuevamente más tarde.',
+            confirmButtonText: 'Aceptar',
+          });
+          return; // 🚫 Detener aquí: no generar certificado ni del principal
+        }
+
+      } catch (error) {
+        console.error('❌ Error al conectar con API UDH:', error);
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión',
+          text: 'No se pudo conectar con el servidor de la UDH. Por favor, inténtalo más tarde.',
+          confirmButtonText: 'Aceptar',
+        });
+        return; // 🚫 Detener aquí: no generar certificado ni del principal
+      }
+
+      // ✅ Generar certificados para integrantes (excluyendo al principal)
+      for (const estudiante of estudiantes) {
+        try {
+          const nombreEstudiante = estudiante.nombre_completo;
+          const codigo = estudiante.codigo_universitario;
+
+          // Saltar al estudiante principal (evitar duplicado)
+          const correoPrincipal = informe.trabajo_social?.correo_institucional || informe.correo_institucional;
+          if (estudiante.correo_institucional === correoPrincipal) {
+            console.log(`⏩ Saltando estudiante principal: ${correoPrincipal}`);
+            continue;
+          }
+
+          const informePersonalizado = {
+            ...informe,
+            Estudiante: { nombre_estudiante: nombreEstudiante },
+            ProgramasAcademico: {
+              ...informe.ProgramasAcademico,
+              Facultade: {
+                nombre_facultad: estudiante.facultad,
+              },
+            },
+          };
+
+          const blob = await pdf(<InformePDF informe={informePersonalizado} />).toBlob();
+
+          const formData = new FormData();
+          formData.append('archivo', blob, `certificado_final_${codigo}.pdf`);
+          formData.append('trabajo_id', trabajoId);
+          formData.append('codigo_universitario', codigo);
+
+          await axios.post('/api/certificados-final', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          console.log(`✅ Certificado generado para integrante: ${codigo}`);
+        } catch (err) {
+          console.error(`❌ Error generando certificado para integrante:`, err);
+        }
+      }
+    }
+
+    // 🧾 Generar certificado del estudiante principal (solo si NO se interrumpió antes)
+    const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
+    const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
+
+    const informePrincipal = {
+      ...informe,
+      Estudiante: { nombre_estudiante: nombreEstudiantePrincipal },
+      ProgramasAcademico: {
+        ...informe.ProgramasAcademico,
+        Facultade: {
+          nombre_facultad: nombreFacultad,
+        },
+      },
+    };
+
+    const blobPrincipal = await pdf(<InformePDF informe={informePrincipal} />).toBlob();
+
+    const formDataPrincipal = new FormData();
+    formDataPrincipal.append('archivo', blobPrincipal, `certificado_final_${id}.pdf`);
+    formDataPrincipal.append('trabajo_id', id);
+
+    await axios.post('/api/trabajo-social/guardar-certificado-final', formDataPrincipal, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log('✅ Certificado del estudiante principal guardado');
+
+    // Cambiar estado a aprobado
+    await axios.patch(`/api/trabajo-social/estado/${id}`, {
+      nuevo_estado: 'aprobado',
+    }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    fetchInformesFinales();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Informe aprobado',
+      text: 'Los certificados fueron generados y guardados exitosamente.',
+      confirmButtonText: 'Aceptar',
+    });
+
+  } catch (error) {
+    console.error('❌ Error general al aceptar informe:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo procesar el informe.',
+    });
+  }
+};
+
+
+
+
+
 const fetchInformesFinales = async () => {
   try {
     const res = await axios.get('/api/trabajo-social/informes-finales', {
@@ -933,7 +1045,7 @@ const rechazarInforme = async (id) => {
                   <td>
                     {inf.informe_final_pdf ? (
                       <a
-                        href={`/uploads/informes_finales/${inf.informe_final_pdf}`}
+                        href={`${process.env.REACT_APP_API_URL}/uploads/informes_finales/${inf.informe_final_pdf}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-ver-pdf"
@@ -957,7 +1069,7 @@ const rechazarInforme = async (id) => {
                   <td>
                     {inf.certificado_final ? (
                       <a
-                        href={`/uploads/certificados_finales/${inf.certificado_final}`}
+                        href={`${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${inf.certificado_final}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-ver-pdf"

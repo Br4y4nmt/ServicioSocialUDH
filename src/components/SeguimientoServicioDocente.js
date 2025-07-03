@@ -136,46 +136,84 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
     });
 
     if (nuevoEstado === 'aprobada') {
-  if (plan.tipo_servicio_social === 'grupal') {
-    await generarYSubirCartaTermino(plan, firmaDocente);
+      if (plan.tipo_servicio_social === 'grupal') {
+        // Obtener integrantes del grupo
+        const { data: integrantes } = await axios.get(`/api/integrantes/${plan.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-    const { data: integrantes } = await axios.get(`/api/integrantes/${plan.id}`);
+        // Obtener datos enriquecidos del backend
+        let datosEnriquecidos;
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/integrantes/${plan.id}/enriquecido`,
+            {
+              headers: { Authorization: `Bearer ${token}` }
+            }
+          );
+          datosEnriquecidos = response.data;
+        } catch (error) {
+          console.error('❌ Error al conectar con API UDH:', error);
+          await Swal.fire({
+            icon: 'error',
+            title: 'Servidor UDH inalcanzable',
+            text: 'La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.',
+          });
+          return; // ❌ No continuar si falla
+        }
 
-    for (const integrante of integrantes) {
-      if (integrante.usuario_id === plan.usuario_id) continue;
+        if (!Array.isArray(datosEnriquecidos) || datosEnriquecidos.length === 0) {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Servidor UDH no respondió',
+            text: 'No se pudieron obtener los datos de los integrantes. Intenta más tarde.',
+          });
+          return; // ❌ No continuar si no hay datos
+        }
 
-      const codigo = integrante.correo_institucional.split('@')[0];
-      try {
-        const { data } = await axios.get(
-          `http://www.udh.edu.pe/websauh/secretaria_general/gradosytitulos/datos_estudiante_json.aspx?_c_3456=${codigo}`
-        );
-        const info = data[0];
-        const nombreEstudiante = `${info.stu_nombres} ${info.stu_apellido_paterno} ${info.stu_apellido_materno}`;
+        // ✅ Solo se genera la carta del estudiante principal si la API respondió correctamente
+        await generarYSubirCartaTermino(plan, firmaDocente);
 
-        const html = await generarHTML(
-        nombreEstudiante,
-        info.stu_programa,
-        info.stu_facultad,
-        plan.LaboresSociale?.nombre_labores || '--------',
-        firmaDocente
-      );
+        // Procesar integrantes uno por uno
+        for (const integrante of integrantes) {
+          if (integrante.usuario_id === plan.usuario_id) continue;
 
-      const blob = await generarPDFBlobTermino(html, `Carta_Termino_${nombreEstudiante}.pdf`);
+          const codigo = integrante.correo_institucional.split('@')[0];
+          const info = datosEnriquecidos.find(est => est.codigo_universitario === codigo);
+          if (!info) {
+            console.warn(`⚠️ No se encontró info enriquecida para el código: ${codigo}`);
+            continue;
+          }
 
-        const formData = new FormData();
-        formData.append('archivo', blob, `Carta_Termino_${nombreEstudiante}.pdf`);
-        formData.append('trabajo_id', plan.id);
-        formData.append('codigo_universitario', codigo);
+          const nombreEstudiante = info.nombre_completo;
 
-        await axios.post('/api/cartas-termino', formData);
-      } catch (error) {
-        console.error(`❌ Error al procesar integrante ${codigo}:`, error);
+          const html = await generarHTML(
+            nombreEstudiante,
+            info.programa,
+            info.facultad,
+            plan.LaboresSociale?.nombre_labores || '--------',
+            firmaDocente
+          );
+
+          const blob = await generarPDFBlobTermino(html, `Carta_Termino_${nombreEstudiante}.pdf`);
+
+          const formData = new FormData();
+          formData.append('archivo', blob, `Carta_Termino_${nombreEstudiante}.pdf`);
+          formData.append('trabajo_id', plan.id);
+          formData.append('codigo_universitario', codigo);
+
+          await axios.post('/api/cartas-termino', formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        }
+      } else {
+        // Individual
+        await generarYSubirCartaTermino(plan, firmaDocente);
       }
     }
-  } else {
-    await generarYSubirCartaTermino(plan, firmaDocente);
-  }
-}
 
   } catch (error) {
     console.error('Error al actualizar solicitud:', error);
@@ -186,6 +224,9 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
     });
   }
 };
+
+
+
 
 
   useEffect(() => {

@@ -12,13 +12,13 @@ function RegisterPage() {
   const [dni, setDni] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [showDni, setShowDni] = useState(false);
- 
+ const [isSubmitting, setIsSubmitting] = useState(false);
+
   const emailFinal = `${codigo}@udh.edu.pe`;
 
 const handleRegister = async (e) => {
   e.preventDefault();
 
-  // Validación del número de WhatsApp
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({
       icon: 'error',
@@ -29,16 +29,16 @@ const handleRegister = async (e) => {
     return;
   }
 
+  setIsSubmitting(true); // ⏳ Desactivar botón
+
   try {
-    // Enviar los datos al back-end para registrar al usuario
     const res = await axios.post('/api/auth/register', {
-      email: `${codigo}@udh.edu.pe`,  // Generamos el correo como `${codigo}@udh.edu.pe`
+      email: `${codigo}@udh.edu.pe`,
       dni,
       whatsapp,
-      codigo,  // El código institucional que se pasa al back-end
+      codigo,
     });
 
-    // Mostrar mensaje de éxito y redirigir al inicio de sesión
     Swal.fire({
       icon: 'success',
       title: '¡Registro Exitoso!',
@@ -48,21 +48,32 @@ const handleRegister = async (e) => {
       showConfirmButton: false,
     });
 
-    // Redirigir al usuario al login después de 2 segundos
     setTimeout(() => navigate('/login'), 2000);
 
   } catch (error) {
     console.error('Error en el registro:', error.response ? error.response.data : error.message);
 
-    // Mostrar mensaje de error si algo salió mal
-    Swal.fire({
-      icon: 'error',
-      title: 'Error en el registro',
-      text: error.response?.data?.message || 'No se pudo registrar. Intenta nuevamente.',
-      confirmButtonColor: '#d33',
-    });
+    if (error.response?.status === 503) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Servicio UDH no disponible',
+        text: 'No se pudo verificar tus datos en este momento. Intenta nuevamente más tarde.',
+        confirmButtonColor: '#f27474',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el registro',
+        text: error.response?.data?.message || 'No se pudo registrar. Intenta nuevamente.',
+        confirmButtonColor: '#d33',
+      });
+    }
+
+  } finally {
+    setIsSubmitting(false); // ✅ Reactivar botón
   }
 };
+
 
   return (
     <div className="register-page">
@@ -163,9 +174,13 @@ const handleRegister = async (e) => {
 
 
 
-  <button type="submit" className="register-button">
-    REGISTRAR
-  </button>
+  <button
+  type="submit"
+  className="register-button"
+  disabled={isSubmitting}
+>
+  {isSubmitting ? 'Registrando...' : 'REGISTRAR'}
+</button>
 </form>
 
     </div>
