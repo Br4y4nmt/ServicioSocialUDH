@@ -1,15 +1,16 @@
 // src/components/PlanTrabajo.jsx
 
 import React from 'react';
-import './Reglamento.css'; // reutilizamos los estilos existentes
-import { FaCheckCircle } from 'react-icons/fa';
+import './Reglamento.css'; 
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 
 function PlanTrabajo() {
   return (
       <div style={{ border: '1px solid #e2e2e2', borderRadius: '10px', padding: '20px', backgroundColor: '#fff' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-          <FaCheckCircle size={28} style={{ color: '#2ecc71', marginRight: '10px' }} />
+          <span className="check-circle-plan">
+          <i className="fas fa-check"></i>
+        </span>
           <h3 className="titulo-reglamento">PLAN DE TRABAJO</h3>
           <div className="info-tooltip">
           <HiOutlineInformationCircle
@@ -61,7 +62,7 @@ function PlanTrabajo() {
             <button
               className="btn-ver-documento-inline"
               onClick={() =>
-                window.open('https://drive.google.com/file/d/17gAI3ACdRPgheDtd1dhSvSA9szTmtsHT/view?usp=sharing', '_blank') // ← pon aquí tu URL de Drive
+                window.open('https://drive.google.com/file/d/13NCxoOYne46Wx46xydWWPR2tRf5HV8gq/view?usp=sharing', '_blank') // ← pon aquí tu URL de Drive
               }
             >
               <svg
@@ -78,17 +79,9 @@ function PlanTrabajo() {
               Ver
             </button>
   
-            <span
-              style={{
-                backgroundColor: '#2ecc71',
-                color: 'white',
-                padding: '4px 12px',
-                borderRadius: '8px',
-                fontSize: '0.9rem'
-              }}
-            >
-              Vigente
-            </span>
+            <span className="etiqueta-vigente">
+            Vigente
+          </span>
           </div>
         </div>
       </div>

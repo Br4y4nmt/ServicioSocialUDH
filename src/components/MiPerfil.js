@@ -21,6 +21,8 @@ function MiPerfil() {
     facultad: '',
     programa: '',
     codigo: '',
+    sede: '',
+    modalidad: ''
   });
 
   const { user } = useUser();
@@ -51,6 +53,8 @@ function MiPerfil() {
           facultad: data.facultad?.nombre_facultad || '',
           programa: data.programa?.nombre_programa || '',
           codigo: data.codigo,
+          sede: data.sede || '',
+          modalidad: data.modalidad || '' 
         });
 
         setCelularOriginal(data.celular || '');
@@ -168,6 +172,22 @@ function MiPerfil() {
             />
             <small className="text-muted">Puedes modificar este campo</small>
           </div>
+          <div className="form-group">
+          <label className="bold-text">Sede</label>
+          <input
+            className="input-disabled"
+            value={perfil.sede}
+            disabled
+          />
+        </div>
+        <div className="form-group">
+          <label className="bold-text">Modalidad</label>
+          <input
+        className="input-disabled"
+        value={perfil.modalidad || ''}
+        disabled
+      />
+        </div>
           <div className="form-group">
             <label className="bold-text">Facultad</label>
             <input className="input-disabled" value={perfil.facultad} disabled />

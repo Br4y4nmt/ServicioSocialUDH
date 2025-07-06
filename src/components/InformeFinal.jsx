@@ -722,7 +722,7 @@ if (!recomendacionesInforme.trim()) {
 </div>
 
 <div className="form-group">
-  <label className="bold-text">Carta de término (PDF)</label>
+  <label className="bold-text">Documento de aprobacion actividades (PDF)</label>
   <input type="file" accept="application/pdf" onChange={(e) => handleFileChangeLocal(e, 'cartaTermino')} />
 </div>
 

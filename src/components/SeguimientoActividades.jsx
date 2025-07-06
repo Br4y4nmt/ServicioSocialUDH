@@ -29,8 +29,7 @@ const solicitudEnviada = planSeleccionado !== null;
 const trabajoId = planSeleccionado?.id;
 const { user } = useUser(); 
 const token = user?.token;  
-
-
+const [cargandoEvidencia, setCargandoEvidencia] = useState([]);
 
 
 const verCartasMiembros = async (trabajoId) => {
@@ -75,7 +74,6 @@ const verCartasMiembros = async (trabajoId) => {
             <table className="tabla-cronograma">
                 <thead>
                     <tr>
-                        
                         <th>Actividad</th>
                         <th>Justificación</th>
                         <th>Fecha Inicio</th>
@@ -237,93 +235,133 @@ const verCartasMiembros = async (trabajoId) => {
                                     </button>
                                     ) : (
                                         
-                                        <button
-                                            onClick={async () => {
-                                                const actividad = actividadesSeguimiento[index];
-                                               
-                                        const hoy = new Date();
-                                        const fechaPermitida = new Date(actividad.fecha_fin_primero);
+    <button
+  onClick={async () => {
+    if (cargandoEvidencia[index]) return;
 
-                                    
-                                        const diferenciaEnMs = hoy - fechaPermitida;
-                                        const diferenciaEnDias = Math.floor(diferenciaEnMs / (1000 * 60 * 60 * 24));
+    const newCargando = [...cargandoEvidencia];
+    newCargando[index] = true;
+    setCargandoEvidencia(newCargando);
 
-                                        if (diferenciaEnDias < -5) {
-                                        Swal.fire({
-                                            icon: 'warning',
-                                            title: 'Demasiado pronto',
-                                            text: `Solo puedes subir la evidencia desde 5 días antes de la fecha permitida (${actividad.fecha_fin_primero?.substring(0, 10)}).`,
-                                            confirmButtonText: 'Entendido'
-                                        });
-                                        return;
-                                        }
+    const actividad = actividadesSeguimiento[index];
+    const hoy = new Date();
+    const fechaPermitida = new Date(actividad.fecha_fin_primero);
+    const diferenciaEnMs = hoy - fechaPermitida;
+    const diferenciaEnDias = Math.floor(diferenciaEnMs / (1000 * 60 * 60 * 24));
 
-                                        if (diferenciaEnDias > 10) {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Fecha vencida',
-                                            text: `La fecha máxima para subir la evidencia era hasta 10 días después de la fecha permitida (${actividad.fecha_fin_primero?.substring(0, 10)}).`,
-                                            confirmButtonText: 'Aceptar'
-                                        });
-                                        return;
-                                        }
-                                                if (!actividad.archivoTemporalEvidencia) {
-                                                    Swal.fire({
-                                                        icon: 'warning',
-                                                        title: 'Falta evidencia',
-                                                        text: 'Selecciona una evidencia antes de confirmar.',
-                                                        confirmButtonText: 'Aceptar'
-                                                    });
-                                                    return;
-                                                }
+    if (diferenciaEnDias < -5) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Demasiado pronto',
+        text: `Solo puedes subir la evidencia desde 5 días antes de la fecha permitida (${actividad.fecha_fin_primero?.substring(0, 10)}).`,
+        confirmButtonText: 'Entendido'
+      });
+      newCargando[index] = false;
+      setCargandoEvidencia(newCargando);
+      return;
+    }
 
-                                                const formData = new FormData();
-                                                formData.append('evidencia', actividad.archivoTemporalEvidencia);
-                                                const fechaHoy = new Date().toISOString().split('T')[0];
-                                                formData.append('fecha_fin', fechaHoy);
-                                                formData.append('estado', 'pendiente');
+    if (diferenciaEnDias > 10) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Fecha vencida',
+        text: `La fecha máxima para subir la evidencia era hasta 10 días después de la fecha permitida (${actividad.fecha_fin_primero?.substring(0, 10)}).`,
+        confirmButtonText: 'Aceptar'
+      });
+      newCargando[index] = false;
+      setCargandoEvidencia(newCargando);
+      return;
+    }
 
-                                               try {
-    const res = await axios.post(
+    if (!actividad.archivoTemporalEvidencia) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Falta evidencia',
+        text: 'Selecciona una evidencia antes de confirmar.',
+        confirmButtonText: 'Aceptar'
+      });
+      newCargando[index] = false;
+      setCargandoEvidencia(newCargando);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('evidencia', actividad.archivoTemporalEvidencia);
+    const fechaHoy = new Date().toISOString().split('T')[0];
+    formData.append('fecha_fin', fechaHoy);
+    formData.append('estado', 'pendiente');
+
+    try {
+      const res = await axios.post(
         `/api/cronograma/evidencia/${actividad.id}`,
         formData,
         {
-            headers: { Authorization: `Bearer ${token}` }  // Usamos el token del contexto
+          headers: { Authorization: `Bearer ${token}` }
         }
-    );
+      );
 
-    // Actualiza el estado con la nueva evidencia
-    const updated = [...actividadesSeguimiento];
-    updated[index].evidencia = res.data.filename;
-    updated[index].fecha_fin = fechaHoy;
-    updated[index].estado = 'pendiente';
-    updated[index].archivoTemporalEvidencia = null;
-    setActividadesSeguimiento(updated);
+      const updated = [...actividadesSeguimiento];
+      updated[index].evidencia = res.data.filename;
+      updated[index].fecha_fin = fechaHoy;
+      updated[index].estado = 'pendiente';
+      updated[index].archivoTemporalEvidencia = null;
+      setActividadesSeguimiento(updated);
 
-    Swal.fire({
+      Swal.fire({
         icon: 'success',
         title: 'Evidencia subida',
         text: 'Actividad marcada como pendiente de revisión.',
         timer: 1500,
         showConfirmButton: false
-    });
-} catch (error) {
-    console.error('Error al subir evidencia:', error);
-    Swal.fire({
+      });
+    } catch (error) {
+      console.error('Error al subir evidencia:', error);
+      Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'No se pudo subir la evidencia.'
-    });
-                                                }
-                                            }}
-                                            className="btn-enviar-evidenciasss"
-                                            title="Enviar evidencia"
-                                        >
-                                            Enviar
-                                        </button>
-                                    )}
-                                </td>
+      });
+    } finally {
+      newCargando[index] = false;
+      setCargandoEvidencia(newCargando);
+    }
+  }}
+  className="btn-enviar-evidenciasss"
+  title="Enviar evidencia"
+  disabled={cargandoEvidencia[index]}
+>
+  {cargandoEvidencia[index] ? (
+    <>
+      <svg className="spinner" width="16" height="16" viewBox="0 0 50 50">
+        <circle
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="#4A5568"
+          strokeWidth="5"
+          strokeDasharray="90 150"
+          strokeLinecap="round"
+        >
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            dur="0.75s"
+            from="0 25 25"
+            to="360 25 25"
+            repeatCount="indefinite"
+          />
+        </circle>
+      </svg>
+      <span style={{ marginLeft: '8px' }}>Enviando...</span>
+    </>
+  ) : (
+    'Enviar'
+  )}
+</button>
 
+     )}
+    </td>
 
                                 {hayObservaciones && (
                                     <td style={{ textAlign: 'center' }}>
@@ -425,10 +463,10 @@ const verCartasMiembros = async (trabajoId) => {
                     </div>
 
                     <div style={{ marginTop: '0px', paddingLeft: '32px' }}>
-                        <p><strong>Carta de término: </strong></p>
+                        <p><strong>Aprobación de Actividades: </strong></p>
                         {estadoSolicitudTermino === 'aprobada' ? (
                             <p style={{ color: '#2C7A7B', fontStyle: 'italic', fontSize: '14px' }}>
-                                Se aprobó correctamente su solicitud. Puede ver y descargar su carta de término.
+                                Se aprobó correctamente su solicitud. Puede ver y descargar su documento de término de actividades.
                             </p>
                         ) : (
                             <p style={{ color: '#2C7A7B', fontStyle: 'italic', fontSize: '14px' }}>
@@ -446,7 +484,7 @@ const verCartasMiembros = async (trabajoId) => {
       </span>
 
        <h3>
-        {cartasMiembros.length > 1 ? 'Cartas de término del grupo' : 'CARTA DE TERMINO'}
+        {cartasMiembros.length > 1 ? 'Cartas de término del grupo' : 'DOCUMENTOS DE APROBACIÓN DE ACTIVIDADES'}
       </h3>
       <div className="info-tooltip">
         <svg className="info-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -459,7 +497,6 @@ const verCartasMiembros = async (trabajoId) => {
         </div>
       </div>
     </div>
-
 
     <div className="documento-card">
       <div className="documento-info">
@@ -484,17 +521,17 @@ const verCartasMiembros = async (trabajoId) => {
         </g>
         <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
       </svg>
-        <span className="titulo-pdf">CARTA DE TERMINO (ESTUDIANTE PRINCIPAL)</span>
+        <span className="titulo-pdf"> DOCUMENTO DE APROBACION DE ACTIVIDADES (ESTUDIANTE PRINCIPAL)</span>
       </div>
       <div className="acciones-doc">
         <button
           className="btn-ver-documento-inline"
           onClick={() => {
-                                        window.open(
-                                            `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
-                                            '_blank'
-                                        );
-                                    }}
+              window.open(
+                `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
+              '_blank'
+             );
+          }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12
@@ -532,7 +569,7 @@ const verCartasMiembros = async (trabajoId) => {
         <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
       </svg>
           <span className="titulo-pdf">
-            CARTA DE TERMINO ({carta?.codigo_universitario || 'SIN CÓDIGO'})
+            DOCUMENTO DE APROBACION DE ACTIVIDADES  ({carta?.codigo_universitario || 'SIN CÓDIGO'})
             </span>
 
         </div>

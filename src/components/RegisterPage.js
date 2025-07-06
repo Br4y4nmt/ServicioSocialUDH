@@ -5,14 +5,12 @@ import './RegisterPage.css';
 import Swal from 'sweetalert2';
 
 function RegisterPage() {
- 
-
   const navigate = useNavigate();
   const [codigo, setCodigo] = useState('');
   const [dni, setDni] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [showDni, setShowDni] = useState(false);
- const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const emailFinal = `${codigo}@udh.edu.pe`;
 
@@ -29,7 +27,19 @@ const handleRegister = async (e) => {
     return;
   }
 
-  setIsSubmitting(true); // ⏳ Desactivar botón
+  // 🚨 Validar el año del código institucional
+  const yearPrefix = parseInt(codigo.substring(0, 4), 10);
+  if (isNaN(yearPrefix) || yearPrefix < 2021) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Código no válido',
+      text: 'Solo se permite el registro para estudiantes desde el año 2021 en adelante.',
+      confirmButtonColor: '#d33',
+    });
+    return;
+  }
+
+  setIsSubmitting(true);
 
   try {
     const res = await axios.post('/api/auth/register', {
@@ -70,7 +80,7 @@ const handleRegister = async (e) => {
     }
 
   } finally {
-    setIsSubmitting(false); // ✅ Reactivar botón
+    setIsSubmitting(false);
   }
 };
 
@@ -161,7 +171,6 @@ const handleRegister = async (e) => {
   pattern="9\d{8}"
   inputMode="numeric"
 />
-
 </div>
   <div className="checkbox-group">
   <input type="checkbox" id="terms" required />
@@ -171,9 +180,6 @@ const handleRegister = async (e) => {
     </label>
   </div>
 </div>
-
-
-
   <button
   type="submit"
   className="register-button"

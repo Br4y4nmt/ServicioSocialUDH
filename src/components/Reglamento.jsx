@@ -1,20 +1,21 @@
 import React from 'react';
 import './Reglamento.css';
-import { FaCheckCircle } from 'react-icons/fa';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 function Reglamento() {
   
   return (
     <div style={{ border: '1px solid #e2e2e2', borderRadius: '10px', padding: '20px', backgroundColor: '#fff' }}>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-        <FaCheckCircle size={28} style={{ color: '#2ecc71', marginRight: '10px' }} />
+        <span className="check-circle-plan">
+          <i className="fas fa-check"></i>
+        </span>
         <h3 className="titulo-reglamento">REGLAMENTO DEL SERVICIO SOCIAL</h3>
         <div className="info-tooltip">
         <HiOutlineInformationCircle
           style={{
             marginLeft: '10px',
             color: '#888',
-            fontSize: '22px' // ⬅️ Aquí defines el tamaño del ícono
+            fontSize: '22px'
           }}
         />
         <div className="tooltip-text">
@@ -76,17 +77,9 @@ function Reglamento() {
             Ver
           </button>
 
-          <span
-            style={{
-              backgroundColor: '#2ecc71',
-              color: 'white',
-              padding: '4px 12px',
-              borderRadius: '8px',
-              fontSize: '0.9rem'
-            }}
-          >
-            Vigente
-          </span>
+          <span className="etiqueta-vigente">
+          Vigente
+        </span>
         </div>
       </div>
     </div>

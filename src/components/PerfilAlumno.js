@@ -12,6 +12,9 @@ function PerfilAlumno() {
   const sidebarRef = useRef();
   const [nombre, setNombre] = useState('');
   const { user } = useUser();  
+  const [sedeSeleccionada, setSedeSeleccionada] = useState('');
+  const [modalidadSeleccionada, setModalidadSeleccionada] = useState('');
+  const [sedes, setSedes] = useState([]);
   const token = user?.token;
   const [perfil, setPerfil] = useState({
     nombre_completo: '',
@@ -58,10 +61,10 @@ function PerfilAlumno() {
   };
 
   const handleGuardar = async () => {
-    const usuario_id = localStorage.getItem('id_usuario');
-    const { celular } = perfil;
+  const usuario_id = localStorage.getItem('id_usuario');
+  const { celular } = perfil;
 
-    // Validación de campo vacío
+  // Validación de campo celular
     if (!celular) {
       Swal.fire({
         icon: 'warning',
@@ -71,46 +74,65 @@ function PerfilAlumno() {
       });
       return;
     }
+  if (!modalidadSeleccionada) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Campo obligatorio',
+      text: 'Por favor seleccione una modalidad.',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
+  const celularRegex = /^\d{9}$/;
+  if (!celularRegex.test(celular)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Celular inválido',
+      text: 'El número de celular debe contener exactamente 9 dígitos.',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
 
-    // Validación de 9 dígitos
-    const celularRegex = /^\d{9}$/;
-    if (!celularRegex.test(celular)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Celular inválido',
-        text: 'El número de celular debe contener exactamente 9 dígitos.',
-        confirmButtonColor: '#d33'
-      });
-      return;
-    }
+  // ✅ Nueva validación de sede obligatoria
+  if (!sedeSeleccionada) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Campo obligatorio',
+      text: 'Por favor seleccione una sede.',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
 
-    try {
-      await axios.put(`/api/estudiantes/actualizar-celular/${usuario_id}`, 
-        { celular },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  try {
+    await axios.put(`/api/estudiantes/actualizar-celular/${usuario_id}`, 
+      { celular, sede: sedeSeleccionada, modalidad: modalidadSeleccionada.toUpperCase() },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Celular actualizado',
-        text: 'Tu número de celular ha sido actualizado correctamente.',
-        confirmButtonColor: '#28a745',
-        timer: 2000,
-        showConfirmButton: false
-      }).then(() => {
-        window.location.href = '/dashboard-alumno';
-      });
+    Swal.fire({
+      icon: 'success',
+      title: 'Datos actualizados',
+      text: 'Tu información ha sido guardada correctamente.',
+      confirmButtonColor: '#28a745',
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      window.location.href = '/dashboard-alumno';
+    });
 
-    } catch (error) {
-      console.error('Error al actualizar celular:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al actualizar',
-        text: 'Ocurrió un error al actualizar el celular.',
-        confirmButtonColor: '#d33'
-      });
-    }
+  } catch (error) {
+    console.error('Error al actualizar:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al actualizar',
+      text: 'Ocurrió un error al guardar los datos.',
+      confirmButtonColor: '#d33'
+    });
+  }
 };
+
 useEffect(() => {
   const fetchPerfilPorUsuario = async () => {
     const id_usuario = localStorage.getItem('id_usuario');
@@ -131,7 +153,9 @@ useEffect(() => {
       programa: data.programa?.nombre_programa || '',
       codigo: data.codigo,
     });
-
+     
+  setSedeSeleccionada(data.sede || '');
+  setModalidadSeleccionada(data.modalidad || '');
     } catch (error) {
       console.error('Error al obtener perfil por usuario:', error);
     }
@@ -202,7 +226,9 @@ const handleCelularChange = (e) => {
             </div>
 
             <div className="form-group">
-            <label className="bold-text">Número Celular</label>
+            <label className="bold-text">
+              Número Celular <span style={{ color: 'red' }}>*</span> 
+            </label>
             <input
               name="celular"
               className="input-editable"
@@ -214,7 +240,35 @@ const handleCelularChange = (e) => {
             />
             <small className="text-muted">Campo obligatorio</small>
           </div>
+            <div className="form-group">
+        <label className="bold-text">
+          Sede <span style={{ color: 'red' }}>*</span>
+        </label>
+        <select
+          className="input-editable"
+          value={sedeSeleccionada}
+          onChange={(e) => setSedeSeleccionada(e.target.value)}
+        >
+          <option value="">Seleccione una sede</option>
+          <option value="HUÁNUCO">HUÁNUCO</option>
+          <option value="LEONCIO PRADO">LEONCIO PRADO</option>
+        </select>
+      </div>
 
+      <div className="form-group">
+      <label className="bold-text">
+        Modalidad <span style={{ color: 'red' }}>*</span>
+      </label>
+      <select
+        className="input-editable"
+        value={modalidadSeleccionada}
+        onChange={(e) => setModalidadSeleccionada(e.target.value)}
+      >
+        <option value="">Seleccione una modalidad</option>
+        <option value="PRESENCIAL">PRESENCIAL</option>
+        <option value="SEMI-PRESENCIAL">SEMI-PRESENCIAL</option>
+      </select>
+    </div>
 
            <div className="form-group">
           <label className="bold-text">Facultad</label>

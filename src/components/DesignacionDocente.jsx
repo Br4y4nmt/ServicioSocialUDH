@@ -122,9 +122,9 @@ const verCartasMiembros = async (trabajoId) => {
   <button
     onClick={() => {
       if (solicitudEnviada) {
-        obtenerIntegrantesDelGrupo(); // 🔄 solo si ya hay datos en la BD
+        obtenerIntegrantesDelGrupo(); 
       } else {
-        setModalGrupoVisible(true); // si es la primera vez, solo abre el modal vacío
+        setModalGrupoVisible(true); 
       }
     }}
     className="btn-ver-documento-inline"
@@ -196,8 +196,6 @@ const verCartasMiembros = async (trabajoId) => {
                           ))}
                         </select>
                         </div>
-          
-                        {/* Desplegable para seleccionar el Docente Supervisor */}
                         <div className="form-group">
                           <label className="bold-text">Seleccione Docente Supervisor</label>
                           <select
@@ -239,7 +237,6 @@ const verCartasMiembros = async (trabajoId) => {
                     ))}
                   </select>
                 </div>
-                        {/* Desplegable para seleccionar el tipo de labor social */}
                         <div className="form-group">
                           <label className="bold-text">Servicios Sociales</label>
                           <select

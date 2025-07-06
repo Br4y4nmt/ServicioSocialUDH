@@ -233,23 +233,16 @@ function ConformidadPlan({
            value={fechaPresentacion}
            onChange={(e) => setFechaPresentacion(e.target.value)}
          />
-       </div>
-   
-   
-       
-   
+       </div>  
      </div>
      </div>
    )}
    
-   
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
-     <div className="solicitar-revision-card">
-   
+     <div className="solicitar-revision-card">  
        <div className="solicitar-revision-header">
          <h3>INTRODUCCION</h3>
        </div>
-   
        <div className="form-group">
        <textarea
      className="input-estilo-select"
@@ -261,15 +254,12 @@ function ConformidadPlan({
    
      </div>
    )}
-   
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
 
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
-   
        <div className="solicitar-revision-header">
          <h3>JUSTIFICACION</h3>
-       </div>
-   
+       </div>  
        <div className="form-group">
        <textarea
      className="input-estilo-select"
@@ -277,9 +267,7 @@ function ConformidadPlan({
      onChange={(e) => setJustificacion(e.target.value)}
      placeholder="Explica por qué es importante realizar el servicio social en la institución elegida, resaltando la contribución que se espera hacer y cómo se articula con la especialidad profesional del estudiante."
    />
-   
-       </div>
-   
+       </div>  
      </div>
    )}
    
@@ -316,13 +304,10 @@ function ConformidadPlan({
    )}
    
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
-
      <div className="solicitar-revision-card">
-   
        <div className="solicitar-revision-header">
          <h3>MARCO INSTITUCIONAL</h3>
        </div>
-   
        <div className="form-group">
      <label className="bold-text">Nombre de la entidad receptora</label>
      <textarea
@@ -332,7 +317,6 @@ function ConformidadPlan({
        placeholder="Describir..."
      />
    </div>
-   
    
    <div className="form-group">
      <label className="bold-text">Misión y visión institucional</label>
@@ -368,20 +352,15 @@ function ConformidadPlan({
    )}
    
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
-
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>Cronograma de Actividades</h3>
        </div>
-   
-      
        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
        <button className="btn-agregar-alumno" onClick={abrirModalActividad}>
          Agregar <i className="fas fa-plus"></i>
        </button>
        </div>
-   
-       {/* Tabla vacía */}
        <table className="tabla-cronograma">
          <thead>
            <tr>
@@ -434,8 +413,6 @@ function ConformidadPlan({
          0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
        </svg>
      </button>
-   
-     {/* Eliminar */}
      <button
        onClick={() => {
          const nuevaLista = actividades.filter((_, i) => i !== index);
@@ -507,13 +484,10 @@ function ConformidadPlan({
            placeholder="Explicación del enfoque o estrategias que se aplicarán para el desarrollo de las actividades: observación, entrevistas, asistencia técnica, intervención comunitaria, entre otras."
          />
        </div>
-   
-   
      </div>
    )}
    
    {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
-
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>RECURSOS REQUERIDOS</h3>
@@ -566,11 +540,22 @@ function ConformidadPlan({
        </div>
    
        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-         <button
-        className="boton-ver-pdf-conf"
-        onClick={handleGenerarPDF}
-        disabled={archivoYaEnviado}
-      >
+        <button
+          className="boton-ver-pdf-conf"
+          onClick={() => {
+            if (!cartaAceptacionPdf) {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Falta el archivo anexo',
+                text: 'Debes adjuntar el archivo de Convenio de Cooperación Institucional antes de poder generar el PDF.',
+                confirmButtonText: 'Aceptar'
+              });
+              return;
+            }
+            handleGenerarPDF();
+          }}
+          disabled={archivoYaEnviado}
+        >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="18"

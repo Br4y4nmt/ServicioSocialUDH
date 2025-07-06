@@ -20,6 +20,7 @@ function RevisionDocente() {
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [firmaDocente, setFirmaDocente] = useState('');
+  const [trabajoEnProcesoId, setTrabajoEnProcesoId] = useState(null);
   const [modalDeclinarVisible, setModalDeclinarVisible] = useState(false);
   const [observacionDeclinar, setObservacionDeclinar] = useState('');
 
@@ -46,55 +47,7 @@ function RevisionDocente() {
     xhr.send();
   });
 };
-useEffect(() => {
-  const usuarioId = localStorage.getItem('id_usuario');
-  const token = user?.token;
 
-  if (!usuarioId || !token) {
-    console.error('Faltan el ID del usuario o el token.');
-    return;
-  }
-
-  // Verificar si es la primera vez que ingresa el docente
-  axios.get(`/api/usuarios/${usuarioId}/primera-vez`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .then(res => {
-      if (res.data.primera_vez) {
-        Swal.fire({
-          title: '¡Bienvenido!',
-          text: 'Antes de continuar, debes completar tu perfil.',
-          icon: 'info',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false
-        }).then(result => {
-          if (result.isConfirmed) {
-            navigate('/perfil-docente');
-          }
-        });
-      } else {
-        // Si no es primera vez, obtener la firma del docente
-        axios.get(`/api/docentes/usuario/${usuarioId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(response => {
-          setFirmaDocente(response.data.firma);
-        })
-        .catch(error => {
-          console.error('Error al obtener la firma del docente:', error.response ? error.response.data : error.message);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo obtener la firma del docente.',
-          });
-        });
-      }
-    })
-    .catch(err => {
-      console.error('Error al verificar primera vez del docente:', err);
-    });
-}, [user, navigate]);
 
 function formatearFechaExtendida(fecha) {
   const meses = [
@@ -208,32 +161,6 @@ const generarYSubirPDF = async (trabajo) => {
     }
   };
 
-
- useEffect(() => {
-  const usuario_id = localStorage.getItem('id_usuario');
-if (!usuario_id) return;
-
- axios.get(`/api/usuarios/${usuario_id}/primera-vez`)
-    .then(res => {
-      if (res.data.primera_vez) {
-        Swal.fire({
-          title: '¡Bienvenido!',
-          text: 'Antes de continuar, debes completar tu perfil.',
-          icon: 'info',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false
-        }).then(result => {
-          if (result.isConfirmed) {
-            navigate('/perfil-docente');
-          }
-        });
-      }
-    })
-    .catch(err => {
-      console.error('Error al verificar primera vez del docente:', err);
-    });
-}, [navigate]);
 
 
 const toggleSidebar = () => {
@@ -520,6 +447,9 @@ const cerrarModalGrupo = () => {
   setIntegrantesGrupo([]);
 };
 const handleCambiarEstado = async (trabajo, nuevoEstado) => {
+  if (trabajoEnProcesoId !== null) return; // Previene doble clic
+  setTrabajoEnProcesoId(trabajo.id);
+
   if (nuevoEstado === 'aceptado') {
     const result = await Swal.fire({
       title: '¿Estás seguro de aceptar al estudiante?',
@@ -532,7 +462,10 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       cancelButtonText: 'Cancelar'
     });
 
-    if (!result.isConfirmed) return;
+    if (!result.isConfirmed) {
+      setTrabajoEnProcesoId(null);
+      return;
+    }
   }
 
   try {
@@ -573,13 +506,12 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
             text: 'No se pudo contactar con el servidor de datos académicos. Inténtalo más tarde.',
             confirmButtonText: 'Aceptar'
           });
-          return; // ⛔ Detiene toda la generación
+          return;
         }
 
-        // ✅ Solo si todo fue bien, generar PDF del estudiante principal
+        // PDF del estudiante principal
         await generarYSubirPDF(trabajo);
 
-        // 2.3 Procesar cada integrante
         for (const integrante of integrantes) {
           const trabajoFake = {
             ...trabajo,
@@ -641,6 +573,8 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       confirmButtonColor: '#d33',
       confirmButtonText: 'Aceptar'
     });
+  } finally {
+    setTrabajoEnProcesoId(null); // siempre limpia
   }
 };
 
@@ -724,17 +658,35 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   {trabajo.estado_plan_labor_social === 'pendiente' ? (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       <button
-        className="btn-accion aceptar"
-        onClick={() => handleCambiarEstado(trabajo, 'aceptado')}
-      >
-        Aceptar
-      </button>
-      <button
-        className="btn-accion rechazar"
-        onClick={() => handleCambiarEstado(trabajo, 'rechazado')}
-      >
-        Rechazar
-      </button>
+  className="btn-accion aceptar"
+  onClick={() => handleCambiarEstado(trabajo, 'aceptado')}
+  disabled={trabajoEnProcesoId === trabajo.id}
+>
+  {trabajoEnProcesoId === trabajo.id ? (
+    <>
+      <span className="spinner" />
+      Generando...
+    </>
+  ) : (
+    'Aceptar'
+  )}
+</button>
+
+<button
+  className="btn-accion rechazar"
+  onClick={() => handleCambiarEstado(trabajo, 'rechazado')}
+  disabled={trabajoEnProcesoId === trabajo.id}
+>
+  {trabajoEnProcesoId === trabajo.id ? (
+    <>
+      <span className="spinner" />
+      Procesando...
+    </>
+  ) : (
+    'Rechazar'
+  )}
+</button>
+
     </div>
   ) : (
     <button

@@ -98,15 +98,19 @@ function DashboardAlumno() {
     organigrama: null,
     documentosAdicionales: null
   });
-  const handleFileChange = (e, tipo) => {
-    const archivo = e.target.files[0];
-    if (archivo) {
-      setImagenesAnexos(prevState => ({
-        ...prevState,
-        [tipo]: archivo
-      }));
+const handleFileChange = (e, tipo) => {
+  const archivo = e.target.files[0];
+  if (archivo) {
+    setImagenesAnexos(prevState => ({
+      ...prevState,
+      [tipo]: archivo
+    }));
+
+    if (tipo === 'cartaAceptacion') {
+      setCartaAceptacionPdf(archivo); // 👈 Esto es lo que te faltaba
     }
-  };
+  }
+};
 useEffect(() => {
   const mostrarBienvenida = localStorage.getItem('showBienvenida');
   const nombre = localStorage.getItem('nombre_usuario');
@@ -740,6 +744,7 @@ useEffect(() => {
 }, [activeSection, estadoPlan, datosCargados]);
 
 const handleGenerarPDF = async () => {
+  console.log("Anexo actual cargado:", cartaAceptacionPdf);
   const camposRequeridos = [
     nombreInstitucion, nombreResponsable, lineaAccion, fechaPresentacion,
     periodoEstimado, introduccion, justificacion, objetivoGeneral,
@@ -749,7 +754,8 @@ const handleGenerarPDF = async () => {
   ];
 
 
-  const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0;
+  const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0 ||
+ !imagenesAnexos.cartaAceptacion;
   if (camposVacios) {
     Swal.fire({
       icon: 'warning',
@@ -1102,7 +1108,7 @@ const mergedBlob = await mergePDFs(pdfBlob, anexos);
 
 // Mostrar y guardar
 const url = URL.createObjectURL(mergedBlob);
-const archivoFinal = new File([mergedBlob], 'esquema-plan-con-anexos.pdf', { type: 'application/pdf' });
+const archivoFinal = new File([mergedBlob], 'PLAN-SERVICIO-SOCIAL-UDH.pdf', { type: 'application/pdf' });
 
 setPdfGenerado(url);
 setProyectoFile(archivoFinal);
@@ -1110,7 +1116,7 @@ setPdfDescargado(true);
 
 const link = document.createElement('a');
 link.href = url;
-link.download = 'esquema-plan-con-anexos.pdf';
+link.download = 'PLAN-SERVICIO-SOCIAL-UDH.pdf';
 link.click();
 };
 const hayObservaciones = actividadesSeguimiento.some(
@@ -1338,6 +1344,7 @@ useEffect(() => {
   nombreLaborSocial={nombreLaborSocial}
   abrirModalProyecto={abrirModalProyecto}
   cartaAceptacionPdf={cartaAceptacionPdf}
+  setCartaAceptacionPdf={setCartaAceptacionPdf}
   introduccion={introduccion}
   setIntroduccion={setIntroduccion}
   justificacion={justificacion}
