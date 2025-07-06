@@ -27,19 +27,7 @@ const handleRegister = async (e) => {
     return;
   }
 
-  // 🚨 Validar el año del código institucional
-  const yearPrefix = parseInt(codigo.substring(0, 4), 10);
-  if (isNaN(yearPrefix) || yearPrefix < 2021) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Código no válido',
-      text: 'Solo se permite el registro para estudiantes desde el año 2021 en adelante.',
-      confirmButtonColor: '#d33',
-    });
-    return;
-  }
-
-  setIsSubmitting(true);
+  setIsSubmitting(true); // ⏳ Desactivar botón
 
   try {
     const res = await axios.post('/api/auth/register', {
@@ -80,7 +68,7 @@ const handleRegister = async (e) => {
     }
 
   } finally {
-    setIsSubmitting(false);
+    setIsSubmitting(false); // ✅ Reactivar botón
   }
 };
 
