@@ -93,16 +93,6 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Docentes
                   </span>
                 </li>
-                    <li className={activeSection === 'labores' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('labores')}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Labores sociales: Corazón + manos */}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
-                      <path d="M3 15c1.5 2 5.5 2 7 0l2-2 2 2c1.5 2 5.5 2 7 0" />
-                      <path d="M12 8.5l-1.1-1.1a3 3 0 10-4.2 4.2L12 17l5.3-5.4a3 3 0 00-4.2-4.2L12 8.5z" />
-                    </svg>
-                    Servicios Sociales
-                  </span>
-                </li>
                      <li className={activeSection === 'lineas' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('lineas')}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {/* Líneas de acción: Lista o gráfico */}
@@ -110,6 +100,16 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       <path d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
                     Líneas de Acción
+                  </span>
+                </li>
+                 <li className={activeSection === 'labores' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('labores')}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {/* Labores sociales: Corazón + manos */}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
+                      <path d="M3 15c1.5 2 5.5 2 7 0l2-2 2 2c1.5 2 5.5 2 7 0" />
+                      <path d="M12 8.5l-1.1-1.1a3 3 0 10-4.2 4.2L12 17l5.3-5.4a3 3 0 00-4.2-4.2L12 8.5z" />
+                    </svg>
+                    Servicios Sociales
                   </span>
                 </li>
                     <li className={activeSection === 'informes-finales' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('informes-finales')}>

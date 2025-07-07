@@ -24,6 +24,7 @@ function DashboardGestor() {
   const [nuevoDocenteEmail, setNuevoDocenteEmail] = useState('');
   const [whatsappPrograma, setWhatsappPrograma] = useState('');
   const [nuevoDocenteDni, setNuevoDocenteDni] = useState('');
+  const [emailDocenteEditado, setEmailDocenteEditado] = useState('');
   const [nuevaFacultadDocente, setNuevaFacultadDocente] = useState('');
   const [nuevoProgramaDocente, setNuevoProgramaDocente] = useState('');
   const [nuevoDocenteWhatsapp, setNuevoDocenteWhatsapp] = useState('');
@@ -43,6 +44,7 @@ function DashboardGestor() {
   const [modalEditarVisible, setModalEditarVisible] = useState(false);
   const [labores, setLabores] = useState([]);
   const [nuevaLabor, setNuevaLabor] = useState('');
+  const [emailEditado, setEmailEditado] = useState('');
   const [editandoLaborId, setEditandoLaborId] = useState(null);
   const [nombreLaborEditado, setNombreLaborEditado] = useState('');
   const [collapsed, setCollapsed] = useState(false);
@@ -266,16 +268,48 @@ const guardarEdicionLinea = async (id) => {
   }
 };
 
+
+
 const eliminarLinea = async (id) => {
-  try {
-   await axios.delete(`/api/lineas/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    fetchLineas();
-  } catch (error) {
-    console.error('Error al eliminar línea de acción:', error);
+  const resultado = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará la línea de acción permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+
+  if (resultado.isConfirmed) {
+    try {
+      await axios.delete(`/api/lineas/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Eliminado!',
+        text: 'La línea de acción ha sido eliminada.',
+        confirmButtonColor: '#1a237e',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      fetchLineas();
+    } catch (error) {
+      console.error('Error al eliminar línea de acción:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar la línea de acción.',
+        confirmButtonColor: '#d33'
+      });
+    }
   }
 };
+
 
   const fetchProgramas = async () => {
     try {
@@ -292,7 +326,39 @@ const eliminarLinea = async (id) => {
   };
 
 const crearPrograma = async () => {
-  if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) return;
+  // Validar campos vacíos
+  if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Campos incompletos',
+      text: 'Por favor completa todos los campos.',
+    });
+    return;
+  }
+
+  // Validar email con dominio permitido
+  const emailValido = /@(gmail\.com|udh\.edu\.pe)$/.test(emailPrograma);
+  if (!emailValido) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Correo inválido',
+      text: 'Solo se permiten correos @gmail.com o @udh.edu.pe',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
+
+  // Validar longitud del WhatsApp
+  if (whatsappPrograma.length !== 9) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Número inválido',
+      text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
+
   try {
     await axios.post('/api/programas', {
       nombre_programa: nuevoPrograma,
@@ -320,7 +386,14 @@ const crearPrograma = async () => {
 
   } catch (error) {
     console.error('Error al crear programa:', error);
-    if (error.response && error.response.status === 400) {
+
+    if (error.response?.status === 409) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo duplicado',
+        text: 'Ya existe un usuario con ese correo.',
+      });
+    } else if (error.response?.status === 400) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -337,7 +410,7 @@ const crearPrograma = async () => {
     }
   }
 };
-  
+
   const guardarEdicionFacultad = async (id) => {
     try {
       await axios.put(`/api/facultades/${id}`, {
@@ -352,17 +425,47 @@ const crearPrograma = async () => {
       console.error('Error al actualizar facultad:', error);
     }
   };
-  
-  const eliminarPrograma = async (id) => {
+
+const eliminarPrograma = async (id) => {
+  // Confirmación previa
+  const confirmacion = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el programa académico de forma permanente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6'
+  });
+
+  if (confirmacion.isConfirmed) {
     try {
       await axios.delete(`/api/programas/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-      fetchProgramas();
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      await fetchProgramas(); // Recargar lista
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Programa eliminado',
+        text: 'El programa fue eliminado correctamente.',
+        confirmButtonColor: '#1a237e'
+      });
+
     } catch (error) {
       console.error('Error al eliminar programa:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al eliminar el programa.',
+        confirmButtonColor: '#d33'
+      });
     }
-  };
+  }
+};
   const cancelarEdicion = () => {
     setEditandoId(null);
     setNombreEditado('');
@@ -382,73 +485,152 @@ const crearPrograma = async () => {
   };
 
 
-  const crearDocente = async () => {
-    // Verificar si faltan campos
-    if (!nuevoDocenteEmail || !nuevoDocenteDni || !nuevoDocenteWhatsapp) {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Faltan campos!',
-        text: 'Por favor completa todos los campos del docente.',
-      });
-      return;
-    }
+const crearDocente = async () => {
+  // Validar campos vacíos
+  if (
+    !nuevoDocenteEmail ||
+    !nuevoDocenteDni ||
+    !nuevoDocenteWhatsapp ||
+    !nuevaFacultadDocente ||
+    !nuevoProgramaDocente
+  ) {
+    Swal.fire({
+      icon: 'warning',
+      title: '¡Faltan campos!',
+      text: 'Completa todos los campos incluyendo facultad y programa.',
+    });
+    return;
+  }
 
-    try {
-      await axios.post('/api/auth/register-docente', {
+  // Validar longitud de DNI (8 dígitos)
+  if (nuevoDocenteDni.length !== 8) {
+    Swal.fire({
+      icon: 'error',
+      title: 'DNI inválido',
+      text: 'El DNI debe tener exactamente 8 dígitos.',
+    });
+    return;
+  }
+
+  // Validar longitud de WhatsApp (9 dígitos)
+  if (nuevoDocenteWhatsapp.length !== 9) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Número inválido',
+      text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+    });
+    return;
+  }
+
+  try {
+    await axios.post(
+      '/api/auth/registrar-docente-completo',
+      {
         email: nuevoDocenteEmail,
         dni: nuevoDocenteDni,
         whatsapp: nuevoDocenteWhatsapp,
-      }, {
+        facultad_id: nuevaFacultadDocente,
+        programa_academico_id: nuevoProgramaDocente,
+      },
+      {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      }
+    );
 
-      // Limpiar campos del modal
-      setNuevoDocenteEmail('');
-      setNuevoDocenteDni('');
-      setNuevoDocenteWhatsapp('');
+    // Limpiar campos
+    setNuevoDocenteEmail('');
+    setNuevoDocenteDni('');
+    setNuevoDocenteWhatsapp('');
+    setNuevaFacultadDocente('');
+    setNuevoProgramaDocente('');
 
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Docente registrado exitosamente.',
+    });
+
+    fetchDocentes();
+  } catch (error) {
+    console.error('Error al registrar docente:', error);
+
+    if (error.response?.status === 409) {
       Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Docente registrado exitosamente.',
+        icon: 'error',
+        title: 'Correo duplicado',
+        text: 'Ya existe un usuario registrado con ese correo.',
       });
-
-      fetchDocentes();
-    } catch (error) {
-      console.error('Error al registrar docente:', error);
+    } else {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: error.response?.data?.message || 'Error al registrar docente. Intenta nuevamente.',
+        text:
+          error.response?.data?.message ||
+          'Error al registrar docente. Intenta nuevamente.',
       });
     }
-  };
+  }
+};
+
+
 
   
-  const guardarEdicionPrograma = async () => {
-    if (!programaEditado.trim() || !facultadEditada) return;
-  
-    try {
-       await axios.put(`/api/programas/${idEditandoPrograma}`, {
+const guardarEdicionPrograma = async () => {
+  if (!programaEditado.trim() || !facultadEditada || !emailEditado.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Campos incompletos',
+      text: 'Completa todos los campos requeridos.',
+    });
+    return;
+  }
+
+  // Validación de formato de correo
+  const correoValido = emailEditado.endsWith('@gmail.com') || emailEditado.endsWith('@udh.edu.pe');
+  if (!correoValido) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Correo inválido',
+      text: 'El correo debe ser @gmail.com o @udh.edu.pe.',
+    });
+    return;
+  }
+
+  try {
+    await axios.put(`/api/programas/${idEditandoPrograma}`, {
       nombre_programa: programaEditado,
       id_facultad: facultadEditada,
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-      
-      // Limpiar y cerrar modal
-      setModalEditarProgramaVisible(false);
-      setIdEditandoPrograma(null);
-      setProgramaEditado('');
-      setFacultadEditada('');
-  
-      // Refrescar lista
-      fetchProgramas();
-    } catch (error) {
-      console.error('Error al actualizar el programa académico:', error);
-      alert('Hubo un error al actualizar el programa académico.');
-    }
-  };
+      email: emailEditado
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Programa actualizado',
+      showConfirmButton: false,
+      timer: 1800
+    });
+
+    // Limpiar estado y cerrar modal
+    setModalEditarProgramaVisible(false);
+    setIdEditandoPrograma(null);
+    setProgramaEditado('');
+    setFacultadEditada('');
+    setEmailEditado('');
+
+    fetchProgramas();
+  } catch (error) {
+    console.error('Error al actualizar el programa académico:', error);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.response?.data?.message || 'No se pudo actualizar el programa.',
+    });
+  }
+};
+
   
   
   const eliminarDocente = async (id) => {
@@ -462,22 +644,71 @@ const crearPrograma = async () => {
     }
   };
 
+useEffect(() => {
+  const fetchProgramasPorFacultad = async () => {
+    if (!nuevaFacultadDocente) {
+      setProgramas([]); // Limpia programas si no hay facultad seleccionada
+      return;
+    }
 
-  const guardarEdicionDocente = async (id) => {
     try {
-       await axios.put(`/api/docentes/${id}`, {
-      nombre_docente: nombreDocenteEditado,
-      programa_academico_id: programaDocenteEditado,
-      facultad_id: facultadDocenteEditada,
-      }, {
+      const res = await axios.get(`/api/programas/facultad/${nuevaFacultadDocente}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setEditandoDocenteId(null);
-      fetchDocentes();
+      setProgramas(res.data); // ¡Cambia los programas mostrados!
     } catch (error) {
-      console.error('Error al actualizar docente:', error);
+      console.error('Error al obtener programas filtrados:', error);
     }
   };
+
+  fetchProgramasPorFacultad();
+}, [nuevaFacultadDocente]);
+
+const guardarEdicionDocente = async (id) => {
+  try {
+    await axios.put(`/api/docentes/${id}`, {
+      nombre_docente: nombreDocenteEditado,
+      email: emailDocenteEditado,
+      programa_academico_id: programaDocenteEditado,
+      facultad_id: facultadDocenteEditada,
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    // Mostrar alerta de éxito
+    Swal.fire({
+      icon: 'success',
+      title: 'Docente actualizado',
+      text: 'Los datos del docente se actualizaron correctamente.',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+    // Limpiar estado y recargar lista
+    setEditandoDocenteId(null);
+    fetchDocentes();
+
+  } catch (error) {
+    console.error('Error al actualizar docente:', error);
+
+    if (error.response?.status === 409) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo duplicado',
+        text: 'Ya existe otro usuario registrado con este correo.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'No se pudo actualizar el docente.',
+      });
+    }
+  }
+};
+
+
+
 
   // ====================== FUNCIONES LABORES SOCIALES ======================
   const fetchLabores = async () => {
@@ -818,6 +1049,7 @@ const rechazarInforme = async (id) => {
               setIdEditandoPrograma(prog.id_programa);
               setProgramaEditado(prog.nombre_programa);
               setFacultadEditada(prog.Facultade?.id_facultad || '');
+              setEmailEditado(prog.email);
               setModalEditarProgramaVisible(true);
             }}
             className="programas-btn editar"
@@ -844,12 +1076,12 @@ const rechazarInforme = async (id) => {
   </div>
   
 )}
+
 {modalEditarProgramaVisible && (
   <div className="programas-modal show">
     <div className="programas-modal-content">
       <h3>Editar Programa Académico</h3>
 
-      {/* Input de nombre */}
       <input
         type="text"
         className="programas-modal-input"
@@ -859,7 +1091,6 @@ const rechazarInforme = async (id) => {
         autoFocus
       />
 
-      {/* Select de facultades */}
       <select
         className="programas-modal-select"
         value={facultadEditada}
@@ -873,6 +1104,14 @@ const rechazarInforme = async (id) => {
         ))}
       </select>
 
+      <input
+        type="email"
+        className="programas-modal-input"
+        placeholder="Correo institucional"
+        value={emailEditado}
+        onChange={(e) => setEmailEditado(e.target.value)}
+      />
+
       <div className="programas-modal-actions">
         <button
           className="programas-btn cancelar"
@@ -881,6 +1120,7 @@ const rechazarInforme = async (id) => {
             setIdEditandoPrograma(null);
             setProgramaEditado('');
             setFacultadEditada('');
+            setEmailEditado('');
           }}
         >
           Cancelar
@@ -895,6 +1135,7 @@ const rechazarInforme = async (id) => {
     </div>
   </div>
 )}
+
 
 {modalProgramaVisible && (
   <div className="programas-modal show">
@@ -923,8 +1164,6 @@ const rechazarInforme = async (id) => {
           </option>
         ))}
       </select>
-
-      {/* Nuevo campo: Email del programa */}
       <input
         type="email"
         className="programas-modal-input"
@@ -932,15 +1171,18 @@ const rechazarInforme = async (id) => {
         value={emailPrograma}
         onChange={(e) => setEmailPrograma(e.target.value)}
       />
-    {/* Nuevo campo: WhatsApp del programa */}
       <input
         type="text"
         className="programas-modal-input"
         placeholder="WhatsApp del programa"
         value={whatsappPrograma}
-        onChange={(e) => setWhatsappPrograma(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (/^\d{0,9}$/.test(value)) {
+            setWhatsappPrograma(value);
+          }
+        }}
       />
-      {/* Botones */}
       <div className="programas-modal-actions">
         <button
           className="programas-btn cancelar"
@@ -957,6 +1199,15 @@ const rechazarInforme = async (id) => {
         <button
           className="programas-btn guardar"
           onClick={() => {
+            if (whatsappPrograma.length !== 9) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Número inválido',
+                text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+                confirmButtonColor: '#d33'
+              });
+              return;
+            }
             crearPrograma();
             setModalProgramaVisible(false);
           }}
@@ -1126,18 +1377,15 @@ const rechazarInforme = async (id) => {
 )}
 
 
-
-
-
 {activeSection === 'docentes' && (
   <div className="docentes-container">
     <div className="docentes-card">
       <div className="docentes-header">
         <div className="docentes-header-left">
           <h2>Docentes</h2>
-          {/*<button className="docentes-btn-agregar" onClick={() => setModalDocenteVisible(true)}>
+          {<button className="docentes-btn-agregar" onClick={() => setModalDocenteVisible(true)}>
             Agregar
-          </button> */}
+          </button> }
         </div>
         <div className="docentes-header-right">
     <label className="docentes-search-label">
@@ -1153,13 +1401,13 @@ const rechazarInforme = async (id) => {
   </div>
       </div>
       
-
       <div className="docentes-table-wrapper">
         <table className="docentes-table">
           <thead className="docentes-table-thead">
             <tr>
               <th>ID</th>
               <th>Nombre</th>
+              <th>Correo</th>
               <th>Facultad</th>
               <th>Programa Academico</th>
               <th>Acciones</th>
@@ -1187,6 +1435,7 @@ const rechazarInforme = async (id) => {
 
                   )}
                 </td>
+                <td>{doc.email || 'SIN CORREO'}</td>
                 <td>
                   {(doc.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}
                 </td>
@@ -1214,6 +1463,7 @@ const rechazarInforme = async (id) => {
     onClick={() => {
       setEditandoDocenteId(doc.id_docente);
       setNombreDocenteEditado(doc.nombre_docente);
+      setEmailDocenteEditado(doc.email || '');
       setProgramaDocenteEditado(doc.programa_academico_id);
       setFacultadDocenteEditada(doc.facultad_id);
       setModalEditarDocenteVisible(true);
@@ -1255,7 +1505,13 @@ const rechazarInforme = async (id) => {
         onChange={(e) => setNombreDocenteEditado(e.target.value)}
         autoFocus
       />
-
+         <input
+        type="email"
+        className="docentes-modal-input"
+        placeholder="Correo del docente"
+        value={emailDocenteEditado}
+        onChange={(e) => setEmailDocenteEditado(e.target.value)}
+      />
       <select
         className="docentes-modal-select"
         value={facultadDocenteEditada}
@@ -1338,8 +1594,45 @@ const rechazarInforme = async (id) => {
         className="docentes-modal-input"
         placeholder="WhatsApp del docente"
         value={nuevoDocenteWhatsapp}
-        onChange={(e) => setNuevoDocenteWhatsapp(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          // Solo números y máximo 9 dígitos
+          if (/^\d{0,9}$/.test(value)) {
+            setNuevoDocenteWhatsapp(value);
+          }
+        }}
       />
+
+    <select
+      className="docentes-modal-select"
+      value={nuevaFacultadDocente}
+      onChange={(e) => {
+        setNuevaFacultadDocente(e.target.value);
+        setNuevoProgramaDocente(''); 
+      }}
+    >
+      <option value="">Selecciona una facultad</option>
+      {facultades.map((fac) => (
+        <option key={fac.id_facultad} value={fac.id_facultad}>
+          {fac.nombre_facultad}
+        </option>
+      ))}
+    </select>
+    <select
+      className="docentes-modal-select"
+      value={nuevoProgramaDocente}
+      onChange={(e) => setNuevoProgramaDocente(e.target.value)}
+    >
+      <option value="">Selecciona un programa académico</option>
+      {programas
+        .filter((prog) => prog.id_facultad === parseInt(nuevaFacultadDocente)) 
+        .map((prog) => (
+          <option key={prog.id_programa} value={prog.id_programa}>
+            {prog.nombre_programa}
+          </option>
+        ))}
+    </select>
+
 
       <div className="docentes-modal-actions">
         <button
@@ -1355,18 +1648,29 @@ const rechazarInforme = async (id) => {
         >
           Cancelar
         </button>
-        <button
+       <button
           className="docentes-btn guardar"
           onClick={() => {
             if (nuevoDocenteDni.length !== 8) {
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'El DNI INCOMPLETO.',
+                text: 'El DNI debe tener exactamente 8 dígitos.',
               });
               return;
             }
-            crearDocente(); // Asegúrate de que esta función ya no dependa de los selects eliminados
+
+            if (nuevoDocenteWhatsapp.length !== 9) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Número inválido',
+                text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+                confirmButtonColor: '#d33'
+              });
+              return;
+            }
+
+            crearDocente();
             setModalDocenteVisible(false);
           }}
         >
@@ -1376,9 +1680,6 @@ const rechazarInforme = async (id) => {
     </div>
   </div>
 )}
-
-
-
 
 
 
@@ -1406,7 +1707,6 @@ const rechazarInforme = async (id) => {
   </label>
 </div>
 </div>
-
       <div className="labores-table-wrapper">
         <table className="labores-table">
           <thead className="labores-table-thead">
@@ -1471,7 +1771,6 @@ const rechazarInforme = async (id) => {
                 </svg>
                 &nbsp;
               </button>
-
               <button
                 className="labores-btn eliminar"
                 onClick={() => eliminarLabor(labor.id_labores)}
@@ -1482,8 +1781,6 @@ const rechazarInforme = async (id) => {
                 &nbsp;
               </button>
             </td>
-
-
               </tr>
             ))}
           </tbody>
@@ -1492,6 +1789,8 @@ const rechazarInforme = async (id) => {
     </div>
   </div>
 )}
+
+
 {activeSection === 'lineas' && (
   <div className="labores-container">
     <div className="labores-card">
@@ -1513,7 +1812,6 @@ const rechazarInforme = async (id) => {
           </label>
         </div>
       </div>
-
       <div className="labores-table-wrapper">
         <table className="labores-table">
           <thead className="labores-table-thead">

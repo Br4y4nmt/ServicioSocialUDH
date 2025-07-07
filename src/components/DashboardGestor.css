@@ -999,7 +999,9 @@
   cursor: pointer;
   font-weight: 500;
 }
-
+.labores-table td {
+  font-size: 14px; /* o 12px si quieres más pequeño */
+}
 .labores-btn.guardar:hover {
   background-color: #0f164a;
 }
