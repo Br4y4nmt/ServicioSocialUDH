@@ -6,6 +6,7 @@ import SidebarDocente from './SidebarDocente';
 import './DashboardDocente.css';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import QRCode from 'qrcode';
 import { useUser } from '../UserContext';
 
 function RevisionDocente() {
@@ -27,7 +28,17 @@ function RevisionDocente() {
   const navigate = useNavigate();
 
 
-
+  const generarQRBase64 = async (url) => {
+    try {
+      return await QRCode.toDataURL(url, {
+        width: 120, // Tamaño controlado
+        margin: 1,
+      });
+    } catch (err) {
+      console.error('Error generando QR:', err);
+      return null;
+    }
+  };
   const convertirImagenABase64 = (url) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -76,7 +87,8 @@ const generarYSubirPDF = async (trabajo) => {
 
       const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
       const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
-
+      const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
+      const qrBase64 = await generarQRBase64(urlVerificacion);
     const contenido = `
       <html>
         <head><style>${css}</style></head>
@@ -118,6 +130,14 @@ const generarYSubirPDF = async (trabajo) => {
               </div>
             </div>
           </div>
+          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 120px; padding-left: 30px;">
+          <img src="${qrBase64}" style="width: 60px; height: 60px; margin-right: 10px;" />
+          <div style="font-size: 8px; line-height: 1.2; max-width: 300px;">
+            <strong>Documento:</strong> CARTA DE ACEPTACIÓN<br/>
+            <strong>URL de Verificación:</strong><br/>
+            ${urlVerificacion}
+          </div>
+        </div>
         </body>
       </html>`;
 
@@ -250,6 +270,9 @@ const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
+  
+  const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
+  const qrBase64 = await generarQRBase64(urlVerificacion); // Usa tu función existente
 
   const contenido = `
     <html>
@@ -260,9 +283,13 @@ const generarPDFBlob = async (trabajo) => {
         <div class="carta-aceptacion">
           <div class="carta-encabezado">
             <img src="/images/logoudh.png" class="carta-logo" />
+            <div class="separador-vertical"></div>
             <div class="carta-institucion">
-              <strong>FACULTAD DE ${trabajo.Facultad?.nombre_facultad || 'Facultad no disponible'}</strong><br />
-              ${trabajo.ProgramasAcademico?.nombre_programa || 'Programa no disponible'}
+              <p>FACULTAD DE ${trabajo.Facultad?.nombre_facultad || 'Facultad no disponible'}</p>
+            </div>
+            <div class="separador-vertical"></div>
+            <div class="carta-institucion">
+              <p>P.A. DE ${trabajo.ProgramasAcademico?.nombre_programa || 'Programa no disponible'}</p>
             </div>
           </div>
           <hr />
@@ -270,14 +297,7 @@ const generarPDFBlob = async (trabajo) => {
             CARTA DE ACEPTACIÓN
           </h1>
           <p class="carta-fecha">Huánuco, ${formatearFechaExtendida(new Date())}</p>
-
           <div class="carta-cuerpo">
-            <p>
-              <strong>Ing. Ethel J MANZANO LOZANO</strong><br />
-              Coordinador del Programa Académico de Ingeniería de Sistemas e Informática<br />
-              Facultad de Ingeniería<br />
-              Universidad de Huánuco
-            </p>
             <p class="carta-asunto">
               <strong style="display: inline-block; width: 120px;">ASUNTO:</strong>
               <span class="asunto-texto">ACEPTACIÓN DE SUPERVISIÓN DE SERVICIO SOCIAL</span>
@@ -286,7 +306,7 @@ const generarPDFBlob = async (trabajo) => {
             <p class="carta-body" style="text-indent: 40px;">
               Tengo el agrado de dirigirme a usted para expresarle un cordial saludo y a la vez comunicarle que he aceptado supervisar el desarrollo de su servicio social a:
             </p>
-             <p class="carta-asunto">
+            <p class="carta-asunto">
               <span style="display: inline-block; width: 150px;"><strong>ESTUDIANTE:</strong></span>
               ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}
             </p>
@@ -294,13 +314,23 @@ const generarPDFBlob = async (trabajo) => {
               Sin otro particular, me despido recordándole las muestras de mi especial consideración y estima personal.
             </p>
 
-             <div class="carta-footer">
-                <p style="margin-top: 100px;">Atentamente,</p>
-                <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
-                <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
-              </div>
+            <div class="carta-footer">
+              <p style="margin-top: 100px;">Atentamente,</p>
+              <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
+              <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
+            </div>
           </div>
         </div>
+
+        <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 120px; padding-left: 30px;">
+          <img src="${qrBase64}" style="width: 60px; height: 60px; margin-right: 10px;" />
+          <div style="font-size: 8px; line-height: 1.2; max-width: 300px;">
+            <strong>Documento:</strong> CARTA DE ACEPTACIÓN<br/>
+            <strong>URL de Verificación:</strong><br/>
+            ${urlVerificacion}
+          </div>
+        </div>
+
       </body>
     </html>
   `;

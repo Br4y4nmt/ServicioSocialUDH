@@ -290,6 +290,116 @@
       transform: scale(1);
     }
   }
+
+/* Fondo oscuro y borroso */
+.detalle-actividad-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2147483647 !important;
+  padding: 24px;
+}
+
+/* Contenedor del modal */
+.detalle-actividad-modal {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 36px 40px 30px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 540px;
+  position: relative;
+  animation: fadeInModal 0.35s ease-out;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+/* Título del modal */
+.detalle-actividad-modal h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 24px;
+  padding-top: 10px;
+}
+
+/* Texto de detalle */
+.detalle-actividad-modal p {
+  font-size: 15px;
+  margin-bottom: 14px;
+  color: #5f5d5d;
+  line-height: 1.6;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+/* Etiquetas destacadas */
+.detalle-actividad-modal strong {
+  color: #011B4B;
+  font-weight: 600;
+}
+
+/* Botón moderno */
+.detalle-actividad-btn-cerrar {
+  display: block;
+  margin: 25px auto 0;
+  background-color: #011B4B; /* Color inicial sólido */
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.detalle-actividad-btn-cerrar:hover {
+  background-color: #1E429F; /* Cambio suave a azul más claro */
+}
+
+
+/* Animación de entrada */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .detalle-actividad-modal {
+    padding: 24px 20px 28px;
+  }
+
+  .detalle-actividad-modal h3 {
+    font-size: 20px;
+  }
+
+  .detalle-actividad-modal p {
+    font-size: 14px;
+  }
+
+  .detalle-actividad-btn-cerrar {
+    width: 100%;
+  }
+}
+
+
 @media (max-width: 768px) {
   .modal-cronograma-content {
     width: 95%;

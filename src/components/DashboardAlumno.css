@@ -1366,6 +1366,17 @@
   color: #1f2937;
   font-size: 14px;
 }
+.celda-actividad-clickable {
+  color: #1A202C;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.celda-actividad-clickable:hover {
+  color: #1E429F; /* Azul más vivo al pasar mouse */
+  text-decoration: underline;
+}
 
 .acciones-doc {
   display: flex;

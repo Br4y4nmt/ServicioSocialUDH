@@ -4,6 +4,7 @@ import axios from 'axios';
 import './DashboardAlumno.css';
 import './ModalGlobal.css';
 import { useUser } from '../UserContext';
+import ReactDOM from 'react-dom';
 
 const SeguimientoActividades = ({
   actividadesSeguimiento,
@@ -30,6 +31,8 @@ const trabajoId = planSeleccionado?.id;
 const { user } = useUser(); 
 const token = user?.token;  
 const [cargandoEvidencia, setCargandoEvidencia] = useState([]);
+const [modalActividadVisible, setModalActividadVisible] = useState(false);
+const [actividadDetalle, setActividadDetalle] = useState(null);
 
 
 const verCartasMiembros = async (trabajoId) => {
@@ -88,9 +91,17 @@ const verCartasMiembros = async (trabajoId) => {
                 <tbody>
                     {actividadesSeguimiento.length > 0 ? (
                         actividadesSeguimiento.map((item, index) => (
-                            <tr key={index}>
-                                
-                                <td>{item.actividad.length > 10 ? item.actividad.slice(0, 10) + '...' : item.actividad}</td>
+                            <tr key={index}>                                
+                               <td
+                                className="celda-actividad-clickable"
+                                onClick={() => {
+                                    setActividadDetalle(item);
+                                    setModalActividadVisible(true);
+                                }}
+                                title="Ver detalles"
+                                >
+                                {item.actividad.length > 10 ? item.actividad.slice(0, 10) + '...' : item.actividad}
+                                </td>
                                 <td>{item.justificacion.length > 10 ? item.justificacion.slice(0, 10) + '...' : item.justificacion}</td>
                                 <td style={{ fontSize: '13px' }}>{item.fecha}</td>
                                 <td>
@@ -362,7 +373,6 @@ const verCartasMiembros = async (trabajoId) => {
 
      )}
     </td>
-
                                 {hayObservaciones && (
                                     <td style={{ textAlign: 'center' }}>
                                         {item.estado === 'observado' && item.observacion ? (
@@ -397,7 +407,6 @@ const verCartasMiembros = async (trabajoId) => {
                         </tr>
                     )}
                 </tbody>
-
             </table>
             {todasAprobadas && estadoSolicitudTermino === 'no_solicitada' && (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
@@ -409,8 +418,8 @@ const verCartasMiembros = async (trabajoId) => {
                     </button>
 
                 </div>
-
             )}
+
             {(estadoSolicitudTermino === 'solicitada' || estadoSolicitudTermino === 'aprobada') && (
                 <div className="respuesta-asesor-cardss">
                     <div className="respuesta-asesor-header">
@@ -593,7 +602,30 @@ const verCartasMiembros = async (trabajoId) => {
     ))}
   </div>
 )}
-
+{modalActividadVisible && actividadDetalle && ReactDOM.createPortal(
+  <div className="detalle-actividad-overlay">
+    <div className="detalle-actividad-modal">
+      <h3>Detalle de Actividad</h3>
+      <p><strong>Actividad:</strong> {actividadDetalle.actividad}</p>
+      <p><strong>Justificación:</strong> {actividadDetalle.justificacion}</p>
+      <p><strong>Fecha Inicio:</strong> {actividadDetalle.fecha}</p>
+      <p>
+        <strong>Fecha Fin Permitida:</strong>{' '}
+        {actividadDetalle.fecha_fin_primero
+            ? actividadDetalle.fecha_fin_primero.substring(0, 10)
+            : 'No asignada'}
+        </p>
+      <p><strong>Fecha Término:</strong> {actividadDetalle.fecha_fin || 'Sin completar'}</p>
+      <p><strong>Resultados Esperados:</strong> {actividadDetalle.resultados}</p>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <button className="detalle-actividad-btn-cerrar" onClick={() => setModalActividadVisible(false)}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>,
+  document.body
+)}
 </div> 
 ); 
 };

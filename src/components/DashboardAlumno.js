@@ -744,7 +744,7 @@ useEffect(() => {
 }, [activeSection, estadoPlan, datosCargados]);
 
 const handleGenerarPDF = async () => {
-  console.log("Anexo actual cargado:", cartaAceptacionPdf);
+
   const camposRequeridos = [
     nombreInstitucion, nombreResponsable, lineaAccion, fechaPresentacion,
     periodoEstimado, introduccion, justificacion, objetivoGeneral,
@@ -754,16 +754,27 @@ const handleGenerarPDF = async () => {
   ];
 
 
-  const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0 ||
- !imagenesAnexos.cartaAceptacion;
-  if (camposVacios) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Campos incompletos',
-      text: 'Completa todos los campos del esquema plan y agrega al menos una actividad antes de generar el PDF.',
-    });
-    return;
-  }
+    // Primero validamos si falta la carta de aceptación
+    if (!imagenesAnexos.cartaAceptacion) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Falta el ANEXO',
+        text: 'Debes adjuntar el convenio de Cooperación Institucional antes de generar el PDF.',
+      });
+      return;
+    }
+
+    // Luego validamos campos vacíos y actividades
+    const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0;
+    if (camposVacios) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Completa todos los campos del esquema plan y agrega al menos una actividad antes de generar el PDF.',
+      });
+      return;
+    }
+
   // Validación de duración total del cronograma vs periodo estimado
   const periodoEnDias = {
     '4 MESES': 120,

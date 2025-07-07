@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    width: 300,
+    width: 250,
     height: 100,
     marginBottom: 10,
   },
@@ -103,9 +103,33 @@ const styles = StyleSheet.create({
     width: 200,
     height: 80,
   },
+ qrContainer: {
+  position: 'absolute',
+  bottom: 30,
+  left: 30,
+  flexDirection: 'row',
+  alignItems: 'center',
+  width: '60%',
+},
+
+qrImage: {
+  width: 60,        // ⬅️ antes 80
+  height: 60,       // ⬅️ antes 80
+  marginRight: 0,
+},
+
+qrText: {
+  fontSize: 8,      // ⬅️ antes 10
+  fontFamily: 'Times-Roman',
+  flexShrink: 1,
+  maxWidth: '75%',
+  wordBreak: 'break-all',
+  lineHeight: 1.2,
+},
+
 });
 
-const InformefinalProgramaPDF = ({ informe }) => {
+const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
   const nombre = informe.Estudiante?.nombre_estudiante || 'N/A';
   const programa = informe.ProgramasAcademico?.nombre_programa || 'N/A';
   const fechaFormateada = formatearFechaLarga(new Date());
@@ -114,10 +138,10 @@ const InformefinalProgramaPDF = ({ informe }) => {
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.logoContainer}>
-          <Image src="/images/logograduado.png" style={styles.logo} />
+          <Image src="/images/logoSS.png" style={styles.logo} />
         </View>
 
-        <Text style={styles.title}>Sistema de Servicio Social Universitario</Text>
+        <Text style={styles.title}>Oficina Servicio Social Universitario</Text>
         <View style={styles.separator} />
         <Text style={styles.subtitle}>CONSTANCIA DE HABER CONCLUIDO EL SERVICIO SOCIAL UNIVERSITARIO</Text>
         <Text style={styles.subsubtitle}>Hace constar:</Text>
@@ -136,7 +160,16 @@ const InformefinalProgramaPDF = ({ informe }) => {
         <View style={styles.firmaContainer}>
           <Image src="/images/firma.jpg" style={styles.firmaImage} />
         </View>
-
+        {qrImage && verificationUrl && (
+        <View style={styles.qrContainer}>
+          <Image src={qrImage} style={styles.qrImage} />
+          <Text style={styles.qrText}>
+            Documento: CONSTANCIA DE SERVICIO SOCIAL UNIVERSITARIO{'\n'}
+            URL de Verificación:{'\n'}
+            {verificationUrl}
+          </Text>
+        </View>
+      )}
         {/* Datos internos */}
         <View style={styles.section}>
         </View>

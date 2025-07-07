@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import SidebarGestor from './SidebarGestor';
 import Header from '../components/Header';
 import { pdf } from '@react-pdf/renderer';
+import QRCode from 'qrcode';
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
 import { useUser } from '../UserContext'; 
@@ -160,6 +161,9 @@ const aceptarInforme = async (id) => {
     const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
     const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
 
+    const verificationUrl = `http://localhost:5000/verificar/${id}`;
+    const qrDataUrl = await QRCode.toDataURL(verificationUrl);
+
     const informePrincipal = {
       ...informe,
       Estudiante: { nombre_estudiante: nombreEstudiantePrincipal },
@@ -171,7 +175,13 @@ const aceptarInforme = async (id) => {
       },
     };
 
-    const blobPrincipal = await pdf(<InformePDF informe={informePrincipal} />).toBlob();
+    const blobPrincipal = await pdf(
+    <InformePDF
+      informe={informePrincipal}
+      qrImage={qrDataUrl}
+      verificationUrl={verificationUrl}
+    />
+  ).toBlob();
 
     const formDataPrincipal = new FormData();
     formDataPrincipal.append('archivo', blobPrincipal, `certificado_final_${id}.pdf`);
@@ -211,9 +221,6 @@ const aceptarInforme = async (id) => {
     });
   }
 };
-
-
-
 
 
 const fetchInformesFinales = async () => {

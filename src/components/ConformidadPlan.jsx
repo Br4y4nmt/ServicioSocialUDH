@@ -642,8 +642,6 @@ function ConformidadPlan({
   </>
   </div>
 )}
-
-
     {proyectoFile && !archivoYaEnviado && (
       <p className="archivo-seleccionado">
         Archivo listo para enviar: <strong>{proyectoFile.name}</strong>

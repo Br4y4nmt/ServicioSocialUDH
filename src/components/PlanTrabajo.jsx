@@ -17,7 +17,7 @@ function PlanTrabajo() {
             style={{
               marginLeft: '10px',
               color: '#888',
-              fontSize: '22px' // ⬅️ Aquí defines el tamaño del ícono
+              fontSize: '22px' 
             }}
           />
           <div className="tooltip-text">
