@@ -16,6 +16,16 @@ function RegisterPage() {
 
 const handleRegister = async (e) => {
   e.preventDefault();
+  const anioIngreso = parseInt(codigo.substring(0, 4), 10);
+  if (isNaN(anioIngreso) || anioIngreso < 2021) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Código no permitido',
+      text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
+      confirmButtonColor: '#f27474',
+    });
+    return;
+  }
 
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({

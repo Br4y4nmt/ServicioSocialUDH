@@ -493,10 +493,8 @@ const eliminarPrograma = async (id) => {
 
 
 const crearDocente = async () => {
-  // Validar campos vacíos
   if (
     !nuevoDocenteEmail ||
-    !nuevoDocenteDni ||
     !nuevoDocenteWhatsapp ||
     !nuevaFacultadDocente ||
     !nuevoProgramaDocente
@@ -509,17 +507,6 @@ const crearDocente = async () => {
     return;
   }
 
-  // Validar longitud de DNI (8 dígitos)
-  if (nuevoDocenteDni.length !== 8) {
-    Swal.fire({
-      icon: 'error',
-      title: 'DNI inválido',
-      text: 'El DNI debe tener exactamente 8 dígitos.',
-    });
-    return;
-  }
-
-  // Validar longitud de WhatsApp (9 dígitos)
   if (nuevoDocenteWhatsapp.length !== 9) {
     Swal.fire({
       icon: 'error',
@@ -534,7 +521,6 @@ const crearDocente = async () => {
       '/api/auth/registrar-docente-completo',
       {
         email: nuevoDocenteEmail,
-        dni: nuevoDocenteDni,
         whatsapp: nuevoDocenteWhatsapp,
         facultad_id: nuevaFacultadDocente,
         programa_academico_id: nuevoProgramaDocente,
@@ -544,9 +530,8 @@ const crearDocente = async () => {
       }
     );
 
-    // Limpiar campos
+    // Limpiar campos (ya no necesitas limpiar el DNI)
     setNuevoDocenteEmail('');
-    setNuevoDocenteDni('');
     setNuevoDocenteWhatsapp('');
     setNuevaFacultadDocente('');
     setNuevoProgramaDocente('');
@@ -1587,18 +1572,6 @@ const rechazarInforme = async (id) => {
       <input
         type="text"
         className="docentes-modal-input"
-        placeholder="DNI del docente"
-        value={nuevoDocenteDni}
-        onChange={(e) => {
-          const value = e.target.value;
-          if (value.length <= 8 && /^\d*$/.test(value)) {
-            setNuevoDocenteDni(value);
-          }
-        }}
-      />
-      <input
-        type="text"
-        className="docentes-modal-input"
         placeholder="WhatsApp del docente"
         value={nuevoDocenteWhatsapp}
         onChange={(e) => {
@@ -1658,15 +1631,6 @@ const rechazarInforme = async (id) => {
        <button
           className="docentes-btn guardar"
           onClick={() => {
-            if (nuevoDocenteDni.length !== 8) {
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'El DNI debe tener exactamente 8 dígitos.',
-              });
-              return;
-            }
-
             if (nuevoDocenteWhatsapp.length !== 9) {
               Swal.fire({
                 icon: 'error',

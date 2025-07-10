@@ -79,7 +79,14 @@ function DashboardDocente() {
     });
     return;
   }
-
+      if (!/^\d{8}$/.test(dni)) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'DNI inválido',
+          text: 'Debe contener exactamente 8 dígitos numéricos.'
+        });
+        return;
+      }
   if (!/^\d{9}$/.test(celular)) {
     Swal.fire({
       icon: 'warning',
@@ -177,7 +184,20 @@ const handleCelularChange = (e) => {
 
         <div className="perfil-docente-field">
         <label>DNI</label>
-        <input type="text" value={dni} disabled />
+        <input
+          type="text"
+          value={dni}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d{0,8}$/.test(value)) {
+              setDni(value);
+            }
+          }}
+          maxLength={8}
+          required
+          placeholder="Ingrese su DNI"
+        />
+        <small className="editable-hint">Debe tener 8 dígitos numéricos</small>
       </div>
 
         <div className="perfil-docente-field">
