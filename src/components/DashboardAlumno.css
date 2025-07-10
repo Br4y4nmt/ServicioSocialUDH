@@ -206,7 +206,16 @@
   padding: 8px 10px;
   border-radius: 4px; /* Opcional: para bordes redondeados */
 }
+  .campo-obligatorio {
+    color: red;
+    font-weight: bold;
+  }
 
+  .campo-ayuda {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
 
   .form-group select {
     width: 100%;

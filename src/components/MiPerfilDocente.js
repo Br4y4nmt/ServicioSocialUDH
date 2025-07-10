@@ -49,8 +49,8 @@ function MiPerfilDocente() {
           dni: data.dni || '',
           email: data.email || '',
           celular: data.celular || '',
-          facultad_id: data.Facultade?.id_facultad || '',
-          programa_academico_id: data.ProgramaDelDocente?.id_programa || ''
+          facultad_nombre: data.Facultade?.nombre_facultad || '',
+          programa_nombre: data.ProgramaDelDocente?.nombre_programa || ''
         });
 
         setCelularOriginal(data.celular || ''); // 👈 Guardamos el celular original
@@ -184,40 +184,37 @@ function MiPerfilDocente() {
               <input className="input-disabled" value={perfil.email.toLowerCase()} disabled />
             </div>
             <div className="form-group">
-              <label className="bold-text">Número Celular</label>
-              <input
-                  className="input-disabled"
-                  value={perfil.celular}
-                  maxLength={9} // <- Límite visual en el input
-                  onChange={(e) => {
-                    const soloNumeros = e.target.value.replace(/\D/g, ''); // Elimina letras
-                    if (soloNumeros.length <= 9) {
-                      setPerfil((prev) => ({ ...prev, celular: soloNumeros }));
-                    }
-                  }}
-                />
-            </div>
+            <label className="bold-text">
+              Número Celular <span className="campo-obligatorio">*</span>
+            </label>
+            <input
+              className="input-editable"
+              value={perfil.celular}
+              maxLength={9}
+              onChange={(e) => {
+                const soloNumeros = e.target.value.replace(/\D/g, '');
+                if (soloNumeros.length <= 9) {
+                  setPerfil((prev) => ({ ...prev, celular: soloNumeros }));
+                }
+              }}
+            />
+            <p className="campo-ayuda">Puedes modificar este campo</p>
+          </div>
             <div className="form-group">
-              <label className="bold-text">Facultad</label>
-              <select className="input-disabled" value={perfil.facultad_id} disabled>
-                <option value="">Seleccione Facultad</option>
-                {facultades.map((fac) => (
-                  <option key={fac.id_facultad} value={fac.id_facultad}>
-                    {fac.nombre_facultad}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <label className="bold-text">Facultad</label>
+            <input
+              className="input-disabled"
+              value={perfil.facultad_nombre || ''}
+              disabled
+            />
+          </div>
             <div className="form-group">
               <label className="bold-text">Programa Académico</label>
-              <select className="input-disabled" value={perfil.programa_academico_id} disabled>
-                <option value="">Seleccione Programa</option>
-                {programas.map((prog) => (
-                  <option key={prog.id_programa} value={prog.id_programa}>
-                    {prog.nombre_programa}
-                  </option>
-                ))}
-              </select>
+              <input
+                className="input-disabled"
+                value={perfil.programa_nombre || ''}
+                disabled
+              />
             </div>
             <div className="alerta-boton-wrapper">
             <div className="alerta-importante bounce">

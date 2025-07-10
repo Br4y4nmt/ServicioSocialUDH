@@ -107,6 +107,16 @@ const verCartasMiembros = async (trabajoId) => {
   //const laboresFiltradas = labores.filter(
   //(labor) => labor.linea_accion_id === parseInt(lineaSeleccionada)
 //);
+const formularioCompleto = () => {
+  return (
+    tipoServicio &&
+    facultadSeleccionada &&
+    programaSeleccionado &&
+    docenteSeleccionado &&
+    lineaSeleccionada &&
+    laborSeleccionada
+  );
+};
   return (
     <>
       <div className="step-header">
@@ -265,7 +275,7 @@ const verCartasMiembros = async (trabajoId) => {
                       </select>
                         </div>
           
-                        {laborSeleccionada && !solicitudEnviada && (
+                        {formularioCompleto() && !solicitudEnviada && (
                           <div className="form-group">
                             <button 
                       className="btn-solicitar-aprobaciones"
@@ -286,7 +296,7 @@ const verCartasMiembros = async (trabajoId) => {
                         });
                       }}
                     >
-                      Solicitar asesoría 
+                      Solicitar Asesoría 
                     </button>
       
                           </div>
@@ -474,7 +484,6 @@ const verCartasMiembros = async (trabajoId) => {
         <span className="estado-tramitado">Tramitado</span>
       </div>
   </div>
-
 
     {cartasMiembros.map((carta, index) => (
   <div key={index} className="documento-card">
