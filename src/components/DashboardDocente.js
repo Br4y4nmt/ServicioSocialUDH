@@ -75,20 +75,24 @@ function formatearFechaExtendida(fecha) {
 
 
 const generarYSubirPDF = async (trabajo) => {
-    try {
-      const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
+  try {
+    const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
 
-      // Verificar que el token sea válido
-      if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
-        console.error('❌ Token inválido o mal formado:', token);
-        alert('Tu sesión ha expirado o hay un problema con la autenticación. Por favor, vuelve a iniciar sesión.');
-        return;
-      }
+    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+      console.error('❌ Token inválido o mal formado:', token);
+      alert('Tu sesión ha expirado o hay un problema con la autenticación. Por favor, vuelve a iniciar sesión.');
+      return;
+    }
 
-      const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
-      const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
-      const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
-      const qrBase64 = await generarQRBase64(urlVerificacion);
+    const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
+    const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
+
+    // ✅ Generar URL usando solo el id (ya puede incluir guión bajo si es miembro)
+    const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
+
+    const qrBase64 = await generarQRBase64(urlVerificacion);
+
+    // Aquí continúa como antes...
     const contenido = `
       <html>
         <head><style>${css}</style></head>
@@ -181,8 +185,6 @@ const generarYSubirPDF = async (trabajo) => {
     }
   };
 
-
-
 const toggleSidebar = () => {
   setCollapsed(prev => {
     return !prev;
@@ -218,13 +220,13 @@ useEffect(() => {
         return;
       }
 
-      // Si no es la primera vez, continuar con la lógica
+
       axios.get(`/api/docentes/usuario/${usuarioId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
           const docenteId = response.data.id_docente;
-          setFirmaDocente(response.data.firma); // <-- si estás usando la firma
+          setFirmaDocente(response.data.firma); 
 
           axios.get(`/api/trabajo-social/docente/${docenteId}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -257,22 +259,21 @@ useEffect(() => {
 }, [user, navigate]);
 
 
-
- 
-
   const handleEdit = (trabajo) => {
-    setSelectedTrabajo(trabajo); // Establece el trabajo seleccionado
-    setNuevoEstado(trabajo.estado_plan_labor_social); // Prellena el campo del estado
-    setModalVisible(true); // Muestra el modal
+    setSelectedTrabajo(trabajo);
+    setNuevoEstado(trabajo.estado_plan_labor_social); 
+    setModalVisible(true); 
 
   };
 const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
-  
+
+  // ✅ Generar URL usando solo el ID (con o sin _)
   const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
-  const qrBase64 = await generarQRBase64(urlVerificacion); // Usa tu función existente
+
+  const qrBase64 = await generarQRBase64(urlVerificacion);
 
   const contenido = `
     <html>
