@@ -14,6 +14,7 @@ function PerfilAlumno() {
   const { user } = useUser();  
   const [sedeSeleccionada, setSedeSeleccionada] = useState('');
   const [modalidadSeleccionada, setModalidadSeleccionada] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [sedes, setSedes] = useState([]);
   const token = user?.token;
   const [perfil, setPerfil] = useState({
@@ -27,18 +28,18 @@ function PerfilAlumno() {
   });
 
     const handleClickOutside = (event) => {
-    // Verificamos si el clic es fuera del sidebar
+  
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-      setCollapsed(true); // Colapsamos el sidebar si se hace clic fuera
+      setCollapsed(true);
     }
   };
 
   useEffect(() => {
-    // Añadimos un listener de click
+    
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      // Limpiamos el listener cuando el componente se desmonte
+      
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
@@ -48,23 +49,15 @@ function PerfilAlumno() {
   setNombre(localStorage.getItem('nombre_usuario') || 'NOMBRE DEL ALUMNO');
 }, []);
 
-
-
-
   const toggleSidebar = () => {
     setCollapsed((prev) => !prev);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPerfil((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGuardar = async () => {
   const usuario_id = localStorage.getItem('id_usuario');
   const { celular } = perfil;
 
-  // Validación de campo celular
+
     if (!celular) {
       Swal.fire({
         icon: 'warning',
@@ -94,7 +87,6 @@ function PerfilAlumno() {
     return;
   }
 
-  // ✅ Nueva validación de sede obligatoria
   if (!sedeSeleccionada) {
     Swal.fire({
       icon: 'warning',

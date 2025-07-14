@@ -12,20 +12,20 @@ function RegisterPage() {
   const [showDni, setShowDni] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const emailFinal = `${codigo}@udh.edu.pe`;
-
 const handleRegister = async (e) => {
   e.preventDefault();
-  const anioIngreso = parseInt(codigo.substring(0, 4), 10);
-  if (isNaN(anioIngreso) || anioIngreso < 2021) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Código no permitido',
-      text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
-      confirmButtonColor: '#f27474',
-    });
-    return;
-  }
+  const anio = codigo.startsWith('120') ? parseInt(codigo.substring(1, 5), 10) : parseInt(codigo.substring(0, 4), 10);
+
+if (isNaN(anio) || anio < 2021) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Código no permitido',
+    text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
+    confirmButtonColor: '#f27474',
+  });
+  return;
+}
+
 
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({
@@ -37,15 +37,15 @@ const handleRegister = async (e) => {
     return;
   }
 
-  setIsSubmitting(true); // ⏳ Desactivar botón
+  setIsSubmitting(true); 
 
-  try {
-    const res = await axios.post('/api/auth/register', {
-      email: `${codigo}@udh.edu.pe`,
-      dni,
-      whatsapp,
-      codigo,
-    });
+    try {
+      await axios.post('/api/auth/register', {
+        email: `${codigo}@udh.edu.pe`,
+        dni,
+        whatsapp,
+        codigo,
+      });
 
     Swal.fire({
       icon: 'success',

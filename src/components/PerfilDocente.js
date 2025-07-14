@@ -32,24 +32,19 @@ function DashboardDocente() {
     if (nombreGuardado) setNombre(nombreGuardado);
     if (correoGuardado) setEmail(correoGuardado);
   }, []);
-  const removerAcentos = (texto) => {
-  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-};
-  useEffect(() => {
-    const fetchPerfilDocente = async () => {
-      try {
-        const { data } = await axios.get(
-          '/api/docentes/perfil',
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
 
+useEffect(() => {
+  const fetchPerfilDocente = async () => {
+    try {
+      const { data } = await axios.get(
+        '/api/docentes/perfil',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       setDni(data.dni || '');
       setFacultad(data.facultad_id || '');
       setProgramaAcademico(data.programa_id || '');
       setCelular(data.celular || '');
-
-      // 👉 Estos dos campos son los que estás olvidando usar
       setFacultadNombre(data.facultad_nombre || '');
       setProgramaNombre(data.programa_nombre || '');
 
@@ -63,8 +58,10 @@ function DashboardDocente() {
     }
   };
 
-  fetchPerfilDocente();
-}, []);
+  if (token) {
+    fetchPerfilDocente();
+  }
+}, [token]);
 
 
   // Manejar el submit del formulario

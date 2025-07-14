@@ -7,6 +7,7 @@ import './RevisionPlanSocial.css';
 import html2pdf from 'html2pdf.js';
 import './CartaTerminoPDF.css'; // importa el estilo
 import { useUser } from '../UserContext';
+import QRCode from 'qrcode';
 
 
 function SeguimientoServicioDocente() {
@@ -33,7 +34,7 @@ function SeguimientoServicioDocente() {
   const handleVerGrupo = async (trabajoId) => {
     try {
       const response = await axios.get(`/api/integrantes/${trabajoId}`, {
-        headers: { Authorization: `Bearer ${token}` }  // Usamos el token del contexto
+        headers: { Authorization: `Bearer ${token}` }  
       });
       setIntegrantesGrupo(response.data);
       setModalGrupoVisible(true);
@@ -65,6 +66,18 @@ const convertirImagenABase64 = (url) => {
     xhr.send();
   });
 };
+const generarQRBase64 = async (url) => {
+  try {
+    return await QRCode.toDataURL(url, {
+      width: 120,
+      margin: 1,
+    });
+  } catch (err) {
+    console.error('Error generando QR:', err);
+    return null;
+  }
+};
+
 const generarHTML = async (nombreEstudiante, programa, facultad, labor, firmaDocente) => `
   <html>
     <head>
@@ -352,11 +365,14 @@ const generarPDFBlobTermino = async (html, filename) => {
 };
 
 
-
-
 const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE';
+
+   // ✅ GENERAR QR
+  const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documento-termino/${plan.id}`;
+  const qrBase64 = await generarQRBase64(urlVerificacion);
+
 
   const contenido = `
     <html>
@@ -402,6 +418,14 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
       <p class="firma-docente"><em>${nombreDocente}</em></p>
     </div>
   </div>
+   <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 40px; padding-left: 30px;">
+          <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
+          <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+            <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
+            <strong>URL de Verificación:</strong><br/>
+            ${urlVerificacion}
+          </div>
+        </div>
 </body>
     </html>
   `;
@@ -413,7 +437,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   await new Promise(r => setTimeout(r, 800));
   const blob = await html2pdf().set({
     margin: 10,
-    filename: `Carta_Termino_${plan.Estudiante?.nombre_estudiante || 'estudiante'}.pdf`,
+    filename: `carta_termino_${plan.id}.pdf`, // ✅ BIEN, coincidirá con la API
     image: { type: 'jpeg', quality: 1.0 },
     html2canvas: { scale: 3 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -421,7 +445,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   document.body.removeChild(contenedor);
 
   const formData = new FormData();
-  formData.append('archivo', blob, `Carta_Termino_${plan.Estudiante?.nombre_estudiante || 'estudiante'}.pdf`);
+  formData.append('archivo', blob, `carta_termino_${plan.id}.pdf`);
   formData.append('trabajo_id', plan.id);
 
  await axios.post('/api/trabajo-social/guardar-carta-termino-html', formData, {

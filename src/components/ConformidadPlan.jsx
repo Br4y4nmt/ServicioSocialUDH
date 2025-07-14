@@ -65,6 +65,9 @@ function ConformidadPlan({
   handleSolicitarRevision,
   activeSection
 }) {
+  const [cargandoPDF, setCargandoPDF] = React.useState(false);
+  const [enviandoRevision, setEnviandoRevision] = React.useState(false);
+
   return (
     <>
    {activeSection === 'conformidad' && (
@@ -541,38 +544,63 @@ function ConformidadPlan({
    
        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
         <button
-          className="boton-ver-pdf-conf"
-          onClick={() => {
-            if (!cartaAceptacionPdf) {
-              Swal.fire({
-                icon: 'warning',
-                title: 'Falta el archivo anexo',
-                text: 'Debes adjuntar el archivo de Convenio de Cooperación Institucional antes de poder generar el PDF.',
-                confirmButtonText: 'Aceptar'
-              });
-              return;
-            }
-            handleGenerarPDF();
-          }}
-          disabled={archivoYaEnviado}
-        >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          style={{
-            marginRight: '6px',
-            position: 'relative',
-            top: '-2px', 
-            verticalAlign: 'middle'
-          }}
-        >
-          <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V9h5.5L14 3.5zM8 13h8v-2H8v2zm0 4h8v-2H8v2z" />
-        </svg>
-        Ver PDF
-      </button>
+  className="boton-ver-pdf-conf"
+  onClick={async () => {
+    if (!cartaAceptacionPdf) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Falta el archivo anexo',
+        text: 'Debes adjuntar el archivo de Convenio de Cooperación Institucional antes de poder generar el PDF.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    setCargandoPDF(true);
+    try {
+      await Promise.resolve(handleGenerarPDF());
+    } finally {
+      setTimeout(() => setCargandoPDF(false), 1000);
+    }
+  }}
+  disabled={archivoYaEnviado || cargandoPDF}
+>
+  {cargandoPDF ? (
+    <>
+      <span
+        className="spinner-border-conformidad"
+        role="status"
+        aria-hidden="true"
+        style={{
+          marginRight: '6px',
+          verticalAlign: 'middle'
+        }}
+      ></span>
+      Generando...
+    </>
+  ) : (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        style={{
+          marginRight: '6px',
+          position: 'relative',
+          top: '-2px',
+          verticalAlign: 'middle'
+        }}
+      >
+        <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V9h5.5L14 3.5zM8 13h8v-2H8v2zm0 4h8v-2H8v2z" />
+      </svg>
+      Ver PDF
+    </>
+  )}
+</button>
+
+
 
 
        </div>
@@ -648,9 +676,9 @@ function ConformidadPlan({
       </p>
     )}
 
-    <button
+   <button
   className={`btn-revision ${estadoConformidad === 'aceptado' ? 'oculto' : ''}`}
-  onClick={() => {
+  onClick={async () => {
     if (archivoYaEnviado) {
       Swal.fire({
         icon: 'info',
@@ -660,16 +688,42 @@ function ConformidadPlan({
       });
       return;
     }
-    handleSolicitarRevision();
+
+    setEnviandoRevision(true);
+    try {
+      await Promise.resolve(handleSolicitarRevision());
+    } finally {
+      setTimeout(() => setEnviandoRevision(false), 1000);
+    }
   }}
-  disabled={archivoYaEnviado}
+  disabled={archivoYaEnviado || enviandoRevision}
   style={{
-    opacity: archivoYaEnviado ? 0.6 : 1,
-    cursor: archivoYaEnviado ? 'not-allowed' : 'pointer'
+    opacity: archivoYaEnviado || enviandoRevision ? 0.6 : 1,
+    cursor: archivoYaEnviado || enviandoRevision ? 'not-allowed' : 'pointer'
   }}
 >
-  {archivoYaEnviado ? 'Ya enviado' : 'Solicitar revisión'} <i className="fas fa-edit"></i>
+  {archivoYaEnviado ? (
+    'Ya enviado'
+  ) : enviandoRevision ? (
+    <>
+      <span
+        className="spinner-border-conformidad"
+        role="status"
+        aria-hidden="true"
+        style={{
+          marginRight: '6px',
+          verticalAlign: 'middle'
+        }}
+      ></span>
+      Enviando...
+    </>
+  ) : (
+    <>
+      Solicitar revisión <i className="fas fa-edit"></i>
+    </>
+  )}
 </button>
+
   </div>
 )}
 

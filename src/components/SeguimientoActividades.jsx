@@ -33,6 +33,7 @@ const token = user?.token;
 const [cargandoEvidencia, setCargandoEvidencia] = useState([]);
 const [modalActividadVisible, setModalActividadVisible] = useState(false);
 const [actividadDetalle, setActividadDetalle] = useState(null);
+const [enviandoSolicitudTermino, setEnviandoSolicitudTermino] = useState(false);
 
 
 const verCartasMiembros = async (trabajoId) => {
@@ -408,17 +409,40 @@ const verCartasMiembros = async (trabajoId) => {
                     )}
                 </tbody>
             </table>
-            {todasAprobadas && estadoSolicitudTermino === 'no_solicitada' && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <button
-                        className="btn-carta-termino"
-                        onClick={solicitarCartaTermino}
-                    >
-                        Solicitar Documento De  Término
-                    </button>
+           {todasAprobadas && estadoSolicitudTermino === 'no_solicitada' && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <button
+                className="btn-carta-termino"
+                onClick={async () => {
+                  setEnviandoSolicitudTermino(true);
+                  try {
+                    await Promise.resolve(solicitarCartaTermino());
+                  } finally {
+                    setTimeout(() => setEnviandoSolicitudTermino(false), 1000);
+                  }
+                }}
+                disabled={enviandoSolicitudTermino}
+              >
+                {enviandoSolicitudTermino ? (
+                  <>
+                    <span
+                      className="spinner-border-conformidad"
+                      role="status"
+                      aria-hidden="true"
+                      style={{
+                        marginRight: '6px',
+                        verticalAlign: 'middle'
+                      }}
+                    ></span>
+                    Enviando...
+                  </>
+                ) : (
+                  'Solicitar Documento De Término'
+                )}
+              </button>
+            </div>
+          )}
 
-                </div>
-            )}
 
             {(estadoSolicitudTermino === 'solicitada' || estadoSolicitudTermino === 'aprobada') && (
                 <div className="respuesta-asesor-cardss">

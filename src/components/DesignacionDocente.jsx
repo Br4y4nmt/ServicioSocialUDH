@@ -30,6 +30,7 @@ function DesignacionDocente({
 }) {
   const user = JSON.parse(localStorage.getItem('user'));
   const token = user?.token;
+  const [loadingSolicitud, setLoadingSolicitud] = useState(false);
 
   const [cartasMiembros, setCartasMiembros] = useState([]);
 const eliminarEleccion = async () => {
@@ -275,33 +276,38 @@ const formularioCompleto = () => {
                       </select>
                         </div>
           
-                        {formularioCompleto() && !solicitudEnviada && (
-                          <div className="form-group">
-                            <button 
-                      className="btn-solicitar-aprobaciones"
-                      onClick={() => {
-                        Swal.fire({
-                          title: '¿Estás seguro?',
-                          text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados.',
-                          icon: 'warning',
-                          showCancelButton: true,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Sí, enviar',
-                          cancelButtonText: 'Cancelar'
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            handleSolicitarAprobacion();
-                          }
-                        });
-                      }}
-                    >
-                      Solicitar Asesoría 
-                    </button>
-      
-                          </div>
-                        )}
-          
+     {formularioCompleto() && !solicitudEnviada && (
+      <div className="form-group">
+        <button 
+          className="btn-solicitar-aprobaciones"
+          onClick={() => {
+            Swal.fire({
+              title: '¿Estás seguro?',
+              text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados.',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Sí, enviar',
+              cancelButtonText: 'Cancelar'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                setLoadingSolicitud(true); // 👈 activa spinner
+                Promise.resolve(handleSolicitarAprobacion())
+                  .finally(() => setLoadingSolicitud(false)); // 👈 desactiva spinner al finalizar
+              }
+            });
+          }}
+          disabled={loadingSolicitud} // 👈 desactiva botón mientras carga
+        >
+          {loadingSolicitud ? (
+            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          ) : (
+            'Solicitar Asesoría'
+          )}
+        </button>
+      </div>
+    )}
           {solicitudEnviada && (
         <div className="respuesta-asesor-card">
           <div className="respuesta-asesor-header">
