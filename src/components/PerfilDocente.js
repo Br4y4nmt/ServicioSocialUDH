@@ -115,11 +115,11 @@ useEffect(() => {
     formData.append('firma_digital', firma); 
 
      await axios.put('/api/docentes', formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-    Authorization: `Bearer ${token}`
-  }
-});
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`
+      }
+    });
   localStorage.setItem('firma_docente_completa', 'true'); 
     Swal.fire({
       icon: 'success',
@@ -257,22 +257,22 @@ const handleCelularChange = (e) => {
         </>
   )}
         <input
-          type="file"
-          accept="image/png"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            setFirma(file);
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                setFirmaPreview(reader.result); // ← Guarda la URL base64
-              };
-              reader.readAsDataURL(file);
-            }
-          }}
-          required
-          className="firma-input"
-        />
+        type="file"
+        accept="image/png, image/jpeg, image/jpg"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          setFirma(file);
+          if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setFirmaPreview(reader.result); // ← Guarda la URL base64
+            };
+            reader.readAsDataURL(file);
+          }
+        }}
+        required
+        className="firma-input"
+      />
       </div>
       </div>
 
