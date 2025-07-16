@@ -20,6 +20,7 @@ function DashboardDocente() {
   const token = user?.token;
   const [facultadNombre, setFacultadNombre] = useState('');
   const [programaNombre, setProgramaNombre] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const toggleSidebar = () => {
@@ -104,6 +105,8 @@ useEffect(() => {
   }
 
   try {
+    setLoading(true);
+
     const formData = new FormData();
     formData.append('nombre_docente', nombre);
     formData.append('dni', dni);
@@ -124,7 +127,7 @@ useEffect(() => {
     Swal.fire({
       icon: 'success',
       title: 'Registro Exitoso',
-      text: 'El docente fue registrado correctamente.',
+      text: 'Su perfil se ha completado exitosamente.',
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
@@ -141,6 +144,8 @@ useEffect(() => {
       text: 'Hubo un error al registrar el docente.',
       confirmButtonColor: '#d33'
     });
+  }finally {
+    setLoading(false);
   }
 };
 
@@ -276,9 +281,20 @@ const handleCelularChange = (e) => {
       </div>
       </div>
 
-        <button type="submit" className="perfil-docente-btn guardar">
-          Guardar Cambios
-        </button>
+        <button
+        type="submit"
+        className="perfil-docente-btn guardar"
+        disabled={loading}
+      >
+       {loading ? (
+          <>
+            <div className="spinner" style={{ marginRight: '8px' }}></div>
+            Actualizando...
+          </>
+        ) : (
+          'Guardar Cambios'
+        )}
+      </button>
       </form>
 
       <div className="perfil-docente-footer">
