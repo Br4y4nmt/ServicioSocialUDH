@@ -625,16 +625,46 @@ const guardarEdicionPrograma = async () => {
 
   
   
-  const eliminarDocente = async (id) => {
+const eliminarDocente = async (id) => {
+  const confirmacion = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará al docente permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+
+  if (confirmacion.isConfirmed) {
     try {
       await axios.delete(`/api/docentes/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-      fetchDocentes();
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      await fetchDocentes();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Docente eliminado!',
+        text: 'El docente fue eliminado correctamente.',
+        confirmButtonColor: '#1a237e',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (error) {
       console.error('Error al eliminar docente:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el docente.',
+        confirmButtonColor: '#d33'
+      });
     }
-  };
+  }
+};
+
 
 useEffect(() => {
   const fetchProgramasPorFacultad = async () => {
@@ -727,16 +757,46 @@ const guardarEdicionDocente = async (id) => {
     }
   };
 
-  const eliminarLabor = async (id) => {
+const eliminarLabor = async (id) => {
+  const confirmacion = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el servicio social permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+
+  if (confirmacion.isConfirmed) {
     try {
       await axios.delete(`/api/labores/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-      fetchLabores();
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      await fetchLabores();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Servicio social eliminado!',
+        text: 'La labor fue eliminada correctamente.',
+        confirmButtonColor: '#1a237e',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (error) {
       console.error('Error al eliminar labor social:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el servicio social.',
+        confirmButtonColor: '#d33'
+      });
     }
-  };
+  }
+};
+
 
 
   const guardarEdicionLabor = async (id) => {
@@ -781,16 +841,46 @@ const guardarEdicionDocente = async (id) => {
     }
   };
 
-  const eliminarFacultad = async (id) => {
+const eliminarFacultad = async (id) => {
+  const confirmacion = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará la facultad permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+
+  if (confirmacion.isConfirmed) {
     try {
       await axios.delete(`/api/facultades/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-      fetchFacultades();
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      await fetchFacultades();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Facultad eliminada!',
+        text: 'La facultad fue eliminada correctamente.',
+        confirmButtonColor: '#1a237e',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (error) {
       console.error('Error al eliminar facultad:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar la facultad.',
+        confirmButtonColor: '#d33'
+      });
     }
-  };
+  }
+};
+
 const rechazarInforme = async (id) => {
     try {
       await axios.patch(`/api/trabajo-social/estado/${id}`, {
