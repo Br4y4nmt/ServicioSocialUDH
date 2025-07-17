@@ -16,6 +16,7 @@ function PerfilAlumno() {
   const [modalidadSeleccionada, setModalidadSeleccionada] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [sedes, setSedes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const token = user?.token;
   const [perfil, setPerfil] = useState({
     nombre_completo: '',
@@ -98,6 +99,7 @@ function PerfilAlumno() {
   }
 
   try {
+    setLoading(true);
     await axios.put(`/api/estudiantes/actualizar-celular/${usuario_id}`, 
       { celular, sede: sedeSeleccionada, modalidad: modalidadSeleccionada.toUpperCase() },
       { headers: { Authorization: `Bearer ${token}` } }
@@ -105,8 +107,8 @@ function PerfilAlumno() {
 
     Swal.fire({
       icon: 'success',
-      title: 'Datos actualizados',
-      text: 'Tu información ha sido guardada correctamente.',
+      title: 'Perfil actualizado',
+      text: 'Tu perfil ha sido completado correctamente.',
       confirmButtonColor: '#28a745',
       timer: 2000,
       showConfirmButton: false
@@ -122,6 +124,8 @@ function PerfilAlumno() {
       text: 'Ocurrió un error al guardar los datos.',
       confirmButtonColor: '#d33'
     });
+  }finally {
+    setLoading(false); 
   }
 };
 
@@ -285,9 +289,21 @@ const handleCelularChange = (e) => {
       </div>
 
             <div className="button-container">
-              <button className="btn-completar-perfil" onClick={handleGuardar}>
-                Guardar Cambios
-              </button>
+              <button
+              className="btn-completar-perfil"
+              onClick={handleGuardar}
+              disabled={loading}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              {loading ? (
+                <>
+                  <div className="spinner-alumno" style={{ width: '16px', height: '16px' }}></div>
+                  Actualizando...
+                </>
+              ) : (
+                'Guardar Cambios'
+              )}
+            </button>
             </div>
           </div>
         

@@ -24,7 +24,8 @@ function DashboardGestor() {
   const [modalDocenteVisible, setModalDocenteVisible] = useState(false);
   const [nuevoDocenteEmail, setNuevoDocenteEmail] = useState('');
   const [whatsappPrograma, setWhatsappPrograma] = useState('');
-  const [nuevoDocenteDni, setNuevoDocenteDni] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [, setNuevoDocenteDni] = useState('');
   const [emailDocenteEditado, setEmailDocenteEditado] = useState('');
   const [nuevaFacultadDocente, setNuevaFacultadDocente] = useState('');
   const [nuevoProgramaDocente, setNuevoProgramaDocente] = useState('');
@@ -79,7 +80,6 @@ const aceptarInforme = async (id) => {
 
     const trabajoId = informe.trabajo_social_id || informe.id;
 
-    // 🧪 Bloqueo completo si el servicio es grupal y hay un fallo en la API UDH
     if (tipoServicio === 'grupal') {
       let estudiantes = [];
 
@@ -654,7 +654,8 @@ useEffect(() => {
   };
 
   fetchProgramasPorFacultad();
-}, [nuevaFacultadDocente]);
+}, [nuevaFacultadDocente, token]);
+
 
 const guardarEdicionDocente = async (id) => {
   try {
@@ -699,10 +700,6 @@ const guardarEdicionDocente = async (id) => {
   }
 };
 
-
-
-
-  // ====================== FUNCIONES LABORES SOCIALES ======================
   const fetchLabores = async () => {
     try {
       const res = await axios.get('/api/labores', {
@@ -757,7 +754,7 @@ const guardarEdicionDocente = async (id) => {
     }
   };
 
-  // ====================== FUNCIONES FACULTADES ======================
+
   const fetchFacultades = async () => {
     try {
       const res = await axios.get('/api/facultades', {
@@ -806,7 +803,7 @@ const rechazarInforme = async (id) => {
       console.error('Error al rechazar informe:', error);
     }
   };  
-  // ====================== USE EFFECT ======================
+
   useEffect(() => {
     fetchProgramas();
     fetchDocentes();
@@ -816,7 +813,6 @@ const rechazarInforme = async (id) => {
     fetchLineas();
 
   }, []);
-
 
   return (
     <div className="layout-gestor">

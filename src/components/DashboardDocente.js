@@ -27,7 +27,6 @@ function RevisionDocente() {
 
   const navigate = useNavigate();
 
-
   const generarQRBase64 = async (url) => {
     try {
       return await QRCode.toDataURL(url, {
@@ -166,7 +165,7 @@ const generarYSubirPDF = async (trabajo) => {
       formData.append('archivo', blob, `carta_aceptacion_${trabajo.id}.pdf`);
       formData.append('trabajo_id', trabajo.id);
 
-      const response = await axios.post('/api/trabajo-social/guardar-pdf-html', formData, {
+       await axios.post('/api/trabajo-social/guardar-pdf-html', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -227,6 +226,20 @@ useEffect(() => {
         .then(response => {
           const docenteId = response.data.id_docente;
           setFirmaDocente(response.data.firma); 
+             
+       if (!sessionStorage.getItem('bienvenidaDocenteMostrada')) {
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          icon: 'success',
+          title: `Bienvenido ${localStorage.getItem('nombre_usuario')}`,
+          showConfirmButton: false,
+          timer: 4000,
+          timerProgressBar: true,
+        });
+
+        sessionStorage.setItem('bienvenidaDocenteMostrada', 'true'); // ⬅️ Marca que ya se mostró
+      }
 
           axios.get(`/api/trabajo-social/docente/${docenteId}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -259,12 +272,12 @@ useEffect(() => {
 }, [user, navigate]);
 
 
-  const handleEdit = (trabajo) => {
-    setSelectedTrabajo(trabajo);
-    setNuevoEstado(trabajo.estado_plan_labor_social); 
-    setModalVisible(true); 
+  // const handleEdit = (trabajo) => {
+  //   setSelectedTrabajo(trabajo);
+  //   setNuevoEstado(trabajo.estado_plan_labor_social);
+  //   setModalVisible(true);
+  // };
 
-  };
 const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
@@ -452,20 +465,15 @@ const handleSave = async () => {
   }
 };
 
-
-
   const handleCloseModal = () => {
     setModalVisible(false);
   };
 const handleVerGrupo = async (trabajoId) => {
   try {
-    const response = await axios.get(
-      `/api/integrantes/${trabajoId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
-    setIntegrantesGrupo(response.data);
+    const { data } = await axios.get(`/api/integrantes/${trabajoId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setIntegrantesGrupo(data);
     setModalGrupoVisible(true);
   } catch (error) {
     console.error('Error al obtener integrantes del grupo:', error);
@@ -608,6 +616,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
     setTrabajoEnProcesoId(null); // siempre limpia
   }
 };
+
 
   return (
     <>

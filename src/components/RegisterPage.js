@@ -26,7 +26,6 @@ if (isNaN(anio) || anio < 2021) {
   return;
 }
 
-
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({
       icon: 'error',

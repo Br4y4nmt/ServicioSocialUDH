@@ -130,7 +130,7 @@ useEffect(() => {
 
       const container = document.getElementById('google-signin-button');
       if (container) {
-        container.innerHTML = ''; // 🔁 Limpiar el contenedor por si ya existe un botón anterior
+        container.innerHTML = ''; 
         google.accounts.id.renderButton(container, {
           theme: 'outline',
           size: 'large',
@@ -142,7 +142,7 @@ useEffect(() => {
     }
   };
 
-  // Si el SDK no está cargado, lo carga; si ya está, renderiza igual el botón
+
   if (!window.google?.accounts?.id) {
     loadGoogleSDK();
   } else {

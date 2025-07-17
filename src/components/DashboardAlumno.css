@@ -1470,6 +1470,20 @@
   align-items: center;
   gap: 8px;
 }
+.spinner-alumno {
+  border: 2px solid #fff;
+  border-top: 2px solid #555;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 @media screen and (max-width: 768px) {
   html, body, #root, .main-content {
