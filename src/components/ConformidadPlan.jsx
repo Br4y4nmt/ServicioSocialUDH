@@ -231,11 +231,12 @@ function ConformidadPlan({
        <div className="form-group">
          <label className="bold-text">Fecha de presentación</label>
          <input
-           type="date"
-           className="input-estilo-select"
-           value={fechaPresentacion}
-           onChange={(e) => setFechaPresentacion(e.target.value)}
-         />
+          type="date"
+          className="input-estilo-select"
+          value={fechaPresentacion}
+          onChange={(e) => setFechaPresentacion(e.target.value)}
+          min={new Date().toISOString().split('T')[0]} // ⬅️ impide retroceder
+        />
        </div>  
      </div>
      </div>

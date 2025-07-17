@@ -161,7 +161,7 @@ const aceptarInforme = async (id) => {
     const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
     const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
 
-    const verificationUrl = `http://localhost:5000/verificar/${id}`;
+    const verificationUrl = `${process.env.REACT_APP_API_URL}/verificar/${id}`;
     const qrDataUrl = await QRCode.toDataURL(verificationUrl);
 
     const informePrincipal = {

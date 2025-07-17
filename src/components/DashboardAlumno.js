@@ -1534,7 +1534,7 @@ useEffect(() => {
         <input
         type="text"
         className="input-estilo-select"
-        style={{ width: '100%' }}  // 👈 Añade esto
+        style={{ width: '100%' }}  
         value={nuevaActividad}
         onChange={(e) => setNuevaActividad(e.target.value)}
         placeholder="Ingrese nombre de la actividad"
@@ -1557,16 +1557,18 @@ useEffect(() => {
           className="input-estilo-select"
           value={nuevaFecha}
           onChange={(e) => setNuevaFecha(e.target.value)}
+          min={new Date().toISOString().split('T')[0]} // ⬅️ Esta línea bloquea fechas pasadas
         />
       </div>
 <div className="form-group">
   <label className="bold-text">Fecha Fin</label>
   <input
-    type="date"
-    className="input-estilo-select"
-    value={nuevaFechaFin}
-    onChange={(e) => setNuevaFechaFin(e.target.value)}
-  />
+  type="date"
+  className="input-estilo-select"
+  value={nuevaFechaFin}
+  onChange={(e) => setNuevaFechaFin(e.target.value)}
+  min={new Date().toISOString().split('T')[0]} // ⬅️ Igualmente aquí
+/>
 </div>
       <div className="form-group">
   <label className="bold-text">Resultados Esperados</label>
