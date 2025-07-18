@@ -1476,8 +1476,6 @@ const rechazarInforme = async (id) => {
       <div className="docentes-header">
         <div className="docentes-header-left">
           <h2>Estudiantes</h2>
-          {/* Botón Agregar si lo necesitas más adelante */}
-          {/* <button className="docentes-btn-agregar">Agregar</button> */}
         </div>
 
         <div className="docentes-header-right">
@@ -1514,7 +1512,7 @@ const rechazarInforme = async (id) => {
         <table className="docentes-table">
           <thead className="docentes-table-thead">
             <tr>
-              <th>ID</th>
+              <th>Nº</th> 
               <th>Nombre</th>
               <th>DNI</th>
               <th>Correo</th>
@@ -1535,9 +1533,9 @@ const rechazarInforme = async (id) => {
 
                 return coincideTexto && coincidePrograma;
               })
-              .map((est) => (
+              .map((est, index) => (
                 <tr key={est.id_estudiante}>
-                  <td>{est.id_estudiante}</td>
+                  <td>{index + 1}</td> {/* ← Numeración dinámica */}
                   <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
                   <td>{est.dni || '—'}</td>
                   <td>{est.email || 'SIN CORREO'}</td>

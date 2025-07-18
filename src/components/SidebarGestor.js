@@ -119,10 +119,10 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                 onClick={() => setActiveSection('estudiantes')}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {/* Estudiantes: Icono de graduación o usuarios */}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
-                    <path d="M12 14c4.418 0 8-1.79 8-4s-3.582-4-8-4-8 1.79-8 4 3.582 4 8 4z" />
-                    <path d="M6 18v-2c0-1.657 3.582-3 8-3s8 1.343 8 3v2" />
+                  {/* Estudiantes: Icono de graduación */}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#2e9e7f" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M22 12l-10 6L2 12l10-6 10 6z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12v5c0 .6.4 1.2 1 1.5l5 2.5 5-2.5c.6-.3 1-.9 1-1.5v-5" />
                   </svg>
                   Estudiantes
                 </span>
