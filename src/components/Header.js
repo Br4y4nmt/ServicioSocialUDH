@@ -104,14 +104,15 @@ function Header({ onToggleSidebar }) {
           />
 
             {menuAbierto && (
-              <div className="dropdown-menu-fixed">
-                <div className="dropdown-item" onClick={handlePerfilClick}>
-                Perfil
-              </div>
-                <div className="dropdown-item" onClick={handleLogout}>Cerrar sesión</div>
-              </div>
-            )}
-
+        <div className="dropdown-menu-fixed">
+          {rolUsuario !== 'gestor-udh' && (
+            <div className="dropdown-item" onClick={handlePerfilClick}>
+              Perfil
+            </div>
+          )}
+          <div className="dropdown-item" onClick={handleLogout}>Cerrar sesión</div>
+        </div>
+      )}
         </div>
       </div>
     </header>

@@ -62,6 +62,9 @@ function DashboardGestor() {
   const [idEditandoLinea, setIdEditandoLinea] = useState(null);
   const [nombreLineaEditado, setNombreLineaEditado] = useState('');
   const [informesFinales, setInformesFinales] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [filtroEstudiantes, setFiltroEstudiantes] = useState('');
+
   const { user } = useUser();
   const token = user?.token;
 const aceptarInforme = async (id) => {
@@ -222,6 +225,20 @@ const aceptarInforme = async (id) => {
   }
 };
 
+useEffect(() => {
+  const fetchEstudiantes = async () => {
+    try {
+      const res = await axios.get('/api/estudiantes', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEstudiantes(res.data);
+    } catch (error) {
+      console.error('Error al obtener estudiantes:', error);
+    }
+  };
+
+  fetchEstudiantes();
+}, []);
 
 const fetchInformesFinales = async () => {
   try {
@@ -1453,6 +1470,90 @@ const rechazarInforme = async (id) => {
     </div>
   </div>
 )}
+{activeSection === 'estudiantes' && (
+  <div className="docentes-container">
+    <div className="docentes-card">
+      <div className="docentes-header">
+        <div className="docentes-header-left">
+          <h2>Estudiantes</h2>
+          {/* Botón Agregar si lo necesitas más adelante */}
+          {/* <button className="docentes-btn-agregar">Agregar</button> */}
+        </div>
+
+        <div className="docentes-header-right">
+          <label className="docentes-search-label">
+            Buscar:
+            <input
+              type="text"
+              className="docentes-search-input"
+              placeholder="Nombre del estudiante o DNI"
+              value={filtroEstudiantes}
+              onChange={(e) => setFiltroEstudiantes(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <label className="docentes-search-label">
+          Buscar por Programa Académico:
+          <select
+            className="select-profesional"
+            value={programaSeleccionado}
+            onChange={(e) => setProgramaSeleccionado(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {programas.map((prog) => (
+              <option key={prog.id_programa} value={prog.nombre_programa}>
+                {prog.nombre_programa}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="docentes-table-wrapper">
+        <table className="docentes-table">
+          <thead className="docentes-table-thead">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>DNI</th>
+              <th>Correo</th>
+              <th>Celular</th>
+              <th>Programa Académico</th>
+            </tr>
+          </thead>
+          <tbody>
+            {estudiantes
+              .filter((est) => {
+                const coincideTexto =
+                  est.nombre_estudiante?.toLowerCase().includes(filtroEstudiantes.toLowerCase()) ||
+                  est.dni?.includes(filtroEstudiantes);
+
+                const coincidePrograma =
+                  programaSeleccionado === '' ||
+                  est.programa?.nombre_programa === programaSeleccionado;
+
+                return coincideTexto && coincidePrograma;
+              })
+              .map((est) => (
+                <tr key={est.id_estudiante}>
+                  <td>{est.id_estudiante}</td>
+                  <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
+                  <td>{est.dni || '—'}</td>
+                  <td>{est.email || 'SIN CORREO'}</td>
+                  <td>{est.celular || '—'}</td>
+                  <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
 
 
 {activeSection === 'docentes' && (

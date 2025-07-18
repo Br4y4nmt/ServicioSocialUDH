@@ -15,7 +15,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
     if (nombre) setNombreUsuario(nombre);
 
     // Abrir menú si la sección activa corresponde
-    if (["facultades", "programas", "docentes", "labores", "lineas", "informes-finales"].includes(activeSection)) {
+    if (["facultades", "programas", "docentes", "labores", "lineas", "informes-finales", "estudiantes"].includes(activeSection)) {
       setOpenMenu(0);
     } else {
       setOpenMenu(null);
@@ -83,6 +83,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Programas Académicos
                   </span>
                 </li>
+               
                       <li className={activeSection === 'docentes' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('docentes')}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                      
@@ -102,6 +103,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Líneas de Acción
                   </span>
                 </li>
+
                  <li className={activeSection === 'labores' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('labores')}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {/* Labores sociales: Corazón + manos */}
@@ -112,6 +114,19 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Servicios Sociales
                   </span>
                 </li>
+                 <li
+                className={activeSection === 'estudiantes' ? 'sidebar-gestor-selected' : ''}
+                onClick={() => setActiveSection('estudiantes')}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {/* Estudiantes: Icono de graduación o usuarios */}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
+                    <path d="M12 14c4.418 0 8-1.79 8-4s-3.582-4-8-4-8 1.79-8 4 3.582 4 8 4z" />
+                    <path d="M6 18v-2c0-1.657 3.582-3 8-3s8 1.343 8 3v2" />
+                  </svg>
+                  Estudiantes
+                </span>
+              </li>
                     <li className={activeSection === 'informes-finales' ? 'sidebar-gestor-selected' : ''} onClick={() => setActiveSection('informes-finales')}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {/* Informes finales: Documento */}
