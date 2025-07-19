@@ -34,6 +34,7 @@ const [cargandoEvidencia, setCargandoEvidencia] = useState([]);
 const [modalActividadVisible, setModalActividadVisible] = useState(false);
 const [actividadDetalle, setActividadDetalle] = useState(null);
 const [enviandoSolicitudTermino, setEnviandoSolicitudTermino] = useState(false);
+const [nombresMiembros, setNombresMiembros] = useState([]);
 
 
 const verCartasMiembros = async (trabajoId) => {
@@ -61,13 +62,34 @@ const verCartasMiembros = async (trabajoId) => {
       Swal.fire('Error', 'No se pudo cargar las cartas del grupo.', 'error');
     }
   };
+  const obtenerNombresMiembros = async (correos) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ correos })
+      });
+
+      const data = await response.json();
+      setNombresMiembros(data);
+    } catch (error) {
+      console.error('Error al obtener nombres de los miembros:', error);
+    }
+  };
 
  useEffect(() => {
     if (solicitudEnviada && trabajoId) {
       verCartasMiembros(trabajoId);
     }
   }, [solicitudEnviada, trabajoId, token]);
-
+  useEffect(() => {
+    if (cartasMiembros.length > 0) {
+      const correos = cartasMiembros.map(c => `${c.codigo_universitario}@udh.edu.pe`);
+      obtenerNombresMiembros(correos);
+    }
+  }, [cartasMiembros]);
     return (
         <div className="seguimiento-container">
 
@@ -602,9 +624,20 @@ const verCartasMiembros = async (trabajoId) => {
         <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
       </svg>
           <span className="titulo-pdf">
-            DOCUMENTO DE APROBACION DE ACTIVIDADES  ({carta?.codigo_universitario || 'SIN CÓDIGO'})
-            </span>
-
+        DOCUMENTO DE APROBACION DE ACTIVIDADES (
+        {
+          (() => {
+            const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+            const miembro = nombresMiembros.find(n =>
+              n.correo?.trim().toLowerCase() === correo
+            );
+            return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
+              ? miembro.nombre
+              : 'NOMBRE NO DISPONIBLE';
+          })()
+        }
+        )
+      </span>
         </div>
         <div className="acciones-doc">
           <button

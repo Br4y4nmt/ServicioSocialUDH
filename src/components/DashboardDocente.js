@@ -470,16 +470,31 @@ const handleSave = async () => {
   };
 const handleVerGrupo = async (trabajoId) => {
   try {
-    const { data } = await axios.get(`/api/integrantes/${trabajoId}`, {
+    // Paso 1: Obtener correos institucionales
+    const { data: integrantes } = await axios.get(`/api/integrantes/${trabajoId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    setIntegrantesGrupo(data);
+
+    // Extraer solo los correos institucionales
+    const correos = integrantes.map(item => item.correo_institucional);
+
+    // Paso 2: Obtener nombres desde tu API personalizada
+    const { data: nombresYCorreos } = await axios.post(
+      '/api/estudiantes/grupo-nombres',
+      { correos },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // Paso 3: Mostrar en el modal
+    setIntegrantesGrupo(nombresYCorreos);
     setModalGrupoVisible(true);
+
   } catch (error) {
     console.error('Error al obtener integrantes del grupo:', error);
     alert('No se pudieron cargar los integrantes del grupo');
   }
 };
+
 
 const cerrarModalGrupo = () => {
   setModalGrupoVisible(false);
@@ -779,27 +794,39 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
             </div>
         </div>
       </main>
- {modalGrupoVisible && (
-  <div className="modal-grupo-overlay">
-    <div className="modal-grupo-content">
-      <h3 className="modal-grupo-title">Integrantes del Grupo</h3>
-      <ul className="modal-grupo-lista">
-        {integrantesGrupo.length > 0 ? (
-          integrantesGrupo.map((integrante, index) => (
-            <li key={index}>{integrante.correo_institucional}</li>
-          ))
-        ) : (
-          <li className="modal-grupo-vacio">No hay integrantes registrados.</li>
-        )}
-      </ul>
-      <div className="modal-grupo-actions">
-        <button className="modal-grupo-btn cerrar" onClick={cerrarModalGrupo}>
-          Cerrar
-        </button>
+  {modalGrupoVisible && (
+    <div className="modal-grupo-overlay">
+      <div className="modal-grupo-content">
+        <h3 className="modal-grupo-title">Integrantes del Grupo</h3>
+        <ul className="modal-grupo-lista">
+          {integrantesGrupo.length > 0 ? (
+            integrantesGrupo.map((integrante, index) => (
+              <li key={index} className="modal-grupo-item">
+                <span className="modal-grupo-correo" style={{ display: 'inline' }}>
+                  {integrante.correo}
+                </span>
+                <span style={{ display: 'inline' }}> - </span>
+                <span className="modal-grupo-nombre" style={{ display: 'inline' }}>
+                  {integrante.nombre && integrante.nombre !== 'NO ENCONTRADO'
+                    ? integrante.nombre
+                    : 'NOMBRE NO DISPONIBLE'}
+                </span>
+              </li>
+            ))
+          ) : (
+            <li className="modal-grupo-vacio">No hay integrantes registrados.</li>
+          )}
+        </ul>
+        <div className="modal-grupo-actions">
+          <button className="modal-grupo-btn cerrar" onClick={cerrarModalGrupo}>
+            Cerrar
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  )}
+
+
 
 {modalDeclinarVisible && (
   <div className="modal-declinar-overlay">

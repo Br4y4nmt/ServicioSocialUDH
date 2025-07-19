@@ -58,8 +58,11 @@ const InformeFinal = ({
   const refActividades = useRef(null);
   const refAreaInfluencia = useRef(null);
   const refRecursos = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const refMetodologia = useRef(null);
+  const [isSending, setIsSending] = useState(false);
   const refConclusiones = useRef(null);
+  const [nombresMiembros, setNombresMiembros] = useState([]);
   const refRecomendaciones = useRef(null);
   const refAnexos = useRef(null);
    const [anexos, setAnexos] = useState({
@@ -69,11 +72,9 @@ const InformeFinal = ({
     cronogramaFinal: null
   });
 
-  // Obtener el token del contexto
+
   const { user } = useUser();
   const token = user?.token;
-
-
 
 useEffect(() => {
   const fetchCertificadosGrupo = async () => {
@@ -84,7 +85,7 @@ useEffect(() => {
             Authorization: `Bearer ${token}`
           }
         });
-        setCertificadosGrupo(data); // ← array con { nombre_archivo_pdf, codigo_universitario }
+        setCertificadosGrupo(data); 
       } catch (error) {
         console.error('❌ Error al obtener certificados del grupo:', error);
       }
@@ -94,6 +95,22 @@ useEffect(() => {
   fetchCertificadosGrupo();
 }, [planSeleccionado, token]);
 
+useEffect(() => {
+  const fetchNombres = async () => {
+    if (planSeleccionado?.estado_informe_final === 'aprobado' && certificadosGrupo.length > 0) {
+      const correos = certificadosGrupo.map(c => `${c.codigo_universitario}@udh.edu.pe`);
+      try {
+        const { data } = await axios.post('/api/estudiantes/grupo-nombres', { correos });
+        setNombresMiembros(data);
+      } catch (error) {
+        console.error('❌ Error al obtener nombres del grupo:', error);
+      }
+    }
+  };
+
+  fetchNombres();
+}, [certificadosGrupo, planSeleccionado]);
+
 const handleFileChangeLocal = (e, tipo) => {
   const archivo = e.target.files[0];
   if (!archivo) return;
@@ -101,8 +118,8 @@ const handleFileChangeLocal = (e, tipo) => {
 };
 
 const handleGenerarYSubirPDF = async () => {
+  setIsLoading(true); 
   try {
-    // ✅ Validación de campos uno por uno con scroll
    if (!nombreInstitucion.trim()) {
   await Swal.fire({
     icon: 'warning',
@@ -110,12 +127,10 @@ const handleGenerarYSubirPDF = async () => {
     text: 'Falta completar el campo: Nombre de la institución o comunidad receptora.',
     confirmButtonColor: '#3085d6'
   });
-
-  // Darle tiempo al DOM para reposicionarse
   setTimeout(() => {
     refInstitucion.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     refInstitucion.current?.focus();
-  }, 200); // 200ms es suficiente
+  }, 200); 
 
   return;
 }
@@ -375,6 +390,8 @@ if (!recomendacionesInforme.trim()) {
       title: 'Error',
       text: 'Hubo un problema al procesar el informe final.'
     });
+  }finally {
+    setIsLoading(false); 
   }
 };
  const handleEnviarPDF = async () => {
@@ -385,7 +402,7 @@ if (!recomendacionesInforme.trim()) {
         text: 'Primero debes generar y descargar el PDF antes de enviarlo.'
       });
     }
-
+    setIsSending(true);
     const formData = new FormData();
     formData.append('archivo', pdfFinalBlob, 'informe_final.pdf');
     formData.append('trabajo_id', planSeleccionado.id);
@@ -397,29 +414,29 @@ if (!recomendacionesInforme.trim()) {
           Authorization: `Bearer ${token}`
         }
       });
-
-
-   Swal.fire({
-    icon: 'success',
-    title: 'Revisión solicitada',
-    text: 'Tu informe fue enviado exitosamente para revisión.',
-    confirmButtonColor: '#3085d6'
-  }).then(() => {
-    setPlanSeleccionado(prev => ({
-      ...prev,
-      estado_informe_final: 'pendiente',
-      informe_final_pdf: true
-    }));
-  });
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudo enviar el informe. Intenta nuevamente.'
-    });
-  }
-};
+        Swal.fire({
+          icon: 'success',
+          title: 'Revisión solicitada',
+          text: 'Tu informe fue enviado exitosamente para revisión.',
+          confirmButtonColor: '#3085d6'
+        }).then(() => {
+          setPlanSeleccionado(prev => ({
+            ...prev,
+            estado_informe_final: 'pendiente',
+            informe_final_pdf: true
+          }));
+        });
+        } catch (error) {
+          console.error(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo enviar el informe. Intenta nuevamente.'
+          });
+        }finally {
+          setIsSending(false); 
+        }
+      };
   return (
     <>
    {!yaSeEnvio && (
@@ -740,33 +757,15 @@ if (!recomendacionesInforme.trim()) {
        
       </div>
    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-  <button
+   <button
     onClick={handleGenerarYSubirPDF}
-    style={{
-      padding: '8px 18px',
-      backgroundColor: '#011B4B',
-      color: 'white',
-      borderRadius: '6px',
-      fontWeight: '500',
-      border: 'none',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      fontSize: '15px',
-    }}
-    onMouseOver={(e) => {
-      e.currentTarget.style.backgroundColor = '#1e429f';
-      e.currentTarget.style.transform = 'translateY(-4px)';
-    }}
-    onMouseOut={(e) => {
-      e.currentTarget.style.backgroundColor = '#011B4B';
-      e.currentTarget.style.transform = 'translateY(0)';
-    }}
+    className="boton-descarga-informefinal flex items-center justify-center gap-2"
+    disabled={isLoading}
   >
-    Generar y Descargar
+    {isLoading && <span className="spinner-informefinal"></span>}
+    {isLoading ? 'Generando...' : 'Generar y Descargar'}
   </button>
-  
 </div>
-
     </div>
     )}
 
@@ -827,10 +826,10 @@ if (!recomendacionesInforme.trim()) {
     style={{
       backgroundColor:
         planSeleccionado.estado_informe_final === 'aprobado'
-          ? '#38A169' // verde
+          ? '#38A169' 
           : planSeleccionado.estado_informe_final === 'rechazado'
-          ? '#E53E3E' // rojo
-          : '#8898aa', // naranja para pendiente
+          ? '#E53E3E' 
+          : '#8898aa', 
       color: 'white',
       fontWeight: '500',
       fontSize: '13px',
@@ -854,84 +853,39 @@ if (!recomendacionesInforme.trim()) {
   {planSeleccionado?.estado_informe_final === 'pendiente' &&
  !planSeleccionado?.informe_final_pdf && (
   <button
-    onClick={handleEnviarPDF}
-    style={{
-      padding: '8px 20px',
-      backgroundColor: '#39B49E',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      fontWeight: '600',
-      fontSize: '14px',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-    }}
-    onMouseOver={(e) => {
-      e.currentTarget.style.backgroundColor = '#147760';
-      e.currentTarget.style.transform = 'translateY(-2px)';
-    }}
-    onMouseOut={(e) => {
-      e.currentTarget.style.backgroundColor = '#39B49E';
-      e.currentTarget.style.transform = 'translateY(0)';
-    }}
-  >
-    Solicitar revisión
-  </button>
+  onClick={handleEnviarPDF}
+  disabled={isSending}
+  className={`boton-enviar-final ${isSending ? 'enviando' : ''}`}
+>
+  {isSending && <span className="spinner-enviar-informefinal"></span>}
+  {isSending ? 'Enviando...' : 'Solicitar revisión'}
+</button>
 )}
 
 {planSeleccionado?.estado_informe_final === 'pendiente' &&
  planSeleccionado?.informe_final_pdf && (
   <button
-    disabled
-    style={{
-      padding: '8px 20px',
-      backgroundColor: '#CBD5E0',
-      color: '#4A5568',
-      border: 'none',
-      borderRadius: '6px',
-      fontWeight: '600',
-      fontSize: '14px',
-      cursor: 'not-allowed',
-      opacity: 0.8
-    }}
-  >
-    Ya se ha enviado
-  </button>
+  disabled
+  className="boton-deshabilitado-final"
+>
+  Ya se ha enviado
+</button>
 )}
 
   {planSeleccionado?.estado_informe_final === 'rechazado' && (
     <button
-      onClick={() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }}
-      style={{
-        padding: '8px 20px',
-        backgroundColor: '#39B49E',
-        color: 'white',
-        border: 'none',
-        borderRadius: '6px',
-        fontWeight: '600',
-        fontSize: '14px',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-      }}
-      onMouseOver={(e) => {
-        e.currentTarget.style.backgroundColor = '#147760';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.backgroundColor = '#39B49E';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
-    >
-      Volver a generar informe
-    </button>
+  onClick={() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }}
+  className="boton-scroll-arriba"
+>
+  Volver a generar informe
+</button>
   )}
 </div>
 
 </div>
 )}
-
 
 {planSeleccionado?.estado_informe_final === 'aprobado' && (
 <div
@@ -1122,7 +1076,17 @@ if (!recomendacionesInforme.trim()) {
         }}
       >
         <span style={{ fontWeight: '600', fontSize: '14px' }}>
-          Certificado - {cert.codigo_universitario || 'Integrante'}
+          Certificado - {
+            (() => {
+              const correo = `${cert.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+              const miembro = nombresMiembros.find(n =>
+                n.correo?.trim().toLowerCase() === correo
+              );
+              return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
+                ? miembro.nombre
+                : 'NOMBRE NO DISPONIBLE';
+            })()
+          }
         </span>
         <button
           className="btn-ver-documento-inline"

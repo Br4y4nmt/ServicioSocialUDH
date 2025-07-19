@@ -16,6 +16,9 @@ function RevisionPlanSocial() {
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
   const [observacionTexto, setObservacionTexto] = useState('');
   const [trabajoADeclinar, setTrabajoADeclinar] = useState(null);
+  const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
+  const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
+  const [nombresMiembros, setNombresMiembros] = useState([]);
 
   const navigate = useNavigate();
 
@@ -66,6 +69,36 @@ function RevisionPlanSocial() {
         });
       });
   }, [token]); 
+const obtenerNombresMiembros = async (correos) => {
+  try {
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
+      correos
+    });
+    setNombresMiembros(data);
+  } catch (error) {
+    console.error('Error al obtener nombres del grupo:', error);
+  }
+};
+const handleVerGrupo = async (trabajoId) => {
+  try {
+    const response = await axios.get(`/api/integrantes/${trabajoId}`, {
+      headers: { Authorization: `Bearer ${token}` }  
+    });
+
+    const integrantes = response.data;
+    setIntegrantesGrupo(integrantes);
+    setModalGrupoVisible(true);
+
+    const correos = integrantes.map(i => i.correo_institucional);
+    const { data: nombres } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, { correos });
+
+    setNombresMiembros(nombres);
+    
+  } catch (error) {
+    console.error('Error al obtener integrantes del grupo:', error);
+    alert('No se pudieron cargar los integrantes del grupo');
+  }
+};
 
 const cambiarConformidad = async (idTrabajo, nuevoEstado) => {
   const accion = nuevoEstado === 'aceptado' ? 'aceptar' : 'rechazar';
@@ -161,6 +194,7 @@ const capitalizarPrimeraLetra = (texto) =>
                       <th>Servicio Social</th>
                       <th>Estado</th>
                       <th>Documento</th>
+                      <th>Tipo Servicio Social</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -205,7 +239,20 @@ const capitalizarPrimeraLetra = (texto) =>
                           <span style={{ color: '#999', fontSize: '12px' }}>No subido</span>
                         )}
                       </td>
-
+                      <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                      <span>{plan.tipo_servicio_social}</span>
+                      {plan.tipo_servicio_social === 'grupal' && (
+                        <button
+                          className="btn-ver-ojo"
+                          title="Ver integrantes del grupo"
+                          onClick={() => handleVerGrupo(plan.id)}
+                        >
+                          Ver
+                        </button>
+                      )}
+                    </div>
+                  </td>
                         <td>
                         {plan.conformidad_plan_social === 'pendiente' ? (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -242,8 +289,6 @@ const capitalizarPrimeraLetra = (texto) =>
                 <p className="conformidad-no-data">No hay trabajos sociales disponibles aún.</p>
               )}
             </div>
-  
-            
           </div>
           <div className="conformidad-footer">
               <button className="conformidad-btn siguiente" onClick={() => navigate('/revision-documento-docente')}>
@@ -281,7 +326,45 @@ const capitalizarPrimeraLetra = (texto) =>
     </div>
   </div>
 )}
-      
+      {modalGrupoVisible && (
+  <div className="modal-grupo-overlay">
+    <div className="modal-grupo-content">
+      <h3 className="modal-grupo-title">Integrantes del Grupo</h3>
+      <ul className="modal-grupo-lista">
+        {integrantesGrupo.length > 0 ? (
+          integrantesGrupo.map((integrante, index) => (
+            <li key={index}>
+              <span className="modal-grupo-correo" style={{ display: 'inline' }}>
+                {integrante.correo_institucional}
+              </span>
+              <span style={{ display: 'inline' }}> - </span>
+              <span className="modal-grupo-nombre">
+                {
+                  (() => {
+                    const encontrado = nombresMiembros.find(n =>
+                      n.correo?.toLowerCase().trim() === integrante.correo_institucional.toLowerCase().trim()
+                    );
+                    return encontrado && encontrado.nombre && encontrado.nombre !== 'NO ENCONTRADO'
+                      ? encontrado.nombre
+                      : 'NOMBRE NO DISPONIBLE';
+                  })()
+                }
+              </span>
+            </li>
+          ))
+        ) : (
+          <li className="modal-grupo-vacio">No hay integrantes registrados.</li>
+        )}
+      </ul>
+      <div className="modal-grupo-actions">
+        <button className="modal-grupo-btn cerrar" onClick={() => setModalGrupoVisible(false)}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
   

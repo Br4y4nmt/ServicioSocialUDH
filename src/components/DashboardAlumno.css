@@ -1478,11 +1478,126 @@
   height: 16px;
   animation: spin 0.8s linear infinite;
 }
+.boton-descarga-informefinal {
+  padding: 8px 18px;
+  background-color: #011B4B;
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.boton-descarga-informefinal:hover {
+  background-color: #1e429f;
+  transform: translateY(-4px);
+}
+
+.boton-descarga-informefinal:active {
+  transform: translateY(0);
+}
+.boton-deshabilitado-final {
+  padding: 8px 20px;
+  background-color: #CBD5E0;
+  color: #4A5568;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+.boton-scroll-arriba {
+  padding: 8px 20px;
+  background-color: #39B49E;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.boton-scroll-arriba:hover {
+  background-color: #147760;
+  transform: translateY(-2px);
+}
+
+.boton-scroll-arriba:active {
+  transform: translateY(0);
+}
+.spinner-informefinal {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner-enviar-informefinal {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.boton-enviar-final {
+  padding: 8px 20px;
+  background-color: #39B49E;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.boton-enviar-final:hover {
+  background-color: #147760;
+  transform: translateY(-2px);
+}
+
+.boton-enviar-final:active {
+  transform: translateY(0);
+}
+
+.boton-enviar-final.enviando {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.boton-enviar-final.enviando:hover {
+  background-color: #39B49E;
+  transform: none;
 }
 
 @media screen and (max-width: 768px) {

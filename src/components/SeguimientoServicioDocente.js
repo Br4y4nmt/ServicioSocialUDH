@@ -29,20 +29,34 @@ function SeguimientoServicioDocente() {
   const [firmaDocente, setFirmaDocente] = useState('');
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
+  const [nombresMiembros, setNombresMiembros] = useState([]);
 
 
   const handleVerGrupo = async (trabajoId) => {
-    try {
-      const response = await axios.get(`/api/integrantes/${trabajoId}`, {
-        headers: { Authorization: `Bearer ${token}` }  
-      });
-      setIntegrantesGrupo(response.data);
-      setModalGrupoVisible(true);
-    } catch (error) {
-      console.error('Error al obtener integrantes del grupo:', error);
-      alert('No se pudieron cargar los integrantes del grupo');
-    }
-  };
+  try {
+    const response = await axios.get(`/api/integrantes/${trabajoId}`, {
+      headers: { Authorization: `Bearer ${token}` }  
+    });
+
+    const integrantes = response.data;
+    setIntegrantesGrupo(integrantes);
+    setModalGrupoVisible(true);
+
+    // Extraer correos y consultar la API externa
+    const correos = integrantes.map(i => i.correo_institucional);
+
+    const { data: nombres } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
+      correos
+    });
+
+    setNombresMiembros(nombres);
+    
+  } catch (error) {
+    console.error('Error al obtener integrantes del grupo:', error);
+    alert('No se pudieron cargar los integrantes del grupo');
+  }
+};
+
 
 const cerrarModalGrupo = () => {
   setModalGrupoVisible(false);
@@ -557,56 +571,54 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
                 >
                   Aceptar
                 </button>
+              <button
+                style={{
+                  padding: '4px 10px',
+                  backgroundColor: '#e53e3e',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
+              >
+                Rechazar
+              </button>
+            </div>
+          ) : (
+            <span style={{ fontSize: '12px', color: '#aaa' }}>
+              {plan.solicitud_termino === 'aprobada' ? (
+          <span style={{
+            padding: '4px 10px',
+            backgroundColor: '#38a169',
+            color: '#fff',
+            borderRadius: '10px',
+            fontSize: '12px',
+            
+          }}>
+            APROBADA
+          </span>
+        ) : plan.solicitud_termino === 'rechazada' ? (
+          <span style={{
+            padding: '4px 10px',
+            backgroundColor: '#e53e3e',
+            color: '#fff',
+            borderRadius: '10px',
+            fontSize: '12px',
+            
+          }}>
+            RECHAZADA
+          </span>
+        ) : (
+          <span style={{ fontSize: '12px', color: '#aaa' }}>
+            No solicitada
+          </span>
+        )}
 
-
-      <button
-        style={{
-          padding: '4px 10px',
-          backgroundColor: '#e53e3e',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          fontSize: '12px',
-          cursor: 'pointer'
-        }}
-        onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
-      >
-        Rechazar
-      </button>
-    </div>
-  ) : (
-    <span style={{ fontSize: '12px', color: '#aaa' }}>
-      {plan.solicitud_termino === 'aprobada' ? (
-  <span style={{
-    padding: '4px 10px',
-    backgroundColor: '#38a169',
-    color: '#fff',
-    borderRadius: '10px',
-    fontSize: '12px',
-    
-  }}>
-    APROBADA
-  </span>
-) : plan.solicitud_termino === 'rechazada' ? (
-  <span style={{
-    padding: '4px 10px',
-    backgroundColor: '#e53e3e',
-    color: '#fff',
-    borderRadius: '10px',
-    fontSize: '12px',
-    
-  }}>
-    RECHAZADA
-  </span>
-) : (
-  <span style={{ fontSize: '12px', color: '#aaa' }}>
-    No solicitada
-  </span>
-)}
-
-    </span>
-  )}
-</td>
+            </span>
+          )}
+        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -625,7 +637,24 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
       <ul className="modal-grupo-lista">
         {integrantesGrupo.length > 0 ? (
           integrantesGrupo.map((integrante, index) => (
-            <li key={index}>{integrante.correo_institucional}</li>
+           <li key={index}>
+    <span className="modal-grupo-correo" style={{ display: 'inline' }}>
+      {integrante.correo_institucional}
+    </span>
+    <span style={{ display: 'inline' }}> - </span>
+    <span className="modal-grupo-nombre">
+      {
+        (() => {
+          const encontrado = nombresMiembros.find(n => 
+            n.correo?.toLowerCase().trim() === integrante.correo_institucional.toLowerCase().trim()
+          );
+          return encontrado && encontrado.nombre && encontrado.nombre !== 'NO ENCONTRADO'
+            ? encontrado.nombre
+            : 'NOMBRE NO DISPONIBLE';
+        })()
+      }
+    </span>
+  </li>
           ))
         ) : (
           <li className="modal-grupo-vacio">No hay integrantes registrados.</li>

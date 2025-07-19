@@ -31,6 +31,7 @@ function DesignacionDocente({
   const user = JSON.parse(localStorage.getItem('user'));
   const token = user?.token;
   const [loadingSolicitud, setLoadingSolicitud] = useState(false);
+  const [nombresMiembros, setNombresMiembros] = useState([]);
 
   const [cartasMiembros, setCartasMiembros] = useState([]);
 const eliminarEleccion = async () => {
@@ -69,7 +70,26 @@ const eliminarEleccion = async () => {
     Swal.fire('Error', 'No se pudo eliminar la elección.', 'error');
   }
 };
+const obtenerNombresMiembros = async (codigos) => {
+  try {
+    const correos = codigos.map(cod => `${cod}@udh.edu.pe`);
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ correos })
+    });
+    const data = await response.json();
+    setNombresMiembros(data); // Guarda resultado
+  
 
+  } catch (error) {
+    console.error('Error al obtener nombres:', error);
+    setNombresMiembros([]); // fallback vacío
+  }
+};
 const verCartasMiembros = async (trabajoId) => {
   if (!trabajoId) return;
 
@@ -83,6 +103,8 @@ const verCartasMiembros = async (trabajoId) => {
 
     if (Array.isArray(data) && data.length > 0) {
       setCartasMiembros(data);
+      const codigos = data.map((c) => c.codigo_universitario);
+       obtenerNombresMiembros(codigos);
     } else {
       setCartasMiembros([]);
 
@@ -118,6 +140,8 @@ const formularioCompleto = () => {
     laborSeleccionada
   );
 };
+
+
   return (
     <>
       <div className="step-header">
@@ -515,10 +539,22 @@ const formularioCompleto = () => {
         </g>
         <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
       </svg>
-    <span className="titulo-pdf">
-      CARTA DE ACEPTACION ({carta.codigo_universitario})
+      <span className="titulo-pdf">
+      CARTA DE ACEPTACION (
+      {
+        (() => {
+          const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+          const miembro = nombresMiembros.find(n =>
+            n.correo?.trim().toLowerCase() === correo
+          );
+          
+          return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
+            ? miembro.nombre
+            : carta.codigo_universitario;
+        })()
+      }
+      )
     </span>
-   
   </div>
    <div className="acciones-doc">
       <button

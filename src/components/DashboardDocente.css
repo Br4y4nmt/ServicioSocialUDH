@@ -372,6 +372,13 @@
   border-radius: 8px;
   cursor: pointer;
 }
+.modal-grupo-item {
+  font-size: 0.95rem;
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
 .spinner {
   display: inline-block;
   width: 14px;
@@ -410,10 +417,36 @@
   background: #fff;
   padding: 24px 28px;
   border-radius: 14px;
-  width: 400px;
-  max-width: 90%;
+  width: 500px; /* ⬅️ Aumentado desde 400px */
+  max-width: 95%; /* ⬅️ Más tolerancia en pantallas pequeñas */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-grupo-lista {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.modal-grupo-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.modal-grupo-correo {
+  font-size: 14px;
+  color: #555;
+}
+
+.modal-grupo-nombre {
+  font-weight: 600;
+  font-size: 15px;
+  color: #555; /* igual al correo */
 }
 
 .modal-grupo-title {
