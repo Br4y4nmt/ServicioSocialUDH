@@ -80,8 +80,6 @@ if (isNaN(anio) || anio < 2021) {
     setIsSubmitting(false); // ✅ Reactivar botón
   }
 };
-
-
   return (
     <div className="register-page">
   <div className="image-container">
@@ -100,7 +98,10 @@ if (isNaN(anio) || anio < 2021) {
     <input
       type="text"
       value={codigo}
-      onChange={(e) => setCodigo(e.target.value)}
+      onChange={(e) => {
+        const input = e.target.value;
+        if (/^\d{0,10}$/.test(input)) setCodigo(input); 
+      }}
       maxLength="10"
       placeholder="Código institucional"
       className="input-no-border"
@@ -116,14 +117,16 @@ if (isNaN(anio) || anio < 2021) {
     <input
       type={showDni ? 'text' : 'password'}
       value={dni}
-      onChange={(e) => setDni(e.target.value)}
+      onChange={(e) => {
+        const input = e.target.value;
+        if (/^\d{0,8}$/.test(input)) setDni(input); 
+      }}
       placeholder="Ingrese número DNI"
       className="form-control"
       required
       maxLength="8"
-      pattern="\d{8}"
       inputMode="numeric"
-      style={{ paddingRight: '2.5rem' }} // suficiente espacio para ícono
+      style={{ paddingRight: '2.5rem' }}
     />
     <button
   type="button"
