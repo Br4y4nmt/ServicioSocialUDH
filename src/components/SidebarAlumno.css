@@ -85,18 +85,18 @@
 }
 
 .rol {
-  color: #2e9e7f; /* Color verde para el rol */
+  color: #2e9e7f; 
   font-weight: 500;
-  margin-bottom: 10px; /* Espacio debajo del rol */
-  font-size: 1.1rem; /* Aumenta el tamaño de la fuente del rol */
+  margin-bottom: 10px; 
+  font-size: 1.1rem;
 }
 .rol::after {
   content: "";
   display: block;
-  width: 50%; /* La línea ocupa el 50% del ancho */
-  height: 2px;
-  background-color: #2e9e7f; /* Color verde */
-  margin: 10px auto; /* Centra la línea debajo del rol */
+  width: 70%; 
+  height: 3px;
+  background-color: #EFB036; 
+  margin: 10px auto;
 }
 /* Navegación */
 .sidebar-nav ul {
@@ -105,7 +105,7 @@
 }
 .menu-item {
   margin-bottom: 15px;
-  padding: 10px 0; /* Mayor altura para cada sección */
+  padding: 10px 0; 
   
 }
 .menu-title {

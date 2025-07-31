@@ -935,7 +935,7 @@ const rechazarInforme = async (id) => {
      
         <h2>Dashboard Gestor UDH</h2>
   
-        {activeSection === 'facultades' && (
+{activeSection === 'facultades' && (
   <div className="facultades-container">
     <div className="facultades-card">
     <div className="facultades-header">
@@ -968,6 +968,7 @@ const rechazarInforme = async (id) => {
         <table className="facultades-table">
           <thead>
             <tr>
+              <th>Nº</th>
               <th>Nombre</th>
               <th>Estado</th>
               <th>Opciones</th>
@@ -978,8 +979,9 @@ const rechazarInforme = async (id) => {
           .filter(f =>
               (f.nombre_facultad || '').toLowerCase().includes(busquedaFacultad.toLowerCase())
             )
-          .map((f) => (
-              <tr key={f.id_facultad}>
+          .map((f, index) => (
+            <tr key={f.id_facultad}>
+              <td>{index + 1}</td>
                 <td>
                 {(f.nombre_facultad || '').toUpperCase()}
                 </td>
@@ -1119,7 +1121,7 @@ const rechazarInforme = async (id) => {
         <table className="programas-table">
         <thead className="programas-table-thead">
           <tr>
-            <th>ID</th>
+            <th>Nº</th>
             <th>Nombre</th>
             <th>Facultad</th>
             <th>Email</th>
@@ -1132,9 +1134,9 @@ const rechazarInforme = async (id) => {
     .filter((prog) =>
         (prog.nombre_programa || '').toLowerCase().includes(busquedaPrograma.toLowerCase())
       )
-    .map((prog) => (
-      <tr key={prog.id_programa}>
-        <td>{prog.id_programa}</td>
+      .map((prog, index) => (
+    <tr key={prog.id_programa}>
+        <td>{index + 1}</td>
         <td>{(prog.nombre_programa || '').toUpperCase()}</td>
         <td>{(prog.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
         <td>{prog.email || 'SIN CORREO'}</td>
@@ -1358,7 +1360,7 @@ const rechazarInforme = async (id) => {
         <table className="docentes-table">
           <thead className="docentes-table-thead">
             <tr>
-              <th>ID</th>
+              <th>Nº</th>
               <th>Estudiante</th>
               <th>Programa</th>
               <th>Facultad</th>
@@ -1381,9 +1383,9 @@ const rechazarInforme = async (id) => {
           .filter((inf) =>
             (inf.Estudiante?.nombre_estudiante || '').toLowerCase().includes(busquedaDocente.toLowerCase())
           )
-              .map((inf) => (
+              .map((inf, index) => (
                 <tr key={inf.id}>
-                  <td>{inf.id}</td>
+                  <td>{index + 1}</td>
                   <td>{(inf.Estudiante?.nombre_estudiante || 'SIN NOMBRE').toUpperCase()}</td>
                   <td>{(inf.ProgramasAcademico?.nombre_programa || 'SIN PROGRAMA').toUpperCase()}</td>
                   <td>{(inf.Facultad?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
@@ -1483,7 +1485,7 @@ const rechazarInforme = async (id) => {
             Buscar:
             <input
               type="text"
-              className="docentes-search-input"
+              className="docentes-search-input-es"
               placeholder="Nombre del estudiante o DNI"
               value={filtroEstudiantes}
               onChange={(e) => setFiltroEstudiantes(e.target.value)}
@@ -1582,7 +1584,7 @@ const rechazarInforme = async (id) => {
         <table className="docentes-table">
           <thead className="docentes-table-thead">
             <tr>
-              <th>ID</th>
+              <th>Nº</th>
               <th>Nombre</th>
               <th>Correo</th>
               <th>Facultad</th>
@@ -1595,10 +1597,9 @@ const rechazarInforme = async (id) => {
           .filter((doc) =>
             (doc.nombre_docente || '').toLowerCase().includes(busquedaDocente.toLowerCase())
           )
-          .map((doc) => (
-
-              <tr key={doc.id_docente}>
-                <td>{doc.id_docente}</td>
+         .map((doc, index) => (
+          <tr key={doc.id_docente}>
+            <td>{index + 1}</td>
                 <td>
                   {editandoDocenteId === doc.id_docente ? (
                     <input
@@ -1867,7 +1868,7 @@ const rechazarInforme = async (id) => {
         <table className="labores-table">
           <thead className="labores-table-thead">
             <tr>
-              <th>ID</th>
+              <th>Nº</th>
               <th>Nombre</th>
               <th>Linea de Accion</th>
               <th>Acciones</th>
@@ -1879,9 +1880,9 @@ const rechazarInforme = async (id) => {
     (labor.nombre_labores || '').toLowerCase().includes(busquedaLabor.toLowerCase())
 
   )
-  .map((labor) => (
+  .map((labor,index) => (
               <tr key={labor.id_labores}>
-                <td>{labor.id_labores}</td>
+                <td>{index + 1}</td>
                 <td>
                   {editandoLaborId === labor.id_labores ? (
                     <input
@@ -1972,7 +1973,7 @@ const rechazarInforme = async (id) => {
         <table className="labores-table">
           <thead className="labores-table-thead">
             <tr>
-              <th>ID</th>
+              <th>Nº</th>
               <th>Nombre</th>
               <th>Acciones</th>
             </tr>
@@ -1980,9 +1981,9 @@ const rechazarInforme = async (id) => {
           <tbody>
             {lineas
               .filter((l) => (l.nombre_linea || '').toLowerCase().includes(busquedaLinea.toLowerCase()))
-              .map((l) => (
-                <tr key={l.id_linea}>
-                  <td>{l.id_linea}</td>
+              .map((l, index) => (
+              <tr key={l.id_linea}>
+                <td>{index + 1}</td>
                   <td>{(l.nombre_linea || 'SIN NOMBRE').toUpperCase()}</td>
                   <td>
                     <button

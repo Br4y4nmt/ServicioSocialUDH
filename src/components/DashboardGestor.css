@@ -683,7 +683,12 @@
   border: 1px solid #ccc;
   width: 180px;
 }
-
+.docentes-search-input-es {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
 
 
 

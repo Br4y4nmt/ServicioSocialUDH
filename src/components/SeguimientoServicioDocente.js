@@ -483,7 +483,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
     onClick={() => toggleSidebar()} 
   ></div>
 )}
-     <main className={`main-content ${window.innerWidth <= 768 && !collapsed ? 'sidebar-open' : ''}`}>
+     <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
         <div className="conformidad-container">
           <div className="conformidad-card">
             <h1 className="conformidad-title">Seguimiento del Servicio Social</h1>

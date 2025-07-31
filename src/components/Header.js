@@ -57,9 +57,8 @@ function Header({ onToggleSidebar }) {
       </div>
 
       <div className="right-section" ref={menuRef}>
-        
+        {rolUsuario !== 'gestor-udh' && (
      <div className="guia-btn-container">
-
       <span className="ver-float-label">¡Ver!</span>
       <button className="guia-btn"
        onClick={() => window.open(enlaceGuia, '_blank')}>
@@ -91,7 +90,8 @@ function Header({ onToggleSidebar }) {
 </span>
     <span className="guia-label">Guía</span>
   </button>
-</div>
+      </div>
+      )}
         <div className="profile-container">
         <img
             src={fotoPerfil || 'https://via.placeholder.com/40'}
