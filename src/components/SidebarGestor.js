@@ -15,7 +15,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
     if (nombre) setNombreUsuario(nombre);
 
     // Abrir menú si la sección activa corresponde
-    if (["facultades", "programas", "docentes", "labores", "lineas", "informes-finales", "estudiantes"].includes(activeSection)) {
+    if (["facultades", "programas", "docentes", "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
       setOpenMenu(0);
     } else {
       setOpenMenu(null);
@@ -80,7 +80,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 4.5A2.5 2.5 0 016.5 7H20" />
                       <path d="M20 22V2" />
                     </svg>
-                    Programas Académicos
+                    Pro. Académicos
                   </span>
                 </li>
                
@@ -137,6 +137,20 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Informes Finales
                   </span>
                 </li>
+                <li
+                    className={activeSection === 'supervisores' ? 'sidebar-gestor-selected' : ''}
+                    onClick={() => setActiveSection('supervisores')}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {/* Supervisor: icono de persona con check */}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" stroke="#2e9e7f" fill="none" viewBox="0 0 24 24" strokeWidth="2">
+                        <circle cx="12" cy="7" r="4" />
+                        <path d="M5.5 21a8.38 8.38 0 0113 0" />
+                        <path d="M16.5 11.5l1.5 1.5 3-3" /> {/* pequeño check decorativo */}
+                      </svg>
+                      Desig. de supervisor
+                    </span>
+                  </li>
                   </ul>
                 )}
               </li>

@@ -7,7 +7,9 @@ import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
-import { useUser } from '../UserContext'; 
+import { useUser } from '../UserContext';
+
+
 function DashboardGestor() {
   const [programas, setProgramas] = useState([]);
   const [programaSeleccionado, setProgramaSeleccionado] = useState('');
@@ -63,10 +65,51 @@ function DashboardGestor() {
   const [nombreLineaEditado, setNombreLineaEditado] = useState('');
   const [informesFinales, setInformesFinales] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
+  const [busquedaSupervisor, setBusquedaSupervisor] = useState('');
+  const [programaSupervisor, setProgramaSupervisor] = useState('');
   const [filtroEstudiantes, setFiltroEstudiantes] = useState('');
-
+  const [supervisores, setSupervisores] = useState([]);
   const { user } = useUser();
   const token = user?.token;
+
+  const eliminarSupervisor = async (id) => {
+  const confirmacion = await Swal.fire({
+    title: '¿Eliminar designación?',
+    text: 'Se quitará la designación del docente supervisor.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6'
+  });
+
+  if (!confirmacion.isConfirmed) return;
+
+  try {
+    await axios.delete(`/api/trabajo-social/seleccionado/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    await fetchSupervisores();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Eliminado',
+      text: 'La designación fue eliminada correctamente.',
+      timer: 2000,
+      showConfirmButton: false
+    });
+  } catch (error) {
+    console.error('Error al eliminar designación:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.response?.data?.message || 'No se pudo eliminar la designación.'
+    });
+  }
+};
+
 const aceptarInforme = async (id) => {
   try {
     const informe = informesFinales.find((i) => i.id === id);
@@ -101,7 +144,7 @@ const aceptarInforme = async (id) => {
             text: 'No se pudieron obtener los integrantes del grupo. Intenta nuevamente más tarde.',
             confirmButtonText: 'Aceptar',
           });
-          return; // 🚫 Detener aquí: no generar certificado ni del principal
+          return;
         }
 
       } catch (error) {
@@ -112,10 +155,9 @@ const aceptarInforme = async (id) => {
           text: 'No se pudo conectar con el servidor de la UDH. Por favor, inténtalo más tarde.',
           confirmButtonText: 'Aceptar',
         });
-        return; // 🚫 Detener aquí: no generar certificado ni del principal
+        return; 
       }
 
-      // ✅ Generar certificados para integrantes (excluyendo al principal)
       for (const estudiante of estudiantes) {
         try {
           const nombreEstudiante = estudiante.nombre_completo;
@@ -160,7 +202,6 @@ const aceptarInforme = async (id) => {
       }
     }
 
-    // 🧾 Generar certificado del estudiante principal (solo si NO se interrumpió antes)
     const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
     const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
 
@@ -197,9 +238,6 @@ const aceptarInforme = async (id) => {
       },
     });
 
-    console.log('✅ Certificado del estudiante principal guardado');
-
-    // Cambiar estado a aprobado
     await axios.patch(`/api/trabajo-social/estado/${id}`, {
       nuevo_estado: 'aprobado',
     }, {
@@ -222,6 +260,18 @@ const aceptarInforme = async (id) => {
       title: 'Error',
       text: 'No se pudo procesar el informe.',
     });
+  }
+};
+
+const fetchSupervisores = async () => {
+  if (!token) return;
+  try {
+    const res = await axios.get('/api/trabajo-social/supervisores', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setSupervisores(Array.isArray(res.data) ? res.data : []);
+  } catch (error) {
+    console.error('Error al cargar supervisores:', error);
   }
 };
 
@@ -911,15 +961,16 @@ const rechazarInforme = async (id) => {
     }
   };  
 
-  useEffect(() => {
-    fetchProgramas();
-    fetchDocentes();
-    fetchLabores();
-    fetchInformesFinales();
-    fetchFacultades();
-    fetchLineas();
-
-  }, []);
+useEffect(() => {
+  if (!token) return;
+  fetchProgramas();
+  fetchDocentes();
+  fetchLabores();
+  fetchInformesFinales();
+  fetchFacultades();
+  fetchLineas();
+  fetchSupervisores();     
+}, [token]);
 
   return (
     <div className="layout-gestor">
@@ -934,6 +985,8 @@ const rechazarInforme = async (id) => {
       <div className="dashboard-container-gestor">
      
         <h2>Dashboard Gestor UDH</h2>
+  
+
   
 {activeSection === 'facultades' && (
   <div className="facultades-container">
@@ -971,7 +1024,7 @@ const rechazarInforme = async (id) => {
               <th>Nº</th>
               <th>Nombre</th>
               <th>Estado</th>
-              <th>Opciones</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -1315,6 +1368,161 @@ const rechazarInforme = async (id) => {
     </div>
   </div>
 )}
+
+{activeSection === 'supervisores' && (
+  <div className="docentes-container">
+    <div className="docentes-card">
+      <div className="docentes-header">
+        <div className="docentes-header-left">
+          <h2>Desig. Docente Supervisor</h2>
+        </div>
+
+        <div className="docentes-header-right">
+          <label className="docentes-search-label">
+            Buscar:
+            <input
+              type="text"
+              className="docentes-search-input"
+              placeholder="Nombre del estudiante"
+              value={busquedaSupervisor}
+              onChange={(e) => setBusquedaSupervisor(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <label className="docentes-search-label">
+          Buscar por Programa Académico:
+          <select
+            className="select-profesional"
+            value={programaSupervisor}
+            onChange={(e) => setProgramaSupervisor(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {programas.map((prog) => (
+              <option key={prog.id_programa} value={prog.nombre_programa}>
+                {prog.nombre_programa}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="docentes-table-wrapper">
+        <table className="docentes-table">
+          <thead className="docentes-table-thead">
+            <tr>
+              <th>Nº</th>
+              <th>Nombre</th>
+              <th>Programa Académico</th>
+              <th>Estado</th>
+              <th>Carta de Aceptación</th>
+              <th>Supervisor</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {(supervisores || [])
+              // filtro por nombre
+              .filter((sup) =>
+                (sup.estudiante?.nombre_estudiante || '')
+                  .toLowerCase()
+                  .includes((busquedaSupervisor || '').toLowerCase())
+              )
+              // filtro por programa
+              .filter((sup) => {
+                if (!programaSupervisor) return true;
+                const nombreProg =
+                  sup.programa?.nombre_programa ||
+                  sup.ProgramasAcademico?.nombre_programa ||
+                  '';
+                return (
+                  nombreProg.toLowerCase() === programaSupervisor.toLowerCase()
+                );
+              })
+              .map((sup, index) => {
+                const nombre = (sup.estudiante?.nombre_estudiante || 'SIN NOMBRE').toUpperCase();
+                const programa =
+                  (sup.programa?.nombre_programa ||
+                    sup.ProgramasAcademico?.nombre_programa ||
+                    'SIN PROGRAMA').toUpperCase();
+                const supervisor =
+                  sup.supervisor?.nombre_supervisor ||
+                  sup.supervisor?.nombre ||
+                  'SIN SUPERVISOR';
+
+                const cartaPdf = sup.carta_aceptacion_pdf || sup.carta_pdf || null;
+
+                return (
+                  <tr key={sup.id_supervisor || sup.id || index}>
+                    <td>{index + 1}</td>
+                    <td>{nombre}</td>
+                    <td>{programa}</td>
+                    <td>
+                      {(() => {
+                        const raw = (
+                          sup.estado ||
+                          sup.estado_plan_labor_social ||
+                          'pendiente'
+                        ).toLowerCase();
+                        const estado = ['aceptado', 'rechazado', 'pendiente'].includes(raw)
+                          ? raw
+                          : 'pendiente';
+                        const label = {
+                          aceptado: 'Aceptado',
+                          rechazado: 'Rechazado',
+                          pendiente: 'Pendiente',
+                        }[estado];
+
+                        return <span className={`badge-estado ${estado}`}>{label}</span>;
+                      })()}
+                    </td>
+                    <td>
+                      {cartaPdf ? (
+                        <a
+                          href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaPdf}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-ver-pdf"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="#2e2e2e"
+                            viewBox="0 0 24 24"
+                            className="icono-ojo"
+                          >
+                            <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
+                          </svg>
+                          <span>Ver</span>
+                        </a>
+                      ) : (
+                        <span className="no-generado">NO GENERADO</span>
+                      )}
+                    </td>
+                    <td>{supervisor}</td>
+                    <td>
+                      <button
+                        onClick={() => eliminarSupervisor(sup.id || sup.id_supervisor)}
+                        className="docentes-btn eliminar"
+                        title="Eliminar designación"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+                          <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
 
 
 {activeSection === 'informes-finales' && (

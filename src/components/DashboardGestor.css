@@ -326,6 +326,21 @@
   align-items: center;
   gap: 10px;
 }
+.programas-header-left h2 {
+  font-size: 22px; 
+  font-weight: 700; 
+  margin: 0; 
+}
+.facultades-header-left h2 {
+  font-size: 22px; 
+  font-weight: 700; 
+  margin: 0; 
+}
+.docentes-header-left h2 {
+   font-size: 22px; 
+  font-weight: 700; 
+  margin: 0; 
+}
 
 .programas-btn-agregar {
   background-color: #1a237e;
@@ -460,7 +475,33 @@
 
 
 
+.badge-estado {
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:9999px;
+  font-weight:600;
+  font-size:.85rem;
+  line-height:1;
+  letter-spacing:.2px;
+  text-transform:none; 
+  border:1px solid transparent;
+}
 
+.badge-estado.pendiente{
+  background:#f3f4f6;   
+  color:#6b7280;       
+  border-color:#e5e7eb;
+}
+
+.badge-estado.aceptado{
+  background:#38a169;   
+  color:#fff;
+}
+
+.badge-estado.rechazado{
+  background:#ef4444;   
+  color:#fff;
+}
 
 
 .docentes-container {

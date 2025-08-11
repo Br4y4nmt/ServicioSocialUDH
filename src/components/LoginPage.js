@@ -14,6 +14,8 @@ function LoginPage() {
   const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const isProcessing = useRef(false);
   const unmounted = useRef(false);
+  const [loadingGoogle, setLoadingGoogle] = React.useState(false);
+
 
   useEffect(() => {
     return () => {
@@ -24,6 +26,7 @@ function LoginPage() {
   const handleCredentialResponse = useCallback(async (response) => {
     if (isProcessing.current) return;
     isProcessing.current = true;
+    setLoadingGoogle(true); // 👈 Activar spinner
 
     try {
       const res = await axios.post('/api/auth/google', {
@@ -41,7 +44,7 @@ function LoginPage() {
         email,
         programa_academico_id,
       } = res.data;
-  console.log('✅ TOKEN JWT del usuario:', token);
+      console.log('✅ TOKEN JWT del usuario:', token);
 
       const userData = {
         token,
@@ -87,25 +90,31 @@ function LoginPage() {
       }
 
     } catch (error) {
-  console.error('❌ Error en login Google:', error.response ? error.response.data : error.message);
-  console.log('Mostrando alerta de usuario no registrado');
+      console.error('❌ Error en login Google:', error.response ? error.response.data : error.message);
+      console.log('Mostrando alerta de usuario no registrado');
 
-  if (window.google?.accounts?.id) {
-    google.accounts.id.cancel();
-    google.accounts.id.disableAutoSelect();
-  }
+      if (window.google?.accounts?.id) {
+        google.accounts.id.cancel();
+        google.accounts.id.disableAutoSelect();
+      }
 
-  Swal.fire({
-    icon: 'error',
-    title: 'Usuario no registrado',
-    text: error.response?.data?.message || 'Tu cuenta no está registrada.',
-    confirmButtonColor: '#d33',
-    confirmButtonText: 'Cerrar',
-    allowOutsideClick: false,
-    allowEscapeKey: false
-  });
-}
-  }, [login, navigate]);
+      Swal.fire({
+        icon: 'error',
+        title: 'Usuario no registrado',
+        text: error.response?.data?.message || 'Tu cuenta no está registrada.',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Cerrar',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      });
+
+    } finally {
+      if (!unmounted.current) {
+        setLoadingGoogle(false); 
+      }
+       isProcessing.current = false;
+    }
+}, [login, navigate]);
 
 useEffect(() => {
   const loadGoogleSDK = () => {
@@ -168,7 +177,28 @@ useEffect(() => {
         </Link>
 
         <p className="subtitle-login">Inicia sesión con tu cuenta de Google</p>
-        <div id="google-signin-button"></div>
+        <div style={{ position: 'relative', display: 'inline-block', height: '10px' }}>
+          <div
+            id="google-signin-button"
+            style={{
+              opacity: loadingGoogle ? 0.5 : 1,
+              pointerEvents: loadingGoogle ? 'none' : 'auto',
+              height: '100%' // asegura que el botón no cambie de altura
+            }}
+          ></div>
+          {loadingGoogle && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <div className="spinner-login"></div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   </div>
