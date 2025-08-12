@@ -14,17 +14,17 @@ function RegisterPage() {
 
 const handleRegister = async (e) => {
   e.preventDefault();
- // const anio = codigo.startsWith('120') ? parseInt(codigo.substring(1, 5), 10) : parseInt(codigo.substring(0, 4), 10);
+ const anio = codigo.startsWith('120') ? parseInt(codigo.substring(1, 5), 10) : parseInt(codigo.substring(0, 4), 10);
 
-//if (isNaN(anio) || anio < 2021) {
-  //Swal.fire({
-   // icon: 'warning',
-    //title: 'Código no permitido',
-    //text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
-    //confirmButtonColor: '#f27474',
-  //});
-  //return;
-//}
+if (isNaN(anio) || anio < 2021) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Código no permitido',
+    text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
+    confirmButtonColor: '#f27474',
+  });
+  return;
+}
 
   if (!/^9\d{8}$/.test(whatsapp)) {
     Swal.fire({
