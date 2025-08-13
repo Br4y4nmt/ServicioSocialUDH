@@ -133,9 +133,9 @@ const generarYSubirPDF = async (trabajo) => {
               </div>
             </div>
           </div>
-          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 120px; padding-left: 30px;">
-          <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
-          <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+          <div class="qr-anchor">
+          <img src="${qrBase64}" alt="QR" />
+          <div class="qr-text">
             <strong>Documento:</strong> CARTA DE ACEPTACIÓN<br/>
             <strong>URL de Verificación:</strong><br/>
             ${urlVerificacion}
@@ -336,9 +336,9 @@ const generarPDFBlob = async (trabajo) => {
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 120px; padding-left: 30px;">
-          <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
-          <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+        <div class="qr-anchor">
+          <img src="${qrBase64}" alt="QR" />
+          <div class="qr-text">
             <strong>Documento:</strong> CARTA DE ACEPTACIÓN<br/>
             <strong>URL de Verificación:</strong><br/>
             ${urlVerificacion}

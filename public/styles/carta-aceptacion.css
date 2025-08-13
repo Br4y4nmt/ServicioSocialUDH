@@ -86,7 +86,32 @@
   height: 50px;
   margin: 0 15px;
 }
+.carta-aceptacion{
+  position: relative;
+  padding-bottom: 150px;  /* súbelo (140–170px según tu firma) */
+}
+/* QR ANCLADO AL PIE DEL CONTENEDOR */
+.qr-anchor{
+  position: absolute;
+  left: 30px;
+  bottom: 0px;            /* 0–4px lo deja pegadito al borde inferior */
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  z-index: 10;
+  page-break-inside: avoid;
+}
+.qr-anchor img{
+  width: 70px;
+  height: 70px;
+}
 
+.qr-anchor .qr-text{
+  font-size: 10px;
+  line-height: 1.2;
+  max-width: 300px;
+  margin-top: 12px;
+}
 .facultad-container, .programa-container {
   flex: 1;
   text-align: center;

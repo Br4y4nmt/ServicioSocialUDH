@@ -6,6 +6,8 @@ import './PerfilDocente.css';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useUser } from '../UserContext';
+import { cleanSignature } from '../utils/signatureCleanup';
+
 function DashboardDocente() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [nombre, setNombre] = useState('');
@@ -21,8 +23,25 @@ function DashboardDocente() {
   const [facultadNombre, setFacultadNombre] = useState('');
   const [programaNombre, setProgramaNombre] = useState('');
   const [loading, setLoading] = useState(false);
+  const [processingSignature, setProcessingSignature] = useState(false);
 
   const navigate = useNavigate();
+
+useEffect(() => {
+    import('@imgly/background-removal');
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setFirmaPreview(prev => {
+        if (prev && typeof prev === 'string' && prev.startsWith('blob:')) {
+          URL.revokeObjectURL(prev);
+        }
+        return null;
+      });
+    };
+  }, []);
+
   const toggleSidebar = () => {
     setCollapsed(prev => !prev);
   };
@@ -68,7 +87,10 @@ useEffect(() => {
   // Manejar el submit del formulario
   const handleSubmit = async (e) => {
   e.preventDefault();
-
+  if (processingSignature) {
+  Swal.fire({ icon: 'info', title: 'Espera un momento', text: 'Estamos procesando tu firma.' });
+  return;
+}
   if (!nombre || !dni || !email || !facultad || !programaAcademico || !celular || !firma) {
     Swal.fire({
       icon: 'warning',
@@ -261,35 +283,69 @@ const handleCelularChange = (e) => {
           <p>Haz clic para subir tu firma<br /><span>PNG (MAX. 2MB)</span></p>
         </>
   )}
-        <input
-        type="file"
-        accept="image/png, image/jpeg, image/jpg"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          setFirma(file);
-          if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              setFirmaPreview(reader.result); // ← Guarda la URL base64
-            };
-            reader.readAsDataURL(file);
-          }
-        }}
-        required
-        className="firma-input"
-      />
+   {processingSignature && (
+    <div className="firma-busy-overlay" aria-live="polite">
+      <div className="spinner-lg" />
+      <span className="busy-text">Procesando firma…</span>
+    </div>
+  )}
+
+  <input
+  type="file"
+  accept="image/png, image/jpeg, image/jpg"
+  onChange={async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    // Preview inmediato
+    const tempUrl = URL.createObjectURL(file);
+    setFirmaPreview((prev) => {
+      if (prev && prev.startsWith('blob:')) URL.revokeObjectURL(prev);
+      return tempUrl;
+    });
+
+    setProcessingSignature(true); // ← bloquea UI de firma
+
+    try {
+      const { file: cleanedFile, previewUrl } = await cleanSignature(file, {
+        model: 'small',
+        alphaThreshold: 185,
+      });
+
+      setFirma(cleanedFile);
+      setFirmaPreview((prev) => {
+        if (prev && prev.startsWith('blob:')) URL.revokeObjectURL(prev);
+        return previewUrl; // blob del PNG ya limpio
+      });
+    } catch (err) {
+      console.error('Limpieza falló, uso original:', err);
+      setFirma(file);
+      // el preview temporal ya quedó
+    } finally {
+      setProcessingSignature(false); // ← desbloquea UI de firma
+    }
+  }}
+  required
+  className="firma-input"
+  disabled={processingSignature}
+/>
       </div>
       </div>
 
-        <button
+       <button
         type="submit"
         className="perfil-docente-btn guardar"
-        disabled={loading}
+        disabled={loading || processingSignature || !firma}
       >
-       {loading ? (
+        {loading ? (
           <>
-            <div className="spinner" style={{ marginRight: '8px' }}></div>
+            <div className="spinner" style={{ marginRight: 8 }}></div>
             Actualizando...
+          </>
+        ) : processingSignature ? (
+          <>
+            <div className="spinner" style={{ marginRight: 8 }}></div>
+            Procesando firma...
           </>
         ) : (
           'Guardar Cambios'
