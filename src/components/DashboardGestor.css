@@ -1,17 +1,14 @@
-/* Estilo general para el contenedor principal */
 
   .dashboard-container-gestor h2 {
     text-align: center;
   }
-  /* Estilos para los encabezados */
+
   h2, h3 {
     font-size: 1.6rem;
     color: #333;
     font-weight: bold;
     margin-bottom: 1rem;
   }
-  
-  /* Estilo para las tablas */
   th, td {
     padding: 12px 15px;
     text-align: left;
@@ -39,24 +36,28 @@
 
   .layout-gestor {
     display: flex;
-    min-height: 100vh; /* antes estaba 50vh, esto lo arregla */
+    min-height: 100vh; 
     background-color: #f5f5f5;
-    padding-top: 80px; /* Ajusta según la altura de tu header */
+    padding-top: 80px; 
   }
   
+.dashboard-container-gestor {
+  flex: 1;
+  margin-left: 250px;   
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+}
 
-  .dashboard-container-gestor {
-    flex: 1;
-    margin-left: 300px; 
-  }
-  /* === CONTENEDOR PRINCIPAL === */
+.dashboard-container-gestor.expanded {
+  margin-left: 0;       
+}
+
 .facultades-container {
   padding: 24px;
   font-family: "Segoe UI", sans-serif;
   background-color: #f4f5fa;
 }
 
-/* === TARJETA / CUADRO === */
 .facultades-card {
   background-color: #ffffff;
   border-radius: 12px;
@@ -65,7 +66,6 @@
   overflow-x: auto;
 }
 
-/* === ENCABEZADO === */
 .facultades-header {
   display: flex;
   justify-content: space-between;
@@ -110,13 +110,12 @@
   font-weight: 600;
 }
 
-/* === BOTÓN AGREGAR === */
 .facultades-btn-agregar {
   background-color: #1a237e;
   color: white;
   border: none;
-  padding: 6px 12px; /* ⬅️ más pequeño que 8px 16px */
-  font-size: 13px;   /* ⬅️ más compacto */
+  padding: 6px 12px; 
+  font-size: 13px;   
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
@@ -127,7 +126,6 @@
   background-color: #0f164a;
 }
 
-/* === TABLA === */
 .facultades-table {
   width: 100%;
   border-collapse: collapse;
@@ -137,14 +135,13 @@
 }
 
 .facultades-table thead {
-  background-color: transparent; /* ✅ Quitar color de fondo */
+  background-color: transparent;
 }
 
-
 .facultades-table th {
-  color: #333;                /* ✅ Color de texto sobrio */
-  font-weight: 600;           /* ✅ Negrita limpia */
-  background-color: transparent !important; /* Evita sobrescritura por DataTables u otros */
+  color: #333;               
+  font-weight: 600;          
+  background-color: transparent !important; 
 }
 
 .facultades-table tbody tr:nth-child(even) {
@@ -159,7 +156,6 @@
   border-radius: 6px;
 }
 
-/* === BADGE ACTIVO === */
 .facultades-badge-activo {
   display: inline-block;
   background-color: #d1fae5;
@@ -170,7 +166,6 @@
   font-weight: 500;
 }
 
-/* === BOTONES ACCIONES === */
 .facultades-btn {
   border: none;
   border-radius: 6px;
@@ -275,9 +270,6 @@
     opacity: 1;
   }
 }
-
-
-
 
 .programas-container {
   padding: 24px;
@@ -422,7 +414,7 @@
 .programas-btn.cancelar {
   background-color: #9e9e9e;
 }
-/* ==== PROGRAMAS - Encabezado de Tabla ==== */
+
 .programas-table-thead {
   background-color: transparent !important;
 }
@@ -451,7 +443,7 @@
   padding: 40px;
   border-radius: 16px;
   width: 90%;
-  max-width: 550px; /* <--- NUEVO TAMAÑO */
+  max-width: 550px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
 }
@@ -472,8 +464,6 @@
   justify-content: flex-end;
   gap: 10px;
 }
-
-
 
 .badge-estado {
   display:inline-block;
@@ -731,8 +721,6 @@
   width: 220px;
 }
 
-
-
 .btn-accion {
   padding: 4px 8px;
   margin: 0 4px;
@@ -795,19 +783,19 @@
 }
 
 .badge-estado.aprobado {
-  background-color: #4CAF50; /* verde */
+  background-color: #4CAF50; 
 }
 
 .badge-estado.rechazado {
-  background-color: #f44336; /* rojo */
+  background-color: #f44336; 
 }
-/* Estilo para el select */
+
 .select-profesional {
-  width: 200px; /* Aumenté el ancho */
+  width: 200px; 
   padding: 8px 10px;
-  font-size: 13px;  /* Tamaño de fuente */
-  font-family: 'Roboto', sans-serif; /* Fuente más moderna */
-  font-weight: 500; /* Peso de fuente más delgado */
+  font-size: 13px;  
+  font-family: 'Roboto', sans-serif; 
+  font-weight: 500; 
   border-radius: 6px;
   color: #979797;
   border: 1px solid #ccc;
@@ -816,18 +804,12 @@
   cursor: pointer;
 }
 
-
 .select-profesional option {
-  font-size: 13px; /* Cambié el tamaño de fuente */
-  font-family: 'Roboto', sans-serif; /* Fuente más moderna */
+  font-size: 13px; 
+  font-family: 'Roboto', sans-serif;
   padding: 8px;
-  color: #4a4a4a; /* Cambié el color de la letra */
+  color: #4a4a4a; 
 }
-
-
-
-
-
 
 .no-generado {
   color: #ccc;
@@ -836,7 +818,6 @@
   font-size: 14px;
 }
 
-/* ===== LABORES SOCIALES ===== */
 .labores-container {
   padding: 20px;
 }
@@ -980,7 +961,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999; /* Por encima del sidebar */
+  z-index: 9999; 
   background-color: rgba(0, 0, 0, 0.4);
   width: 100%;
   height: 100%;
@@ -1046,7 +1027,7 @@
   font-weight: 500;
 }
 .labores-table td {
-  font-size: 14px; /* o 12px si quieres más pequeño */
+  font-size: 14px; 
 }
 .labores-btn.guardar:hover {
   background-color: #0f164a;
@@ -1056,3 +1037,280 @@
   background-color: #7e7e7e;
 }
 
+.docentes-table td:nth-child(5) {
+  text-align: center; 
+  vertical-align: middle;
+}
+.docentes-table td .docentes-btn.eliminar {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  margin: 0 auto;       
+}
+/* Overlay */
+.seguimiento-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Box */
+.seguimiento-modal-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  width: 520px;
+  max-width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Title */
+.seguimiento-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  text-align: center;
+  color: #1e3a8a; /* azul profesional */
+  font-weight: bold;
+}
+
+/* Info básica */
+.seguimiento-info p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #444;
+}
+.seguimiento-info span {
+  font-weight: bold;
+  color: #111;
+}
+
+/* Lista de pasos */
+.seguimiento-steps {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.seguimiento-step {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Estados */
+.seguimiento-aceptado {
+  background: #e6f9ed;
+  color: #1b5e20;
+  border-left: 5px solid #2e7d32;
+}
+
+.seguimiento-pendiente {
+  background: #fff9e6;
+  color: #8d6e00;
+  border-left: 5px solid #f9a825;
+}
+
+.seguimiento-rechazado {
+  background: #fdecea;
+  color: #b71c1c;
+  border-left: 5px solid #c62828;
+}
+
+.seguimiento-no_solicitada {
+  background: #f3f4f6;
+  color: #555;
+  border-left: 5px solid #9ca3af;
+}
+
+/* Botones */
+.seguimiento-actions {
+  text-align: right;
+  margin-top: 15px;
+}
+
+.seguimiento-btn-cerrar {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.seguimiento-btn-cerrar:hover {
+  background: #b71c1c;
+}
+/* Contenedor principal */
+.seguimiento-timeline-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  list-style: none;
+  margin: 30px 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Línea horizontal */
+.seguimiento-timeline-horizontal::before {
+  content: '';
+  position: absolute;
+  top: 18px; /* altura de la línea */
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #e5e7eb; /* gris claro */
+  z-index: 1;
+  border-radius: 2px;
+}
+
+/* Cada ítem */
+.timeline-h-item {
+  position: relative;
+  text-align: center;
+  flex: 1;
+  z-index: 2;
+}
+
+/* Marcador circular */
+.timeline-h-marker {
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #9ca3af; /* gris default */
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px #e5e7eb;
+  position: relative;
+  z-index: 3;
+}
+
+/* Contenido debajo del círculo */
+.timeline-h-content {
+  margin-top: 35px;
+}
+
+.timeline-h-title {
+  display: block;
+  font-weight: 600;
+  color: #111827;
+  font-size: 14px;
+}
+
+.timeline-h-status {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+  color: #4b5563;
+}
+
+/* Colores por estado */
+.timeline-aceptado .timeline-h-marker {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px #bbf7d0;
+}
+
+.timeline-pendiente .timeline-h-marker {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px #fde68a;
+}
+
+.timeline-rechazado .timeline-h-marker {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px #fde68a;
+}
+
+.timeline-no_solicitada .timeline-h-marker {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px #fde68a;
+}
+
+/* Contenedor del icono y tooltip */
+.tooltip-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 6px;
+  cursor: pointer;
+  color: #6b7280; /* gris */
+}
+
+/* Icono */
+.icono-info {
+  vertical-align: middle;
+  transition: color 0.2s;
+}
+.tooltip-container:hover .icono-info {
+  color: #2563eb; /* azul al hover */
+}
+
+/* Tooltip oculto por defecto */
+.tooltip-box {
+  visibility: hidden;
+  opacity: 0;
+  min-width: 220px;
+  background: #111827;   /* fondo sólido oscuro */
+  color: #f9fafb;        /* texto blanco */
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  position: absolute;
+  top: 28px;             /* debajo del icono */
+  left: 50%;
+  transform: translateX(-50%) translateY(5px); /* centrado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  font-size: 13px;
+  line-height: 1.4;
+  z-index: 2000;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Flechita hacia arriba */
+.tooltip-box::after {
+  content: '';
+  position: absolute;
+  top: -6px;   /* encima del tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #111827 transparent;
+}
+
+/* Mostrar al hover */
+.tooltip-container:hover .tooltip-box {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}

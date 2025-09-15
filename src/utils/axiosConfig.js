@@ -1,4 +1,3 @@
-// src/axiosConfig.js
 import axios from 'axios';
 import Swal from 'sweetalert2';
 //axios.defaults.baseURL = 'http://localhost:5000';

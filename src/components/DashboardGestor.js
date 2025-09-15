@@ -57,6 +57,8 @@ function DashboardGestor() {
   const [facultades, setFacultades] = useState([]);
   const [nuevaFacultad, setNuevaFacultad] = useState('');
   const [lineas, setLineas] = useState([]);
+  const [modalSeguimientoVisible, setModalSeguimientoVisible] = useState(false);
+  const [seguimiento, setSeguimiento] = useState(null);
   const [nuevaLinea, setNuevaLinea] = useState('');
   const [busquedaLinea, setBusquedaLinea] = useState('');
   const [modalLineaVisible, setModalLineaVisible] = useState(false);
@@ -204,7 +206,6 @@ const aceptarInforme = async (id) => {
 
     const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
     const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
-
     const verificationUrl = `${process.env.REACT_APP_API_URL}/verificar/${id}`;
     const qrDataUrl = await QRCode.toDataURL(verificationUrl);
 
@@ -274,6 +275,22 @@ const fetchSupervisores = async () => {
     console.error('Error al cargar supervisores:', error);
   }
 };
+
+
+  const verSeguimiento = async (usuario_id) => {
+      try {
+        const res = await axios.get(`/api/trabajo-social/seguimiento/${usuario_id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setSeguimiento(res.data);
+        setModalSeguimientoVisible(true);
+      } catch (error) {
+        console.error("❌ Error al obtener seguimiento:", error);
+        Swal.fire("Error", "No se pudo obtener el seguimiento del trámite", "error");
+      }
+    };
+
+
 
 useEffect(() => {
   const fetchEstudiantes = async () => {
@@ -982,11 +999,8 @@ useEffect(() => {
       activeSection={activeSection}
       setActiveSection={setActiveSection}
     />
-      <div className="dashboard-container-gestor">
-     
+  <div className={`dashboard-container-gestor ${collapsed ? "expanded" : ""}`}>
         <h2>Dashboard Gestor UDH</h2>
-  
-
   
 {activeSection === 'facultades' && (
   <div className="facultades-container">
@@ -1423,13 +1437,11 @@ useEffect(() => {
 
           <tbody>
             {(supervisores || [])
-              // filtro por nombre
               .filter((sup) =>
                 (sup.estudiante?.nombre_estudiante || '')
                   .toLowerCase()
                   .includes((busquedaSupervisor || '').toLowerCase())
               )
-              // filtro por programa
               .filter((sup) => {
                 if (!programaSupervisor) return true;
                 const nombreProg =
@@ -1450,7 +1462,6 @@ useEffect(() => {
                   sup.supervisor?.nombre_supervisor ||
                   sup.supervisor?.nombre ||
                   'SIN SUPERVISOR';
-
                 const cartaPdf = sup.carta_aceptacion_pdf || sup.carta_pdf || null;
 
                 return (
@@ -1581,12 +1592,11 @@ useEffect(() => {
           <tbody>
             {informesFinales
                  .filter((inf) => {
-            // Si se seleccionó un programa, filtrar por el nombre del programa
             return programaSeleccionado
               ? inf.ProgramasAcademico?.nombre_programa
                   ?.toLowerCase()
-                  .includes(programaSeleccionado.toLowerCase())  // Compara con el nombre del programa
-              : true;  // Si no se seleccionó un programa, mostrar todos los informes
+                  .includes(programaSeleccionado.toLowerCase()) 
+              : true;  
           })
           .filter((inf) =>
             (inf.Estudiante?.nombre_estudiante || '').toLowerCase().includes(busquedaDocente.toLowerCase())
@@ -2156,6 +2166,81 @@ useEffect(() => {
 )}
 
 
+{activeSection === 'seguimiento.trami' && (
+  <div className="docentes-container">
+    <div className="docentes-card">
+      <div className="docentes-header">
+        <div className="docentes-header-left">
+          <h2>Seguimiento de Trámite</h2>
+        </div>
+
+        <div className="docentes-header-right">
+          <label className="docentes-search-label">
+            Buscar:
+            <input
+              type="text"
+              className="docentes-search-input-es"
+              placeholder="Nombre del estudiante"
+              value={filtroEstudiantes}
+              onChange={(e) => setFiltroEstudiantes(e.target.value)}
+            />
+          </label>
+        </div>
+      </div>
+
+      <div className="docentes-table-wrapper">
+        <table className="docentes-table">
+          <thead className="docentes-table-thead">
+            <tr>
+              <th>Nº</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Programa Académico</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {estudiantes
+              .filter((est) =>
+                est.nombre_estudiante?.toLowerCase().includes(filtroEstudiantes.toLowerCase())
+              )
+              .map((est, index) => (
+                <tr key={est.id_estudiante}>
+                  <td>{index + 1}</td>
+                  <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
+                  <td>{est.email || 'SIN CORREO'}</td>
+                  <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
+                  <td>
+                    <button
+                        className="btn-ver-pdf"
+                        onClick={() => verSeguimiento(est.id_estudiante)}
+                        title="Ver detalle"
+                      >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        fill="#2e2e2e"
+                        viewBox="0 0 24 24"
+                        className="icono-ojo"
+                      >
+                        <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
+                      </svg>
+                      <span>Ver</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
 {activeSection === 'lineas' && (
   <div className="labores-container">
     <div className="labores-card">
@@ -2219,6 +2304,58 @@ useEffect(() => {
     </div>
   </div>
 )}
+
+
+
+{modalSeguimientoVisible && seguimiento && (
+  <div className="seguimiento-overlay">
+    <div className="seguimiento-modal-box">
+      <h3 className="seguimiento-title">Seguimiento de {seguimiento.estudiante}</h3>
+      
+      <div className="seguimiento-info">
+        <p><span>Email:</span> {seguimiento.email}</p>
+        <p><span>Programa:</span> {seguimiento.programa}</p>
+      </div>
+      <ul className="seguimiento-timeline-horizontal">
+      {seguimiento.pasos.map((p, i) => (
+        <li key={i} className={`timeline-h-item timeline-${p.estado}`}>
+          <div className="timeline-h-marker"></div>
+          <div className="timeline-h-content">
+            <span className="timeline-h-title">
+              {p.paso}
+              <div className="tooltip-container">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                  className="icono-info" 
+                  viewBox="0 0 24 24" 
+                  width="16" height="16" 
+                  fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <div className="tooltip-box">
+                  {p.tooltip}
+                </div>
+              </div>
+            </span>
+            <span className="timeline-h-status">{p.estado.toUpperCase()}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+      <div className="seguimiento-actions">
+        <button 
+          className="seguimiento-btn-cerrar" 
+          onClick={() => setModalSeguimientoVisible(false)}
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
 
 {modalLineaVisible && (

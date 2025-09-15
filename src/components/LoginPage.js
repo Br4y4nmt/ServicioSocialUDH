@@ -1,5 +1,4 @@
 /* global google */
-
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../UserContext';
@@ -183,7 +182,7 @@ useEffect(() => {
             style={{
               opacity: loadingGoogle ? 0.5 : 1,
               pointerEvents: loadingGoogle ? 'none' : 'auto',
-              height: '100%' // asegura que el botón no cambie de altura
+              height: '100%'
             }}
           ></div>
           {loadingGoogle && (
