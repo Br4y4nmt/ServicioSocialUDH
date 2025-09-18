@@ -45,7 +45,7 @@ function RevisionPlanSocial() {
       .then(response => {
         const docenteId = response.data.id_docente;
 
-        axios.get(`/api/trabajo-social/docente/${docenteId}`, {
+        axios.get(`/api/trabajo-social/docente/${docenteId}/nuevo`, {
           headers: { Authorization: `Bearer ${token}` }
         })
           .then(res => {
