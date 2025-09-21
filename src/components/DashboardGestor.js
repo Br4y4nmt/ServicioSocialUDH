@@ -53,6 +53,8 @@ function DashboardGestor() {
   const [nombreLaborEditado, setNombreLaborEditado] = useState('');
   const [collapsed, setCollapsed] = useState(false);
   const [lineaLabor, setLineaLabor] = useState('');
+  const [modalEstudianteVisible, setModalEstudianteVisible] = useState(false);
+  const [codigoUniversitario, setCodigoUniversitario] = useState('');
   const [activeSection, setActiveSection] = useState('facultades');
   const [facultades, setFacultades] = useState([]);
   const [nuevaFacultad, setNuevaFacultad] = useState('');
@@ -111,7 +113,22 @@ function DashboardGestor() {
     });
   }
 };
+const fetchEstudiantes = async () => {
+  try {
+    const res = await axios.get("/api/estudiantes", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setEstudiantes(res.data);
+  } catch (error) {
+    console.error("Error al obtener estudiantes:", error);
+  }
+};
 
+// 2. Llamarla en el useEffect inicial para que cargue al montar
+useEffect(() => {
+  if (!token) return;
+  fetchEstudiantes();
+}, [token]);
 const aceptarInforme = async (id) => {
   try {
     const informe = informesFinales.find((i) => i.id === id);
@@ -1694,10 +1711,16 @@ useEffect(() => {
   <div className="docentes-container">
     <div className="docentes-card">
       <div className="docentes-header">
-        <div className="docentes-header-left">
-          <h2>Estudiantes</h2>
-        </div>
-
+          <div className="docentes-header-left flex items-center gap-4">
+    <h2>Estudiantes</h2>
+    <button
+      className="agregar-btn"
+      onClick={() => setModalEstudianteVisible(true)}
+    >
+      Agregar
+    </button>
+  </div>
+        
         <div className="docentes-header-right">
           <label className="docentes-search-label">
             Buscar:
@@ -1765,6 +1788,111 @@ useEffect(() => {
               ))}
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+)}
+{modalEstudianteVisible && (
+  <div className="docentes-modal show">
+    <div className="docentes-modal-content">
+      <h3>Agregar Estudiante</h3>
+
+      {/* Código universitario */}
+      <input
+        type="text"
+        className="docentes-modal-input"
+        placeholder="Código Universitario (10 dígitos)"
+        value={codigoUniversitario}
+        maxLength={10}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (/^\d{0,10}$/.test(value)) {
+            setCodigoUniversitario(value);
+          }
+        }}
+      />
+
+      {/* WhatsApp */}
+      <input
+        type="text"
+        className="docentes-modal-input"
+        placeholder="WhatsApp del estudiante (9 dígitos)"
+        value={nuevoDocenteWhatsapp}
+        maxLength={9}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (/^\d{0,9}$/.test(value)) {
+            setNuevoDocenteWhatsapp(value);
+          }
+        }}
+      />
+
+      <div className="docentes-modal-actions">
+        <button
+          className="docentes-btn cancelar"
+          onClick={() => {
+            setModalEstudianteVisible(false);
+            setCodigoUniversitario('');
+            setNuevoDocenteWhatsapp('');
+          }}
+        >
+          Cancelar
+        </button>
+        <button
+          className="docentes-btn guardar"
+          onClick={async () => {
+            if (codigoUniversitario.length !== 10) {
+              Swal.fire({
+                icon: "error",
+                title: "Código inválido",
+                text: "El código universitario debe tener exactamente 10 dígitos.",
+              });
+              return;
+            }
+
+            if (nuevoDocenteWhatsapp.length !== 9) {
+              Swal.fire({
+                icon: "error",
+                title: "Número inválido",
+                text: "El WhatsApp debe tener exactamente 9 dígitos.",
+              });
+              return;
+            }
+
+            try {
+              const res = await axios.post(
+                "/api/auth/register-codigo", 
+                { 
+                  codigo: codigoUniversitario, 
+                  whatsapp: nuevoDocenteWhatsapp 
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+
+              Swal.fire({
+                icon: "success",
+                title: "Éxito",
+                text: res.data.message,
+              });
+
+              // refrescar lista
+              await fetchEstudiantes();
+              setModalEstudianteVisible(false);
+              setCodigoUniversitario('');
+              setNuevoDocenteWhatsapp('');
+            } catch (error) {
+              console.error("❌ Error registrando estudiante:", error);
+
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response?.data?.message || "No se pudo registrar el estudiante",
+              });
+            }
+          }}
+        >
+          Guardar
+        </button>
       </div>
     </div>
   </div>

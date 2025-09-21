@@ -1302,7 +1302,19 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+.agregar-btn {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
+.agregar-btn:hover {
+  background-color: #1b3374;
+}
 
 /* Animaciones */
 @keyframes fadeIn {
