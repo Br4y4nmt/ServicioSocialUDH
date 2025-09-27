@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import SidebarGestor from './SidebarGestor';
 import Header from '../components/Header';
+import ImpersonateLogin from './ImpersonateLogin';
 import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import InformePDF from '../components/InformefinalProgramaPDF';
@@ -2185,7 +2186,9 @@ useEffect(() => {
 )}
 
 
-
+{activeSection === 'impersonate' && (
+  <ImpersonateLogin />
+)}
 
 {activeSection === 'labores' && (
   <div className="labores-container">

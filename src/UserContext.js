@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
         if (parsedUser && parsedUser.token) {
           setUser(parsedUser);
         } else {
-          localStorage.removeItem('user'); // datos inválidos
+          localStorage.removeItem('user'); 
         }
       }
     } catch (error) {

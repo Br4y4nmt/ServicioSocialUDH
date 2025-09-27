@@ -6,13 +6,14 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [openMenu, setOpenMenu] = useState(null);
 
+   const isImpersonating = !!sessionStorage.getItem('originalToken');
   useEffect(() => {
     const foto = localStorage.getItem('foto_perfil');
     const nombre = localStorage.getItem('nombre');
 
     if (foto) setFotoPerfil(foto);
     if (nombre) setNombreUsuario(nombre);
-    if (["facultades", "programas", "docentes","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
+    if (["facultades", "programas", "docentes","impersonate","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
       setOpenMenu(0);
     } else {
       setOpenMenu(null);
@@ -21,6 +22,17 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
 
   const toggleMenu = (index) => {
     setOpenMenu(openMenu === index ? null : index);
+  };
+    const salirDeImpersonacion = () => {
+    const originalToken = sessionStorage.getItem('originalToken');
+    if (originalToken) {
+      localStorage.setItem('authToken', originalToken);
+      sessionStorage.removeItem('originalToken');
+      window.location.href = '/'; // refresca al dashboard original
+    } else {
+      localStorage.removeItem('authToken');
+      window.location.href = '/login';
+    }
   };
 
   return (
@@ -150,6 +162,17 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                         <path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" />
                       </svg>
                       Seguimiento de Trámite
+                    </span>
+                  </li>
+                  <li
+                    className={activeSection === 'impersonate' ? 'sidebar-gestor-selected' : ''}
+                    onClick={() => setActiveSection('impersonate')}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#2e9e7f" viewBox="0 0 24 24" strokeWidth="2">
+                        <path d="M12 11c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v9H12v-9zM2 20v-9c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v9H2z" />
+                      </svg>
+                      Ingresar a una cuenta
                     </span>
                   </li>
                   </ul>
