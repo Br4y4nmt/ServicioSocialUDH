@@ -13,7 +13,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
 
     if (foto) setFotoPerfil(foto);
     if (nombre) setNombreUsuario(nombre);
-    if (["facultades", "programas", "docentes","impersonate","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
+    if (["facultades", "programas", "docentes", 'cambio-asesor' ,"cambios-tiempo", "impersonate","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
       setOpenMenu(0);
     } else {
       setOpenMenu(null);
@@ -28,7 +28,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
     if (originalToken) {
       localStorage.setItem('authToken', originalToken);
       sessionStorage.removeItem('originalToken');
-      window.location.href = '/'; // refresca al dashboard original
+      window.location.href = '/'; 
     } else {
       localStorage.removeItem('authToken');
       window.location.href = '/login';
@@ -173,6 +173,29 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                         <path d="M12 11c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v9H12v-9zM2 20v-9c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v9H2z" />
                       </svg>
                       Ingresar a una cuenta
+                    </span>
+                  </li>
+                  <li
+                      className={activeSection === 'cambios-tiempo' ? 'sidebar-gestor-selected' : ''}
+                      onClick={() => setActiveSection('cambios-tiempo')}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#2e9e7f" viewBox="0 0 24 24" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Cambios Tiempo
+                      </span>
+                    </li>
+                    <li
+                    className={activeSection === 'cambio-asesor' ? 'sidebar-gestor-selected' : ''}
+                    onClick={() => setActiveSection('cambio-asesor')}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#2e9e7f" viewBox="0 0 24 24" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm6 8v-1a3 3 0 00-3-3H5a3 3 0 00-3 3v1" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V4m8 3V4m-4 8h.01" />
+                      </svg>
+                      Cambio de Asesor
                     </span>
                   </li>
                   </ul>

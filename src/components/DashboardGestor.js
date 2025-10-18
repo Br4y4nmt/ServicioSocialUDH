@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import SidebarGestor from './SidebarGestor';
 import Header from '../components/Header';
 import ImpersonateLogin from './ImpersonateLogin';
+import CambiosTiempo from './CambiosTiempo';
+import CambioAsesor from "./CambioAsesor"; 
 import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import InformePDF from '../components/InformefinalProgramaPDF';
@@ -1779,7 +1781,7 @@ useEffect(() => {
               })
               .map((est, index) => (
                 <tr key={est.id_estudiante}>
-                  <td>{index + 1}</td> {/* ← Numeración dinámica */}
+                  <td>{index + 1}</td>
                   <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
                   <td>{est.dni || '—'}</td>
                   <td>{est.email || 'SIN CORREO'}</td>
@@ -1797,8 +1799,6 @@ useEffect(() => {
   <div className="docentes-modal show">
     <div className="docentes-modal-content">
       <h3>Agregar Estudiante</h3>
-
-      {/* Código universitario */}
       <input
         type="text"
         className="docentes-modal-input"
@@ -1812,8 +1812,6 @@ useEffect(() => {
           }
         }}
       />
-
-      {/* WhatsApp */}
       <input
         type="text"
         className="docentes-modal-input"
@@ -2184,7 +2182,13 @@ useEffect(() => {
     </div>
   </div>
 )}
+{activeSection === 'cambios-tiempo' && (
+  <CambiosTiempo />
+)}
 
+{activeSection === 'cambio-asesor' && (
+  <CambioAsesor />
+)}
 
 {activeSection === 'impersonate' && (
   <ImpersonateLogin />

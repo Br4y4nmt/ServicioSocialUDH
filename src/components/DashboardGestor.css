@@ -1326,3 +1326,271 @@
   from { transform: translateY(40px); opacity: 0; }
   to   { transform: translateY(0); opacity: 1; }
 }
+.btn-accion-tabla {
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-accion-tabla:hover {
+  background-color: #303f9f;
+}
+
+
+
+/* ===== MODAL CAMBIOS TIEMPO ===== */
+.modal-tiempo-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 24, 39, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+  backdrop-filter: blur(4px);
+  animation: modalTiempoFadeIn 0.3s ease;
+}
+
+.modal-tiempo-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 650px;
+  max-width: 90%;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.15);
+  animation: modalTiempoSlideUp 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-tiempo-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+/* ======= TABLA ======= */
+.modal-tiempo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* ===== FORZAR COLOR ENCABEZADO SOLO EN ESTE MODAL ===== */
+.modal-tiempo-content table.modal-tiempo-table thead {
+  background-color: #1b3374 !important;
+}
+
+.modal-tiempo-content table.modal-tiempo-table thead th {
+  background-color: #1b3374 !important;
+  color: #ffffff !important;
+}
+
+
+.modal-tiempo-table th,
+.modal-tiempo-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-tiempo-table th {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.modal-tiempo-table td {
+  color: #374151;
+}
+
+/* Hover suave */
+.modal-tiempo-table tbody tr:hover {
+  background-color: #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+/* Mensaje vacío */
+.modal-tiempo-empty {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 1rem;
+}
+
+/* Footer */
+.modal-tiempo-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* Botón cerrar */
+.modal-tiempo-btn-cerrar {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-tiempo-btn-cerrar:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes modalTiempoFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes modalTiempoSlideUp {
+  from {
+    transform: translateY(25px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.btn-editar-fecha {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.btn-editar-fecha:hover {
+  background: #1e40af;
+}
+
+.btn-guardar-fecha {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.btn-guardar-fecha:hover {
+  background: #15803d;
+}
+.btn-editar-icono {
+  background-color: #1b74e4;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.btn-editar-icono:hover {
+  background-color: #155bc0;
+  transform: scale(1.05);
+}
+/* ===== BOTONES MODAL CAMBIO DE ASESOR ===== */
+
+/* Contenedor del footer del modal */
+.modal-tiempo-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+/* Botón Cancelar */
+.btn-cancelar-cambio-asesor {
+  background-color: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(220, 38, 38, 0.2);
+}
+
+.btn-cancelar-cambio-asesor:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.btn-cancelar-cambio-asesor:active {
+  transform: translateY(1px);
+}
+
+.btn-cancelar-cambio-asesor:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+/* Botón Guardar Cambio */
+.btn-guardar-cambio-asesor {
+  background-color: #1b3374;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(22, 163, 74, 0.2);
+}
+
+.btn-guardar-cambio-asesor:hover {
+  background-color: #13234e;
+  transform: translateY(-1px);
+}
+
+.btn-guardar-cambio-asesor:active {
+  transform: translateY(1px);
+}
+
+.btn-guardar-cambio-asesor:disabled {
+  background-color: #86efac;
+  cursor: not-allowed;
+}
+
+/* Suavizar interacción con ambos botones */
+.btn-cancelar-cambio-asesor,
+.btn-guardar-cambio-asesor {
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.3px;
+}
