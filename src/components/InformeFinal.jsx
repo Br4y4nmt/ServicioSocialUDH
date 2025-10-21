@@ -582,7 +582,7 @@ if (!recomendacionesInforme.trim()) {
       <div className="solicitar-revision-header">
   <h3>IV. CRONOGRAMA DE ACTIVIDADES</h3>
 </div>
-
+<div className="tabla-cronograma-wrapper">
 <table className="tabla-cronograma">
   <thead>
     <tr>
@@ -601,11 +601,11 @@ if (!recomendacionesInforme.trim()) {
     actividadesSeguimiento.map((item, index) => (
       <tr key={index}>
         <td>{index + 1}</td>
-        <td>{item.actividad}</td>
+        <td className="columna-actividad">{item.actividad}</td>
         <td>{item.justificacion}</td>
         <td>{item.fecha}</td>
         <td>{item.fecha_fin || '—'}</td>
-        <td>{item.resultados}</td>
+        <td className="columna-resultados">{item.resultados}</td>
         <td style={{ textAlign: 'center' }}>
           {item.evidencia ? (
             <button
@@ -653,6 +653,7 @@ if (!recomendacionesInforme.trim()) {
   )}
 </tbody>
 </table>
+</div>
 <div className="solicitar-revision-header" style={{ marginTop: '30px' }}>
   <h3>V. ÁREA DE INFLUENCIA</h3>
 </div>

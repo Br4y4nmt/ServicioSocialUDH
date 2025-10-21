@@ -250,22 +250,88 @@
   }
 .modal-evidencia-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(5px);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 2147483647 !important; /* Valor máximo seguro para estar al frente */
+  align-items: center;
+  z-index: 99999;
+  padding: 1.5rem;
+  animation: fadeInOverlay 0.3s ease;
 }
-.modal-evidencia-image {
-  width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del contenedor */
-  height: 92%; /* Asegura que la imagen ocupe el 100% del alto disponible */
-  object-fit: contain; /* Ajuste de la imagen, para que mantenga su proporción sin cortarse */
-  border-radius: 8px; /* Bordes redondeados */
-  margin-bottom: 20px; /* Espacio entre la imagen y el botón */
+.modal-evidencia-content.mejorado {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.8rem 2rem;
+  width: 95%;
+  max-width: 680px; /* ancho fijo */
+  height: 90vh; /* alto fijo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.08),
+    0 10px 35px rgba(0, 0, 0, 0.1);
+  animation: fadeInModal 0.35s ease-out;
+  overflow: hidden;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  text-align: center;
+}
+.modal-evidencia-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+.modal-evidencia-actions {
+  margin-top: 1rem;
+}
+.modal-evidencia-btn-cerrar {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  transition: all 0.25s ease;
+}
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal-evidencia-btn-cerrar:hover {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
+}
+.modal-evidencia-img-wrapper {
+  flex: 1;
+  width: 100%;
+  overflow: auto; /* 👈 permite scroll si la imagen es muy grande */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-evidencia-img:hover {
+  transform: scale(1.02);
+}
+.modal-evidencia-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #f9fafb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s ease;
 }
 .modal-evidencia-content {
   background: white;
@@ -295,76 +361,120 @@
 .detalle-actividad-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.55); /* azul oscuro translúcido */
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2147483647 !important;
-  padding: 24px;
+  padding: 1.5rem;
+  animation: fadeInModal 0.3s ease-out;
 }
 
 /* Contenedor del modal */
 .detalle-actividad-modal {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 36px 40px 30px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem 2.8rem;
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    0 8px 24px rgba(0, 0, 0, 0.1);
+    0 6px 20px rgba(0, 0, 0, 0.08),
+    0 10px 40px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 540px;
+  max-width: 600px;
   position: relative;
-  animation: fadeInModal 0.35s ease-out;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: auto;
+  max-height: 80vh;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  transition: all 0.3s ease-in-out;
 }
 
-
-
+/* Animación de entrada */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.detalle-actividad-modal div[style*="text-align: center"] {
+  margin-top: 25px;
+}
 /* Título del modal */
 .detalle-actividad-modal h3 {
-  font-size: 22px;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: #111827;
+  color: #0f172a; /* azul gris oscuro */
   text-align: center;
-  margin-bottom: 24px;
-  padding-top: 10px;
+  margin-bottom: 1.8rem;
+  position: relative;
 }
 
 /* Texto de detalle */
 .detalle-actividad-modal p {
   font-size: 15px;
-  margin-bottom: 14px;
-  color: #5f5d5d;
-  line-height: 1.6;
-  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  margin-bottom: 12px;
   padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.6;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.detalle-actividad-modal h3::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+  border-radius: 4px;
+  margin: 0.7rem auto 0;
+}
+/* Si el contenido crece mucho, el modal tendrá scroll interno */
+.detalle-actividad-modal {
+  max-height: 80vh;          /* No ocupa más del 80% del alto visible */
+  overflow-y: auto;          /* Activa scroll vertical interno */
+  overflow-x: hidden;        /* Evita scroll horizontal */
+}
+.detalle-actividad-modal::-webkit-scrollbar {
+  width: 8px;
+}
+.detalle-actividad-modal::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+.detalle-actividad-modal::-webkit-scrollbar-thumb:hover {
+  background: #9a9a9a;
 }
 
 /* Etiquetas destacadas */
 .detalle-actividad-modal strong {
-  color: #011B4B;
+  color: #1e3a8a;
   font-weight: 600;
+  margin-right: 6px;
 }
 
 /* Botón moderno */
 .detalle-actividad-btn-cerrar {
-  display: block;
-  margin: 25px auto 0;
-  background-color: #011B4B; /* Color inicial sólido */
-  color: white;
+  display: inline-block;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #fff;
   border: none;
-  padding: 10px 22px;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 10px 26px;
   font-size: 15px;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   cursor: pointer;
-  transition: background-color 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .detalle-actividad-btn-cerrar:hover {
-  background-color: #1E429F; /* Cambio suave a azul más claro */
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
 }
 
 

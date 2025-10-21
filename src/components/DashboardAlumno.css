@@ -906,39 +906,97 @@
     appearance: none; 
     background-color: white;
   }
-  .tabla-cronograma {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-  }
+
 .spinner {
   animation: spin 0.8s linear infinite;
   display: inline-block;
   vertical-align: middle;
 }
+/* 🩵 --- Permitir salto de línea SOLO en Actividad y Resultados Esperados --- */
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Celdas de Actividad */
+.tabla-cronograma td.columna-actividad {
+  white-space: normal !important;   /* permite salto */
+  word-break: break-word !important; /* corta palabras largas */
+  overflow-wrap: break-word !important;
+  max-width: 300px;                 /* límite razonable */
+  text-align: left;                 /* alinea el texto a la izquierda */
 }
 
-  .tabla-cronograma th,
-  .tabla-cronograma td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .tabla-cronograma th {
-    background-color: #f7f7f7;
-    color: #333;
-  }
+/* Encabezado */
+.tabla-cronograma th:nth-child(2) {
+  white-space: nowrap !important;
+}
+
+/* Celdas de Resultados Esperados */
+.tabla-cronograma td.columna-resultados {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 300px;
+  text-align: left;
+}
+
+/* Encabezado */
+.tabla-cronograma th:nth-child(6) {
+  white-space: nowrap !important;
+}
+
+/* 🩵 --- FIX FINAL: Encabezados siempre en una fila horizontal --- */
+
+.tabla-cronograma-wrapper {
+  width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.tabla-cronograma {
+  width: max-content !important; /* 👈 la tabla se expande al contenido */
+  min-width: 950px;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  table-layout: auto !important; /* 👈 deja que cada columna se ajuste al contenido */
+}
+
+.tabla-cronograma th {
+  white-space: nowrap !important;  /* 👈 evita saltos */
+  text-align: center;
+  padding: 12px 20px;
+  background-color: #f7f7f7;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.tabla-cronograma td {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  text-align: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* 🔹 Scrollbar moderna */
+.tabla-cronograma-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.tabla-cronograma-wrapper::-webkit-scrollbar-thumb {
+  background-color: #b3b3b3;
+  border-radius: 10px;
+}
+.tabla-cronograma-wrapper::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+
   .btn-evidencia-camara {
     background: transparent;
     border: none;

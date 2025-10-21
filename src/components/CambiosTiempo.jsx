@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; // ✅ Importa SweetAlert2
+import Swal from "sweetalert2"; 
 import "./DashboardGestor.css";
 import { useUser } from "../UserContext";
 
@@ -115,7 +115,7 @@ function CambiosTiempo() {
       customClass: {
         popup: "swal2-toast-custom",
       },
-      iconColor: "#22c55e", // Verde suave
+      iconColor: "#22c55e", 
     });
   };
 
@@ -304,7 +304,7 @@ function CambiosTiempo() {
                 <thead>
                   <tr>
                     <th>Nº</th>
-                    <th>Resultado</th>
+                    <th>Actividad</th>
                     <th>Fecha Fin</th>
                     <th>Acción</th>
                   </tr>
@@ -313,7 +313,7 @@ function CambiosTiempo() {
                   {cronogramas.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
-                      <td>{item.resultados || "—"}</td>
+                      <td>{item.actividad || "—"}</td>
                       <td>
                         {editando === item.id ? (
                           <input

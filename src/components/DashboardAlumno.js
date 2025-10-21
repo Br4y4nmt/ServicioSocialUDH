@@ -1770,17 +1770,23 @@ useEffect(() => {
 
 {modalVisible && (
   <div className="modal-evidencia-overlay">
-    <div className="modal-evidencia-content">
-      <img src={imagenModal} alt="Evidencia" className="modal-evidencia-image" />
-      <button
-        onClick={() => setModalVisible(false)}
-        className="btn-cerrar-modal-cronogramasss"
-      >
-        Cerrar
-      </button>
+    <div className="modal-evidencia-content mejorado">
+      <h3 className="modal-evidencia-title">Evidencia</h3>
+      <div className="modal-evidencia-img-wrapper">
+        <img src={imagenModal} alt="Evidencia" className="modal-evidencia-img" />
+      </div>
+      <div className="modal-evidencia-actions">
+        <button
+          onClick={() => setModalVisible(false)}
+          className="modal-evidencia-btn-cerrar"
+        >
+          Cerrar
+        </button>
+      </div>
     </div>
   </div>
 )}
+
 
 
 {modalProyectoVisible && (

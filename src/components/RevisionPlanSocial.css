@@ -213,22 +213,32 @@
 }
 
 .modal-cronograma-content {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  max-width: 1000px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;          /* evita que ocupe toda la pantalla */
+  overflow-y: auto;          /* agrega scroll vertical interno */
+  overflow-x: hidden;        /* quita scroll horizontal */
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 32px 36px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  animation: fadeInModal 0.3s ease;
+  font-family: "Inter", "Segoe UI", sans-serif;
 }
-
+.modal-cronograma-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  border-radius: 4px;
+  margin: 10px auto 0;
+}
 .modal-cronograma-title {
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #003366;
   text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
 .modal-cronograma-content img {
   max-width: 100%;  /* Asegura que la imagen no sobresalga */
@@ -240,24 +250,46 @@
 .modal-cronograma-table-wrapper {
   overflow-x: auto;
 }
-
+/* Scroll personalizado */
+.modal-cronograma-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-cronograma-content::-webkit-scrollbar-thumb {
+  background-color: #b5b5b5;
+  border-radius: 10px;
+}
+.modal-cronograma-content::-webkit-scrollbar-thumb:hover {
+  background-color: #8a8a8a;
+}
+.modal-cronograma-table td {
+  white-space: normal;       /* permite saltos de línea */
+  word-break: break-word;    /* corta palabras largas */
+  overflow-wrap: break-word; /* soporte adicional */
+  vertical-align: top;       /* alinea arriba las celdas de texto largo */
+  max-width: 250px;          /* controla el ancho máximo de columnas amplias */
+  line-height: 1.5;
+}
+.modal-cronograma-table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+.modal-cronograma-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
 .modal-cronograma-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: #fff;
   font-size: 14px;
+  color: #374151;
 }
-
-.modal-cronograma-table th,
-.modal-cronograma-table td {
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
 .modal-cronograma-table th {
-  background-color: #f5f5f5;
+  background: #1e3a8a;
+  color: white;
   font-weight: 600;
-  color: #333;
+  padding: 10px;
+  border-bottom: 2px solid #d1d5db;
 }
 
 .modal-cronograma-empty {
@@ -267,8 +299,8 @@
 }
 
 .modal-cronograma-actions {
-  text-align: center; 
-  margin-top: 16px;
+  text-align: center;
+  margin-top: 24px;
 }
 .btn-accion {
   border: none;
@@ -278,7 +310,16 @@
   cursor: pointer;
   font-weight: bold;
 }
-
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .btn-accion.aceptar {
   background-color: #43a047;
 }
@@ -296,85 +337,117 @@
 }
 
 .modal-cronograma-btn-cerrar {
-  background-color: #9e9e9e;
-  color: white;
-  padding: 8px 16px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #fff;
   border: none;
+  padding: 10px 26px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  display: inline-block; /* Para que el botón sea tratable como bloque inline */
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);
 }
-
 .modal-cronograma-btn-cerrar:hover {
-  background-color: #7e7e7e;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
 }
 
 /* Asegúrate de que el contenedor esté centrado */
 
 .modal-evidencia-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99999;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2147483647 !important;
+  animation: fadeInOverlay 0.3s ease;
+  padding: 1.5rem;
 }
 .modal-evidencia-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 800px;
-  width: 90%;
-  height: 500px; /* Ajusta el tamaño del contenedor modal */
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem 2.2rem;
+  width: 95%;
+  max-width: 650px;
+  height: 600px; /* 🔹 altura fija del modal */
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.08),
+    0 10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* distribuye título, imagen y botón */
+  animation: fadeInModal 0.35s ease-out;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
 }
+
 .modal-evidencia-title {
-  font-size: 24px; 
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #003366;
-  font-family: 'Segoe UI', sans-serif; 
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
-
-
+.modal-evidencia-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  border-radius: 4px;
+  margin: 10px auto 0;
+}
 .modal-evidencia-img {
-  width: 100%;  /* Asegura que la imagen ocupe todo el ancho disponible */
-  height: 400px; /* Altura fija para todas las imágenes */
-  object-fit: contain; /* Mantiene la proporción de la imagen sin deformarla */
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  width: 80%;          /* 🔹 más pequeña dentro del modal */
+  height: 320px;       /* 🔹 altura reducida */
+  object-fit: contain; /* mantiene proporciones sin deformar */
+  border-radius: 12px;
+  background: #f8fafc;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.12),
+    0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  margin-bottom: 1.2rem;
+  transition: transform 0.3s ease;
+}
+.modal-evidencia-img:hover {
+  transform: scale(1.02);
 }
 .modal-evidencia-actions {
   margin-top: 0px;
 }
 
 .modal-evidencia-btn-cerrar {
-  background-color: #1a202c;
-  color: white;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
+  padding: 10px 26px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-evidencia-btn-cerrar:hover {
-  background-color: #003366;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
 }
 
 .btn-ojo-evidencia {

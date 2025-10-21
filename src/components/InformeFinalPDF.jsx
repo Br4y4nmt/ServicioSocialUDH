@@ -38,6 +38,7 @@ tableContainer: {
   display: 'table',
   width: '100%',
   borderStyle: 'solid',
+  borderColor: '#ccc', // ✅ color de borde más suave
   borderWidth: 1,
   borderRightWidth: 0,
   borderBottomWidth: 0,
@@ -55,18 +56,22 @@ subHeaderIndented: {
 },
 tableRow: {
   flexDirection: 'row',
+  minHeight: 20,
 },
 
 tableColHeader: {
   borderStyle: 'solid',
   borderBottomWidth: 1,
   borderRightWidth: 1,
-  backgroundColor: '#eaeaea',
-  padding: 4,
+  borderColor: '#ccc',
+  backgroundColor: '#f2f2f2', // ✅ tono gris claro (como Word)
+  padding: 6,
   fontWeight: 'bold',
   textAlign: 'center',
-  minHeight: 25,
+  minHeight: 28,
+  fontSize: 11,
 },
+
 anexosPage: {
   fontSize: 30,
   textAlign: 'center',
@@ -85,16 +90,19 @@ tableCol: {
   borderStyle: 'solid',
   borderBottomWidth: 1,
   borderRightWidth: 1,
-  padding: 4,
+  borderColor: '#ccc',
+  padding: 6,
   textAlign: 'left',
-  minHeight: 25,
+  flexWrap: 'wrap',
+  lineHeight: 1.3,
+  wordBreak: 'break-word',
+  fontSize: 10.5,
 },
-
-colActividad: { width: '22%' },        // Menos ancha
-colJustificacion: { width: '25%' },    
-colFecha: { width: '13%' },            
-colFechaFin: { width: '13%' },         
-colResultados: { width: '27%' },       // Mayor espacio para texto largo
+colActividad: { width: '25%' },
+colJustificacion: { width: '25%' },
+colFecha: { width: '10%', textAlign: 'center' },
+colFechaFin: { width: '10%', textAlign: 'center' },
+colResultados: { width: '30%' },
 
 
 
