@@ -8,7 +8,7 @@ import './DashboardAlumno.css';
 import DesignacionDocente from './DesignacionDocente';
 import './ModalGlobal.css';
 import Swal from 'sweetalert2';
-import InformeFinal from './InformeFinal'; // porque estás en /src/components
+import InformeFinal from './InformeFinal'; 
 import SeguimientoActividades from './SeguimientoActividades'
 import jsPDF from 'jspdf';
 import Reglamento from './Reglamento';
@@ -28,9 +28,9 @@ function DashboardAlumno() {
   const [programas, setProgramas] = useState([]);
   const [nuevaFechaFin, setNuevaFechaFin] = useState('');
   const [programaSeleccionado, setProgramaSeleccionado] = useState('');
-  const [docentes, setDocentes] = useState([]); // Estado para los docentes
-  const [labores, setLabores] = useState([]); // Estado para las labores sociales
-  const [docenteSeleccionado, setDocenteSeleccionado] = useState(''); // Estado para el docente seleccionado
+  const [docentes, setDocentes] = useState([]);
+  const [labores, setLabores] = useState([]); 
+  const [docenteSeleccionado, setDocenteSeleccionado] = useState(''); 
   const [archivoYaEnviado, setArchivoYaEnviado] = useState(false);
   const [solicitudEnviada, setSolicitudEnviada] = useState(false);
   const [laborSeleccionada, setLaborSeleccionada] = useState('');
@@ -98,18 +98,18 @@ function DashboardAlumno() {
     organigrama: null,
     documentosAdicionales: null
   });
-const handleFileChange = (e, tipo) => {
-  const archivo = e.target.files[0];
-  if (archivo) {
-    setImagenesAnexos(prevState => ({
-      ...prevState,
-      [tipo]: archivo
-    }));
-
-    if (tipo === 'cartaAceptacion') {
-      setCartaAceptacionPdf(archivo); // 👈 Esto es lo que te faltaba
-    }
+ const handleFileChange = (e, tipo) => {
+   const archivo = e.target.files[0];
+   if (!archivo) return;
+   setImagenesAnexos(prev => ({ ...prev, [tipo]: archivo }));
+   if (tipo === 'proyectoPdf') {
+     setProyectoFile(archivo);
+     setArchivoYaEnviado(false);
   }
+
+  if (tipo === 'cartaAceptacion') {
+     setCartaAceptacionPdf(archivo);
+   }
 };
 useEffect(() => {
   const mostrarBienvenida = localStorage.getItem('showBienvenida');
@@ -265,7 +265,7 @@ const handleSolicitarRevision = async () => {
     }).then(() => {
       setArchivoYaEnviado(true);
       setPdfDescargado(true);
-      fetchTrabajoSocial(); // ✅ Si esta función depende de `user`, asegúrate que esté definida con ese contexto
+      fetchTrabajoSocial(); 
     });
 
     setProyectoFile(null);
@@ -544,7 +544,7 @@ const handleGoToNextSection = () => {
   if (activeSection === 'designacion') {
     if (estadoPlan === 'aceptado') {
       setActiveSection('conformidad');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // 👈 scroll arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       Swal.fire({
         icon: 'info',
@@ -556,7 +556,7 @@ const handleGoToNextSection = () => {
   } else if (activeSection === 'conformidad') {
     if (estadoConformidad === 'aceptado') {
       setActiveSection('seguimiento');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // 👈 scroll arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
     } else {
       Swal.fire({
         icon: 'info',
@@ -568,7 +568,7 @@ const handleGoToNextSection = () => {
   } else if (activeSection === 'seguimiento') {
     if (todasAprobadas && estadoSolicitudTermino === 'aprobada') {
       setActiveSection('informe-final');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // 👈 scroll arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
     } else {
       Swal.fire({
         icon: 'info',
@@ -600,7 +600,7 @@ useEffect(() => {
     setLabores([]);
   }
 }, [lineaSeleccionada, token]);
-// ✅ incluir `user` como dependencia
+
 
 
 
@@ -612,7 +612,7 @@ const handleSolicitarAprobacion = async () => {
     return;
   }
 
-  const usuario_id = user?.id; // usar desde el contexto
+  const usuario_id = user?.id; 
 
   if (!usuario_id || !user?.token) {
     alert('No se encontró el ID de usuario o token. Inicia sesión nuevamente.');
@@ -630,14 +630,12 @@ const handleSolicitarAprobacion = async () => {
       linea_accion_id: parseInt(lineaSeleccionada)
     };
 
-    // 1. Guardar la solicitud principal
     const response = await axios.post('/api/trabajo-social', datos, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
     });
 
-    // 2. Si es grupal, guardar los correos
     if (tipoServicio === 'grupal') {
       const trabajoSocialId = response.data.id;
       if (!trabajoSocialId) {
@@ -706,7 +704,7 @@ useEffect(() => {
   }
 }, [activeSection, estadoConformidad, datosCargados]);
 useEffect(() => {
-  const usuario_id = user?.id; // usar desde el contexto
+  const usuario_id = user?.id;
 
   if (!usuario_id || !datosCargados || !user?.token) return;
 
@@ -753,8 +751,6 @@ const handleGenerarPDF = async () => {
     recursosRequeridos, resultadosEsperados
   ];
 
-
-    // Primero validamos si falta la carta de aceptación
     if (!imagenesAnexos.cartaAceptacion) {
       Swal.fire({
         icon: 'warning',
@@ -764,7 +760,6 @@ const handleGenerarPDF = async () => {
       return;
     }
 
-    // Luego validamos campos vacíos y actividades
     const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0;
     if (camposVacios) {
       Swal.fire({
@@ -775,7 +770,6 @@ const handleGenerarPDF = async () => {
       return;
     }
 
-  // Validación de duración total del cronograma vs periodo estimado
   const periodoEnDias = {
     '4 MESES': 120,
     '5 MESES': 150,
@@ -817,12 +811,9 @@ const handleGenerarPDF = async () => {
     }
   }
   const doc = new jsPDF();
-  const altoPagina = doc.internal.pageSize.getHeight(); // <-- ¡Pon esto aquí!
+  const altoPagina = doc.internal.pageSize.getHeight(); 
 
-// ...el resto de tu código...
-
-  // Portada
-   doc.setFont('times');
+  doc.setFont('times');
   doc.setFontSize(12);
   doc.text('UNIVERSIDAD DE HUÁNUCO', 105, 20, { align: 'center' });
   doc.setFont('times', 'bold');
@@ -832,9 +823,7 @@ const handleGenerarPDF = async () => {
   doc.setFontSize(14);
 
 const textoPrograma = `PROGRAMA ACADÉMICO DE ${nombrePrograma.toUpperCase()}`;
-const lineas = doc.splitTextToSize(textoPrograma, 160); // Ajusta 160 para que solo salgan 2 líneas máximo
-
-// Asegúrate de imprimir solo 2 líneas (rellena si solo hay una)
+const lineas = doc.splitTextToSize(textoPrograma, 160);
 if (lineas.length === 1) {
   doc.text(lineas[0], 105, 40, { align: 'center' });
 } else {
@@ -852,22 +841,17 @@ if (lineas.length === 1) {
       reader.readAsDataURL(blob);
     }));
 
-doc.addImage(logo, 'PNG', 56, 50, 90, 60); // ancho: 70, alto: 60
+doc.addImage(logo, 'PNG', 56, 50, 90, 60); 
 
   doc.setFontSize(16);
   doc.text('PLAN SERVICIO SOCIAL UDH', 105, 120, { align: 'center' });
 
-  // Línea superior
-    doc.setLineWidth(0.5); // grosor de la línea
-    doc.line(30, 125, 180, 125); // línea recta horizontal
-
-    // Título centrado
+    doc.setLineWidth(0.5); 
+    doc.line(30, 125, 180, 125); 
     doc.setFontSize(14);
     doc.setFont('times', 'bolditalic');
     doc.text(`"${nombreLaborSocial}"`, 105, 132, { align: 'center' });
-
-    // Línea inferior
-    doc.line(30, 137, 180, 137); // línea recta horizontal
+    doc.line(30, 137, 180, 137); 
 
     doc.setFontSize(12);
 
@@ -877,9 +861,9 @@ doc.addImage(logo, 'PNG', 56, 50, 90, 60); // ancho: 70, alto: 60
 
     const escribirCampoa = (label, valor, y) => {
       doc.setFont('times', 'bold');
-      doc.text(label, 25, y); // antes era 40
+      doc.text(label, 25, y);
       doc.setFont('times', 'normal');
-      doc.text(valor, 80, y); // antes era 95
+      doc.text(valor, 80, y); 
     };
 
 
@@ -908,8 +892,6 @@ escribirCampoa('Periodo Estimado:', periodoEstimado, yActual);
   doc.text('2025', 105, 278, { align: 'center' });
 
   doc.addPage();
-
-      // Página 2: Solo la introducción centrada
     doc.setFont('times', 'bold');
     doc.setFontSize(14);
     const tituloIntro = 'INTRODUCCIÓN';
@@ -927,21 +909,15 @@ escribirCampoa('Periodo Estimado:', periodoEstimado, yActual);
 let y = 20;
 doc.setFontSize(12);
 doc.setFont('times', 'bold');
-
-// 1. Justificación
 doc.text('1. JUSTIFICACIÓN', 20, y);
 doc.setFont('times', 'normal');
 y += 12; 
 const lineasJustificacion = doc.splitTextToSize(justificacion, 170);
 doc.text(lineasJustificacion, 20, y);
 y += lineasJustificacion.length * 6 + 4;
-
-// 2. Objetivos
 doc.setFont('times', 'bold');
 doc.text('2. OBJETIVOS', 20, y);
-y += 12; // Más separación aquí
-
-// 2.1 Objetivo General
+y += 12; 
 doc.setFont('times', 'bold');
 doc.text('2.1 OBJETIVO GENERAL:', 25, y);
 doc.setFont('times', 'normal');
@@ -949,28 +925,21 @@ y += 6;
 const lineasObjGeneral = doc.splitTextToSize(objetivoGeneral, 170);
 doc.text(lineasObjGeneral, 25, y);
 y += lineasObjGeneral.length * 6 + 4;
-
-// 2.2 Objetivos Específicos
 doc.setFont('times', 'bold');
 doc.text('2.2 OBJETIVOS ESPECÍFICOS:', 25, y);
 doc.setFont('times', 'normal');
 y += 6;
 const lineasObjEspecificos = doc.splitTextToSize(objetivosEspecificos, 170);
-
-// Verifica si el contenido se sale de la página
-
-const margenInferior = 20; // margen inferior de seguridad
+const margenInferior = 20; 
 const altoContenido = lineasObjEspecificos.length * 6;
 
 if (y + altoContenido > altoPagina - margenInferior) {
   doc.addPage();
-  y = 20; // reinicia la posición Y en la nueva página
+  y = 20; 
 }
 
 doc.text(lineasObjEspecificos, 25, y);
 y += altoContenido + 4;
-
-// 3. Marco Institucional
 doc.setFont('times', 'bold');
 doc.text('3. MARCO INSTITUCIONAL', 20, y);
 y += 12;
@@ -989,8 +958,6 @@ for (const [titulo, texto] of marcoSubsecciones) {
   doc.setFont('times', 'normal');
   y += 6;
   const lineasSub = doc.splitTextToSize(texto, 170);
-
-  // 👇 Aplica salto de página para cualquier subsección si es necesario
   const altoContenido = lineasSub.length * 6;
   const margenInferior = 20;
   if (y + altoContenido > altoPagina - margenInferior) {
@@ -999,22 +966,17 @@ for (const [titulo, texto] of marcoSubsecciones) {
   }
   doc.text(lineasSub, 25, y);
   y += altoContenido + 4;
-
-  // 👇 Si después de escribir, el cursor está muy abajo, agrega página
   if (y > altoPagina - margenInferior) {
     doc.addPage();
     y = 20;
   }
 }
 
-// 4. Área de Influencia
 doc.setFont('times', 'bold');
 doc.text('4. ÁREA DE INFLUENCIA', 20, y);
 doc.setFont('times', 'normal');
 y += 6;
 const lineasArea = doc.splitTextToSize(areaInfluencia, 170);
-
-// 👇 Aplica salto de página si el contenido es muy largo
 const altoContenidoArea = lineasArea.length * 6;
 if (y + altoContenidoArea > altoPagina - margenInferior) {
   doc.addPage();
@@ -1022,8 +984,6 @@ if (y + altoContenidoArea > altoPagina - margenInferior) {
 }
 doc.text(lineasArea, 20, y);
 y += altoContenidoArea + 4;
-
-// 5. Metodología de Intervención
 doc.setFont('times', 'bold');
 doc.text('5. METODOLOGÍA DE INTERVENCIÓN', 20, y);
 doc.setFont('times', 'normal');
@@ -1031,15 +991,11 @@ y += 6;
 const lineasMetodo = doc.splitTextToSize(metodologiaIntervencion, 170);
 doc.text(lineasMetodo, 20, y);
 y += lineasMetodo.length * 6 + 4;
-
-// 6. Recursos Requeridos
 doc.setFont('times', 'bold');
 doc.text('6. RECURSOS REQUERIDOS', 20, y);
 doc.setFont('times', 'normal');
 y += 6;
 const lineasRecursos = doc.splitTextToSize(recursosRequeridos, 170);
-
-// 👇 Aplica salto de página si el contenido es muy largo
 const altoContenidoRecursos = lineasRecursos.length * 6;
 if (y + altoContenidoRecursos > altoPagina - margenInferior) {
   doc.addPage();
@@ -1053,8 +1009,6 @@ doc.text('7. RESULTADOS ESPERADOS', 20, y);
 doc.setFont('times', 'normal');
 y += 6;
 const lineasResultados = doc.splitTextToSize(resultadosEsperados, 170);
-
-// 👇 Aplica salto de página si el contenido es muy largo
 const altoContenidoResultados = lineasResultados.length * 6;
 if (y + altoContenidoResultados > altoPagina - margenInferior) {
   doc.addPage();
@@ -1069,11 +1023,10 @@ doc.setFont('times', 'bold');
 doc.setFontSize(18);
 doc.text('CRONOGRAMA DE ACTIVIDADES', anchoPagina / 2, 80, { align: 'center' });
 
-// Tabla ocupando todo el ancho
 autoTable(doc, {
   startY: 90,
-  margin: { left: 25, right: 25 }, // Márgenes laterales más amplios
-  tableWidth: 'wrap', // Ajusta la tabla al contenido
+  margin: { left: 25, right: 25 }, 
+  tableWidth: 'wrap', 
   head: [['Actividad', 'Justificación', 'Fecha Estimada', 'Fecha Fin', 'Resultados Esperados']],
   body: actividades.map((a) => [
     a.actividad,
@@ -1086,28 +1039,20 @@ autoTable(doc, {
   headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold', fontSize: 12 },
   alternateRowStyles: { fillColor: [240, 240, 240] },
   columnStyles: {
-    0: { halign: 'left', cellWidth: 60 },  // Actividad
-    1: { halign: 'left', cellWidth: 60 },  // Justificación
-    2: { halign: 'center', cellWidth: 32 },// Fecha Estimada
-    3: { halign: 'center', cellWidth: 32 },// Fecha Fin
-    4: { halign: 'left', cellWidth: 60 },  // Resultados Esperados
+    0: { halign: 'left', cellWidth: 60 },
+    1: { halign: 'left', cellWidth: 60 },  
+    2: { halign: 'center', cellWidth: 32 },
+    3: { halign: 'center', cellWidth: 32 },
+    4: { halign: 'left', cellWidth: 60 },  
   }
 });
 
-
-
 doc.addPage('a4', 'portrait');
-// Página nueva para ANEXOS
-
-
-// Título "ANEXOS" centrado y grande
 doc.setFont('times', 'bold');
-doc.setFontSize(40); // Tamaño grande
-doc.text('ANEXOS', 105, 150, { align: 'center' }); // Centrado vertical y horizontal
+doc.setFontSize(40); 
+doc.text('ANEXOS', 105, 150, { align: 'center' }); 
 
-
-  // Descargar
- const pdfBlob = doc.output('blob');
+const pdfBlob = doc.output('blob');
 const anexos = [
   imagenesAnexos.cartaAceptacion,
   imagenesAnexos.datosContacto,
@@ -1116,8 +1061,6 @@ const anexos = [
 ];
 
 const mergedBlob = await mergePDFs(pdfBlob, anexos);
-
-// Mostrar y guardar
 const url = URL.createObjectURL(mergedBlob);
 const archivoFinal = new File([mergedBlob], 'PLAN-SERVICIO-SOCIAL-UDH.pdf', { type: 'application/pdf' });
 
@@ -1143,7 +1086,6 @@ const solicitarCartaTermino = async () => {
   if (!usuario_id || !token) return;
 
   try {
-    // Obtener trabajo social del alumno
     const { data } = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -1152,8 +1094,6 @@ const solicitarCartaTermino = async () => {
     if (!trabajoId) {
       throw new Error("No se encontró el ID del trabajo social.");
     }
-
-    // Solicitar carta de término
     await axios.patch(`/api/trabajo-social/${trabajoId}/solicitar-carta-termino`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -1189,8 +1129,6 @@ const handleVolverASubir = async (actividad) => {
     });
 
     Swal.fire('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.', 'success');
-
-    // Refresca datos locales
     const actualizadas = actividadesSeguimiento.map((a) =>
       a.id === actividad.id
         ? { ...a, evidencia: null, estado: 'pendiente', archivoTemporalEvidencia: null }
@@ -1270,7 +1208,7 @@ useEffect(() => {
       }
     }
 
-    const delayFactor = width < 768 ? 0.02 : 0.05; // velocidad móvil vs escritorio
+    const delayFactor = width < 768 ? 0.02 : 0.05; 
 
     return partes.map((linea, i) =>
       Array.from(linea).map((letra, index) => (
@@ -1557,7 +1495,7 @@ useEffect(() => {
           className="input-estilo-select"
           value={nuevaFecha}
           onChange={(e) => setNuevaFecha(e.target.value)}
-          min={new Date().toISOString().split('T')[0]} // ⬅️ Esta línea bloquea fechas pasadas
+          min={new Date().toISOString().split('T')[0]} 
         />
       </div>
 <div className="form-group">
@@ -1567,7 +1505,7 @@ useEffect(() => {
   className="input-estilo-select"
   value={nuevaFechaFin}
   onChange={(e) => setNuevaFechaFin(e.target.value)}
-  min={new Date().toISOString().split('T')[0]} // ⬅️ Igualmente aquí
+  min={new Date().toISOString().split('T')[0]} 
 />
 </div>
       <div className="form-group">

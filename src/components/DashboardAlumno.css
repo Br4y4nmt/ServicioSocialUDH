@@ -897,6 +897,21 @@
     line-height: 1.4;
     word-wrap: break-word;
   }
+  .alerta-importantes {
+  padding: 8px 16px;
+  border: 2px solid #f28b82;
+  border-radius: 1rem;
+  color: #b71c1c;
+  background-color: #fff5f5;
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 20px;
+  animation: bounce 2s infinite;
+  width: 100%;            /* ⬅️ hace que ocupe todo el ancho disponible */
+  box-sizing: border-box; /* ⬅️ asegura que el padding no lo desborde */
+  line-height: 1.4;
+  word-wrap: break-word;
+}
   .input-estilo-select {
     width: 100%;
     padding: 10px 14px;
@@ -1657,6 +1672,162 @@
   background-color: #39B49E;
   transform: none;
 }
+/* Hover y focus del dropzone */
+.upload-dropzone:hover {
+  border-color: #A0AEC0;
+  background: #FFFFFF !important; 
+  
+}
+.upload-dropzone:focus-within {
+  outline: none;
+  border-color: #3182CE;
+  background: #F7FAFF;
+}
+
+/* Botón suave dentro del dropzone */
+.btn-upload-soft:hover {
+  background: #F9FAFB;
+}
+/* === CARD SUBIR (alineado visualmente con DESCARGAR) === */
+.col-subir {
+  flex: 1;
+  min-width: 280px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #FFFFFF;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Efecto hover igual que el card de Descargar */
+.col-subir:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+.col-subir:not([aria-disabled="true"]):hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* === CARD DESCARGAR (alineado con el de subir) === */
+.col-descargar {
+  flex: 1;
+  min-width: 280px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #FFFFFF;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.col-descargar:hover {
+  background: #FFFFFF;      /* fondo blanco al pasar el mouse */
+  border-color: #A0AEC0;    /* borde un poco más marcado */
+  transition: all 0.25s ease;
+  transform: translateY(-2px);
+}
+
+/* Header */
+.header-descargar {
+  margin-bottom: 10px;
+}
+.titulo-descargar {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #2D3748;
+  font-size: 16px;
+}
+
+/* Contenido principal */
+.descargar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-box {
+  border: 2px dashed #CBD5E0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: #FAFAFA;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+.download-box:hover {
+  border-color: #A0AEC0;
+  background: #FDFDFD;
+}
+/* Ícono de la nube (subir PDF) con color institucional */
+.upload-dropzone .fa-cloud-upload-alt {
+  color: #011B4B !important;
+}
+
+.download-icon {
+  font-size: 32px;
+  color: #39B49E !important; /* ← color institucional */
+  margin-bottom: 8px;
+}
+
+.download-text {
+  color: #718096;
+  font-size: 14px !important;
+  font-weight: 500;  /* 🔽 antes 600, ahora más equilibrado */
+  line-height: 1.6;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.download-text strong {
+  font-weight: 650;  /* 🔽 suaviza la negrita sin perder énfasis */
+}
+.btn-descargar.loading {
+  pointer-events: none;   /* bloquea clics mientras carga */
+  opacity: 0.85;
+  transform: none;        /* sin “salto” al hover cuando está cargando */
+}
+.upload-dropzone.is-disabled { opacity: .6; cursor: not-allowed; }
+.upload-dropzone.is-disabled * { pointer-events: none; }
+
+/* Botón principal */
+.btn-descargar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  color: #606266;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.btn-descargar:hover {
+  background-color: #EDF2F7;
+  border-color: #CBD5E0;
+  transform: translateY(-1px);
+}
+.btn-descargar:active {
+  transform: scale(0.98);
+}
+
+.btn-descargar i {
+  font-size: 15px;
+  color: #4A5568;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .col-descargar {
+    width: 100%;
+  }
+}
 
 @media screen and (max-width: 768px) {
   html, body, #root, .main-content {
@@ -1951,5 +2122,20 @@
 @media (min-width: 1440px) {
   .contenedor-boton-centro {
     transform: translateX(20px); /* mueve el botón un poco más a la derecha */
+  }
+}
+@media (max-width: 768px) {
+  /* Asegura que los dos cards ocupen el ancho disponible y se centren */
+  .col-descargar,
+  .col-subir {
+    flex: 0 1 560px;           /* ancho cómodo en móvil, permite encoger */
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 16px !important;  /* ← centra horizontalmente */
+  }
+
+  /* Si el contenedor de ambos cards es un flex-row, centramos el contenido */
+  .solicitar-revision-card {
+    padding: 16px; /* un poco menos de padding para móvil */
   }
 }

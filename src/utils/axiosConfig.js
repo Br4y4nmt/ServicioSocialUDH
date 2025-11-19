@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
-//axios.defaults.baseURL = 'http://localhost:5000';
-axios.defaults.baseURL = 'https://serviciosocialback.sistemasudh.com';
+axios.defaults.baseURL = 'http://localhost:5000';
+//axios.defaults.baseURL = 'https://serviciosocialback.sistemasudh.com';
 
 axios.interceptors.response.use(
   response => response,
