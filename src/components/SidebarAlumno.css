@@ -1,10 +1,10 @@
-/* Estilos generales de la sidebar */
+
 .sidebar-alumno {
   width: 270px;
-  background-color: #ffffff; /* Fondo completamente blanco */
-  color: #333; /* Texto en color oscuro para contraste */
+  background-color: #ffffff; 
+  color: #333; 
   min-height: 100vh;
-  border-right: 1px solid #ddd; /* Bordes suaves para separar la barra lateral */
+  border-right: 1px solid #ddd; 
   position: fixed;
   top: 0;
   left: 0;
@@ -14,11 +14,9 @@
   flex-direction: column;
   pointer-events: auto;
   align-items: center;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Añadir sombra suave */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
 }
 
-
-/* Sidebar colapsada */
 .sidebar-alumno.collapsed {
   width: 0;
   padding: 0;
@@ -27,7 +25,7 @@
   opacity: 0;
   pointer-events: none;
 }
-/* Botón de colapso: que siempre quede en el borde derecho visible */
+
 .toggle-btn {
   position: absolute;
   top: 20px;
@@ -48,40 +46,39 @@
 
 .sidebar-header {
   display: flex;
-  flex-direction: column; /* Alinea los elementos en columna */
-  align-items: center; /* Centra los elementos horizontalmente */
+  flex-direction: column; 
+  align-items: center; 
   justify-content: center;
   margin-bottom: -20px;
-  padding: 20px 0; /* Añade un poco de espacio en la parte superior e inferior */
-  text-align: center; /* Alinea el texto al centro */
+  padding: 20px 0; 
+  text-align: center; 
 }
 .sidebar-alumno.collapsed .toggle-btn {
-  right: -15px; /* Aumenta el espacio para que no se corte */
+  right: -15px; 
 }
 .toggle-btn {
-  /* ... lo que ya tienes */
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 .sidebar-alumno .sidebar-header,
 .sidebar-alumno .sidebar-nav {
   transition: opacity 0.3s ease;
 }
-/* Imagen de perfil */
+
 .profile-pic {
-  width: 100px; /* Tamaño de la foto de perfil */
+  width: 100px;
   height: 100px;
-  border-radius: 50%; /* Hace la imagen redonda */
-  object-fit: cover; /* Hace que la imagen se ajuste bien dentro del círculo */
-  margin-bottom: 10px; /* Espacio entre la foto y el nombre */
-  border: 3px solid #2e9e7f; /* Añadimos un borde de color verde */
+  border-radius: 50%;
+  object-fit: cover; 
+  margin-bottom: 10px; 
+  border: 3px solid #2e9e7f; 
 }
-/* Estilos de nombre y rol */
+
 .nombre {
   margin: 0;
-  font-size: 1.3rem; /* Un tamaño de fuente más grande */
+  font-size: 1.3rem; 
   
   color: #2d2d2d;
-  margin-bottom: 5px; /* Espacio entre el nombre y el rol */
+  margin-bottom: 5px; 
 }
 
 .rol {
@@ -98,7 +95,6 @@
   background-color: #EFB036; 
   margin: 10px auto;
 }
-/* Navegación */
 .sidebar-nav ul {
   list-style: none;
   padding-left: 20px;
@@ -111,8 +107,8 @@
 .menu-title {
   background: none;
   border: none;
-  font-size: 1rem; /* Aumentar el tamaño de fuente aquí */
-  font-weight: 500; /* Letra más delgada */
+  font-size: 1rem;
+  font-weight: 500; 
   color: #333;
   display: flex;
   justify-content: space-between;
@@ -130,50 +126,45 @@
 }
 .submenu li {
   padding: 8px 10px;
-  transition: background-color 0.3s ease; /* Efecto suave */
+  transition: background-color 0.3s ease; 
   cursor: pointer;
   border-radius: 8px;
   font-size: 0.9rem !important;
 }
 .submenu li:hover {
-  background-color: #f1f1f1; /* Fondo más oscuro cuando el mouse pasa sobre el item */
-  border-color: #2e9e7f; /* Bordes verdes cuando el mouse pasa sobre el item */
+  background-color: #f1f1f1; 
+  border-color: #2e9e7f; 
 }
 
 .sidebar-nav svg:hover {
-  transform: scale(1.1); /* Le da un pequeño aumento al pasar el ratón por encima */
+  transform: scale(1.1); 
 }
-/* Fondo de los submenú items cuando se selecciona */
+
 .submenu li.selected {
-  background-color: #011B4B; /* Fondo oscuro para los ítems seleccionados */
-  color: white; /* Texto blanco */
+  background-color: #011B4B; 
+  color: white; 
 }
 .sidebar-nav svg {
-  width: 30px; /* Reducir el tamaño de los íconos */
-  height: 30px; /* Reducir el tamaño de los íconos */
+  width: 30px; 
+  height: 30px; 
   transition: transform 0.3s ease;
 }
-/* Efecto hover en los submenú items */
-/* Efecto hover en los submenú items */
 
-/* Flecha de despegue */
 .fas.fa-chevron-down,
 .fas.fa-chevron-up {
   font-size: 12px;
   transition: transform 0.3s ease;
 }
-/* Íconos de cada sección */
-.fas.fa-clipboard-check { color: #2e9e7f; } /* Plan de Tesis */
-.fas.fa-cogs { color: #f39c12; } /* Ejecución */
-.fas.fa-file-pdf { color: #e74c3c; } /* Informe Final de Tesis */
-.fas.fa-user-graduate { color: #9b59b6; } /* Sustentación */
-.fas.fa-tools { color: #34495e; } /* Herramientas */
-/* Efecto hover */
+
+.fas.fa-clipboard-check { color: #2e9e7f; } 
+.fas.fa-cogs { color: #f39c12; } 
+.fas.fa-file-pdf { color: #e74c3c; } 
+.fas.fa-user-graduate { color: #9b59b6; } 
+.fas.fa-tools { color: #34495e; } 
 .menu-title:hover {
   background-color: #f1f1f1;
 }
 
-/* Iconos de los menús */
 .menu-title i {
   font-size: 16px;
 }

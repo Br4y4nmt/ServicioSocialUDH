@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import './DashboardDocente.css';
+import { createPortal } from 'react-dom';
 
 
 function DesignacionDocente({
@@ -32,8 +34,40 @@ function DesignacionDocente({
   const token = user?.token;
   const [loadingSolicitud, setLoadingSolicitud] = useState(false);
   const [nombresMiembros, setNombresMiembros] = useState([]);
-
+  const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
+  const [motivoRechazo, setMotivoRechazo] = useState('');
   const [cartasMiembros, setCartasMiembros] = useState([]);
+  
+  const abrirModalMotivoRechazo = async () => {
+  if (!trabajoId) return;
+
+  try {
+    const resp = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/trabajo-social/motivo-rechazo/${trabajoId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      setMotivoRechazo(data.message || 'No se encontró un motivo registrado.');
+    } else {
+      setMotivoRechazo(data.motivo || 'No se encontró un motivo registrado.');
+    }
+  } catch (error) {
+    console.error(error);
+    setMotivoRechazo(
+      'Ocurrió un error al cargar el motivo de rechazo. Inténtelo más tarde.'
+    );
+  }
+
+  setModalMotivoVisible(true);
+};
+
 const eliminarEleccion = async () => {
   try {
     const response = await fetch(
@@ -53,7 +87,6 @@ const eliminarEleccion = async () => {
 
     Swal.fire('Eliminado', 'La elección fue eliminada correctamente.', 'success');
 
-    // Limpiar estados del formulario
     setTipoServicio('');
     setDocenteSeleccionado('');
     setNombreDocente('');
@@ -61,8 +94,6 @@ const eliminarEleccion = async () => {
     setLaborSeleccionada('');
     setNombreLaborSocial('');
     localStorage.removeItem('trabajo_id');
-
-    // O recargar página o notificar que se reinició
     window.location.reload();
 
   } catch (error) {
@@ -82,12 +113,11 @@ const obtenerNombresMiembros = async (codigos) => {
       body: JSON.stringify({ correos })
     });
     const data = await response.json();
-    setNombresMiembros(data); // Guarda resultado
-  
+    setNombresMiembros(data); 
 
   } catch (error) {
     console.error('Error al obtener nombres:', error);
-    setNombresMiembros([]); // fallback vacío
+    setNombresMiembros([]); 
   }
 };
 const verCartasMiembros = async (trabajoId) => {
@@ -107,8 +137,6 @@ const verCartasMiembros = async (trabajoId) => {
        obtenerNombresMiembros(codigos);
     } else {
       setCartasMiembros([]);
-
-      // Mostrar la alerta solo si el tipo de servicio es grupal
       if (estadoPlan === 'aceptado' && tipoServicio === 'grupal') {
         Swal.fire('Sin cartas', 'No se encontraron cartas de aceptación del grupo.', 'info');
       }
@@ -316,13 +344,13 @@ const formularioCompleto = () => {
               cancelButtonText: 'Cancelar'
             }).then((result) => {
               if (result.isConfirmed) {
-                setLoadingSolicitud(true); // 👈 activa spinner
+                setLoadingSolicitud(true);
                 Promise.resolve(handleSolicitarAprobacion())
-                  .finally(() => setLoadingSolicitud(false)); // 👈 desactiva spinner al finalizar
+                  .finally(() => setLoadingSolicitud(false));
               }
             });
           }}
-          disabled={loadingSolicitud} // 👈 desactiva botón mientras carga
+          disabled={loadingSolicitud} 
         >
           {loadingSolicitud ? (
             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -371,8 +399,19 @@ const formularioCompleto = () => {
                   Ver
                 </button>
               )}
-      
-              {/* Siempre mostrar el botón de estado */}
+              {estadoPlan === "rechazado" && (
+                  <button
+                    className="btn-motivo-rechazo"
+                    onClick={abrirModalMotivoRechazo}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                              10-4.48 10-10S17.52 2 12 2zm0 15a1.5 1.5 0 110-3
+                              1.5 1.5 0 010 3zm1-5h-2V7h2v5z"/>
+                    </svg>
+                    Motivo de rechazo
+                  </button>
+                )}
               <button className={`respuesta-asesor-btn ${estadoPlan}`}>
                 {estadoPlan.charAt(0).toUpperCase() + estadoPlan.slice(1)}
               </button>
@@ -403,7 +442,7 @@ const formularioCompleto = () => {
                   cancelButtonText: 'Cancelar'
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    eliminarEleccion(); // función que llamamos
+                    eliminarEleccion(); 
                   }
                 });
               }}
@@ -579,8 +618,42 @@ const formularioCompleto = () => {
 ))}
   </div>
   )}
+  {modalMotivoVisible &&
+  createPortal(
+    (
+      <div className="motivo-rechazo-modal-overlay">
+        <div className="motivo-rechazo-modal">
+          <h3 className="motivo-rechazo-title">MOTIVO DEL RECHAZO</h3>
+
+          <textarea
+            className="motivo-rechazo-textarea"
+            readOnly
+            value={
+              motivoRechazo ||
+              'Ocurrió un error al cargar el motivo de rechazo. Inténtelo más tarde.'
+            }
+          />
+
+          <div className="motivo-rechazo-footer">
+            <button
+              className="motivo-rechazo-btn-cerrar"
+              onClick={() => setModalMotivoVisible(false)}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    ),
+    document.body   // 👈 esto lo saca del contexto del sidebar/header
+  )
+}
+
     </>
+    
   );
+  
+
 }
 
 export default DesignacionDocente;

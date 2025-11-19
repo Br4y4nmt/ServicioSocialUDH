@@ -30,7 +30,7 @@ function RevisionDocente() {
   const generarQRBase64 = async (url) => {
     try {
       return await QRCode.toDataURL(url, {
-        width: 120, // Tamaño controlado
+        width: 120,
         margin: 1,
       });
     } catch (err) {
@@ -85,13 +85,8 @@ const generarYSubirPDF = async (trabajo) => {
 
     const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
     const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
-
-    // ✅ Generar URL usando solo el id (ya puede incluir guión bajo si es miembro)
     const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
-
     const qrBase64 = await generarQRBase64(urlVerificacion);
-
-    // Aquí continúa como antes...
     const contenido = `
       <html>
         <head><style>${css}</style></head>
@@ -125,7 +120,7 @@ const generarYSubirPDF = async (trabajo) => {
               ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}
             </p>
 
-              <p class="carta-body">Sin otro particular, me despido recordándole las muestras de mi especial consideración y estima personal.</p>
+              <p class="carta-body">Sin otro particular, me despido expresándole mi consideración y estima personal.</p>
               <div class="carta-footer">
                 <p style="margin-top: 100px;">Atentamente,</p>
                 <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
@@ -156,10 +151,10 @@ const generarYSubirPDF = async (trabajo) => {
       contenedorTemporal.innerHTML = contenido;
       document.body.appendChild(contenedorTemporal);
 
-      await new Promise(resolve => setTimeout(resolve, 800)); // ⏳ Espera que cargue
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const blob = await html2pdf().set(opt).from(contenedorTemporal).outputPdf('blob');
-      document.body.removeChild(contenedorTemporal); // 🧹 Limpieza
+      document.body.removeChild(contenedorTemporal);
 
       const formData = new FormData();
       formData.append('archivo', blob, `carta_aceptacion_${trabajo.id}.pdf`);
@@ -197,8 +192,6 @@ useEffect(() => {
     console.error('Faltan el ID del usuario o el token.');
     return;
   }
-
-  // Verificar si es la primera vez del docente
   axios.get(`/api/usuarios/${usuarioId}/primera-vez`, {
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -238,7 +231,7 @@ useEffect(() => {
           timerProgressBar: true,
         });
 
-        sessionStorage.setItem('bienvenidaDocenteMostrada', 'true'); // ⬅️ Marca que ya se mostró
+        sessionStorage.setItem('bienvenidaDocenteMostrada', 'true'); 
       }
 
           axios.get(`/api/trabajo-social/docente/${docenteId}`, {
@@ -282,10 +275,7 @@ const generarPDFBlob = async (trabajo) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const firmaBase64 = await convertirImagenABase64(`${process.env.REACT_APP_API_URL}/uploads/firmas/${firmaDocente}`);
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
-
-  // ✅ Generar URL usando solo el ID (con o sin _)
   const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`;
-
   const qrBase64 = await generarQRBase64(urlVerificacion);
 
   const contenido = `
@@ -325,7 +315,7 @@ const generarPDFBlob = async (trabajo) => {
               ${trabajo.Estudiante?.nombre_estudiante || 'N/A'}
             </p>
             <p class="carta-body">
-              Sin otro particular, me despido recordándole las muestras de mi especial consideración y estima personal.
+              Sin otro particular, me despido expresándole mi consideración y estima personal.
             </p>
 
             <div class="carta-footer">
@@ -373,7 +363,6 @@ const handleSave = async () => {
   if (!selectedTrabajo) return;
 
   try {
-    // 1. Actualizar el estado del trabajo en la BD
     await axios.put(
       `/api/trabajo-social/${selectedTrabajo.id}`,
       {
@@ -384,19 +373,13 @@ const handleSave = async () => {
       }
     );
 
-    // 2. Si el estado es 'aceptado', generar cartas PDF
     if (nuevoEstado === 'aceptado') {
       if (selectedTrabajo.tipo_servicio_social === 'grupal') {
-        // 2.1 PDF del estudiante principal
-        await generarYSubirPDF(selectedTrabajo); // se guarda en tabla principal
-
- 
+        await generarYSubirPDF(selectedTrabajo); 
         const { data: integrantes } = await axios.get(
           `/api/integrantes/${selectedTrabajo.id}/enriquecido`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-
-        // 2.3 Generar y subir PDF para cada integrante
         for (const integrante of integrantes) {
           const trabajoFake = {
             ...selectedTrabajo,
@@ -426,13 +409,9 @@ const handleSave = async () => {
           }
         });
         }
-
       } else {
-        // ✅ Servicio individual
         await generarYSubirPDF(selectedTrabajo);
       }
-
-      // 3. Mostrar confirmación
       Swal.fire({
         icon: 'success',
         title: '¡Trabajo aceptado!',
@@ -442,7 +421,6 @@ const handleSave = async () => {
       });
     }
 
-    // 4. Actualizar estado en la UI
     setTrabajosSociales(prev =>
       prev.map(trabajo =>
         trabajo.id === selectedTrabajo.id
@@ -451,7 +429,7 @@ const handleSave = async () => {
       )
     );
 
-    setModalVisible(false); // cerrar modal
+    setModalVisible(false);
 
   } catch (error) {
     console.error('Error al guardar cambios:', error);
@@ -470,22 +448,15 @@ const handleSave = async () => {
   };
 const handleVerGrupo = async (trabajoId) => {
   try {
-    // Paso 1: Obtener correos institucionales
     const { data: integrantes } = await axios.get(`/api/integrantes/${trabajoId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-
-    // Extraer solo los correos institucionales
     const correos = integrantes.map(item => item.correo_institucional);
-
-    // Paso 2: Obtener nombres desde tu API personalizada
     const { data: nombresYCorreos } = await axios.post(
       '/api/estudiantes/grupo-nombres',
       { correos },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-
-    // Paso 3: Mostrar en el modal
     setIntegrantesGrupo(nombresYCorreos);
     setModalGrupoVisible(true);
 
@@ -501,7 +472,7 @@ const cerrarModalGrupo = () => {
   setIntegrantesGrupo([]);
 };
 const handleCambiarEstado = async (trabajo, nuevoEstado) => {
-  if (trabajoEnProcesoId !== null) return; // Previene doble clic
+  if (trabajoEnProcesoId !== null) return; 
   setTrabajoEnProcesoId(trabajo.id);
 
   if (nuevoEstado === 'aceptado') {
@@ -523,14 +494,12 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   }
 
   try {
-    // 1. Actualizar estado en la base de datos
     await axios.put(
       `/api/trabajo-social/${trabajo.id}`,
       { estado_plan_labor_social: nuevoEstado },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    // 2. Si se aceptó, generar carta(s)
     if (nuevoEstado === 'aceptado') {
       if (trabajo.tipo_servicio_social === 'grupal') {
         let integrantes = [];
@@ -562,8 +531,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
           });
           return;
         }
-
-        // PDF del estudiante principal
         await generarYSubirPDF(trabajo);
 
         for (const integrante of integrantes) {
@@ -597,19 +564,14 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
         }
 
       } else {
-        // Individual
         await generarYSubirPDF(trabajo);
       }
     }
-
-    // 3. Actualizar UI
     setTrabajosSociales(prev =>
       prev.map(t =>
         t.id === trabajo.id ? { ...t, estado_plan_labor_social: nuevoEstado } : t
       )
     );
-
-    // 4. Confirmación
     Swal.fire({
       icon: 'success',
       title: `Trabajo ${nuevoEstado === 'aceptado' ? 'aceptado' : 'rechazado'}`,
@@ -620,10 +582,14 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
 
   } catch (error) {
     console.error(`Error al cambiar estado a ${nuevoEstado}:`, error);
+
+    // 👇 Tomamos el mensaje que manda el backend (si existe)
+    const backendMessage = error.response?.data?.message;
+
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'No se pudo actualizar el estado del trabajo.',
+      text: backendMessage || 'No se pudo actualizar el estado del trabajo.',
       confirmButtonColor: '#d33',
       confirmButtonText: 'Aceptar'
     });
@@ -849,53 +815,90 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
           Cancelar
         </button>
         <button
-          className="btn-enviar"
-          onClick={async () => {
-            if (!observacionDeclinar.trim()) {
-              Swal.fire({
-                icon: 'warning',
-                title: 'Observación requerida',
-                text: 'Por favor, escriba una observación antes de enviar.',
-                confirmButtonText: 'Entendido'
-              });
-              return;
-            }
+  className="btn-enviar"
+  onClick={async () => {
+    if (!observacionDeclinar.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Observación requerida',
+        text: 'Por favor, escriba una observación antes de enviar.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
 
-            try {
-              await axios.post(`/api/trabajo-social/declinar`, {
-                trabajo_id: selectedTrabajo.id,
-                observacion: observacionDeclinar
-              }, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
+    if (!selectedTrabajo) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se ha seleccionado ningún trabajo.',
+      });
+      return;
+    }
 
-              setTrabajosSociales(prev =>
-                prev.map(t =>
-                  t.id === selectedTrabajo.id
-                    ? { ...t, estado_plan_labor_social: 'declinado' }
-                    : t
-                )
-              );
+    // ✅ 1. Calculamos el nuevo estado dinámicamente
+    const nuevoEstadoFinal =
+      selectedTrabajo.estado_plan_labor_social === 'aceptado'
+        ? 'rechazado'
+        : 'aceptado';
 
-              Swal.fire({
-                icon: 'success',
-                title: 'Trabajo declinado',
-                text: 'El motivo ha sido registrado correctamente.',
-              });
-              setModalDeclinarVisible(false);
-              setObservacionDeclinar('');
-            } catch (err) {
-              console.error(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar la observación.',
-              });
-            }
-          }}
-        >
-          Enviar
-        </button>
+    try {
+      // ✅ 2. Enviamos ese nuevo estado al backend
+      await axios.post(
+        `/api/trabajo-social/declinar`,
+        {
+          trabajo_id: selectedTrabajo.id,
+          observacion: observacionDeclinar,
+          nuevo_estado: nuevoEstadoFinal
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      // ✅ 3. Actualizamos la lista en frontend con ese mismo estado
+      setTrabajosSociales(prev =>
+        prev.map(t =>
+          t.id === selectedTrabajo.id
+            ? {
+                ...t,
+                estado_plan_labor_social: nuevoEstadoFinal
+              }
+            : t
+        )
+      );
+
+      // ✅ 4. Swal dinámico según el nuevo estado
+      Swal.fire({
+        icon: 'success',
+        title:
+          nuevoEstadoFinal === 'rechazado'
+            ? 'Trabajo rechazado'
+            : 'Trabajo aceptado',
+        text: 'El motivo ha sido registrado correctamente.'
+      });
+
+      setModalDeclinarVisible(false);
+      setObservacionDeclinar('');
+    } catch (err) {
+  console.error(err);
+
+  // 👇 Intentamos tomar el mensaje que viene del backend
+  const backendMessage = err.response?.data?.message;
+
+  Swal.fire({
+    icon: 'error',
+    title: 'No se puede declinar',
+    text: backendMessage || 'No se pudo guardar la observación.',
+    confirmButtonText: 'Entendido'
+  });
+}
+
+  }}
+>
+  Enviar
+</button>
+
       </div>
     </div>
   </div>
