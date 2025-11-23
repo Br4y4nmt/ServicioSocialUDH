@@ -272,59 +272,68 @@ return (
       </Grid>
 
       <Grid item xs={12} md={3}>
-        <Paper
-          elevation={3}
-          className="quick-summary-card"
-          sx={{ height: 320 }}
-        >
-          <Typography
-            variant="subtitle1"
-            gutterBottom
-            className="quick-summary-title"
-          >
-            Resumen rápido
-          </Typography>
+  <Paper
+    elevation={3}
+    className="quick-summary-card"
+    sx={{ height: 320 }}
+  >
+    <Typography
+      variant="subtitle1"
+      gutterBottom
+      className="quick-summary-title"
+    >
+      Resumen rápido
+    </Typography>
 
-          <div className="quick-summary-section">
-            <span className="quick-summary-section-label">Por sede</span>
+    {/* 🔥 CONTENEDOR CON SCROLL GENERAL */}
+    <div className="resumen-scroll-container">
 
-            <div className="quick-summary-list scrollable-list">
-              {porSede.map((item) => (
-                <div key={item.sede} className="quick-summary-item">
-                  <div className="quick-summary-item-text">
-                    <span className="quick-summary-item-name">{item.sede}</span>
-                  </div>
-                  <div className="quick-summary-item-value">
-                    {item.total}
-                  </div>
-                  <div className="quick-summary-item-bar" />
-                </div>
-              ))}
+      {/* Por sede */}
+      <div className="quick-summary-section">
+        <span className="quick-summary-section-label">Por sede</span>
+
+        <div className="quick-summary-list">
+          {porSede.map((item) => (
+            <div key={item.sede} className="quick-summary-item">
+              <div className="quick-summary-item-text">
+                <span className="quick-summary-item-name">{item.sede}</span>
+              </div>
+              <div className="quick-summary-item-value">
+                {item.total}
+              </div>
+              <div className="quick-summary-item-bar" />
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Por modalidad */}
-          <div className="quick-summary-section">
-            <span className="quick-summary-section-label">Por modalidad</span>
+      {/* Por modalidad */}
+      <div className="quick-summary-section">
+        <span className="quick-summary-section-label">Por modalidad</span>
 
-            <div className="quick-summary-list scrollable-list modalidad-scroll">
-              {porModalidad.map((item) => (
-                <div key={item.modalidad} className="quick-summary-item">
-                  <div className="quick-summary-item-text">
-                    <span className="quick-summary-item-name">
-                      {item.modalidad}
-                    </span>
-                  </div>
-                  <div className="quick-summary-item-value">
-                    {item.total}
-                  </div>
-                  <div className="quick-summary-item-bar" />
-                </div>
-              ))}
+        <div className="quick-summary-list">
+          {porModalidad.map((item) => (
+            <div key={item.modalidad} className="quick-summary-item">
+              <div className="quick-summary-item-text">
+                <span className="quick-summary-item-name">
+                  {item.modalidad}
+                </span>
+              </div>
+              <div className="quick-summary-item-value">
+                {item.total}
+              </div>
+              <div className="quick-summary-item-bar" />
             </div>
-          </div>
-        </Paper>
-      </Grid>
+          ))}
+        </div>
+      </div>
+
+    </div>
+    {/* 🔥 FIN DEL CONTENEDOR CON SCROLL GENERAL */}
+
+  </Paper>
+</Grid>
+
     </Grid>
 
     {/* ► FILA 3: facultad + programa + rankings (alineados horizontalmente) */}
@@ -492,62 +501,66 @@ return (
       Top programas
     </Typography>
 
-   <div className="quick-summary-section">
-  <span className="quick-summary-section-label">
-    Por número de estudiantes
-  </span>
+    {/* 🔥 Contenedor con scroll general */}
+    <div className="top-programas-scroll-container">
+      {/* Top programas por número de estudiantes */}
+      <div className="quick-summary-section">
+        <span className="quick-summary-section-label">
+          Por número de estudiantes
+        </span>
 
-  {topProgramas.length === 0 ? (
-    <Typography variant="body2" sx={{ mt: 1 }}>
-      No hay datos suficientes.
-    </Typography>
-  ) : (
-    <div className="quick-summary-list scrollable-list top-programas-scroll">
-      {topProgramas.map((item, index) => (
-        <div key={item.programa} className="quick-summary-item">
-          <div className="quick-summary-item-text">
-            <span className="quick-summary-item-name">
-              {index + 1}. {item.programa}
-            </span>
+        {topProgramas.length === 0 ? (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            No hay datos suficientes.
+          </Typography>
+        ) : (
+          <div className="quick-summary-list">
+            {topProgramas.map((item, index) => (
+              <div key={item.programa} className="quick-summary-item">
+                <div className="quick-summary-item-text">
+                  <span className="quick-summary-item-name">
+                    {index + 1}. {item.programa}
+                  </span>
+                </div>
+                <div className="quick-summary-item-value">
+                  {item.total}
+                </div>
+                <div className="quick-summary-item-bar" />
+              </div>
+            ))}
           </div>
-          <div className="quick-summary-item-value">
-            {item.total}
+        )}
+      </div>
+
+      {/* Top líneas de acción */}
+      <div className="quick-summary-section">
+        <span className="quick-summary-section-label">
+          Top líneas de acción
+        </span>
+
+        {topLineasAccion.length === 0 ? (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            No hay datos suficientes.
+          </Typography>
+        ) : (
+          <div className="quick-summary-list">
+            {topLineasAccion.map((item, index) => (
+              <div key={item.linea} className="quick-summary-item">
+                <div className="quick-summary-item-text">
+                  <span className="quick-summary-item-name">
+                    {index + 1}. {item.linea}
+                  </span>
+                </div>
+                <div className="quick-summary-item-value">
+                  {item.total}
+                </div>
+                <div className="quick-summary-item-bar" />
+              </div>
+            ))}
           </div>
-          <div className="quick-summary-item-bar" />
-        </div>
-      ))}
+        )}
+      </div>
     </div>
-  )}
-</div>
-
-{/* Top líneas de acción */}
-<div className="quick-summary-section">
-  <span className="quick-summary-section-label">
-    Top líneas de acción
-  </span>
-
-  {topLineasAccion.length === 0 ? (
-    <Typography variant="body2" sx={{ mt: 1 }}>
-      No hay datos suficientes.
-    </Typography>
-  ) : (
-    <div className="quick-summary-list scrollable-list top-lineas-scroll">
-      {topLineasAccion.map((item, index) => (
-        <div key={item.linea} className="quick-summary-item">
-          <div className="quick-summary-item-text">
-            <span className="quick-summary-item-name">
-              {index + 1}. {item.linea}
-            </span>
-          </div>
-          <div className="quick-summary-item-value">
-            {item.total}
-          </div>
-          <div className="quick-summary-item-bar" />
-        </div>
-      ))}
-    </div>
-  )}
-</div>
   </Paper>
 </Grid>
 

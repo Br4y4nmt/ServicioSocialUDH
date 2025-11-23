@@ -458,12 +458,34 @@
 }
 /* LISTA CON SCROLL VERTICAL */
 .scrollable-list {
+  max-height: 110px;      /* 🔥 vuelve a poner un límite general */
   overflow-y: auto;
   padding-right: 4px;
 }
 /* Modalidad: más altura para permitir ver SEMI-PRESENCIAL */
 .modalidad-scroll {
   max-height: 170px !important;  /* ajusta según la cantidad de elementos */
+}
+/* Contenedor con scroll general dentro de la card "Top programas" */
+.top-programas-scroll-container {
+  flex: 1;                /* ocupa el espacio vertical disponible debajo del título */
+  overflow-y: auto;       /* 🔥 aquí va el scroll */
+  padding-right: 4px;
+}
+
+/* Puedes mantener el estilo de scroll que ya tienes */
+.top-programas-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.top-programas-scroll-container::-webkit-scrollbar-thumb {
+  background: #06b6d4;
+  border-radius: 10px;
+}
+
+.top-programas-scroll-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
 }
 
 /* Scroll estético */
@@ -480,11 +502,25 @@
   background: rgba(0,0,0,0.05);
   border-radius: 10px;
 }
-.top-programas-scroll {
-  max-height: 190px;   /* ajusta según veas en pantalla */
+
+/* Scroll general para la card "Resumen rápido" */
+.resumen-scroll-container {
+  flex: 1;                /* ocupa espacio debajo del título */
+  overflow-y: auto;       /* 🔥 aquí va el único scroll */
+  padding-right: 4px;
 }
 
-/* Altura para la lista de top líneas de acción */
-.top-lineas-scroll {
-  max-height: 120px;   /* un poco más chica para que todo entre */
+/* Scroll estético */
+.resumen-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.resumen-scroll-container::-webkit-scrollbar-thumb {
+  background: #06b6d4;
+  border-radius: 10px;
+}
+
+.resumen-scroll-container::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
 }
