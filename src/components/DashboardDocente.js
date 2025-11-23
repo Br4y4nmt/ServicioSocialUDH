@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import SidebarDocente from './SidebarDocente';
 import './DashboardDocente.css';
 import Swal from 'sweetalert2';
+import { useWelcomeToast } from '../hooks/alerts/useWelcomeToast';
+import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
 import axios from 'axios';
 import QRCode from 'qrcode';
 import { useUser } from '../UserContext';
@@ -24,8 +26,8 @@ function RevisionDocente() {
   const [trabajoEnProcesoId, setTrabajoEnProcesoId] = useState(null);
   const [modalDeclinarVisible, setModalDeclinarVisible] = useState(false);
   const [observacionDeclinar, setObservacionDeclinar] = useState('');
-
   const navigate = useNavigate();
+  useWelcomeToast();
 
   const generarQRBase64 = async (url) => {
     try {
@@ -78,7 +80,7 @@ const generarYSubirPDF = async (trabajo) => {
     const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE DESCONOCIDO';
 
     if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
-      console.error('❌ Token inválido o mal formado:', token);
+      console.error('Token inválido o mal formado:', token);
       alert('Tu sesión ha expirado o hay un problema con la autenticación. Por favor, vuelve a iniciar sesión.');
       return;
     }
@@ -168,10 +170,10 @@ const generarYSubirPDF = async (trabajo) => {
       });
 
     } catch (error) {
-      console.error('❌ Error al generar o subir el PDF:', error);
+      console.error('Error al generar o subir el PDF:', error);
 
       if (error.response) {
-        console.error('📩 Detalles del backend:', error.response.data);
+        console.error('Detalles del backend:', error.response.data);
         alert(`Error al subir el PDF: ${error.response.data.message || 'Error del servidor'}`);
       } else {
         alert(`Error al generar PDF: ${error.message}`);
@@ -212,27 +214,12 @@ useEffect(() => {
         return;
       }
 
-
       axios.get(`/api/docentes/usuario/${usuarioId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
           const docenteId = response.data.id_docente;
           setFirmaDocente(response.data.firma); 
-             
-       if (!sessionStorage.getItem('bienvenidaDocenteMostrada')) {
-        Swal.fire({
-          toast: true,
-          position: 'bottom-end',
-          icon: 'success',
-          title: `Bienvenido ${localStorage.getItem('nombre_usuario')}`,
-          showConfirmButton: false,
-          timer: 4000,
-          timerProgressBar: true,
-        });
-
-        sessionStorage.setItem('bienvenidaDocenteMostrada', 'true'); 
-      }
 
           axios.get(`/api/trabajo-social/docente/${docenteId}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -522,7 +509,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
           }
 
         } catch (err) {
-          console.error('❌ Error al obtener datos enriquecidos:', err);
+          console.error('Error al obtener datos enriquecidos:', err);
           await Swal.fire({
             icon: 'error',
             title: 'Servidor de UDH no disponible',
@@ -582,8 +569,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
 
   } catch (error) {
     console.error(`Error al cambiar estado a ${nuevoEstado}:`, error);
-
-    // 👇 Tomamos el mensaje que manda el backend (si existe)
     const backendMessage = error.response?.data?.message;
 
     Swal.fire({
@@ -594,7 +579,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       confirmButtonText: 'Aceptar'
     });
   } finally {
-    setTrabajoEnProcesoId(null); // siempre limpia
+    setTrabajoEnProcesoId(null); 
   }
 };
 
@@ -612,7 +597,7 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   {window.innerWidth <= 768 && !collapsed && (
   <div
     className="sidebar-overlay"
-    onClick={() => toggleSidebar()} // Llama a tu función para colapsar el sidebar
+    onClick={() => toggleSidebar()} 
   ></div>
 )}
       <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
@@ -645,19 +630,10 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
     <span>{trabajo.tipo_servicio_social}</span>
     {trabajo.tipo_servicio_social === 'grupal' && (
-      <button
-        className="btn-ver-ojo"
-        title="Ver integrantes del grupo"
-        onClick={() => handleVerGrupo(trabajo.id)}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#0b1f46" viewBox="0 0 24 24">
-          <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
-            12c-2.761 0-5-2.239-5-5s2.239-5 
-            5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-            3 3 0 0 0 0-6z"/>
-        </svg>
-        <span style={{ marginLeft: '4px' }}>Ver</span>
-      </button>
+     <VerBoton
+      label="Ver"
+      onClick={() => handleVerGrupo(trabajo.id)}
+    />
     )}
   </div>
 </td>
@@ -724,17 +700,16 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
 
     <td>
   {trabajo.estado_plan_labor_social === 'aceptado' ? (
-    <button
-      className="btn-ver-documento"
-      onClick={() => window.open(`${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`, '_blank')}
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="18" height="18" viewBox="0 0 24 24">
-        <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 
-                5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 
-                3 3 3-1.343 3-3-1.343-3-3-3z"/>
-      </svg>
-      &nbsp;Ver
-    </button>
+    <VerBoton
+  label="Ver"
+  onClick={() =>
+    window.open(
+      `${process.env.REACT_APP_API_URL}/api/trabajo-social/documentos-trabajo/${trabajo.id}`,
+      "_blank"
+    )
+  }
+/>
+
   ) : (
     <span style={{ color: '#999', fontSize: '12px' }}>SIN DOCUMENTO</span>
   )}
@@ -793,7 +768,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
   )}
 
 
-
 {modalDeclinarVisible && (
   <div className="modal-declinar-overlay">
     <div className="modal-declinar-content">
@@ -835,15 +809,12 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       });
       return;
     }
-
-    // ✅ 1. Calculamos el nuevo estado dinámicamente
     const nuevoEstadoFinal =
       selectedTrabajo.estado_plan_labor_social === 'aceptado'
         ? 'rechazado'
         : 'aceptado';
 
     try {
-      // ✅ 2. Enviamos ese nuevo estado al backend
       await axios.post(
         `/api/trabajo-social/declinar`,
         {
@@ -855,8 +826,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-
-      // ✅ 3. Actualizamos la lista en frontend con ese mismo estado
       setTrabajosSociales(prev =>
         prev.map(t =>
           t.id === selectedTrabajo.id
@@ -867,8 +836,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
             : t
         )
       );
-
-      // ✅ 4. Swal dinámico según el nuevo estado
       Swal.fire({
         icon: 'success',
         title:
@@ -882,8 +849,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
       setObservacionDeclinar('');
     } catch (err) {
   console.error(err);
-
-  // 👇 Intentamos tomar el mensaje que viene del backend
   const backendMessage = err.response?.data?.message;
 
   Swal.fire({
@@ -893,7 +858,6 @@ const handleCambiarEstado = async (trabajo, nuevoEstado) => {
     confirmButtonText: 'Entendido'
   });
 }
-
   }}
 >
   Enviar

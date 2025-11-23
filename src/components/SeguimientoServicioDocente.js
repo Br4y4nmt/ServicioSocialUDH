@@ -4,10 +4,21 @@ import SidebarDocente from './SidebarDocente';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './RevisionPlanSocial.css';
+import VerBoton from "../hooks/componentes/VerBoton";
 import html2pdf from 'html2pdf.js';
-import './CartaTerminoPDF.css'; // importa el estilo
+import './CartaTerminoPDF.css'; 
+import { showTopSuccessToast } from '../hooks/alerts/useWelcomeToast';
 import { useUser } from '../UserContext';
 import QRCode from 'qrcode';
+import {
+  confirmarAprobacionActividad,
+  mostrarErrorAprobacionActividad,
+  confirmarAceptarSolicitudTermino,
+  mostrarAlertaObservacionRegistrada,
+  confirmarRechazoSolicitudTermino,
+  mostrarErrorGuardarObservacion,
+} from "../hooks/alerts/alertas";
+
 
 
 function SeguimientoServicioDocente() {
@@ -41,10 +52,7 @@ function SeguimientoServicioDocente() {
     const integrantes = response.data;
     setIntegrantesGrupo(integrantes);
     setModalGrupoVisible(true);
-
-    // Extraer correos y consultar la API externa
     const correos = integrantes.map(i => i.correo_institucional);
-
     const { data: nombres } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
       correos
     });
@@ -56,7 +64,6 @@ function SeguimientoServicioDocente() {
     alert('No se pudieron cargar los integrantes del grupo');
   }
 };
-
 
 const cerrarModalGrupo = () => {
   setModalGrupoVisible(false);
@@ -146,6 +153,10 @@ const toggleSidebar = () => {
 };
 const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
   try {
+     if (nuevoEstado === 'rechazada') {
+      const result = await confirmarRechazoSolicitudTermino();
+      if (!result.isConfirmed) return; 
+    }
     await axios.patch(`/api/trabajo-social/${trabajoId}/respuesta-carta-termino`, {
       solicitud_termino: nuevoEstado
     }, {
@@ -164,12 +175,11 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
 
     if (nuevoEstado === 'aprobada') {
       if (plan.tipo_servicio_social === 'grupal') {
-        // Obtener integrantes del grupo
+
         const { data: integrantes } = await axios.get(`/api/integrantes/${plan.id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Obtener datos enriquecidos del backend
         let datosEnriquecidos;
         try {
           const response = await axios.get(
@@ -180,13 +190,13 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
           );
           datosEnriquecidos = response.data;
         } catch (error) {
-          console.error('❌ Error al conectar con API UDH:', error);
+          console.error('Error al conectar con API UDH:', error);
           await Swal.fire({
             icon: 'error',
             title: 'Servidor UDH inalcanzable',
             text: 'La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.',
           });
-          return; // ❌ No continuar si falla
+          return;
         }
 
         if (!Array.isArray(datosEnriquecidos) || datosEnriquecidos.length === 0) {
@@ -195,13 +205,9 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
             title: 'Servidor UDH no respondió',
             text: 'No se pudieron obtener los datos de los integrantes. Intenta más tarde.',
           });
-          return; // ❌ No continuar si no hay datos
+          return;
         }
-
-        // ✅ Solo se genera la carta del estudiante principal si la API respondió correctamente
         await generarYSubirCartaTermino(plan, firmaDocente);
-
-        // Procesar integrantes uno por uno
         for (const integrante of integrantes) {
           if (integrante.usuario_id === plan.usuario_id) continue;
 
@@ -221,9 +227,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
             plan.LaboresSociale?.nombre_labores || '--------',
             firmaDocente
           );
-
           const blob = await generarPDFBlobTermino(html, `Carta_Termino_${nombreEstudiante}.pdf`);
-
           const formData = new FormData();
           formData.append('archivo', blob, `Carta_Termino_${nombreEstudiante}.pdf`);
           formData.append('trabajo_id', plan.id);
@@ -237,7 +241,6 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
           });
         }
       } else {
-        // Individual
         await generarYSubirCartaTermino(plan, firmaDocente);
       }
     }
@@ -251,10 +254,6 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
     });
   }
 };
-
-
-
-
 
   useEffect(() => {
     const usuarioId = localStorage.getItem('id_usuario');
@@ -279,7 +278,7 @@ const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
 
 const handleVerSeguimiento = (trabajoId) => {
   axios.get(`/api/cronograma/trabajo/${trabajoId}`, {
-    headers: { Authorization: `Bearer ${token}` } // Incluimos el encabezado con el token
+    headers: { Authorization: `Bearer ${token}` } 
   })
     .then(res => {
       setCronogramaSeleccionado(res.data);
@@ -304,32 +303,35 @@ const handleCerrarModalEvidencia = () => {
     setModalVisible(false);
     setCronogramaSeleccionado([]);
   };
-const handleAprobar = (actividadId) => {
-  Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Una vez aprobado, no podrás modificar esta actividad.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, aprobar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-     axios.patch(`/api/cronograma/${actividadId}/estado`, { estado: 'aprobado' }, {
-  headers: { Authorization: `Bearer ${token}` }
-})
-        .then(() => {
-          setCronogramaSeleccionado(prev =>
-            prev.map(act => act.id === actividadId ? { ...act, estado: 'aprobado' } : act)
-          );
-          Swal.fire('¡Aprobado!', 'La actividad fue aprobada correctamente.', 'success');
-        })
-        .catch(err => {
-          console.error('Error al aprobar:', err);
-          Swal.fire('Error', 'No se pudo aprobar la actividad.', 'error');
-        });
-    }
-  });
+
+
+const handleAprobar = async (actividadId) => {
+  const result = await confirmarAprobacionActividad();
+
+  if (!result.isConfirmed) return;
+
+  try {
+    await axios.patch(
+      `/api/cronograma/${actividadId}/estado`,
+      { estado: "aprobado" },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setCronogramaSeleccionado((prev) =>
+      prev.map((act) =>
+        act.id === actividadId ? { ...act, estado: "aprobado" } : act
+      )
+    );
+    showTopSuccessToast(
+      "¡Aprobado!",
+      "La actividad fue aprobada correctamente."
+    );
+  } catch (err) {
+    console.error("Error al aprobar:", err);
+    await mostrarErrorAprobacionActividad();
+  }
 };
+
 
 
 const handleAbrirObservacion = (actividadId) => {
@@ -338,11 +340,11 @@ const handleAbrirObservacion = (actividadId) => {
 };
 
 const handleEnviarObservacion = () => {
- axios.patch(`/api/cronograma/${actividadSeleccionadaId}/observacion`, {
-  observacion
-}, {
-  headers: { Authorization: `Bearer ${token}` }
-})
+  axios.patch(
+    `/api/cronograma/${actividadSeleccionadaId}/observacion`,
+    { observacion },
+    { headers: { Authorization: `Bearer ${token}` } }
+  )
   .then(() => {
     setCronogramaSeleccionado(prev =>
       prev.map(act =>
@@ -351,15 +353,16 @@ const handleEnviarObservacion = () => {
           : act
       )
     );
-    Swal.fire('Observado', 'La observación fue registrada correctamente.', 'success');
+    mostrarAlertaObservacionRegistrada();
     setModalObservacionVisible(false);
     setObservacion('');
   })
   .catch(err => {
     console.error('Error al guardar observación:', err);
-    Swal.fire('Error', 'No se pudo guardar la observación.', 'error');
+    mostrarErrorGuardarObservacion();
   });
 };
+
 const generarPDFBlobTermino = async (html, filename) => {
   const contenedor = document.createElement('div');
   contenedor.innerHTML = html;
@@ -378,12 +381,9 @@ const generarPDFBlobTermino = async (html, filename) => {
   return blob;
 };
 
-
 const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   const css = await fetch('/styles/carta-aceptacion.css').then(res => res.text());
   const nombreDocente = localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE';
-
-   // ✅ GENERAR QR
   const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documento-termino/${plan.id}`;
   const qrBase64 = await generarQRBase64(urlVerificacion);
 
@@ -451,7 +451,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   await new Promise(r => setTimeout(r, 800));
   const blob = await html2pdf().set({
     margin: 10,
-    filename: `carta_termino_${plan.id}.pdf`, // ✅ BIEN, coincidirá con la API
+    filename: `carta_termino_${plan.id}.pdf`, 
     image: { type: 'jpeg', quality: 1.0 },
     html2canvas: { scale: 3 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -511,112 +511,47 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                             <span>{plan.tipo_servicio_social}</span>
                             {plan.tipo_servicio_social === 'grupal' && (
-                              <button
-                                className="btn-ver-ojo"
-                                title="Ver integrantes del grupo"
-                                onClick={() => handleVerGrupo(plan.id)}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#0b1f46" viewBox="0 0 24 24">
-                                  <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
-                                    12c-2.761 0-5-2.239-5-5s2.239-5 
-                                    5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-                                    3 3 0 0 0 0-6z"/>
-                                </svg>
-                                <span style={{ marginLeft: '4px' }}>Ver</span>
-                              </button>
-                            )}
+                                <VerBoton
+                                  onClick={() => handleVerGrupo(plan.id)}
+                                  label="Ver"
+                                />
+                              )}
                           </div>
                         </td>
                         <td>
-                          <button
-                            onClick={() => handleVerSeguimiento(plan.id)}
-                            className="btn-ojo-ver-plan-docente"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0
-                                12c-2.761 0-5-2.239-5-5s2.239-5
-                                5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6
-                                3 3 0 0 0 0-6z" />
-                            </svg>
-                            <span className="texto-ver-docente">&nbsp;Ver</span>
-                          </button>
-                        </td>
+                        <VerBoton onClick={() => handleVerSeguimiento(plan.id)} />
+                      </td>
                         <td>
                   {plan.solicitud_termino === 'solicitada' ? (
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <button
-                  style={{
-                    padding: '4px 10px',
-                    backgroundColor: '#38a169',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                    Swal.fire({
-                      title: '¿Estás seguro?',
-                      text: '¿Deseas aceptar esta solicitud de término? Esta acción no se puede deshacer.',
-                      icon: 'warning',
-                      showCancelButton: true,
-                      confirmButtonText: 'Sí, aceptar',
-                      cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        actualizarSolicitud(plan.id, 'aprobada', plan);
-                      }
-                    });
-                  }}
-                >
-                  Aceptar
-                </button>
-              <button
-                style={{
-                  padding: '4px 10px',
-                  backgroundColor: '#e53e3e',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  cursor: 'pointer'
-                }}
-                onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
-              >
-                Rechazar
-              </button>
-            </div>
+                  <div className="contenedor-botones-termino">
+                    <button
+                      className="btn-aceptar-termino"
+                      onClick={async () => {
+                        const result = await confirmarAceptarSolicitudTermino();
+                        if (result.isConfirmed) {
+                          actualizarSolicitud(plan.id, "aprobada", plan);
+                        }
+                      }}
+                    >
+                      Aceptar
+                    </button>
+                    <button
+                      className="btn-rechazar-termino"
+                      onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
+                    >
+                      Rechazar
+                    </button>
+                  </div>
           ) : (
-            <span style={{ fontSize: '12px', color: '#aaa' }}>
-              {plan.solicitud_termino === 'aprobada' ? (
-          <span style={{
-            padding: '4px 10px',
-            backgroundColor: '#38a169',
-            color: '#fff',
-            borderRadius: '10px',
-            fontSize: '12px',
-            
-          }}>
-            APROBADA
+            <span className="estado-termino">
+            {plan.solicitud_termino === 'aprobada' ? (
+              <span className="estado-label estado-aprobada">APROBADA</span>
+            ) : plan.solicitud_termino === 'rechazada' ? (
+              <span className="estado-label estado-rechazada">RECHAZADA</span>
+            ) : (
+              <span className="estado-label estado-no-solicitada">No solicitada</span>
+            )}
           </span>
-        ) : plan.solicitud_termino === 'rechazada' ? (
-          <span style={{
-            padding: '4px 10px',
-            backgroundColor: '#e53e3e',
-            color: '#fff',
-            borderRadius: '10px',
-            fontSize: '12px',
-            
-          }}>
-            RECHAZADA
-          </span>
-        ) : (
-          <span style={{ fontSize: '12px', color: '#aaa' }}>
-            No solicitada
-          </span>
-        )}
-
-            </span>
           )}
         </td>
                       </tr>
@@ -669,7 +604,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   </div>
 )}
 
-      {modalVisible && (
+{modalVisible && (
   <div className="modal-cronograma-overlay">
     <div className="modal-cronograma-content">
       <h3 className="modal-cronograma-title">Cronograma de Actividades</h3>
@@ -712,23 +647,11 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
                   )}
                 </td>
                   <td>
-                    {item.evidencia ? (
-                    <button
-                    onClick={() => handleVerEvidencia(item.evidencia)}
-                    className="btn-ojo-ver-plan-docente"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
-                        12c-2.761 0-5-2.239-5-5s2.239-5 
-                        5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-                        3 3 0 0 0 0-6z" />
-                    </svg>
-                    <span className="texto-ver-docente">&nbsp;Ver</span>
-                    </button>
-
-                    ) : (
+                  {item.evidencia ? (
+                    <VerBoton onClick={() => handleVerEvidencia(item.evidencia)} />
+                  ) : (
                     <span style={{ fontSize: '12px', color: '#aaa' }}>No enviada</span>
-                    )}
+                  )}
                 </td>
                 </tr>
               ))}

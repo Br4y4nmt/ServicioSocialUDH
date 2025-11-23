@@ -6,8 +6,10 @@ import Header from '../components/Header';
 import ImpersonateLogin from './ImpersonateLogin';
 import CambiosTiempo from './CambiosTiempo';
 import CambioAsesor from "./CambioAsesor"; 
+import Dasborasd  from "./Dashboard";
 import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
+import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
 import { useUser } from '../UserContext';
@@ -127,7 +129,6 @@ const fetchEstudiantes = async () => {
   }
 };
 
-// 2. Llamarla en el useEffect inicial para que cargue al montar
 useEffect(() => {
   if (!token) return;
   fetchEstudiantes();
@@ -170,7 +171,7 @@ const aceptarInforme = async (id) => {
         }
 
       } catch (error) {
-        console.error('❌ Error al conectar con API UDH:', error);
+        console.error('Error al conectar con API UDH:', error);
         await Swal.fire({
           icon: 'error',
           title: 'Error de conexión',
@@ -184,8 +185,6 @@ const aceptarInforme = async (id) => {
         try {
           const nombreEstudiante = estudiante.nombre_completo;
           const codigo = estudiante.codigo_universitario;
-
-          // Saltar al estudiante principal (evitar duplicado)
           const correoPrincipal = informe.trabajo_social?.correo_institucional || informe.correo_institucional;
           if (estudiante.correo_institucional === correoPrincipal) {
             console.log(`⏩ Saltando estudiante principal: ${correoPrincipal}`);
@@ -217,9 +216,9 @@ const aceptarInforme = async (id) => {
             },
           });
 
-          console.log(`✅ Certificado generado para integrante: ${codigo}`);
+          console.log(`Certificado generado para integrante: ${codigo}`);
         } catch (err) {
-          console.error(`❌ Error generando certificado para integrante:`, err);
+          console.error(`Error generando certificado para integrante:`, err);
         }
       }
     }
@@ -248,7 +247,7 @@ const aceptarInforme = async (id) => {
     />
   ).toBlob();
 
-    const formDataPrincipal = new FormData();
+ const formDataPrincipal = new FormData();
     formDataPrincipal.append('archivo', blobPrincipal, `certificado_final_${id}.pdf`);
     formDataPrincipal.append('trabajo_id', id);
 
@@ -275,7 +274,7 @@ const aceptarInforme = async (id) => {
     });
 
   } catch (error) {
-    console.error('❌ Error general al aceptar informe:', error);
+    console.error('Error general al aceptar informe:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -305,7 +304,7 @@ const fetchSupervisores = async () => {
         setSeguimiento(res.data);
         setModalSeguimientoVisible(true);
       } catch (error) {
-        console.error("❌ Error al obtener seguimiento:", error);
+        console.error("Error al obtener seguimiento:", error);
         Swal.fire("Error", "No se pudo obtener el seguimiento del trámite", "error");
       }
     };
@@ -437,7 +436,6 @@ const eliminarLinea = async (id) => {
   };
 
 const crearPrograma = async () => {
-  // Validar campos vacíos
   if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) {
     Swal.fire({
       icon: 'warning',
@@ -447,7 +445,6 @@ const crearPrograma = async () => {
     return;
   }
 
-  // Validar email con dominio permitido
   const emailValido = /@(gmail\.com|udh\.edu\.pe)$/.test(emailPrograma);
   if (!emailValido) {
     Swal.fire({
@@ -459,7 +456,6 @@ const crearPrograma = async () => {
     return;
   }
 
-  // Validar longitud del WhatsApp
   if (whatsappPrograma.length !== 9) {
     Swal.fire({
       icon: 'error',
@@ -488,7 +484,6 @@ const crearPrograma = async () => {
       timer: 2000
     });
 
-    // Limpiar campos
     setNuevoPrograma('');
     setFacultadPrograma('');
     setEmailPrograma('');
@@ -538,7 +533,6 @@ const crearPrograma = async () => {
   };
 
 const eliminarPrograma = async (id) => {
-  // Confirmación previa
   const confirmacion = await Swal.fire({
     title: '¿Estás seguro?',
     text: 'Esta acción eliminará el programa académico de forma permanente.',
@@ -556,7 +550,7 @@ const eliminarPrograma = async (id) => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      await fetchProgramas(); // Recargar lista
+      await fetchProgramas(); 
 
       Swal.fire({
         icon: 'success',
@@ -1582,7 +1576,7 @@ useEffect(() => {
             className="select-profesional"
             
             value={programaSeleccionado}
-            onChange={(e) => setProgramaSeleccionado(e.target.value)}  // Aquí actualizas el estado con el nombre del programa seleccionado
+            onChange={(e) => setProgramaSeleccionado(e.target.value)}  
           >
             <option value="">Todos</option>
             {programas.map((prog) => (
@@ -1629,49 +1623,33 @@ useEffect(() => {
                   <td>{(inf.Facultad?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
                   <td>{new Date(inf.createdAt).toLocaleDateString()}</td>
                   <td>
-                    {inf.informe_final_pdf ? (
-                      <a
-                        href={`${process.env.REACT_APP_API_URL}/uploads/informes_finales/${inf.informe_final_pdf}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-ver-pdf"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          fill="#2e2e2e"
-                          viewBox="0 0 24 24"
-                          className="icono-ojo"
-                        >
-                          <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
-                        </svg>
-                        <span>Ver</span>
-                      </a>
-                    ) : (
-                      <span className="no-generado">NO GENERADO</span>
-                    )}
-                  </td>
+                  {inf.informe_final_pdf ? (
+                    <VerBoton
+                      label="Ver"
+                      onClick={() =>
+                        window.open(
+                          `${process.env.REACT_APP_API_URL}/uploads/informes_finales/${inf.informe_final_pdf}`,
+                          "_blank",
+                          "noopener,noreferrer"
+                        )
+                      }
+                    />
+                  ) : (
+                    <span className="no-generado">NO GENERADO</span>
+                  )}
+                </td>
                   <td>
                     {inf.certificado_final ? (
-                      <a
-                        href={`${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${inf.certificado_final}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-ver-pdf"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          fill="#2e2e2e"
-                          viewBox="0 0 24 24"
-                          className="icono-ojo"
-                        >
-                          <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
-                        </svg>
-                        <span>Ver</span>
-                      </a>
+                      <VerBoton
+                        label="Ver"
+                        onClick={() =>
+                          window.open(
+                            `${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${inf.certificado_final}`,
+                            "_blank",
+                            "noopener,noreferrer"
+                          )
+                        }
+                      />
                     ) : (
                       <span className="no-generado">NO GENERADO</span>
                     )}
@@ -2188,6 +2166,9 @@ useEffect(() => {
 
 {activeSection === 'cambio-asesor' && (
   <CambioAsesor />
+)}
+{activeSection === 'dasborasd' && (
+  <Dasborasd />
 )}
 
 {activeSection === 'impersonate' && (

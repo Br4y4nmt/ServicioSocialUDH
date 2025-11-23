@@ -25,7 +25,7 @@ function LoginPage() {
   const handleCredentialResponse = useCallback(async (response) => {
     if (isProcessing.current) return;
     isProcessing.current = true;
-    setLoadingGoogle(true); // 👈 Activar spinner
+    setLoadingGoogle(true); 
 
     try {
       const res = await axios.post('/api/auth/google', {
@@ -43,7 +43,7 @@ function LoginPage() {
         email,
         programa_academico_id,
       } = res.data;
-      console.log('✅ TOKEN JWT del usuario:', token);
+      console.log('TOKEN JWT del usuario:', token);
 
       const userData = {
         token,
@@ -74,6 +74,7 @@ function LoginPage() {
         localStorage.setItem('showBienvenida', 'true');
         navigate('/dashboard-alumno', { replace: true });
       } else if (rol === 'docente supervisor') {
+        localStorage.setItem('showBienvenida', 'true');
         navigate('/dashboard-docente', { replace: true });
       } else if (rol === 'gestor-udh') {
         navigate('/dashboard-gestor', { replace: true });
@@ -89,7 +90,7 @@ function LoginPage() {
       }
 
     } catch (error) {
-      console.error('❌ Error en login Google:', error.response ? error.response.data : error.message);
+      console.error('Error en login Google:', error.response ? error.response.data : error.message);
       console.log('Mostrando alerta de usuario no registrado');
 
       if (window.google?.accounts?.id) {

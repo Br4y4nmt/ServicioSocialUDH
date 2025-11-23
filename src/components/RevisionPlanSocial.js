@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SidebarDocente from './SidebarDocente';
 import { useUser } from '../UserContext'; 
 import axios from 'axios';
+import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
 import Swal from 'sweetalert2';
 
 function RevisionPlanSocial() {
@@ -120,15 +121,11 @@ const cambiarConformidad = async (idTrabajo, nuevoEstado) => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      // Actualizar el estado local
       setTrabajosSociales(prev =>
         prev.map(trabajo =>
           trabajo.id === idTrabajo ? { ...trabajo, conformidad_plan_social: nuevoEstado } : trabajo
         )
       );
-
-      // Mostrar alerta final
       if (nuevoEstado === 'aceptado') {
         Swal.fire({
           icon: 'success',
@@ -148,7 +145,7 @@ const cambiarConformidad = async (idTrabajo, nuevoEstado) => {
       }
 
     } catch (error) {
-      console.error('❌ Error al cambiar estado de conformidad:', error);
+      console.error('Error al cambiar estado de conformidad:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -176,7 +173,7 @@ const capitalizarPrimeraLetra = (texto) =>
        {window.innerWidth <= 768 && !collapsed && (
   <div
     className="sidebar-overlay"
-    onClick={() => toggleSidebar()} // Llama a tu función para colapsar el sidebar
+    onClick={() => toggleSidebar()}
   ></div>
 )}
      <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
@@ -207,49 +204,33 @@ const capitalizarPrimeraLetra = (texto) =>
                         <td>
                           <span className={`estado-badge ${plan.conformidad_plan_social} estado-texto-normal`}>
                             {capitalizarPrimeraLetra(plan.conformidad_plan_social) || 'No definido'}
-
-
                           </span>
                         </td>
 
                         <td>
-                        {plan.archivo_plan_social ? (
-                          <a
-                        href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${plan.archivo_plan_social}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn-ojo-ver-plan-docente"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 
-                            12c-2.761 0-5-2.239-5-5s2.239-5 
-                            5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-                            3 3 0 0 0 0-6z" />
-                        </svg>
-                        <span className="texto-ver-docente">&nbsp;Ver</span>
-                      </a>
-
-                        ) : (
-                          <span style={{ color: '#999', fontSize: '12px' }}>No subido</span>
-                        )}
-                      </td>
+                      {plan.archivo_plan_social ? (
+                        <VerBoton
+                          label="Ver"
+                          onClick={() =>
+                            window.open(
+                              `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${plan.archivo_plan_social}`,
+                              "_blank"
+                            )
+                          }
+                        />
+                      ) : (
+                        <span className="texto-no-subido">No subido</span>
+                      )}
+                    </td>
                       <td>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                       <span>{plan.tipo_servicio_social}</span>
                       {plan.tipo_servicio_social === 'grupal' && (
-                        <button
-                          className="btn-ver-ojo"
+                        <VerBoton
+                          label="Ver"
                           title="Ver integrantes del grupo"
                           onClick={() => handleVerGrupo(plan.id)}
-                        >
-                          Ver
-                        </button>
+                        />
                       )}
                     </div>
                   </td>

@@ -7,20 +7,15 @@ import { useUser } from "../UserContext";
 function CambioAsesor() {
   const { user } = useUser();
   const token = user?.token;
-
   const [trabajos, setTrabajos] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [errorMensaje, setErrorMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
-
-  // Modal
   const [modalVisible, setModalVisible] = useState(false);
   const [asesores, setAsesores] = useState([]);
   const [asesorSeleccionado, setAsesorSeleccionado] = useState("");
   const [trabajoSeleccionado, setTrabajoSeleccionado] = useState(null);
   const [guardando, setGuardando] = useState(false);
-
-  // --- API: Obtener trabajos sociales aceptados ---
   const fetchTrabajos = async () => {
     try {
       if (!token) return;
@@ -55,7 +50,6 @@ function CambioAsesor() {
     }
   };
 
-  // --- API: Obtener asesores disponibles ---
   const fetchAsesores = async () => {
     try {
       const res = await axios.get(`/api/docentes`, {
@@ -63,12 +57,11 @@ function CambioAsesor() {
       });
       setAsesores(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
-      console.error("❌ Error al obtener asesores:", error);
+      console.error("Error al obtener asesores:", error);
       setAsesores([]);
     }
   };
 
-  // --- Abrir modal ---
   const abrirModal = (trabajo) => {
     setTrabajoSeleccionado(trabajo);
     setAsesorSeleccionado("");
@@ -76,14 +69,12 @@ function CambioAsesor() {
     setModalVisible(true);
   };
 
-  // --- Cerrar modal ---
   const cerrarModal = () => {
     setModalVisible(false);
     setAsesorSeleccionado("");
     setTrabajoSeleccionado(null);
   };
 
-  // --- Guardar cambio de asesor ---
   const guardarCambioAsesor = async () => {
     if (!asesorSeleccionado) {
       Swal.fire({
@@ -97,7 +88,6 @@ function CambioAsesor() {
 
     try {
       setGuardando(true);
-      // Aquí iría tu endpoint PUT real (lo crearás luego)
       const res = await axios.put(
         `/api/trabajo-social/cambio-asesor/${trabajoSeleccionado.id}`,
         { nuevo_docente_id: asesorSeleccionado },
@@ -123,7 +113,7 @@ function CambioAsesor() {
         fetchTrabajos();
       }
     } catch (error) {
-      console.error("❌ Error al actualizar asesor:", error);
+      console.error("Error al actualizar asesor:", error);
       Swal.fire({
         icon: "error",
         title: "Error al actualizar",
@@ -231,8 +221,7 @@ function CambioAsesor() {
           )}
         </div>
       </div>
-
-      {/* MODAL ELEGANTE */}
+      
       {modalVisible && (
         <div className="modal-tiempo-overlay">
           <div className="modal-tiempo-content">

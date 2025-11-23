@@ -1,0 +1,606 @@
+import React, { useEffect, useState } from "react";
+import "./Dashboard.css"; 
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+
+import {
+  Grid,
+  Paper,
+  Typography,
+  Box,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+
+import axios from "axios";
+import { useUser } from "../UserContext";  // 👈 IMPORTANTE
+
+function Dasborasd() {
+  const { user } = useUser();              // 👈 sacamos el user
+  const token = user?.token;               // 👈 sacamos el token
+  const [porSede, setPorSede] = useState([]);
+  const [porModalidad, setPorModalidad] = useState([]);
+  const [porFacultad, setPorFacultad] = useState([]);
+  const [porPrograma, setPorPrograma] = useState([]);
+  const [topProgramas, setTopProgramas] = useState([]);
+  const [topLineasAccion, setTopLineasAccion] = useState([]);
+  const totalEstudiantesProgramas = porPrograma.reduce(
+  (sum, item) => sum + (item.total || 0),
+  0
+);
+
+const dataGridSpanishTheme = createTheme({
+  components: {
+    MuiTablePagination: {
+      defaultProps: {
+        labelRowsPerPage: "Filas por página",
+      },
+    },
+  },
+});
+
+
+  const [resumen, setResumen] = useState({
+    alumnosActivos: 0,
+    proyectosActivos: 32,
+    informesPendientes: 18,
+  });
+
+  const [alumnosPorMes, setAlumnosPorMes] = useState([
+    { mes: "Ene", alumnos: 40 },
+    { mes: "Feb", alumnos: 55 },
+    { mes: "Mar", alumnos: 70 },
+    { mes: "Abr", alumnos: 65 },
+    { mes: "May", alumnos: 90 },
+  ]);
+
+  const [alumnosTabla, setAlumnosTabla] = useState([]);
+
+useEffect(() => {
+  const fetchDistribuciones = async () => {
+    try {
+      if (!token) return;
+
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const [resFac, resProg, resTopProg, resTopLineas] = await Promise.all([
+        axios.get("/api/dashboard/estudiantes-por-facultad", { headers }),
+        axios.get("/api/dashboard/estudiantes-por-programa", { headers }),
+        axios.get("/api/dashboard/top-programas", { headers }),
+        axios.get("/api/dashboard/top-lineas-accion", { headers }),
+      ]);
+
+      setPorFacultad(resFac.data || []);
+      setPorPrograma(resProg.data || []);
+      setTopProgramas(resTopProg.data || []);
+      setTopLineasAccion(resTopLineas.data || []);
+    } catch (error) {
+      console.error("Error obteniendo datos por facultad/programa/top:", error);
+    }
+  };
+
+  fetchDistribuciones();
+}, [token]);
+
+const StudentIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="8" r="3.2" />
+    <path d="M5 19.5c0-3.2 2.6-5.5 7-5.5s7 2.3 7 5.5" />
+  </svg>
+);
+
+const ProjectIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="5" y="4" width="14" height="16" rx="2" ry="2" />
+    <path d="M9 8h6M9 12h6M9 16h3" />
+  </svg>
+);
+
+const ReportIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 4h8l4 4v12H7z" />
+    <path d="M11 11l2 2 4-4M9 17h6" />
+  </svg>
+);
+
+
+  useEffect(() => {
+    const fetchTotalEstudiantes = async () => {
+      try {
+        if (!token) return; // aún no hay token
+
+        const res = await axios.get("/api/dashboard/total-estudiantes", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setResumen((prev) => ({
+          ...prev,
+          alumnosActivos: res.data.total, // { total: 1 }
+        }));
+      } catch (error) {
+        console.error("Error obteniendo total de estudiantes:", error);
+      }
+    };
+
+    fetchTotalEstudiantes();
+  }, [token]); // se ejecuta cuando ya hay token
+
+
+  useEffect(() => {
+  const fetchUltimosEstudiantes = async () => {
+    try {
+      if (!token) return;
+
+      const res = await axios.get("/api/dashboard/ultimos-estudiantes", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setAlumnosTabla(res.data || []);
+    } catch (error) {
+      console.error("Error obteniendo últimos estudiantes:", error);
+    }
+  };
+
+  fetchUltimosEstudiantes();
+}, [token]);
+
+useEffect(() => {
+  const fetchResumenEstudiantes = async () => {
+    try {
+      if (!token) return;
+
+      const res = await axios.get("/api/dashboard/resumen-estudiantes", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setPorSede(res.data.porSede || []);
+      setPorModalidad(res.data.porModalidad || []);
+    } catch (error) {
+      console.error("Error obteniendo resumen por sede/modalidad:", error);
+    }
+  };
+
+  fetchResumenEstudiantes();
+}, [token]);
+
+  const columnas = [
+  { field: "codigo", headerName: "Código", flex: 1, minWidth: 110 },
+  { field: "estudiante", headerName: "Estudiante", flex: 1.5, minWidth: 180 },
+  { field: "facultad", headerName: "Facultad", flex: 1.2, minWidth: 160 },
+  { field: "programa", headerName: "Programa académico", flex: 1.5, minWidth: 200 },
+  { field: "estado", headerName: "Estado", flex: 1, minWidth: 110 },
+];
+const coloresPrograma = [
+  "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
+  "#845EC2", "#D65DB1", "#FF6F91", "#FFC75F",
+];
+
+
+return (
+  <Box sx={{ p: 3 }}>
+    {/* ► KPIs superiores */}
+    <Grid container spacing={2} sx={{ mb: 2 }}>
+      <Grid item xs={12}>
+        <Paper className="kpi-card kpi-blue" elevation={3}>
+          <div className="kpi-card-icon">
+            <StudentIcon />
+          </div>
+          <div className="kpi-card-content">
+            <span className="kpi-value">{resumen.alumnosActivos}</span>
+            <span className="kpi-label">Alumnos en servicio social</span>
+          </div>
+        </Paper>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Paper className="kpi-card kpi-gray" elevation={3}>
+          <div className="kpi-card-icon">
+            <ProjectIcon />
+          </div>
+          <div className="kpi-card-content">
+            <span className="kpi-value">{resumen.proyectosActivos}</span>
+            <span className="kpi-label">Proyectos activos</span>
+          </div>
+        </Paper>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Paper className="kpi-card kpi-blue" elevation={3}>
+          <div className="kpi-card-icon">
+            <ReportIcon />
+          </div>
+          <div className="kpi-card-content">
+            <span className="kpi-value">{resumen.informesPendientes}</span>
+            <span className="kpi-label">Informes finales pendientes</span>
+          </div>
+        </Paper>
+      </Grid>
+    </Grid>
+
+    {/* ► FILA 2: alumnos por mes + resumen rápido */}
+    <Grid container spacing={2} sx={{ mb: 2 }}>
+      {/* Gráfico más ancho (9 columnas) */}
+      <Grid item xs={12} md={9} className="chart-grid-wide">
+        <Paper className="chart-card" elevation={2}>
+          <div className="chart-card-header">
+            <span className="chart-title">Alumnos en servicio social por mes</span>
+          </div>
+
+          <div className="chart-card-body">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={alumnosPorMes}
+                margin={{ top: 20, right: 20, left: 0, bottom: 10 }}
+              >
+                <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
+                <XAxis dataKey="mes" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Legend
+                  verticalAlign="top"
+                  align="center"
+                  height={24}
+                  wrapperStyle={{ fontSize: 11 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="alumnos"
+                  name="Alumnos"
+                  stroke="#00aef1"
+                  strokeWidth={3}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Paper>
+      </Grid>
+
+      {/* Resumen rápido (menos ancho, md=3) */}
+      <Grid item xs={12} md={3}>
+        <Paper
+          elevation={3}
+          className="quick-summary-card"
+          sx={{ height: 320 }}
+        >
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            className="quick-summary-title"
+          >
+            Resumen rápido
+          </Typography>
+
+          {/* Por sede */}
+          <div className="quick-summary-section">
+            <span className="quick-summary-section-label">Por sede</span>
+
+            <div className="quick-summary-list">
+              {porSede.map((item) => (
+                <div key={item.sede} className="quick-summary-item">
+                  <div className="quick-summary-item-text">
+                    <span className="quick-summary-item-name">{item.sede}</span>
+                  </div>
+                  <div className="quick-summary-item-value">
+                    {item.total}
+                  </div>
+                  <div className="quick-summary-item-bar" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Por modalidad */}
+          <div className="quick-summary-section">
+            <span className="quick-summary-section-label">Por modalidad</span>
+
+            <div className="quick-summary-list">
+              {porModalidad.map((item) => (
+                <div key={item.modalidad} className="quick-summary-item">
+                  <div className="quick-summary-item-text">
+                    <span className="quick-summary-item-name">
+                      {item.modalidad}
+                    </span>
+                  </div>
+                  <div className="quick-summary-item-value">
+                    {item.total}
+                  </div>
+                  <div className="quick-summary-item-bar" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Paper>
+      </Grid>
+    </Grid>
+
+    {/* ► FILA 3: facultad + programa + rankings (alineados horizontalmente) */}
+    <Grid container spacing={2} sx={{ mb: 2 }}>
+      {/* Estudiantes por facultad */}
+      <Grid item xs={12} md={4}>
+        <Paper
+          elevation={3}
+          className="faculty-chart-card"
+          sx={{ height: 380 }}
+        >
+          <div className="faculty-chart-header">
+            <Typography
+              variant="subtitle1"
+              className="faculty-chart-title"
+            >
+              Estudiantes por facultad
+            </Typography>
+
+            {porFacultad.length > 0 && (
+              <span className="faculty-chart-subtitle">
+                Total:&nbsp;
+                {porFacultad.reduce((sum, f) => sum + (f.total || 0), 0)}
+              </span>
+            )}
+          </div>
+
+          {porFacultad.length === 0 ? (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              No hay datos suficientes.
+            </Typography>
+          ) : (
+            <div className="faculty-chart-body">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={porFacultad}
+                  margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="rgba(148, 163, 184, 0.35)"
+                  />
+                  <XAxis
+                    dataKey="facultad"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: "#6b7280" }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: "#9ca3af" }}
+                  />
+                  <Tooltip cursor={{ fill: "rgba(148, 163, 184, 0.08)" }} />
+                  <Bar
+                    dataKey="total"
+                    radius={[10, 10, 10, 10]}
+                    maxBarSize={35}
+                    background={{ fill: "rgba(148,163,184,0.15)", radius: 20 }}
+                  >
+                    {porFacultad.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          index === porFacultad.length - 1
+                            ? "#14b8a6"
+                            : "#06b6d4"
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Paper>
+      </Grid>
+
+      {/* Estudiantes por programa académico */}
+      <Grid item xs={12} md={4}>
+  <Paper elevation={3} className="program-chart-card">
+    <Typography
+      variant="subtitle1"
+      className="program-chart-title"
+    >
+      Estudiantes por programa académico
+    </Typography>
+
+    {porPrograma.length === 0 ? (
+      <Typography variant="body2">No hay datos suficientes.</Typography>
+    ) : (
+      <div className="program-chart-body">
+        {/* Donut + número en el centro */}
+        <div className="program-chart-inner">
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Pie
+                data={porPrograma}
+                dataKey="total"
+                nameKey="programa"
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={80}
+                paddingAngle={3}
+                stroke="none"
+              >
+                {porPrograma.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={coloresPrograma[index % coloresPrograma.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+
+          <div className="program-chart-center">
+            <span className="program-chart-center-number">
+              {totalEstudiantesProgramas}
+            </span>
+            <span className="program-chart-center-label">
+              Estudiantes
+            </span>
+          </div>
+        </div>
+
+        {/* Leyenda debajo */}
+        <div className="program-chart-legend">
+          {porPrograma.map((item, index) => (
+            <div
+              key={item.programa}
+              className="program-chart-legend-item"
+            >
+              <span
+                className="program-chart-legend-dot"
+                style={{
+                  backgroundColor:
+                    coloresPrograma[index % coloresPrograma.length],
+                }}
+              />
+              <span className="program-chart-legend-text">
+                {item.programa}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </Paper>
+</Grid>
+
+     {/* Top programas + Top líneas de acción (mismo diseño que Resumen rápido) */}
+<Grid item xs={12} md={4}>
+  <Paper
+    elevation={3}
+    className="quick-summary-card"
+    sx={{ height: 380 }}
+  >
+    <Typography
+      variant="subtitle1"
+      className="quick-summary-title"
+    >
+      Top programas
+    </Typography>
+
+    {/* Top programas por número de estudiantes */}
+    <div className="quick-summary-section">
+      <span className="quick-summary-section-label">
+        Por número de estudiantes
+      </span>
+
+      {topProgramas.length === 0 ? (
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          No hay datos suficientes.
+        </Typography>
+      ) : (
+        <div className="quick-summary-list">
+  {topProgramas.map((item, index) => (
+    <div key={item.programa} className="quick-summary-item">
+      <div className="quick-summary-item-text">
+        <span className="quick-summary-item-name">
+          {index + 1}. {item.programa}
+        </span>
+      </div>
+      <div className="quick-summary-item-value">
+        {item.total}
+      </div>
+      <div className="quick-summary-item-bar" />
+    </div>
+  ))}
+</div>
+      )}
+    </div>
+
+    {/* Top líneas de acción */}
+    <div className="quick-summary-section">
+      <span className="quick-summary-section-label">
+        Top líneas de acción
+      </span>
+
+      {topLineasAccion.length === 0 ? (
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          No hay datos suficientes.
+        </Typography>
+      ) : (
+       <div className="quick-summary-list">
+  {topLineasAccion.map((item, index) => (
+    <div key={item.linea} className="quick-summary-item">
+
+      {/* Nombre arriba */}
+      <div className="quick-summary-item-text">
+        <span className="quick-summary-item-name">
+          {index + 1}. {item.linea}
+        </span>
+      </div>
+
+      {/* Valor abajo */}
+      <div className="quick-summary-item-value">
+        {item.total}
+      </div>
+
+      {/* Barra */}
+      <div className="quick-summary-item-bar" />
+    </div>
+  ))}
+</div>
+
+      )}
+    </div>
+  </Paper>
+</Grid>
+
+    </Grid>
+    <Paper elevation={3} className="table-card">
+  <div className="table-card-header">
+    <Typography
+      variant="h6"
+      className="table-card-title"
+    >
+      Últimos alumnos en servicio social
+    </Typography>
+    <Typography
+      variant="body2"
+      className="table-card-subtitle"
+    >
+      Registros más recientes
+    </Typography>
+  </div>
+
+<div className="table-card-body">
+  <ThemeProvider theme={dataGridSpanishTheme}>
+    <DataGrid
+      autoHeight
+      rows={alumnosTabla}
+      columns={columnas}
+      pageSizeOptions={[5, 10]}
+      disableRowSelectionOnClick
+      density="comfortable"
+      className="custom-data-grid"
+      initialState={{
+        pagination: { paginationModel: { pageSize: 5, page: 0 } },
+      }}
+    />
+  </ThemeProvider>
+</div>
+
+</Paper>
+  </Box>
+);
+
+
+}
+
+export default Dasborasd;

@@ -1,4 +1,3 @@
-/* ===== CONFORMIDAD LABOR SOCIAL ===== */
 .conformidad-container {
   padding: 20px;
 }
@@ -8,6 +7,34 @@
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.contenedor-botones-termino {
+  display: flex;
+  justify-content: center;   
+  align-items: center;      
+  gap: 6px;                
+  width: 100%;              
+}
+
+.btn-aceptar-termino {
+  padding: 4px 10px;
+  background-color: #38a169;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-rechazar-termino {
+  padding: 4px 10px;
+  background-color: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .conformidad-title {
@@ -47,7 +74,7 @@
 }
 .conformidad-table td,
 .conformidad-table th {
-  font-size: 14px; /* o prueba con 12px si deseas aún más pequeño */
+  font-size: 14px; 
 }
 .conformidad-btn {
   padding: 6px 12px;
@@ -80,7 +107,6 @@
   text-align: right;
 }
 
-/* Modal */
 .conformidad-modal {
   position: fixed;
   top: 0;
@@ -170,12 +196,12 @@
 .texto-ver-docente {
   font-size: 13px;
 }
-/* Evita que el texto de "Ver" se convierta en mayúsculas */
+
 .conformidad-table td .btn-ojo-ver-plan-docente,
 .conformidad-table td .texto-ver-docente {
   text-transform: none !important;
 }
-/* Centrar horizontal y verticalmente el contenido de la tabla */
+
 .conformidad-table td,
 .conformidad-table th {
   text-align: center;
@@ -213,9 +239,9 @@
 }
 
 .modal-cronograma-content {
-  max-height: 80vh;          /* evita que ocupe toda la pantalla */
-  overflow-y: auto;          /* agrega scroll vertical interno */
-  overflow-x: hidden;        /* quita scroll horizontal */
+  max-height: 80vh;          
+  overflow-y: auto;         
+  overflow-x: hidden;        
   border-radius: 16px;
   background: #ffffff;
   padding: 32px 36px;
@@ -241,16 +267,16 @@
   position: relative;
 }
 .modal-cronograma-content img {
-  max-width: 100%;  /* Asegura que la imagen no sobresalga */
-  max-height: 80%;  /* Limita la altura de la imagen */
-  object-fit: contain;  /* Ajusta la imagen sin distorsionarla */
+  max-width: 100%;  
+  max-height: 80%;  
+  object-fit: contain;  
   border-radius: 8px;
   margin-bottom: 20px;
 }
 .modal-cronograma-table-wrapper {
   overflow-x: auto;
 }
-/* Scroll personalizado */
+
 .modal-cronograma-content::-webkit-scrollbar {
   width: 8px;
 }
@@ -262,11 +288,11 @@
   background-color: #8a8a8a;
 }
 .modal-cronograma-table td {
-  white-space: normal;       /* permite saltos de línea */
-  word-break: break-word;    /* corta palabras largas */
-  overflow-wrap: break-word; /* soporte adicional */
-  vertical-align: top;       /* alinea arriba las celdas de texto largo */
-  max-width: 250px;          /* controla el ancho máximo de columnas amplias */
+  white-space: normal;     
+  word-break: break-word;  
+  overflow-wrap: break-word;
+  vertical-align: top;       
+  max-width: 250px;         
   line-height: 1.5;
 }
 .modal-cronograma-table tbody tr:hover {
@@ -354,8 +380,6 @@
   transform: translateY(-2px);
 }
 
-/* Asegúrate de que el contenedor esté centrado */
-
 .modal-evidencia-overlay {
   position: fixed;
   inset: 0;
@@ -374,14 +398,14 @@
   padding: 2rem 2.2rem;
   width: 95%;
   max-width: 650px;
-  height: 600px; /* 🔹 altura fija del modal */
+  height: 600px; 
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.08),
     0 10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* distribuye título, imagen y botón */
+  justify-content: space-between;
   animation: fadeInModal 0.35s ease-out;
   font-family: "Inter", "Segoe UI", sans-serif;
   text-align: center;
@@ -405,9 +429,9 @@
   margin: 10px auto 0;
 }
 .modal-evidencia-img {
-  width: 80%;          /* 🔹 más pequeña dentro del modal */
-  height: 320px;       /* 🔹 altura reducida */
-  object-fit: contain; /* mantiene proporciones sin deformar */
+  width: 80%;         
+  height: 320px;     
+  object-fit: contain; 
   border-radius: 12px;
   background: #f8fafc;
   box-shadow:
@@ -500,7 +524,7 @@
 .btn-observar-estado:hover {
   background-color: #dd8c2c;
 }
-/* === MODAL OBSERVACIÓN === */
+
 .modal-observacion-overlay {
   position: fixed;
   top: 0;
@@ -617,7 +641,7 @@
   height: 100vh;
 }
 .btn-accion.declinar {
-  background-color: #0b1f46 ; /* azul oscuro */
+  background-color: #0b1f46 ; 
   color: white;
   border: none;
   padding: 4px 12px;
@@ -703,6 +727,26 @@
 }
 .estado-texto-normal {
   text-transform: none !important;
+}
+.estado-label {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.estado-aprobada {
+  background-color: #38a169;
+  color: #fff;
+}
+
+.estado-rechazada {
+  background-color: #e53e3e;
+  color: #fff;
+}
+
+.estado-no-solicitada {
+  color: #aaa;
 }
 
 @media (min-width: 769px) {

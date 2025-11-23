@@ -29,7 +29,7 @@
   padding: 10px;
   position: absolute;
   z-index: 1;
-  bottom: 125%; /* Coloca el tooltip arriba del ícono */
+  bottom: 125%; 
   left: 50%;
   transform: translateX(-50%);
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -47,7 +47,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap; /* por si hay poco espacio */
+  flex-wrap: wrap; 
 }
 
 .reglamento-datos {
@@ -80,7 +80,6 @@
   display: inline-block;
 }
 
-/* En tablets y móviles, ajusta tamaño y peso */
 @media (max-width: 1024px) {
   .titulo-reglamento {
     font-size: 1.5rem;

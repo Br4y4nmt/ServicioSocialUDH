@@ -1,0 +1,24 @@
+.btn-ojo-ver-plan-docente {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d3748;
+  background-color: rgb(255, 255, 255);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-ojo-ver-plan-docente:hover {
+  background-color: #e5e6e7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.conformidad-table td .btn-ojo-ver-plan-docente,
+.conformidad-table td .texto-ver-docente {
+  text-transform: none !important;
+}

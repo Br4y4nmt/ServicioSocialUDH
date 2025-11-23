@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import './DashboardDocente.css';
+import PdfIcon from "../hooks/componentes/PdfIcon";
+import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
 import { createPortal } from 'react-dom';
 
 
@@ -155,9 +157,6 @@ const verCartasMiembros = async (trabajoId) => {
   }, [solicitudEnviada, trabajoId]);
 
 
-  //const laboresFiltradas = labores.filter(
-  //(labor) => labor.linea_accion_id === parseInt(lineaSeleccionada)
-//);
 const formularioCompleto = () => {
   return (
     tipoServicio &&
@@ -182,31 +181,13 @@ const formularioCompleto = () => {
              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <label className="bold-text">Tipo de Servicio Social</label>
       {tipoServicio === 'grupal' && (
-  <button
-    onClick={() => {
-      if (solicitudEnviada) {
-        obtenerIntegrantesDelGrupo(); 
-      } else {
-        setModalGrupoVisible(true); 
-      }
-    }}
-    className="btn-ver-documento-inline"
-    style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-    title="Ver integrantes del grupo"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M12 5c-7.633 0-11 6.994-11 7s3.367 7 11 7 11-6.994 11-7-3.367-7-11-7zm0 12
-            c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8a3 3 0 1 0 0 6 
-            3 3 0 0 0 0-6z"/>
-    </svg>
-    Ver
-  </button>
+      <VerBotonInline
+          onClick={() => {
+            if (solicitudEnviada) obtenerIntegrantesDelGrupo();
+            else setModalGrupoVisible(true);
+          }}
+          label="Ver"
+        />
 )}
       </div>
       
@@ -371,33 +352,16 @@ const formularioCompleto = () => {
         </div>
         <h4 className="titulo-aceptacion">Carta de aceptación</h4>
       </div>
-
-      
-       
         <div className="respuesta-acciones">
           {estadoPlan === "aceptado" && (
-            <button
-              className="btn-ver-documento-inline"
+            <VerBotonInline
               onClick={() =>
                 window.open(
                   `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
-                  '_blank'
+                  "_blank"
                 )
               }
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                    <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 
-                            5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 
-                            3 3 3-1.343 3-3-1.343-3-3-3z" />
-                  </svg>
-                  Ver
-                </button>
+            />
               )}
               {estadoPlan === "rechazado" && (
                   <button
@@ -501,117 +465,57 @@ const formularioCompleto = () => {
     </div>
 
     <div className="documento-card">
-      <div className="documento-info">
-      <svg
-        viewBox="0 0 512 512"
-        xmlns="http://www.w3.org/2000/svg"
-        className="icono-pdf-svg"
-      >
-        <path style={{ fill: "#E2E5E7" }} d="M128,0c-17.6,0-32,14.4-32,32v448c0,17.6,14.4,32,32,32h320c17.6,0,32-14.4,32-32V128L352,0H128z" />
-        <path style={{ fill: "#B0B7BD" }} d="M384,128h96L352,0v96C352,113.6,366.4,128,384,128z" />
-        <polygon style={{ fill: "#CAD1D8" }} points="480,224 384,128 480,128" />
-        <path style={{ fill: "#F15642" }} d="M416,416c0,8.8-7.2,16-16,16H48c-8.8,0-16-7.2-16-16V256c0-8.8,7.2-16,16-16h352c8.8,0,16,7.2,16,16V416z" />
-        <g>
-          <path style={{ fill: "#FFFFFF" }} d="M101.744,303.152c0-4.224,3.328-8.832,8.688-8.832h29.552c16.64,0,31.616,11.136,31.616,32.48
-              c0,20.224-14.976,31.488-31.616,31.488h-21.36v16.896c0,5.632-3.584,8.816-8.192,8.816c-4.224,0-8.688-3.184-8.688-8.816V303.152z
-              M118.624,310.432v31.872h21.36c8.576,0,15.36-7.568,15.36-15.504c0-8.944-6.784-16.368-15.36-16.368H118.624z" />
-          <path style={{ fill: "#FFFFFF" }} d="M196.656,384c-4.224,0-8.832-2.304-8.832-7.92v-72.672c0-4.592,4.608-7.936,8.832-7.936h29.296
-              c58.464,0,57.184,88.528,1.152,88.528H196.656z M204.72,311.088V368.4h21.232c34.544,0,36.08-57.312,0-57.312H204.72z" />
-          <path style={{ fill: "#FFFFFF" }} d="M303.872,312.112v20.336h32.624c4.608,0,9.216,4.608,9.216,9.072c0,4.224-4.608,7.68-9.216,7.68
-              h-32.624v26.864c0,4.48-3.184,7.92-7.664,7.92c-5.632,0-9.072-3.44-9.072-7.92v-72.672c0-4.592,3.456-7.936,9.072-7.936h44.912
-              c5.632,0,8.96,3.344,8.96,7.936c0,4.096-3.328,8.704-8.96,8.704h-37.248V312.112z" />
-        </g>
-        <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
-      </svg>
-      <span className="titulo-pdf">CARTA DE ACEPTACION (ESTUDIANTE PRINCIPAL)</span>
-      
-    </div>
-    <div className="acciones-doc">
-        <button
-        className="btn-ver-documento-inline"
-        onClick={() =>
-          window.open(
-            `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
-            '_blank'
-          )
-        }
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12
-            c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8
-            c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" />
-        </svg>
-        Ver
-      </button>
-
-        <span className="estado-tramitado">Tramitado</span>
-      </div>
+  <div className="documento-info">
+    <PdfIcon />
+    <span className="titulo-pdf">CARTA DE ACEPTACION</span>
   </div>
 
-    {cartasMiembros.map((carta, index) => (
-  <div key={index} className="documento-card">
-    <div className="documento-info">
-    <svg
-        viewBox="0 0 512 512"
-        xmlns="http://www.w3.org/2000/svg"
-        className="icono-pdf-svg"
-      >
-        <path style={{ fill: "#E2E5E7" }} d="M128,0c-17.6,0-32,14.4-32,32v448c0,17.6,14.4,32,32,32h320c17.6,0,32-14.4,32-32V128L352,0H128z" />
-        <path style={{ fill: "#B0B7BD" }} d="M384,128h96L352,0v96C352,113.6,366.4,128,384,128z" />
-        <polygon style={{ fill: "#CAD1D8" }} points="480,224 384,128 480,128" />
-        <path style={{ fill: "#F15642" }} d="M416,416c0,8.8-7.2,16-16,16H48c-8.8,0-16-7.2-16-16V256c0-8.8,7.2-16,16-16h352c8.8,0,16,7.2,16,16V416z" />
-        <g>
-          <path style={{ fill: "#FFFFFF" }} d="M101.744,303.152c0-4.224,3.328-8.832,8.688-8.832h29.552c16.64,0,31.616,11.136,31.616,32.48
-              c0,20.224-14.976,31.488-31.616,31.488h-21.36v16.896c0,5.632-3.584,8.816-8.192,8.816c-4.224,0-8.688-3.184-8.688-8.816V303.152z
-              M118.624,310.432v31.872h21.36c8.576,0,15.36-7.568,15.36-15.504c0-8.944-6.784-16.368-15.36-16.368H118.624z" />
-          <path style={{ fill: "#FFFFFF" }} d="M196.656,384c-4.224,0-8.832-2.304-8.832-7.92v-72.672c0-4.592,4.608-7.936,8.832-7.936h29.296
-              c58.464,0,57.184,88.528,1.152,88.528H196.656z M204.72,311.088V368.4h21.232c34.544,0,36.08-57.312,0-57.312H204.72z" />
-          <path style={{ fill: "#FFFFFF" }} d="M303.872,312.112v20.336h32.624c4.608,0,9.216,4.608,9.216,9.072c0,4.224-4.608,7.68-9.216,7.68
-              h-32.624v26.864c0,4.48-3.184,7.92-7.664,7.92c-5.632,0-9.072-3.44-9.072-7.92v-72.672c0-4.592,3.456-7.936,9.072-7.936h44.912
-              c5.632,0,8.96,3.344,8.96,7.936c0,4.096-3.328,8.704-8.96,8.704h-37.248V312.112z" />
-        </g>
-        <path style={{ fill: "#CAD1D8" }} d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
-      </svg>
-      <span className="titulo-pdf">
-      CARTA DE ACEPTACION (
-      {
-        (() => {
-          const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
-          const miembro = nombresMiembros.find(n =>
-            n.correo?.trim().toLowerCase() === correo
-          );
-          
-          return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
-            ? miembro.nombre
-            : carta.codigo_universitario;
-        })()
+  <div className="acciones-doc">
+    <VerBotonInline
+      onClick={() =>
+        window.open(
+          `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
+          "_blank"
+        )
       }
-      )
-    </span>
+    />
+    <span className="estado-tramitado">Tramitado</span>
   </div>
-   <div className="acciones-doc">
-      <button
-        className="btn-ver-documento-inline"
+</div>
+
+
+   {cartasMiembros.map((carta, index) => (
+  <div key={index} className="documento-card">
+    
+    <div className="documento-info">
+      <PdfIcon />
+
+      <span className="titulo-pdf">
+        CARTA DE ACEPTACION (
+          {
+            (() => {
+              const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+              const miembro = nombresMiembros.find(n =>
+                n.correo?.trim().toLowerCase() === correo
+              );
+              return miembro?.nombre && miembro.nombre !== "NO ENCONTRADO"
+                ? miembro.nombre
+                : carta.codigo_universitario;
+            })()
+          }
+        )
+      </span>
+    </div>
+
+    <div className="acciones-doc">
+      <VerBotonInline
         onClick={() =>
           window.open(
             `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${carta.nombre_archivo_pdf}`,
-            '_blank'
+            "_blank"
           )
         }
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12
-            c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8
-            c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" />
-        </svg>
-        Ver
-      </button>
+      />
       <span className="estado-tramitado">Tramitado</span>
     </div>
   </div>
@@ -645,15 +549,11 @@ const formularioCompleto = () => {
         </div>
       </div>
     ),
-    document.body   // 👈 esto lo saca del contexto del sidebar/header
+    document.body   
   )
 }
-
     </>
-    
   );
-  
-
 }
 
 export default DesignacionDocente;

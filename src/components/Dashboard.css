@@ -1,0 +1,458 @@
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  border: none;
+  height: 90px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.kpi-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+
+.kpi-card-icon svg {
+  width: 38px;
+  height: 38px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.kpi-card,
+.kpi-card * {
+  font-family: 'Poppins', sans-serif;
+}
+
+.kpi-card-icon svg {
+  font-size: 32px;
+}
+
+.kpi-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.kpi-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: -4px;
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.kpi-blue {
+  background: linear-gradient(to right, #06b6d4, #14b8a6) !important;
+}
+
+.kpi-gray {
+  background: linear-gradient(to right, #4b5563, #6b7280) !important;
+}
+
+.chart-card {
+  padding: 16px 18px 18px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.full-width-chart-row {
+  width: 100% !important;
+}
+
+.full-width-chart-row .full-width-chart-item {
+  flex-basis: 100% !important;
+  max-width: 100% !important;
+}
+
+/* por si acaso MUI mete algún max-width raro en el Paper */
+.full-width-chart-item .chart-card {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+.chart-grid-wide {
+  max-width: 100% !important;
+  flex-grow: 1 !important;
+}
+
+.chart-card-header {
+  margin-bottom: 6px;
+}
+
+.chart-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #06b6d4;
+}
+
+.chart-card-body {
+  flex: 1;
+}
+.quick-summary-card {
+  position: relative;
+  padding: 18px 18px 16px;
+  border-radius: 16px;
+  background: #ffffff;   /* FONDO BLANCO */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* sombra suave */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+}
+
+
+/* glow suave atrás, tipo neomorphism */
+.quick-summary-card::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+    circle at 0 0,
+    rgba(6, 182, 212, 0.28),
+    transparent 60%
+  );
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.quick-summary-title {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+  z-index: 1;
+}
+
+.quick-summary-section {
+  z-index: 1;
+  margin-top: 4px;
+}
+
+.quick-summary-section + .quick-summary-section {
+  margin-top: 10px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.4);
+}
+
+.quick-summary-section-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.quick-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-summary-item {
+  position: relative;
+  padding: 6px 10px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quick-summary-item-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quick-summary-item-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.quick-summary-item-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #06b6d4; /* mismo tono que las cards superiores */
+}
+
+/* barrita de progreso estilo la captura */
+.quick-summary-item-bar {
+  margin-top: 4px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #06b6d4, #14b8a6);
+  opacity: 0.85;
+}
+/* Card general */
+.faculty-chart-card {
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  height: 330px;            /* 🔥 altura fija */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Header */
+.faculty-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faculty-chart-title {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin: 0;
+  font-family: 'Poppins', sans-serif !important;   /* 🔥 Aquí */
+  letter-spacing: 0.04em;
+}
+
+
+.faculty-chart-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Contenedor del gráfico */
+.faculty-chart-body {
+  flex-grow: 1;
+  height: 100%;              /* 🔥 necesario */
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(240, 240, 240, 0.4),
+    rgba(230, 230, 230, 0.25)
+  );
+}
+/* Donut - Estudiantes por programa académico */
+.program-chart-card {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+}
+
+.program-chart-title {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.program-chart-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4px;
+}
+
+/* contenedor del donut + número */
+.program-chart-inner {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+/* número en el centro del donut */
+.program-chart-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.program-chart-center-number {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #06b6d4;
+}
+
+.program-chart-center-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+/* Leyenda debajo del donut */
+.program-chart-legend {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.program-chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.program-chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.program-chart-legend-text {
+  font-size: 0.78rem;
+  color: #4b5563;
+}
+/* Card de tabla - estilo corporativo */
+.table-card {
+  margin-top: 8px;
+  padding: 16px 18px 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  font-family: 'Poppins', sans-serif;
+}
+
+.table-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.table-card-title {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+}
+
+.table-card-subtitle {
+  font-size: 0.78rem !important;
+  color: #6b7280;
+}
+
+/* Contenedor de la tabla */
+.table-card-body {
+  width: 100%;
+}
+
+/* Estilos MUI DataGrid corporativo */
+.custom-data-grid.MuiDataGrid-root {
+  border: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Encabezados */
+.custom-data-grid .MuiDataGrid-columnHeaders {
+  background: linear-gradient(to right, #06b6d4, #14b8a6);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 12px 12px 0 0;
+  border-bottom: none;
+}
+
+/* Texto de encabezados centrado verticalmente */
+.custom-data-grid .MuiDataGrid-columnHeaderTitle {
+  font-weight: 500;
+}
+
+/* Celdas y filas */
+.custom-data-grid .MuiDataGrid-cell {
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.82rem;
+  color: #374151;
+}
+
+/* Filas tipo zebra */
+.custom-data-grid .MuiDataGrid-row:nth-of-type(even) {
+  background-color: #f9fafb;
+}
+
+/* Hover de fila */
+.custom-data-grid .MuiDataGrid-row:hover {
+  background-color: #ecfeff;
+}
+
+/* Footer / paginación */
+/* Alinear horizontalmente el footer del DataGrid */
+.custom-data-grid .MuiDataGrid-footerContainer {
+  display: flex !important;
+  align-items: center !important;  /* 🔥 centra todo verticalmente */
+  justify-content: space-between !important; /* distribuye los elementos */
+  height: 50px !important;  /* altura estable */
+  padding: 0 12px !important;
+}
+
+/* Quitar borde de foco azul grueso en celdas */
+.custom-data-grid .MuiDataGrid-cell:focus,
+.custom-data-grid .MuiDataGrid-columnHeader:focus {
+  outline: none !important;
+}
+.custom-data-grid .MuiTablePagination-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+/* Cambiar "Rows per page" a español visualmente */
+.custom-data-grid .MuiTablePagination-selectLabel {
+  font-size: 0 !important;          /* oculto el texto original */
+}
+
+.custom-data-grid .MuiTablePagination-selectLabel::before {
+  content: "Filas por página:";     /* texto nuevo en español */
+  font-size: 0.78rem;               /* tamaño normal */
+  color: #6b7280;                   /* gris suave, opcional */
+}

@@ -1,25 +1,125 @@
-/* src/components/DashboardAlumno.css */
 .main-content {
     margin-left: 250px;
-    padding: 100px 30px 30px; /* 🔽 reduce de 90px a 70px */
+    padding: 100px 30px 30px; 
     background-color: #f3f4f6 !important;
     min-height: 100vh;
     transition: margin-left 0.3s ease;
   }
+.texto-info-secundario-final {
+  color: #319795;
+  font-style: italic;
+  font-weight: 400;
+  margin-left: 26px;
+  margin-top: 4px;
+  font-size: 14px;
+}
 
+.fecha-fin-permitida {
+  background-color: #F7FAFC;
+  color: #2D3748;
+  padding: 4px 10px;
+  border: 1px solid #CBD5E0;
+  border-radius: 6px;
+  font-size: 12px;
+  display: inline-block;
+  font-weight: 500;
+}
+.item-resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.item-certificado-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-certificado-titulo {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.item-resumen-final {
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+.estado-tramitado-final {
+  background-color: #38A169;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.certificado-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.certificado-titulo {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2D3748; 
+}
+
+.tarjeta-info-final {
+  margin-top: 24px;
+  border: 1px solid #CBD5E0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.fecha-fin-real {
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E0;
+  border-radius: 6px;
+  padding: 4px 12px;
+  display: inline-block;
+  font-weight: 500;
+  color: #1A202C;
+  font-size: 12px;
+}
+
+.fecha-sin-completar {
+  color: #A0AEC0;
+  background-color: #FFFFFF;
+  border: 1px dashed #CBD5E0;
+  border-radius: 6px;
+  padding: 2px 8px;
+  display: inline-block;
+}
+
+.fecha-no-asignada {
+  color: #A0AEC0;
+  font-style: italic;
+}
 
   .main-content {
     position: relative;
-    z-index: 1; /* asegúrate que sea menor que el header */
-    overflow: visible !important; /* 👈 este es clave */
+    z-index: 1; 
+    overflow: visible !important; 
   }
   .main-content.collapsed {
     margin-left: 0;
   }
   .bold-text {
-    font-weight: 540 !important; /* Grosor de la fuente más delgado que bold */
-    font-size: 16px; /* Tamaño de la fuente (por defecto en 16px) */
-    color: var(--font-color, #3a3939); /* Color de la fuente (por defecto en negro) */
+    font-weight: 540 !important; 
+    font-size: 16px; 
+    color: var(--font-color, #3a3939); 
   }
   
   .boton-anterior {
@@ -52,15 +152,14 @@
     font-size: 35px;
     font-weight: 700;
     color: #011b4b;
-    text-align: center; /* Asegura que el texto se alinee en el centro */
+    text-align: center; 
     margin-bottom: 30px;
-    display: flex; /* Hacemos uso de flexbox */
-    justify-content: center; /* Centra el contenido horizontalmente */
-    align-items: center; /* Centra el contenido verticalmente */
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
-    height: 100%; /* Asegura que ocupe todo el alto disponible si es necesario */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+    height: 100%; 
 }
-  
   .card-section {
     padding: 20px;
     background-color: #ffffff;
@@ -89,19 +188,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* 🔧 ESTO ES CLAVE */
+  line-height: 1; 
 }
 .step-icon::before {
-  content: '✓'; /* O usa '\2713' */
+  content: '✓'; 
   font-size: 16px;
   display: block;
-  line-height: 1; /* 🔧 ALINEA el check verticalmente */
+  line-height: 1; 
 }
 .step-header h3 {
 
   margin: 0;
   padding: 0;
-  line-height: 1; /* 🔧 Asegura que no se baje */
+  line-height: 1;
 }
 .info-tooltip {
   position: relative;
@@ -149,7 +248,7 @@
 }
 
 .step-header h3 {
-    font-weight: 640;  /* 🔄 antes: bold */
+    font-weight: 640; 
     font-size: 24px;
     color: #2d2d2d;
     margin: 0;
@@ -159,29 +258,29 @@
     cursor: pointer;
   }
   .checkmark {
-    display: none; /* Se oculta por defecto */
+    display: none; 
     color: green;
     font-size: 20px;
     margin-left: 10px;
   }
   input, select {
-    flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
-    padding-right: 30px; /* Añade espacio para el checkmark */
+    flex-grow: 1; 
+    padding-right: 30px; 
   }
   .input-completo + .checkmark {
-    display: inline; /* Muestra el check cuando el campo está completo */
+    display: inline; 
   }
   .form-group {
     margin-bottom: 15px;
   }
   .form-group .input-container {
     display: flex;
-    align-items: center; /* Centra verticalmente los elementos */
-    justify-content: space-between; /* Espacia los elementos a la izquierda y a la derecha */
+    align-items: center; 
+    justify-content: space-between; 
   }
   label {
-    display: block; /* Hace que el label ocupe toda la línea */
-    margin-bottom: 5px; /* Agrega un pequeño espacio debajo del label */
+    display: block; 
+    margin-bottom: 5px;
   }
   .form-group label {
     font-weight: 500;
@@ -189,7 +288,7 @@
     margin-bottom: 5px;
   }
   .texto-cursiva {
-    font-style: italic; /* Aplica el estilo cursiva */
+    font-style: italic;
   }
   .input-disabled {
     width: 100%;
@@ -221,11 +320,11 @@
 
 .input-editable {
   width: 100%;
-  background-color: #fff; /* Fondo blanco para campos editables */
-  color: #333; /* Texto oscuro */
+  background-color: #fff; 
+  color: #333; 
   border: 1px solid #ccc;
   padding: 8px 10px;
-  border-radius: 4px; /* Opcional: para bordes redondeados */
+  border-radius: 4px; 
 }
   .campo-obligatorio {
     color: red;
@@ -245,7 +344,7 @@
     border-radius: 8px;
     font-size: 16px;
     background-color: #fff;
-    color: #5f5f5f; /* 👈 Esto hace que el texto sea plomo claro */
+    color: #5f5f5f; 
     transition: border-color 0.3s ease;
     appearance: none;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -283,9 +382,6 @@
     transform: translateY(1px);
   }
 
-  
-
-
  .btn-solicitar-aprobaciones {
   background-color: #2EBAA1;
   color: white;
@@ -294,58 +390,46 @@
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin: 20px auto 0 auto; /* Centrado horizontal + margen superior */
-  display: block; /* Necesario para que 'margin: auto' funcione en inline elements */
+  margin: 20px auto 0 auto; 
+  display: block; 
   transition: background-color 0.3s, transform 0.2s;
 }
-  
-  .btn-solicitar-aprobaciones:hover {
-    background-color: #26a78d; /* Color al pasar el mouse */
-    transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
-  }
-  
-  .btn-solicitar-aprobaciones:active {
-    background-color: #209c80; /* Color cuando se hace clic */
-    transform: translateY(1px); /* Efecto de pulsación */
-  }
 
-/* Container for the button to center it */
 .button-container {
   display: flex;
-  justify-content: center;  /* Center the button horizontally */
-  align-items: center;      /* Center the button vertically (if needed) */
-  width: 100%;              /* Full width of the parent container */
-  margin-top: 20px;         /* Optional: add space above the button */
+  justify-content: center;  
+  align-items: center;    
+  width: 100%;              
+  margin-top: 20px;        
 }
 
 .btn-completar-perfil {
-  background-color: #2EBAA1; /* Color de fondo */
-  color: white; /* Texto blanco */
-  padding: 10px 20px; /* Espaciado interno */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  /* Elegant font */
-  font-size: 16px; /* Tamaño de fuente */
-  cursor: pointer; /* Cursor de puntero */
-  transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+  background-color: #2EBAA1; 
+  color: white; 
+  padding: 10px 20px; 
+  border: none; 
+  border-radius: 5px; 
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-completar-perfil:hover {
-  background-color: #26a78d; /* Color al pasar el mouse */
-  transform: translateY(-2px); /* Sombra de elevación para el efecto hover */
+  background-color: #26a78d; 
+  transform: translateY(-2px); 
 }
 
 .btn-completar-perfil:active {
-  background-color: #209c80; /* Color cuando se hace clic */
-  transform: translateY(1px); /* Efecto de pulsación */
+  background-color: #209c80; 
+  transform: translateY(1px); 
 }
 
-  
   .respuesta-acciones {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: auto; /* los lleva al lado derecho */
+    margin-left: auto;
   }
 
   .respuesta-asesor-card {
@@ -355,13 +439,13 @@
     margin-top: 40px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    width: 100%; 
   }
 .respuesta-asesor-cardss {
   background-color: #fff;
   border-radius: 8px;
-  padding: 5px 16px;         /* ↓ Menos espacio vertical y lateral */
-  margin-top: 100px;           /* ↓ Menor separación del elemento anterior */
+  padding: 5px 16px;         
+  margin-top: 100px;           
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #ddd;
   width: 100%;
@@ -370,23 +454,23 @@
   .respuesta-asesor-header {
     display: flex;
     align-items: center;
-    justify-content: flex-start !important; /* Asegura que el texto y el ícono estén alineados a la izquierda */
+    justify-content: flex-start !important; 
     font-weight: bold;
     font-size: 16px;
     color: #2d2d2d;
-    gap: 10px; /* Espacio entre el ícono y el texto */
-    width: 100%; /* Asegura que el encabezado ocupe el 100% del ancho */
+    gap: 10px; 
+    width: 100%; 
   }
   .respuesta-asesor-body h4 {
-    font-size: 14px; /* Tamaño de fuente más pequeño */
-    font-weight: bold; /* Si deseas que se mantenga en negrita */
-    color: #2d2d2d; /* Color del texto */
+    font-size: 14px; 
+    font-weight: bold; 
+    color: #2d2d2d; 
   }
   .respuesta-asesor-title {
     display: flex;
     align-items: center;
     justify-content: flex-start !important;
-    font-weight: 600;  /* 🔄 antes: bold */
+    font-weight: 600; 
     font-size: 18px;
     color: #2d2d2d;
     gap: 10px;
@@ -397,7 +481,7 @@
   margin: 0;
   padding: 0;
   max-width: 100vw;
-  overflow-x: hidden; /* 👈 clave para evitar que el header se expanda fuera */
+  overflow-x: hidden; 
 }
   .respuesta-asesor-body {
     margin-top: 10px;
@@ -411,33 +495,40 @@
 }
 
 .icono-azul {
-  color: #3b82f6; /* Azul similar al de la captura */
+  color: #3b82f6; 
   font-size: 18px;
 }
 
-  
   .respuesta-asesor-body p {
-    color: #3d7f6f; /* Color de texto similar al de la segunda captura */
-    margin-bottom: 0px;     /* 🔽 Menor separación entre líneas */
-    line-height: 1.4;        /* 🔽 Altura de línea más compacta */
+    color: #3d7f6f; 
+    margin-bottom: 0px;    
+    line-height: 1.4;        
   }
   .texto-revision-supervisor p {
   margin-bottom: 4px;
   line-height: 1.4;
-  font-size: 14.2px; /* opcional: si deseas ajustarlo un poco */
+  font-size: 14.2px; 
 }
 
   .respuesta-asesor-btn {
-    background-color: #38a169 ; /* Color del botón */
+    background-color: #38a169 ;
     color: white;
     padding: 6px 8px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    margin-left: auto; /* Mueve el botón hacia la derecha */
-    display: block; /* Asegura que el botón ocupe el espacio completo disponible */
+    margin-left: auto; 
+    display: block; 
   }
+  .estado-solicitada {
+  background-color: #A0AEC0;
+}
+
+/* Estado: aprobada (verde) */
+.estado-aprobada {
+  background-color: #38A169;
+}
   .botones-acciones-docente {
     display: flex;
     justify-content: flex-start;
@@ -485,8 +576,8 @@
   display: none !important;
 }
 .aviso-importante {
-  border: 1.5px solid #E53E3E;        /* rojo suave */
-  background-color: #FFF5F5;          /* fondo rosado muy claro */
+  border: 1.5px solid #E53E3E;        
+  background-color: #FFF5F5;          
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 13.5px;
@@ -539,15 +630,14 @@
   }
   
   .respuesta-asesor-btn:hover {
-    background-color: #26a78d; /* Efecto hover */
+    background-color: #26a78d; 
   }
   
   .respuesta-asesor-btn:active {
-    background-color: #209c80; /* Color al hacer clic */
-    transform: translateY(1px); /* Efecto de clic */
+    background-color: #209c80; 
+    transform: translateY(1px);
   }
-  
-  /* Agregar al archivo DashboardAlumno.css */
+
 .boton-siguiente {
     margin-left: auto;
     margin-right: 20px;
@@ -595,63 +685,58 @@
     background-color: #D32F2F;
     color: white;
   }
-  /* Contenedor principal de la sección */
+
   .conformidad-plan {
-    display: block; /* Cambiar de flex a block */
-    margin: 0 0 40px 0; /* Eliminar cualquier margen automático y asegurarse de que esté alineado a la izquierda */
+    display: block; 
+    margin: 0 0 40px 0; 
     padding: 20px;
     background-color: #f6f6f6;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Contenedor para la información del plan */
+
  .plan-info {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
     width: 100%;
-    max-width: 1200px;       /* Limita el ancho en pantallas grandes */
-    margin: 0 auto;          /* Centra el contenedor horizontalmente */
-    padding: 0 20px;         /* Espacio horizontal en móviles o pantallas más pequeñas */
-    box-sizing: border-box;  /* Asegura que el padding no rompa el ancho */
+    max-width: 1200px;      
+    margin: 0 auto;         
+    padding: 0 20px;         
+    box-sizing: border-box;  
 }
-  
-  /* Icono de la persona */
+
   .plan-icon {
-    width: 350px;  /* Ajustamos el tamaño del contenedor */
-    height: 350px; /* Ajustamos el tamaño del contenedor */
+    width: 350px;  
+    height: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
   .plan-icon img {
-    width: 330px;           /* antes 100% */
-    height: 330px;          /* antes 100% */
+    width: 330px;           
+    height: 330px;          
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 70px; /* Ajusta el valor de margin-top para mover la imagen hacia abajo */
+    margin-top: 70px; 
 }
 .texto-instrucciones {
     font-size: 14px;
-    color: #757575;  /* Gris claro */
+    color: #757575;
     margin-top: 10px;
-    text-align: left; /* Alinea el texto a la izquierda */
+    text-align: left; 
     font-family: 'Arial', sans-serif;
-    margin-left: 0px; /* Elimina cualquier margen adicional desde la izquierda */
-    padding-left: 10px; /* Añade algo de espacio desde el borde izquierdo */
+    margin-left: 0px; 
+    padding-left: 10px; 
   }
-  
-  
-  /* Contenedor de detalles del plan */
+
   .plan-details {
     flex: 3;
     margin-left: -40px;
   }
-  
-  /* Títulos y subtítulos */
+
   h2 {
     font-size: 24px;
     font-weight: 600;
@@ -706,36 +791,35 @@
     width: 100%;
   }
   .plan-icon i {
-    font-size: 40px; /* Reducir el tamaño del ícono */
-    color: #011B4B; /* Color verde del ícono */
-    margin-bottom: 5px; /* Reducir el espacio debajo del ícono */
+    font-size: 40px; 
+    color: #011B4B; 
+    margin-bottom: 5px; 
   }
-  
-  /* Caja de información */
+
   .plan-info-box {
-    background-color: #a0d6c9; /* Fondo azul claro */
-    padding: 5px 10px; /* Reducir el padding en todas las direcciones */
-    margin-bottom: 10px; /* Reducir el margen inferior */
+    background-color: #a0d6c9; 
+    padding: 5px 10px; 
+    margin-bottom: 10px; 
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra el contenido dentro del card */
-    justify-content: flex-start; /* Cambiar de 'center' a 'flex-start' para alinear hacia arriba */
-    width: 400px !important; /* Establecer un ancho fijo para el card */
-    height: 160px; /* Ajuste automático en altura, ahora más pequeño */
+    align-items: center; 
+    justify-content: flex-start; 
+    width: 400px !important; 
+    height: 160px; 
     margin-top: 40px;
 }
 .plan-info-box .plan-icon {
-    margin-bottom: -20px !important; /* Reduce el espacio entre el icono y el texto */
+    margin-bottom: -20px !important; 
 }
   .plan-info-box h4 {
-    font-size: 17px; /* Reducir el tamaño de la fuente del título */
+    font-size: 17px; 
     font-weight: bold;
     color: #1d3557;
     font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-    margin-top: -15px; /* Menos margen arriba para moverlo hacia arriba */
-    margin-bottom: 5px; /* Espaciado entre el título y el contenido */
+    margin-top: -15px; 
+    margin-bottom: 5px; 
     
 }
 @keyframes slideFadeDown {
@@ -750,28 +834,26 @@
 }
 .select-filled {
   
-  background-color: #f3f4f6 !important; /* Fondo celeste claro */
+  background-color: #f3f4f6 !important; 
   font-weight: 500;
-  border: 1px solid #CBD5E0; /* borde más definido opcional */
+  border: 1px solid #CBD5E0; 
   transition: background-color 0.3s ease;
 }
-
 
 .plan-icon img {
   animation: slideFadeDown 1s ease-out;
 }
 .plan-info-box p {
-  font-size: 14px; /* un poco más legible que 12px */
-  color: #4a4e55; /* tono elegante verde oscuro */
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /* fuente moderna y limpia */
+  font-size: 14px; 
+  color: #4a4e55; 
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; 
   margin-top: 2px;
   font-weight: 500;
   text-align: center;
-  line-height: 1.4; /* mejora la legibilidad */
+  line-height: 1.4; 
   text-transform: uppercase;
 }
 
-  /* Botón de abrir proyecto */
   .abrir-proyecto-btn {
     padding: 10px 20px;
     background-color: #006f8e;
@@ -794,7 +876,7 @@
     background-color: #f9fbfd;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    max-width: 1000px; /* más ancho */
+    max-width: 1000px; 
   }
   
   .solicitar-revision-header {
@@ -822,9 +904,9 @@
     font-weight: 500;
   }
   .text-muted {
-    color: #d9534f;  /* Rojo similar al error */
-    font-size: 0.875rem;  /* Un tamaño más pequeño */
-    margin-top: 5px;  /* Un poco de espacio encima */
+    color: #d9534f; 
+    font-size: 0.875rem;  
+    margin-top: 5px; 
   }
 
   .btn-revision {
@@ -844,7 +926,7 @@
   .btn-revision i {
     margin-left: 6px;
   }
-  /* CENTRAR EL BOTÓN */
+
 .solicitar-revision-card .btn-revision {
     margin-left: auto;
     margin-right: auto;
@@ -912,23 +994,19 @@
   display: inline-block;
   vertical-align: middle;
 }
-/* 🩵 --- Permitir salto de línea SOLO en Actividad y Resultados Esperados --- */
 
-/* Celdas de Actividad */
 .tabla-cronograma td.columna-actividad {
-  white-space: normal !important;   /* permite salto */
-  word-break: break-word !important; /* corta palabras largas */
+  white-space: normal !important;  
+  word-break: break-word !important; 
   overflow-wrap: break-word !important;
-  max-width: 300px;                 /* límite razonable */
-  text-align: left;                 /* alinea el texto a la izquierda */
+  max-width: 300px;                 
+  text-align: left;              
 }
 
-/* Encabezado */
 .tabla-cronograma th:nth-child(2) {
   white-space: nowrap !important;
 }
 
-/* Celdas de Resultados Esperados */
 .tabla-cronograma td.columna-resultados {
   white-space: normal !important;
   word-break: break-word !important;
@@ -937,12 +1015,9 @@
   text-align: left;
 }
 
-/* Encabezado */
 .tabla-cronograma th:nth-child(6) {
   white-space: nowrap !important;
 }
-
-/* 🩵 --- FIX FINAL: Encabezados siempre en una fila horizontal --- */
 
 .tabla-cronograma-wrapper {
   width: 100%;
@@ -954,17 +1029,17 @@
 }
 
 .tabla-cronograma {
-  width: max-content !important; /* 👈 la tabla se expande al contenido */
+  width: max-content !important; 
   min-width: 950px;
   border-collapse: collapse;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: white;
-  table-layout: auto !important; /* 👈 deja que cada columna se ajuste al contenido */
+  table-layout: auto !important;
 }
 
 .tabla-cronograma th {
-  white-space: nowrap !important;  /* 👈 evita saltos */
+  white-space: nowrap !important;  
   text-align: center;
   padding: 12px 20px;
   background-color: #f7f7f7;
@@ -984,7 +1059,6 @@
   font-size: 14px;
 }
 
-/* 🔹 Scrollbar moderna */
 .tabla-cronograma-wrapper::-webkit-scrollbar {
   height: 8px;
 }
@@ -995,7 +1069,6 @@
 .tabla-cronograma-wrapper::-webkit-scrollbar-track {
   background-color: #f1f1f1;
 }
-
 
   .btn-evidencia-camara {
     background: transparent;
@@ -1053,16 +1126,16 @@
  
   @keyframes bounce {
     0%, 100% {
-        transform: translateY(0); /* Posición inicial y final */
+        transform: translateY(0); 
     }
     25% {
-        transform: translateY(-8px); /* Primer rebote hacia arriba */
+        transform: translateY(-8px);
     }
     50% {
-        transform: translateY(4px);  /* Rebote hacia abajo después del primer rebote */
+        transform: translateY(4px);  
     }
     75% {
-        transform: translateY(-4px); /* Segundo rebote hacia arriba */
+        transform: translateY(-4px); 
     }
 }
 
@@ -1081,13 +1154,19 @@
 }
 .alerta-boton-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: flex-start; /* todos alineados al inicio */
-  gap: 2rem;
-  flex-wrap: wrap;
+  flex-direction: column;  
+  align-items: flex-start;  
   width: 100%;
   margin-top: 1rem;
+  gap: 0.75rem;            
 }
+.boton-centrado {
+  width: 100%;
+  display: flex;
+  justify-content: center;  
+  
+}
+
 .contenedor-boton-centro {
   flex-grow: 1;
   display: flex;
@@ -1152,14 +1231,12 @@
   background-color: #2e9e8c;
 }
 
-
 .modal-observacion-content h3 {
   font-size: 20px;
   color: #2d3748;
   margin-bottom: 15px;
   text-align: center;
 }
-
 
 .modal-observacion-content p {
   font-size: 16px;
@@ -1185,7 +1262,7 @@
   background-color: #238f72;
 }
 .btn-estado-observado-actividad {
-  background-color: #ED8936; /* rojo */
+  background-color: #ED8936; 
   color: #fff;
   border: none;
   padding: 4px 8px;
@@ -1247,7 +1324,6 @@
   background-color: #c53030;
 }
 
-/* Animación suave al mostrar */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1275,7 +1351,6 @@
   background-color: #1e429f;
   transform: translateY(-2px);
 }
-
 
 .btn-carta-termino:active {
   transform: scale(0.96);
@@ -1462,7 +1537,7 @@
 }
 
 .celda-actividad-clickable:hover {
-  color: #1E429F; /* Azul más vivo al pasar mouse */
+  color: #1E429F; 
   text-decoration: underline;
 }
 
@@ -1652,10 +1727,34 @@
   opacity: 0.8;
   cursor: not-allowed;
 }
+.btn-estado-aprobado {
+  background-color: #38a169;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: default;
+}
 
 .boton-enviar-final.enviando:hover {
   background-color: #39B49E;
   transform: none;
+}
+.btn-estado-pendiente {
+  background-color: #a0aec0;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: default;
+}
+
+.texto-solicitud-aprobada {
+  color: #2C7A7B;
+  font-style: italic;
+  font-size: 14px;
 }
 
 @media screen and (max-width: 768px) {
@@ -1850,13 +1949,11 @@
 
   .btn-ver-documento-inline {
     width: fit-content;
-    max-width: 80px;          /* 👈 Limita el ancho máximo */
-    padding: 4px 10px;         /* 👈 Reduce el relleno */
-    font-size: 12px;           /* 👈 Letra un poco más chica */
+    max-width: 80px;      
+    padding: 4px 10px;         
+    font-size: 12px;           
     justify-content: center;
   }
-
-
   .estado-tramitado {
     font-size: 12px;
     padding: 4px 10px;
@@ -1914,9 +2011,9 @@
 }
 @media (max-width: 768px) {
   .contenedor-boton-centro {
-    justify-content: center; /* O flex-start si lo quieres a la izquierda */
+    justify-content: center;
     padding: 0 15px;
-    margin-left: 0; /* Elimina el desplazamiento negativo */
+    margin-left: 0; 
   }
 }
 
@@ -1928,7 +2025,7 @@
 
     .btn-solicitar-aprobacion {
     width: 100%;
-    max-width: 200px; /* evita que se haga muy grande */
+    max-width: 200px;
     margin: 20px auto 0 auto;
     display: block;
     box-sizing: border-box;
@@ -1945,11 +2042,52 @@
 
 @media (min-width: 1440px) {
   .plan-info {
-    transform: translateX(140px); /* Ajusta visualmente hacia la derecha */
+    transform: translateX(140px); 
   }
 }
 @media (min-width: 1440px) {
   .contenedor-boton-centro {
-    transform: translateX(20px); /* mueve el botón un poco más a la derecha */
+    transform: translateX(20px); 
   }
+}
+
+.tabla-cronograma-wrapper-se {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.tabla-cronograma-se {
+  width: 100%;                 
+  min-width: 900px;          
+  border-collapse: collapse;
+  table-layout: fixed;         
+  background: white;
+}
+
+.tabla-cronograma-se th,
+.tabla-cronograma-se td {
+  padding: 10px 12px;
+  font-size: 14px;
+  text-align: center;
+  white-space: normal;      
+  word-wrap: break-word;
+  border-bottom: 1px solid #eee;
+}
+
+.tabla-cronograma-se th {
+  background-color: #f7f7f7;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;        
+}
+
+.tabla-cronograma-wrapper-se::-webkit-scrollbar {
+  height: 8px;
+}
+.tabla-cronograma-wrapper-se::-webkit-scrollbar-thumb {
+  background-color: #b3b3b3;
+  border-radius: 8px;
 }

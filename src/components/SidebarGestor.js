@@ -13,7 +13,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
 
     if (foto) setFotoPerfil(foto);
     if (nombre) setNombreUsuario(nombre);
-    if (["facultades", "programas", "docentes", 'cambio-asesor' ,"cambios-tiempo", "impersonate","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
+    if (["facultades", "programas", "docentes", 'cambio-asesor' ,"cambios-tiempo","dasborasd", "impersonate","seguimiento.trami" , "labores", "lineas", "informes-finales", "estudiantes", "supervisores"].includes(activeSection)) {
       setOpenMenu(0);
     } else {
       setOpenMenu(null);
@@ -198,6 +198,35 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       Cambio de Asesor
                     </span>
                   </li>
+                  <li
+                      className={
+                        activeSection === "dasborasd"
+                          ? "sidebar-gestor-selected sidebar-gestor-menu-simple"
+                          : "sidebar-gestor-menu-simple"
+                      }
+                      onClick={() => setActiveSection("dasborasd")}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#2e9e7f"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect x="3" y="3" width="18" height="11" rx="1.5" />
+                          <path d="M6 13l4-4 3 3 5-5" />
+                          <path d="M12 14v5" />
+                          <path d="M8 21l4-5 4 5" />
+                        </svg>
+
+                        Dashboard
+                      </span>
+                    </li>
                   </ul>
                 )}
               </li>

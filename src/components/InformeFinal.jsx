@@ -1,9 +1,10 @@
-// src/components/alumno/InformeFinal.jsx
 import './DashboardAlumno.css';
 import axios from 'axios';
 import './ModalGlobal.css';
 import React, { useRef, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
+import PdfIcon from "../hooks/componentes/PdfIcon";
 import { pdf } from '@react-pdf/renderer';
 import InformeFinalPDF from './InformeFinalPDF';
 import { PDFDocument } from 'pdf-lib';
@@ -87,7 +88,7 @@ useEffect(() => {
         });
         setCertificadosGrupo(data); 
       } catch (error) {
-        console.error('❌ Error al obtener certificados del grupo:', error);
+        console.error('Error al obtener certificados del grupo:', error);
       }
     }
   };
@@ -103,7 +104,7 @@ useEffect(() => {
         const { data } = await axios.post('/api/estudiantes/grupo-nombres', { correos });
         setNombresMiembros(data);
       } catch (error) {
-        console.error('❌ Error al obtener nombres del grupo:', error);
+        console.error('Error al obtener nombres del grupo:', error);
       }
     }
   };
@@ -324,7 +325,6 @@ if (!recomendacionesInforme.trim()) {
       });
     }
 
-    // 1. Generar el PDF principal
     const blobPrincipal = await pdf(
       <InformeFinalPDF
         nombreFacultad={nombreFacultad}
@@ -347,10 +347,7 @@ if (!recomendacionesInforme.trim()) {
       />
     ).toBlob();
     
-    // 2. Cargar el documento PDF generado
     const mainPdf = await PDFDocument.load(await blobPrincipal.arrayBuffer());
-
-    // 3. Unir anexos si existen
     const anexosArray = [
       anexos?.cartaAceptacion,
       anexos?.cartaTermino,
@@ -368,15 +365,12 @@ if (!recomendacionesInforme.trim()) {
 
     const mergedPdfBytes = await mainPdf.save();
     const mergedBlob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-
-    // 4. Enviar al backend
     const formData = new FormData();
     formData.append('archivo', mergedBlob, 'informe_final.pdf');
     formData.append('trabajo_id', planSeleccionado.id);
 
     setPdfFinalBlob(mergedBlob);
 
-    // 5. Descargar el PDF fusionado
     const url = window.URL.createObjectURL(mergedBlob);
     const a = document.createElement('a');
     a.href = url;
@@ -437,6 +431,8 @@ if (!recomendacionesInforme.trim()) {
           setIsSending(false); 
         }
       };
+
+
   return (
     <>
    {!yaSeEnvio && (
@@ -608,36 +604,13 @@ if (!recomendacionesInforme.trim()) {
         <td className="columna-resultados">{item.resultados}</td>
         <td style={{ textAlign: 'center' }}>
           {item.evidencia ? (
-            <button
+            <VerBoton
+              label="Ver"
               onClick={() => {
                 setImagenModal(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${item.evidencia}`);
                 setModalVisible(true);
               }}
-              className="btn-ver-evidencia"
-              title="Ver evidencia"
-              style={{
-                backgroundColor: '#EDF2F7',
-                border: '1px solid #CBD5E0',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontWeight: '500',
-                fontSize: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2D3748" viewBox="0 0 24 24">
-                <path d="M12 5c-7.633 0-11 6.994-11 7s3.367 7 11 7 
-                         11-6.994 11-7-3.367-7-11-7zm0 
-                         12c-2.761 0-5-2.239-5-5s2.239-5 
-                         5-5 5 2.239 5 5-2.239 5-5 
-                         5zm0-8a3 3 0 1 0 0 6 
-                         3 3 0 0 0 0-6z" />
-              </svg>
-              Ver
-            </button>
+            />
           ) : (
             <span style={{ color: '#A0AEC0' }}>—</span>
           )}
@@ -797,19 +770,13 @@ if (!recomendacionesInforme.trim()) {
     fontSize: '14px',
   }}
 >
-  ℹ️
+ <i className="fas fa-info-circle icono-azul"></i>
+
 </span>
         <strong style={{ fontSize: '15px', color: '#2D3748' }}>Solicitar revisión al asesor:</strong>
       </div>
-      <div  style={{
-      color: '#319795',
-      fontStyle: 'italic',
-      fontWeight: 400,
-      marginLeft: '26px',
-      marginTop: '4px',
-      fontSize: '14px'
-    }}
-  >
+      <div className="texto-info-secundario-final">
+
       {planSeleccionado?.estado_informe_final === 'aprobado'
         ? 'Su informe final fue aprobado, ya puede revisar sus documentos.'
         : planSeleccionado?.estado_informe_final === 'rechazado'
@@ -903,15 +870,9 @@ if (!recomendacionesInforme.trim()) {
   }}
 >
   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="#38A169"
-      viewBox="0 0 24 24"
-    >
-      <path d="M20.285 2L9 13.567l-5.285-5.278L2 9.993 9 17l13-13z" />
-    </svg>
+    <span className="check-circle">
+      <i className="fas fa-check"></i>
+    </span>
     <strong style={{ fontSize: '15px', color: '#2D3748' }}>
       Documentos Generados Servicio Social
     </strong>
@@ -957,151 +918,76 @@ if (!recomendacionesInforme.trim()) {
       marginTop: '8px'
     }}
   >
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="28"
-  height="28"
-  viewBox="0 0 384 512"
->
-  <path
-    fill="#E2E5E7"
-    d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24z"
-  />
-  <path
-    fill="#B0B7BD"
-    d="M224 0v128h128L224 0z"
-  />
-  <path
-    fill="#F15642"
-    d="M48 256h288c8.8 0 16 7.2 16 16v144c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16z"
-  />
-  <text
-    x="192"
-    y="355"
-    textAnchor="middle"
-    fontFamily="Arial, sans-serif"
-    fontSize="80"
-    fill="#fff"
-    fontWeight="bold"
-  >
-    PDF
-  </text>
-</svg>
+    <div className="certificado-header">
+  <PdfIcon />
 
-   <span style={{ fontWeight: '600', fontSize: '14px' }}>
-    CERTIFICADO FINAL SERVICIO SOCIAL 
-   </span>
+  <span className="certificado-titulo">
+    CERTIFICADO FINAL SERVICIO SOCIAL
+  </span>
 </div>
+
  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
 {planSeleccionado?.certificado_final ? (
-  <button
-    className="btn-ver-documento-inline"
-    onClick={() =>
-      window.open(
-        `${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
-        '_blank'
-      )
-    }
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M12 5c-7.633 0-11 6.994-11 7s3.367 7 11 7 
-               11-6.994 11-7-3.367-7-11-7zm0 
-               12c-2.761 0-5-2.239-5-5s2.239-5 
-               5-5 5 2.239 5 5-2.239 5-5 
-               5zm0-8a3 3 0 1 0 0 6 
-               3 3 0 0 0 0-6z" />
-    </svg>
-    Ver
-  </button>
+  <VerBotonInline
+  label="Ver"
+  onClick={() =>
+    window.open(
+      `${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
+      "_blank"
+    )
+  }
+/>
 ) : (
   <span style={{ color: '#A0AEC0', fontSize: '14px' }}>No disponible</span>
 )}
-      <span
-        style={{
-          backgroundColor: '#38A169',
-          color: 'white',
-          fontSize: '13px',
-          fontWeight: '500',
-          padding: '4px 10px',
-          borderRadius: '6px'
-        }}
-      >
-        Tramitado
-      </span>
+     <span className="estado-tramitado-final">Tramitado</span>
     </div>
   </div>
 </div>
 )}
 {planSeleccionado?.estado_informe_final === 'aprobado' &&
  certificadosGrupo.length > 0 && (
-  <div
-    style={{
-      marginTop: '24px',
-      border: '1px solid #CBD5E0',
-      borderRadius: '10px',
-      padding: '16px 20px',
-      backgroundColor: '#ffffff',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-    }}
-  >
+  <div className="tarjeta-info-final">
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#3182CE" viewBox="0 0 24 24">
-        <path d="M20.285 2L9 13.567l-5.285-5.278L2 9.993 9 17l13-13z" />
-      </svg>
+      <span className="check-circle">
+      <i className="fas fa-check"></i>
+    </span>
       <strong style={{ fontSize: '15px', color: '#2D3748' }}>
         Certificados de integrantes del grupo
       </strong>
     </div>
 
-    {certificadosGrupo.map((cert, index) => (
-      <div
-        key={index}
-        style={{
-          border: '1px solid #E2E8F0',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: '12px'
-        }}
-      >
-        <span style={{ fontWeight: '600', fontSize: '14px' }}>
-          Certificado - {
-            (() => {
-              const correo = `${cert.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
-              const miembro = nombresMiembros.find(n =>
-                n.correo?.trim().toLowerCase() === correo
-              );
-              return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
-                ? miembro.nombre
-                : 'NOMBRE NO DISPONIBLE';
-            })()
-          }
-        </span>
-        <button
-          className="btn-ver-documento-inline"
+{certificadosGrupo.map((cert, index) => (
+      <div key={index} className="item-resumen">
+        
+        <div className="item-certificado-info">
+          <PdfIcon/>
+          <span className="certificado-titulo">
+            CERTIFICADO - {
+              (() => {
+                const correo = `${cert.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+                const miembro = nombresMiembros.find(n =>
+                  n.correo?.trim().toLowerCase() === correo
+                );
+                return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
+                  ? miembro.nombre
+                  : 'NOMBRE NO DISPONIBLE';
+              })()
+            }
+          </span>
+        </div>
+
+        <VerBotonInline
+          label="Ver"
           onClick={() =>
             window.open(
               `${process.env.REACT_APP_API_URL}/uploads/certificados_finales_miembros/${cert.nombre_archivo_pdf}`,
-              '_blank'
+              "_blank"
             )
           }
-        >
-          Ver
-        </button>
+        />
       </div>
-    ))}
+))}
   </div>
 )}
     </>

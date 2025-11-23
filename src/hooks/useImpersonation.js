@@ -4,9 +4,8 @@ export function useImpersonation() {
     if (originalToken) {
       localStorage.setItem('authToken', originalToken);
       sessionStorage.removeItem('originalToken');
-      window.location.href = '/'; // vuelve al dashboard original
+      window.location.href = '/'; 
     } else {
-      // si no hay originalToken, cerrar sesión normal
       localStorage.removeItem('authToken');
       window.location.href = '/login';
     }

@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegisterPage.css'; 
 import Swal from 'sweetalert2';
+import {
+  mostrarAlertaCodigoNoPermitido,
+  mostrarAlertaWhatsappInvalido,
+  mostrarAlertaRegistroExitoso,
+  mostrarAlertaServicioUDHNoDisponible,
+  mostrarAlertaErrorRegistro,
+} from "../hooks/alerts/alertas"; 
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -14,72 +21,59 @@ function RegisterPage() {
 
 const handleRegister = async (e) => {
   e.preventDefault();
- const anio = codigo.startsWith('120') ? parseInt(codigo.substring(1, 5), 10) : parseInt(codigo.substring(0, 4), 10);
 
-if (isNaN(anio) || anio < 2021) {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Código no permitido',
-    text: 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.',
-    confirmButtonColor: '#f27474',
-  });
-  return;
-}
+  const anio = codigo.startsWith('120')
+    ? parseInt(codigo.substring(1, 5), 10)
+    : parseInt(codigo.substring(0, 4), 10);
 
-  if (!/^9\d{8}$/.test(whatsapp)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Número de WhatsApp inválido',
-      text: 'El número debe comenzar con 9 y tener exactamente 9 dígitos.',
-      confirmButtonColor: '#d33',
-    });
+  // Validación: Año permitido
+  if (isNaN(anio) || anio < 2021) {
+    await mostrarAlertaCodigoNoPermitido();
     return;
   }
 
-  setIsSubmitting(true); 
+  // Validación: WhatsApp válido
+  if (!/^9\d{8}$/.test(whatsapp)) {
+    await mostrarAlertaWhatsappInvalido();
+    return;
+  }
 
-    try {
-      await axios.post('/api/auth/register', {
-        email: `${codigo}@udh.edu.pe`,
-        dni,
-        whatsapp,
-        codigo,
-      });
+  setIsSubmitting(true);
 
-    Swal.fire({
-      icon: 'success',
-      title: '¡Registro Exitoso!',
-      text: 'Serás redirigido al inicio de sesión...',
-      confirmButtonColor: '#28a745',
-      timer: 2500,
-      showConfirmButton: false,
+  try {
+    // Registrar usuario
+    await axios.post('/api/auth/register', {
+      email: `${codigo}@udh.edu.pe`,
+      dni,
+      whatsapp,
+      codigo,
     });
+
+    // Éxito
+    await mostrarAlertaRegistroExitoso();
 
     setTimeout(() => navigate('/login'), 2000);
 
   } catch (error) {
-    console.error('Error en el registro:', error.response ? error.response.data : error.message);
+    console.error(
+      'Error en el registro:',
+      error.response ? error.response.data : error.message
+    );
 
+    // Error: Servicio UDH caído
     if (error.response?.status === 503) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Servicio UDH no disponible',
-        text: 'No se pudo verificar tus datos en este momento. Intenta nuevamente más tarde.',
-        confirmButtonColor: '#f27474',
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error en el registro',
-        text: error.response?.data?.message || 'No se pudo registrar. Intenta nuevamente.',
-        confirmButtonColor: '#d33',
-      });
+      await mostrarAlertaServicioUDHNoDisponible();
+    } 
+    // Error genérico
+    else {
+      await mostrarAlertaErrorRegistro(error.response?.data?.message);
     }
 
   } finally {
-    setIsSubmitting(false); 
+    setIsSubmitting(false);
   }
 };
+
   return (
     <div className="register-page">
   <div className="image-container">
@@ -140,7 +134,7 @@ if (isNaN(anio) || anio < 2021) {
     border: 'none',
     cursor: 'pointer',
     padding: 0,
-    color: '#555', // 👈 asegúrate de esto
+    color: '#555', 
   }}
 >
   {showDni ? (
@@ -163,7 +157,7 @@ if (isNaN(anio) || anio < 2021) {
   value={whatsapp}
   onChange={(e) => {
     const input = e.target.value;
-    if (/^\d{0,9}$/.test(input)) setWhatsapp(input); // Solo permite hasta 9 dígitos numéricos
+    if (/^\d{0,9}$/.test(input)) setWhatsapp(input); 
   }}
   placeholder="Ingrese su número de WhatsApp"
   className="form-control"

@@ -1,4 +1,3 @@
-// src/utils/signatureCleanup.js
 
 export async function postProcessSignature(pngBlob, alphaThreshold = 180) {
   const img = await blobToImage(pngBlob);
@@ -8,23 +7,18 @@ export async function postProcessSignature(pngBlob, alphaThreshold = 180) {
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
 
-  // Endurecer borde (quita halo)
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const d = imageData.data;
   for (let i = 0; i < d.length; i += 4) d[i + 3] = d[i + 3] < alphaThreshold ? 0 : 255;
   ctx.putImageData(imageData, 0, 0);
 
-  // Recortar márgenes transparentes
   const trimmed = trimTransparent(canvas, 5);
-
-  // Asegurar PNG: toBlob puede devolver null → fallback a dataURL
   const blob = await new Promise((resolve) => {
     trimmed.toBlob((b) => resolve(b || dataURLToBlob(trimmed.toDataURL('image/png'))), 'image/png');
   });
   return blob;
 }
 
-// Opción todo-en-uno: devuelve { file, previewUrl }
 export async function cleanSignature(file, { model = 'small', alphaThreshold = 180 } = {}) {
   const { removeBackground } = await import('@imgly/background-removal');
   const cut = await removeBackground(file, { model, debug: false });
@@ -34,7 +28,6 @@ export async function cleanSignature(file, { model = 'small', alphaThreshold = 1
   return { file: outFile, previewUrl };
 }
 
-// -- utils internas --
 function blobToImage(blob) {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(blob);

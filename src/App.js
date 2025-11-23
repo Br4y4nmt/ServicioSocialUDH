@@ -18,6 +18,7 @@ import RevisionPlanSocial from './components/RevisionPlanSocial';
 import RevisionDocente from './components/RevisionDocente';
 import PerfilDocente from './components/PerfilDocente';
 import MiPerfil from './components/MiPerfil';
+import Dasborasd from "./components/Dashboard";
 import PerfilAlumno from './components/PerfilAlumno';
 import './App.css';
 
@@ -68,6 +69,14 @@ function App() {
             <MiPerfil />
           </ProtectedRoute>
         } />
+        <Route
+          path="/dasborasd"
+          element={
+            <ProtectedRoute allowedRoles={['gestor-udh']}>
+              <Dasborasd />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/dashboard-alumno" element={
         <ProtectedRoute allowedRoles={['alumno']}>
           <DashboardAlumno />

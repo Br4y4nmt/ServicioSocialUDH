@@ -1,4 +1,3 @@
-// src/pages/MiPerfil.js
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import SidebarAlumno from '../components/SidebarAlumno';
@@ -196,11 +195,13 @@ function MiPerfil() {
             <label className="bold-text">Programa Académico</label>
             <input className="input-disabled" value={perfil.programa} disabled />
           </div>
-          <div className="form-group alerta-boton-wrapper">
+
+          <div className="alerta-boton-wrapper">
             <div className="alerta-importante bounce">
               <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
             </div>
-            <div className="contenedor-boton-centro">
+
+            <div className="boton-centrado">
             <button className="btn-solicitar-aprobacion" onClick={handleGuardar}>
               Guardar Cambios
             </button>

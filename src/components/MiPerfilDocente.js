@@ -7,7 +7,6 @@ import './DashboardAlumno.css';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 
-
 function MiPerfilDocente() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [nombre, setNombre] = useState('');
@@ -53,7 +52,7 @@ function MiPerfilDocente() {
           programa_nombre: data.ProgramaDelDocente?.nombre_programa || ''
         });
 
-        setCelularOriginal(data.celular || ''); // 👈 Guardamos el celular original
+        setCelularOriginal(data.celular || ''); 
       } catch (error) {
         console.error('Error al obtener perfil docente:', error);
       }
@@ -100,7 +99,7 @@ function MiPerfilDocente() {
   };
 
  const handleGuardar = async () => {
-  // Validar que tenga exactamente 9 dígitos
+
   if (!/^\d{9}$/.test(perfil.celular)) {
     Swal.fire({
       icon: 'warning',
@@ -111,7 +110,6 @@ function MiPerfilDocente() {
     return;
   }
 
-  // Validar si no se han realizado cambios
   if (perfil.celular === celularOriginal) {
     Swal.fire({
       icon: 'info',
@@ -133,7 +131,7 @@ function MiPerfilDocente() {
       }
     );
 
-    setCelularOriginal(perfil.celular); // Actualiza el valor original
+    setCelularOriginal(perfil.celular); 
 
     Swal.fire({
       icon: 'success',
@@ -216,13 +214,17 @@ function MiPerfilDocente() {
                 disabled
               />
             </div>
+            
             <div className="alerta-boton-wrapper">
-            <div className="alerta-importante bounce">
-              <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
-            </div>
-            <button className="btn-solicitar-aprobacion" onClick={handleGuardar}>
-              Guardar Cambios
-            </button>
+              <div className="alerta-importante bounce">
+                <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
+              </div>
+
+            <div className="boton-centrado">
+              <button className="btn-solicitar-aprobacion" onClick={handleGuardar}>
+                  Guardar Cambios
+              </button>
+          </div>
           </div>
           </div>
         
