@@ -27,11 +27,11 @@ import {
 } from "recharts";
 
 import axios from "axios";
-import { useUser } from "../UserContext";  // 👈 IMPORTANTE
+import { useUser } from "../UserContext";  
 
 function Dasborasd() {
-  const { user } = useUser();              // 👈 sacamos el user
-  const token = user?.token;               // 👈 sacamos el token
+  const { user } = useUser();           
+  const token = user?.token;               
   const [porSede, setPorSede] = useState([]);
   const [porModalidad, setPorModalidad] = useState([]);
   const [porFacultad, setPorFacultad] = useState([]);
@@ -121,7 +121,7 @@ const ReportIcon = () => (
   useEffect(() => {
     const fetchTotalEstudiantes = async () => {
       try {
-        if (!token) return; // aún no hay token
+        if (!token) return; 
 
         const res = await axios.get("/api/dashboard/total-estudiantes", {
           headers: { Authorization: `Bearer ${token}` },
@@ -129,7 +129,7 @@ const ReportIcon = () => (
 
         setResumen((prev) => ({
           ...prev,
-          alumnosActivos: res.data.total, // { total: 1 }
+          alumnosActivos: res.data.total, 
         }));
       } catch (error) {
         console.error("Error obteniendo total de estudiantes:", error);
@@ -137,7 +137,7 @@ const ReportIcon = () => (
     };
 
     fetchTotalEstudiantes();
-  }, [token]); // se ejecuta cuando ya hay token
+  }, [token]); 
 
 
   useEffect(() => {
@@ -231,7 +231,7 @@ return (
       </Grid>
     </Grid>
 
-    {/* ► FILA 2: alumnos por mes + resumen rápido */}
+
     <Grid container spacing={2} sx={{ mb: 2 }}>
       {/* Gráfico más ancho (9 columnas) */}
       <Grid item xs={12} md={9} className="chart-grid-wide">
@@ -271,7 +271,6 @@ return (
         </Paper>
       </Grid>
 
-      {/* Resumen rápido (menos ancho, md=3) */}
       <Grid item xs={12} md={3}>
         <Paper
           elevation={3}
@@ -286,11 +285,10 @@ return (
             Resumen rápido
           </Typography>
 
-          {/* Por sede */}
           <div className="quick-summary-section">
             <span className="quick-summary-section-label">Por sede</span>
 
-            <div className="quick-summary-list">
+            <div className="quick-summary-list scrollable-list">
               {porSede.map((item) => (
                 <div key={item.sede} className="quick-summary-item">
                   <div className="quick-summary-item-text">
@@ -309,7 +307,7 @@ return (
           <div className="quick-summary-section">
             <span className="quick-summary-section-label">Por modalidad</span>
 
-            <div className="quick-summary-list">
+            <div className="quick-summary-list scrollable-list">
               {porModalidad.map((item) => (
                 <div key={item.modalidad} className="quick-summary-item">
                   <div className="quick-summary-item-text">
