@@ -307,7 +307,7 @@ return (
           <div className="quick-summary-section">
             <span className="quick-summary-section-label">Por modalidad</span>
 
-            <div className="quick-summary-list scrollable-list">
+            <div className="quick-summary-list scrollable-list modalidad-scroll">
               {porModalidad.map((item) => (
                 <div key={item.modalidad} className="quick-summary-item">
                   <div className="quick-summary-item-text">
@@ -479,7 +479,6 @@ return (
   </Paper>
 </Grid>
 
-     {/* Top programas + Top líneas de acción (mismo diseño que Resumen rápido) */}
 <Grid item xs={12} md={4}>
   <Paper
     elevation={3}
@@ -493,70 +492,62 @@ return (
       Top programas
     </Typography>
 
-    {/* Top programas por número de estudiantes */}
-    <div className="quick-summary-section">
-      <span className="quick-summary-section-label">
-        Por número de estudiantes
-      </span>
+   <div className="quick-summary-section">
+  <span className="quick-summary-section-label">
+    Por número de estudiantes
+  </span>
 
-      {topProgramas.length === 0 ? (
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          No hay datos suficientes.
-        </Typography>
-      ) : (
-        <div className="quick-summary-list">
-  {topProgramas.map((item, index) => (
-    <div key={item.programa} className="quick-summary-item">
-      <div className="quick-summary-item-text">
-        <span className="quick-summary-item-name">
-          {index + 1}. {item.programa}
-        </span>
-      </div>
-      <div className="quick-summary-item-value">
-        {item.total}
-      </div>
-      <div className="quick-summary-item-bar" />
+  {topProgramas.length === 0 ? (
+    <Typography variant="body2" sx={{ mt: 1 }}>
+      No hay datos suficientes.
+    </Typography>
+  ) : (
+    <div className="quick-summary-list scrollable-list top-programas-scroll">
+      {topProgramas.map((item, index) => (
+        <div key={item.programa} className="quick-summary-item">
+          <div className="quick-summary-item-text">
+            <span className="quick-summary-item-name">
+              {index + 1}. {item.programa}
+            </span>
+          </div>
+          <div className="quick-summary-item-value">
+            {item.total}
+          </div>
+          <div className="quick-summary-item-bar" />
+        </div>
+      ))}
     </div>
-  ))}
-</div>
-      )}
-    </div>
-
-    {/* Top líneas de acción */}
-    <div className="quick-summary-section">
-      <span className="quick-summary-section-label">
-        Top líneas de acción
-      </span>
-
-      {topLineasAccion.length === 0 ? (
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          No hay datos suficientes.
-        </Typography>
-      ) : (
-       <div className="quick-summary-list">
-  {topLineasAccion.map((item, index) => (
-    <div key={item.linea} className="quick-summary-item">
-
-      {/* Nombre arriba */}
-      <div className="quick-summary-item-text">
-        <span className="quick-summary-item-name">
-          {index + 1}. {item.linea}
-        </span>
-      </div>
-
-      {/* Valor abajo */}
-      <div className="quick-summary-item-value">
-        {item.total}
-      </div>
-
-      {/* Barra */}
-      <div className="quick-summary-item-bar" />
-    </div>
-  ))}
+  )}
 </div>
 
-      )}
+{/* Top líneas de acción */}
+<div className="quick-summary-section">
+  <span className="quick-summary-section-label">
+    Top líneas de acción
+  </span>
+
+  {topLineasAccion.length === 0 ? (
+    <Typography variant="body2" sx={{ mt: 1 }}>
+      No hay datos suficientes.
+    </Typography>
+  ) : (
+    <div className="quick-summary-list scrollable-list top-lineas-scroll">
+      {topLineasAccion.map((item, index) => (
+        <div key={item.linea} className="quick-summary-item">
+          <div className="quick-summary-item-text">
+            <span className="quick-summary-item-name">
+              {index + 1}. {item.linea}
+            </span>
+          </div>
+          <div className="quick-summary-item-value">
+            {item.total}
+          </div>
+          <div className="quick-summary-item-bar" />
+        </div>
+      ))}
     </div>
+  )}
+</div>
   </Paper>
 </Grid>
 

@@ -458,9 +458,12 @@
 }
 /* LISTA CON SCROLL VERTICAL */
 .scrollable-list {
-  max-height: 110px;      /* ajusta si quieres más o menos espacio */
   overflow-y: auto;
-  padding-right: 4px;     /* evita que el scrollbar tape contenido */
+  padding-right: 4px;
+}
+/* Modalidad: más altura para permitir ver SEMI-PRESENCIAL */
+.modalidad-scroll {
+  max-height: 170px !important;  /* ajusta según la cantidad de elementos */
 }
 
 /* Scroll estético */
@@ -476,4 +479,12 @@
 .scrollable-list::-webkit-scrollbar-track {
   background: rgba(0,0,0,0.05);
   border-radius: 10px;
+}
+.top-programas-scroll {
+  max-height: 190px;   /* ajusta según veas en pantalla */
+}
+
+/* Altura para la lista de top líneas de acción */
+.top-lineas-scroll {
+  max-height: 120px;   /* un poco más chica para que todo entre */
 }
