@@ -335,7 +335,7 @@ return (
       <Grid item xs={12} md={9} className="chart-grid-wide">
         <Paper className="chart-card" elevation={2}>
           <div className="chart-card-header">
-            <span className="chart-title">Certificados finales emitidos por mes</span>
+            <span className="chart-title">Estudiantes que inciarón su servicio social por mes</span>
           </div>
 
           <div className="chart-card-body">
