@@ -1,4 +1,3 @@
-// src/components/Header.js
 import React, { useEffect, useState, useRef } from 'react';
 import './Header.css';
 import { FaBars } from 'react-icons/fa';
@@ -16,7 +15,6 @@ function Header({ onToggleSidebar }) {
     if (foto) setFotoPerfil(foto);
   }, []);
 
-  // Cerrar menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -47,8 +45,8 @@ function Header({ onToggleSidebar }) {
     }
   };
   const enlaceGuia = rolUsuario === 'docente supervisor'
-  ? 'https://drive.google.com/file/d/1b1ecTv9eRWmvgt-q82q9rbee-z03Wkwe/view?usp=sharing' // ← Link para docentes
-  : 'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing'; // ← Link para alumnos
+  ? 'https://drive.google.com/file/d/1b1ecTv9eRWmvgt-q82q9rbee-z03Wkwe/view?usp=sharing' 
+  : 'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing'; 
 
   return (
     <header className="custom-header">

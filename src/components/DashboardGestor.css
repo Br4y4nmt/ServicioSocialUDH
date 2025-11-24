@@ -601,6 +601,18 @@
   cursor: pointer;
   color: white;
 }
+.docentes-acciones-cell {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.docentes-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .docentes-btn.editar {
   background-color: #03a9f4;

@@ -8,7 +8,6 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Cargar usuario desde localStorage al iniciar
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem('user');
@@ -28,13 +27,11 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  // Guardar el usuario completo y persistir
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  // Cerrar sesión y limpiar
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');

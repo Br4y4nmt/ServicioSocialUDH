@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css"; 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-
 import {
   Grid,
   Paper,
@@ -36,6 +34,8 @@ function Dasborasd() {
   const [porModalidad, setPorModalidad] = useState([]);
   const [porFacultad, setPorFacultad] = useState([]);
   const [porPrograma, setPorPrograma] = useState([]);
+  const [alumnosPorMes, setAlumnosPorMes] = useState([]);
+  const [alumnosTabla, setAlumnosTabla] = useState([]);
   const [topProgramas, setTopProgramas] = useState([]);
   const [topLineasAccion, setTopLineasAccion] = useState([]);
   const totalEstudiantesProgramas = porPrograma.reduce(
@@ -53,22 +53,109 @@ const dataGridSpanishTheme = createTheme({
   },
 });
 
+const handleClickPrograma = (programa) => {
+  console.log("Programa seleccionado:", programa);
+};
+useEffect(() => {
+  const fetchAlumnosPorMes = async () => {
+    try {
+      if (!token) return;
 
-  const [resumen, setResumen] = useState({
-    alumnosActivos: 0,
-    proyectosActivos: 32,
-    informesPendientes: 18,
-  });
+      const res = await axios.get("/api/dashboard/alumnos-por-mes", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  const [alumnosPorMes, setAlumnosPorMes] = useState([
-    { mes: "Ene", alumnos: 40 },
-    { mes: "Feb", alumnos: 55 },
-    { mes: "Mar", alumnos: 70 },
-    { mes: "Abr", alumnos: 65 },
-    { mes: "May", alumnos: 90 },
-  ]);
+      const mesesES = [
+        "Ene",
+        "Feb",
+        "Mar",
+        "Abr",
+        "May",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dic",
+      ];
 
-  const [alumnosTabla, setAlumnosTabla] = useState([]);
+      const datos = (res.data || []).map((item) => ({
+        mes: mesesES[item.mes - 1] + " " + item.anio, 
+        alumnos: item.total,
+      }));
+
+      setAlumnosPorMes(datos);
+    } catch (error) {
+      console.error("Error obteniendo alumnos por mes:", error);
+    }
+  };
+
+  fetchAlumnosPorMes();
+}, [token]);
+
+
+const [resumen, setResumen] = useState({
+  alumnosActivos: 0,
+  proyectosActivos: 0,
+  certificadosFinales: 0,
+});
+
+useEffect(() => {
+  const fetchTrabajosSocialesActivos = async () => {
+    try {
+      if (!token) return;
+
+      const res = await axios.get(
+        "/api/dashboard/total-trabajos-sociales-activos",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setResumen((prev) => ({
+        ...prev,
+        proyectosActivos: res.data.total,   
+      }));
+    } catch (error) {
+      console.error(
+        "Error obteniendo total de trabajos sociales activos:",
+        error
+      );
+    }
+  };
+
+  fetchTrabajosSocialesActivos();
+}, [token]);
+
+
+useEffect(() => {
+  const fetchTotalCertificadosFinales = async () => {
+    try {
+      if (!token) return;
+
+      const res = await axios.get(
+        "/api/dashboard/total-certificados-finales",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setResumen((prev) => ({
+        ...prev,
+        certificadosFinales: res.data.total,
+      }));
+    } catch (error) {
+      console.error(
+        "Error obteniendo total de certificados finales:",
+        error
+      );
+    }
+  };
+
+  fetchTotalCertificadosFinales();
+}, [token]);
+
 
 useEffect(() => {
   const fetchDistribuciones = async () => {
@@ -184,15 +271,12 @@ useEffect(() => {
   { field: "programa", headerName: "Programa académico", flex: 1.5, minWidth: 200 },
   { field: "estado", headerName: "Estado", flex: 1, minWidth: 110 },
 ];
-const coloresPrograma = [
-  "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
-  "#845EC2", "#D65DB1", "#FF6F91", "#FFC75F",
-];
+const coloresPrograma = ["#06b6d4", "#14b8a6"];
+
 
 
 return (
   <Box sx={{ p: 3 }}>
-    {/* ► KPIs superiores */}
     <Grid container spacing={2} sx={{ mb: 2 }}>
       <Grid item xs={12}>
         <Paper className="kpi-card kpi-blue" elevation={3}>
@@ -219,21 +303,20 @@ return (
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <Paper className="kpi-card kpi-blue" elevation={3}>
-          <div className="kpi-card-icon">
-            <ReportIcon />
-          </div>
-          <div className="kpi-card-content">
-            <span className="kpi-value">{resumen.informesPendientes}</span>
-            <span className="kpi-label">Informes finales pendientes</span>
-          </div>
-        </Paper>
-      </Grid>
+      <Paper className="kpi-card kpi-blue" elevation={3}>
+        <div className="kpi-card-icon">
+          <ReportIcon />
+        </div>
+        <div className="kpi-card-content">
+          <span className="kpi-value">{resumen.certificadosFinales}</span>
+          <span className="kpi-label">Certificados finales emitidos</span>
+        </div>
+      </Paper>
+    </Grid>
     </Grid>
 
 
     <Grid container spacing={2} sx={{ mb: 2 }}>
-      {/* Gráfico más ancho (9 columnas) */}
       <Grid item xs={12} md={9} className="chart-grid-wide">
         <Paper className="chart-card" elevation={2}>
           <div className="chart-card-header">
@@ -285,10 +368,7 @@ return (
       Resumen rápido
     </Typography>
 
-    {/* 🔥 CONTENEDOR CON SCROLL GENERAL */}
     <div className="resumen-scroll-container">
-
-      {/* Por sede */}
       <div className="quick-summary-section">
         <span className="quick-summary-section-label">Por sede</span>
 
@@ -307,7 +387,6 @@ return (
         </div>
       </div>
 
-      {/* Por modalidad */}
       <div className="quick-summary-section">
         <span className="quick-summary-section-label">Por modalidad</span>
 
@@ -329,16 +408,11 @@ return (
       </div>
 
     </div>
-    {/* 🔥 FIN DEL CONTENEDOR CON SCROLL GENERAL */}
-
   </Paper>
 </Grid>
 
     </Grid>
-
-    {/* ► FILA 3: facultad + programa + rankings (alineados horizontalmente) */}
     <Grid container spacing={2} sx={{ mb: 2 }}>
-      {/* Estudiantes por facultad */}
       <Grid item xs={12} md={4}>
         <Paper
           elevation={3}
@@ -397,13 +471,9 @@ return (
                   >
                     {porFacultad.map((entry, index) => (
                       <Cell
-                        key={`cell-${index}`}
-                        fill={
-                          index === porFacultad.length - 1
-                            ? "#14b8a6"
-                            : "#06b6d4"
-                        }
-                      />
+                      key={`cell-${index}`}
+                      fill={index % 2 === 0 ? "#06b6d4" : "#14b8a6"}
+                    />
                     ))}
                   </Bar>
                 </BarChart>
@@ -413,8 +483,7 @@ return (
         </Paper>
       </Grid>
 
-      {/* Estudiantes por programa académico */}
-      <Grid item xs={12} md={4}>
+<Grid item xs={12} md={4}>
   <Paper elevation={3} className="program-chart-card">
     <Typography
       variant="subtitle1"
@@ -427,7 +496,7 @@ return (
       <Typography variant="body2">No hay datos suficientes.</Typography>
     ) : (
       <div className="program-chart-body">
-        {/* Donut + número en el centro */}
+
         <div className="program-chart-inner">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -441,6 +510,7 @@ return (
                 outerRadius={80}
                 paddingAngle={3}
                 stroke="none"
+                onClick={(data) => handleClickPrograma(data.programa)}
               >
                 {porPrograma.map((entry, index) => (
                   <Cell
@@ -463,12 +533,12 @@ return (
           </div>
         </div>
 
-        {/* Leyenda debajo */}
-        <div className="program-chart-legend">
+        <div className="program-chart-legend program-chart-scroll">
           {porPrograma.map((item, index) => (
             <div
               key={item.programa}
-              className="program-chart-legend-item"
+              className="program-chart-legend-item legend-clickable"
+              onClick={() => handleClickPrograma(item.programa)}
             >
               <span
                 className="program-chart-legend-dot"
@@ -501,9 +571,7 @@ return (
       Top programas
     </Typography>
 
-    {/* 🔥 Contenedor con scroll general */}
     <div className="top-programas-scroll-container">
-      {/* Top programas por número de estudiantes */}
       <div className="quick-summary-section">
         <span className="quick-summary-section-label">
           Por número de estudiantes
@@ -532,7 +600,6 @@ return (
         )}
       </div>
 
-      {/* Top líneas de acción */}
       <div className="quick-summary-section">
         <span className="quick-summary-section-label">
           Top líneas de acción

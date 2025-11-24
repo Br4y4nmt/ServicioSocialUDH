@@ -1,10 +1,8 @@
-/* Fuente global */
 .impersonate-container,
 .impersonate-container * {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Contenedor principal */
 .impersonate-container {
   width: 100%;
   max-width: 380px;
@@ -18,7 +16,7 @@
   overflow: hidden;
 }
 
-/* Glow suave corporativo */
+
 .impersonate-container::before {
   content: '';
   position: absolute;
@@ -32,7 +30,6 @@
   pointer-events: none;
 }
 
-/* Título */
 .impersonate-container h2 {
   font-size: 1.2rem;
   text-transform: uppercase;
@@ -42,14 +39,12 @@
   margin-bottom: 25px;
 }
 
-/* Formulario */
 .impersonate-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Inputs */
 .impersonate-form input {
   width: 100%;
   padding: 12px 14px;
@@ -68,7 +63,6 @@
   box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
 }
 
-/* Botón corporativo */
 .impersonate-form button {
   padding: 12px;
   border: none;
@@ -91,10 +85,9 @@
   cursor: not-allowed;
 }
 
-/* Mensaje de error */
 .error-message {
   margin-top: 12px;
   font-size: 0.85rem;
-  color: #e11d48; /* rojo elegante */
+  color: #e11d48;
   font-weight: 500;
 }

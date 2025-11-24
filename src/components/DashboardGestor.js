@@ -1959,31 +1959,31 @@ useEffect(() => {
 
                   )}
                 </td>
-                <td>
-  <button
-    onClick={() => {
-      setEditandoDocenteId(doc.id_docente);
-      setNombreDocenteEditado(doc.nombre_docente);
-      setEmailDocenteEditado(doc.email || '');
-      setProgramaDocenteEditado(doc.programa_academico_id);
-      setFacultadDocenteEditada(doc.facultad_id);
-      setModalEditarDocenteVisible(true);
-    }}
-    className="docentes-btn editar"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-    </svg>
-  </button>
-  <button
-    onClick={() => eliminarDocente(doc.id_docente)}
-    className="docentes-btn eliminar"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-      <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-    </svg>
-  </button>
-</td>
+               <td className="docentes-acciones-cell">
+                <button
+                  onClick={() => {
+                    setEditandoDocenteId(doc.id_docente);
+                    setNombreDocenteEditado(doc.nombre_docente);
+                    setEmailDocenteEditado(doc.email || '');
+                    setProgramaDocenteEditado(doc.programa_academico_id);
+                    setFacultadDocenteEditada(doc.facultad_id);
+                    setModalEditarDocenteVisible(true);
+                  }}
+                  className="docentes-btn editar"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={() => eliminarDocente(doc.id_docente)}
+                  className="docentes-btn eliminar"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
+                  </svg>
+                </button>
+              </td>
               </tr>
             ))}
           </tbody>
@@ -2394,24 +2394,29 @@ useEffect(() => {
               <tr key={l.id_linea}>
                 <td>{index + 1}</td>
                   <td>{(l.nombre_linea || 'SIN NOMBRE').toUpperCase()}</td>
-                  <td>
-                    <button
-                      className="labores-btn editar"
-                      onClick={() => {
-                        setIdEditandoLinea(l.id_linea);
-                        setNombreLineaEditado(l.nombre_linea);
-                        setModalEditarLineaVisible(true);
-                      }}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="labores-btn eliminar"
-                      onClick={() => eliminarLinea(l.id_linea)}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
+                 <td className="labores-acciones-cell">
+                <button
+                  className="docentes-btn editar"
+                  onClick={() => {
+                    setIdEditandoLinea(l.id_linea);
+                    setNombreLineaEditado(l.nombre_linea);
+                    setModalEditarLineaVisible(true);
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                  </svg>
+                </button>
+
+                <button
+                  className="docentes-btn eliminar"
+                  onClick={() => eliminarLinea(l.id_linea)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
+                  </svg>
+                </button>
+              </td>
                 </tr>
               ))}
           </tbody>

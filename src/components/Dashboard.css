@@ -90,7 +90,6 @@
   max-width: 100% !important;
 }
 
-/* por si acaso MUI mete algún max-width raro en el Paper */
 .full-width-chart-item .chart-card {
   width: 100% !important;
   box-sizing: border-box;
@@ -112,6 +111,30 @@
   text-transform: uppercase;
   color: #06b6d4;
 }
+.program-chart-scroll {
+  max-height: 150px;   
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.legend-clickable {
+  cursor: pointer;
+  transition: background 0.15s;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.legend-clickable:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.program-chart-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.program-chart-scroll::-webkit-scrollbar-thumb {
+  background-color: #c7c7c7;
+  border-radius: 4px;
+}
 
 .chart-card-body {
   flex: 1;
@@ -120,8 +143,8 @@
   position: relative;
   padding: 18px 18px 16px;
   border-radius: 16px;
-  background: #ffffff;   /* FONDO BLANCO */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* sombra suave */
+  background: #ffffff;   
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); 
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -129,8 +152,6 @@
   overflow: hidden;
 }
 
-
-/* glow suave atrás, tipo neomorphism */
 .quick-summary-card::before {
   content: '';
   position: absolute;
@@ -206,10 +227,9 @@
 .quick-summary-item-value {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #06b6d4; /* mismo tono que las cards superiores */
+  color: #06b6d4; 
 }
 
-/* barrita de progreso estilo la captura */
 .quick-summary-item-bar {
   margin-top: 4px;
   height: 3px;
@@ -217,20 +237,19 @@
   background: linear-gradient(to right, #06b6d4, #14b8a6);
   opacity: 0.85;
 }
-/* Card general */
+
 .faculty-chart-card {
   padding: 18px;
   border-radius: 18px;
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-  height: 330px;            /* 🔥 altura fija */
+  height: 330px;           
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-family: "Poppins", sans-serif;
 }
 
-/* Header */
 .faculty-chart-header {
   display: flex;
   justify-content: space-between;
@@ -243,20 +262,18 @@
   text-transform: uppercase;
   color: #0f172a;
   margin: 0;
-  font-family: 'Poppins', sans-serif !important;   /* 🔥 Aquí */
+  font-family: 'Poppins', sans-serif !important;  
   letter-spacing: 0.04em;
 }
-
 
 .faculty-chart-subtitle {
   font-size: 0.75rem;
   color: #6b7280;
 }
 
-/* Contenedor del gráfico */
 .faculty-chart-body {
   flex-grow: 1;
-  height: 100%;              /* 🔥 necesario */
+  height: 100%;           
   margin-top: 6px;
   padding: 10px;
   border-radius: 16px;
@@ -266,7 +283,7 @@
     rgba(230, 230, 230, 0.25)
   );
 }
-/* Donut - Estudiantes por programa académico */
+
 .program-chart-card {
   padding: 16px 18px;
   border-radius: 18px;
@@ -295,7 +312,6 @@
   padding-top: 4px;
 }
 
-/* contenedor del donut + número */
 .program-chart-inner {
   position: relative;
   width: 100%;
@@ -303,7 +319,6 @@
   margin: 0 auto;
 }
 
-/* número en el centro del donut */
 .program-chart-center {
   position: absolute;
   inset: 0;
@@ -327,7 +342,6 @@
   color: #6b7280;
 }
 
-/* Leyenda debajo del donut */
 .program-chart-legend {
   margin-top: 12px;
   display: flex;
@@ -353,7 +367,7 @@
   font-size: 0.78rem;
   color: #4b5563;
 }
-/* Card de tabla - estilo corporativo */
+
 .table-card {
   margin-top: 8px;
   padding: 16px 18px 18px;
@@ -383,18 +397,15 @@
   color: #6b7280;
 }
 
-/* Contenedor de la tabla */
 .table-card-body {
   width: 100%;
 }
 
-/* Estilos MUI DataGrid corporativo */
 .custom-data-grid.MuiDataGrid-root {
   border: none;
   font-family: 'Poppins', sans-serif;
 }
 
-/* Encabezados */
 .custom-data-grid .MuiDataGrid-columnHeaders {
   background: linear-gradient(to right, #06b6d4, #14b8a6);
   color: #ffffff;
@@ -404,39 +415,32 @@
   border-bottom: none;
 }
 
-/* Texto de encabezados centrado verticalmente */
 .custom-data-grid .MuiDataGrid-columnHeaderTitle {
   font-weight: 500;
 }
 
-/* Celdas y filas */
 .custom-data-grid .MuiDataGrid-cell {
   border-bottom: 1px solid #e5e7eb;
   font-size: 0.82rem;
   color: #374151;
 }
 
-/* Filas tipo zebra */
 .custom-data-grid .MuiDataGrid-row:nth-of-type(even) {
   background-color: #f9fafb;
 }
 
-/* Hover de fila */
 .custom-data-grid .MuiDataGrid-row:hover {
   background-color: #ecfeff;
 }
 
-/* Footer / paginación */
-/* Alinear horizontalmente el footer del DataGrid */
 .custom-data-grid .MuiDataGrid-footerContainer {
   display: flex !important;
-  align-items: center !important;  /* 🔥 centra todo verticalmente */
-  justify-content: space-between !important; /* distribuye los elementos */
-  height: 50px !important;  /* altura estable */
+  align-items: center !important; 
+  justify-content: space-between !important;
+  height: 50px !important;  
   padding: 0 12px !important;
 }
 
-/* Quitar borde de foco azul grueso en celdas */
 .custom-data-grid .MuiDataGrid-cell:focus,
 .custom-data-grid .MuiDataGrid-columnHeader:focus {
   outline: none !important;
@@ -446,34 +450,33 @@
   align-items: center !important;
   gap: 12px !important;
 }
-/* Cambiar "Rows per page" a español visualmente */
+
 .custom-data-grid .MuiTablePagination-selectLabel {
-  font-size: 0 !important;          /* oculto el texto original */
+  font-size: 0 !important;        
 }
 
 .custom-data-grid .MuiTablePagination-selectLabel::before {
-  content: "Filas por página:";     /* texto nuevo en español */
-  font-size: 0.78rem;               /* tamaño normal */
-  color: #6b7280;                   /* gris suave, opcional */
+  content: "Filas por página:";  
+  font-size: 0.78rem;               
+  color: #6b7280;               
 }
-/* LISTA CON SCROLL VERTICAL */
+
 .scrollable-list {
-  max-height: 110px;      /* 🔥 vuelve a poner un límite general */
+  max-height: 110px;     
   overflow-y: auto;
   padding-right: 4px;
 }
-/* Modalidad: más altura para permitir ver SEMI-PRESENCIAL */
+
 .modalidad-scroll {
-  max-height: 170px !important;  /* ajusta según la cantidad de elementos */
+  max-height: 170px !important; 
 }
-/* Contenedor con scroll general dentro de la card "Top programas" */
+
 .top-programas-scroll-container {
-  flex: 1;                /* ocupa el espacio vertical disponible debajo del título */
-  overflow-y: auto;       /* 🔥 aquí va el scroll */
+  flex: 1;               
+  overflow-y: auto;     
   padding-right: 4px;
 }
 
-/* Puedes mantener el estilo de scroll que ya tienes */
 .top-programas-scroll-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -488,7 +491,6 @@
   border-radius: 10px;
 }
 
-/* Scroll estético */
 .scrollable-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -503,14 +505,12 @@
   border-radius: 10px;
 }
 
-/* Scroll general para la card "Resumen rápido" */
 .resumen-scroll-container {
-  flex: 1;                /* ocupa espacio debajo del título */
-  overflow-y: auto;       /* 🔥 aquí va el único scroll */
+  flex: 1;              
+  overflow-y: auto;    
   padding-right: 4px;
 }
 
-/* Scroll estético */
 .resumen-scroll-container::-webkit-scrollbar {
   width: 6px;
 }
