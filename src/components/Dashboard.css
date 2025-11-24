@@ -112,9 +112,10 @@
   color: #06b6d4;
 }
 .program-chart-scroll {
-  max-height: 150px;   
+  max-height: 142px;   
   overflow-y: auto;
   padding-right: 6px;
+  padding-bottom: 8px; 
 }
 .legend-clickable {
   cursor: pointer;

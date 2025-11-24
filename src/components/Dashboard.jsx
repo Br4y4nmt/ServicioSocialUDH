@@ -36,6 +36,7 @@ function Dasborasd() {
   const [porPrograma, setPorPrograma] = useState([]);
   const [alumnosPorMes, setAlumnosPorMes] = useState([]);
   const [alumnosTabla, setAlumnosTabla] = useState([]);
+  const [programaSeleccionado, setProgramaSeleccionado] = useState(null);
   const [topProgramas, setTopProgramas] = useState([]);
   const [topLineasAccion, setTopLineasAccion] = useState([]);
   const totalEstudiantesProgramas = porPrograma.reduce(
@@ -54,8 +55,22 @@ const dataGridSpanishTheme = createTheme({
 });
 
 const handleClickPrograma = (programa) => {
-  console.log("Programa seleccionado:", programa);
+  setProgramaSeleccionado((prev) =>
+    prev === programa ? null : programa    
+  );
 };
+const programaSeleccionadoData = programaSeleccionado
+  ? porPrograma.find((p) => p.programa === programaSeleccionado)
+  : null;
+
+const numeroCentro = programaSeleccionadoData
+  ? programaSeleccionadoData.total
+  : totalEstudiantesProgramas;
+
+const labelCentro = programaSeleccionadoData
+  ? programaSeleccionadoData.programa
+  : "Estudiantes";
+
 useEffect(() => {
   const fetchAlumnosPorMes = async () => {
     try {
@@ -320,7 +335,7 @@ return (
       <Grid item xs={12} md={9} className="chart-grid-wide">
         <Paper className="chart-card" elevation={2}>
           <div className="chart-card-header">
-            <span className="chart-title">Alumnos en servicio social por mes</span>
+            <span className="chart-title">Certificados finales emitidos por mes</span>
           </div>
 
           <div className="chart-card-body">
@@ -524,13 +539,13 @@ return (
           </ResponsiveContainer>
 
           <div className="program-chart-center">
-            <span className="program-chart-center-number">
-              {totalEstudiantesProgramas}
-            </span>
-            <span className="program-chart-center-label">
-              Estudiantes
-            </span>
-          </div>
+          <span className="program-chart-center-number">
+            {numeroCentro}
+          </span>
+          <span className="program-chart-center-label">
+            {labelCentro}
+          </span>
+        </div>
         </div>
 
         <div className="program-chart-legend program-chart-scroll">
