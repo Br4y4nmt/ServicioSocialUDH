@@ -71,15 +71,15 @@
     margin-bottom: 10px;
     font-size: 1.1rem;
   }
-  .rol-docente::after {
-    content: "";
-    display: block;
-    width: 50%;
-    height: 2px;
-    background-color: #2e9e7f;
-    margin: 10px auto;
-  }
-  
+.rol-docente::after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 2px;
+  background-color: #EFB036; 
+  margin: 10px auto;
+}
+
   .sidebar-nav-docente {
     width: 100%;
   }
@@ -94,25 +94,26 @@
     padding: 10px 0;
   }
   
-  .menu-title-docente {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-    padding: 8px 12px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .menu-title-docente:hover {
-    background-color: #f1f1f1;
-  }
-  
+.menu-title-docente {
+  background-color: #ffffff;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu-title-docente:hover {
+  background-color: #F3F4F6;
+}
+
   .submenu-docente {
     list-style: none;
     padding-left: 20px;
@@ -132,6 +133,22 @@
     background-color: #003366;
     color: white;
   }
-  /* Estilos solo para pantallas responsive (móviles y tabletas) */
-/* Para el fondo transparente en modo responsive */
 
+.menu-title-docente--active {
+  background-color: #F3F4F6; 
+  color: #222; 
+}
+
+.menu-title-docente--active span {
+  color: #222;
+}
+
+.menu-title-docente__chevron {
+  margin-left: 8px;
+  font-size: 0.9rem;
+  color: #2e9e7f;
+}
+
+.menu-title-docente--active .menu-title-docente__chevron {
+  color: #222;
+}

@@ -161,8 +161,17 @@
 .fas.fa-file-pdf { color: #e74c3c; } 
 .fas.fa-user-graduate { color: #9b59b6; } 
 .fas.fa-tools { color: #34495e; } 
+
 .menu-title:hover {
-  background-color: #f1f1f1;
+  background-color: #F3F4F6;
+}
+.menu-title--active {
+  background-color: #F3F4F6; 
+  color: #262727;
+}
+
+.menu-title--active span {
+  color: inherit;
 }
 
 .menu-title i {

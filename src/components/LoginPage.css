@@ -16,11 +16,10 @@ body, html, #root {
   .login-page, .image-container {
     background-color: #ffffff;
   }
-  
-  /* Parte de la imagen */
+
 .image-container {
   flex: 1.5;
-  background-color: #ffffff; /* Aseguramos blanco */
+  background-color: #ffffff; 
   overflow: hidden;
   position: relative;
   transform: translateX(-30px);
@@ -34,7 +33,6 @@ body, html, #root {
   transform: none;
 }
 
-  /* Parte del formulario */
   .form-container {
     flex: 1;
     display: flex;
@@ -49,21 +47,21 @@ body, html, #root {
   margin-top: 20px;
 }
   .login-card {
-  position: relative; /* ✅ NECESARIO para los bordes */
+  position: relative; 
   background: #ffffff;
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
-  overflow: hidden; /* Opcional si hay problemas de desbordamiento */
+  overflow: hidden; 
   width: 440px; 
 }
 .login-card::before {
   content: '';
   position: absolute;
-  top: 16px;              /* Más hacia adentro */
+  top: 16px;              
   left: 16px;
-  width: 28px;            /* Más grande */
+  width: 28px;            
   height: 28px;
   border-top: 3px solid #39B49E;
   border-left: 3px solid #39B49E;
@@ -73,7 +71,7 @@ body, html, #root {
 .login-card::after {
   content: '';
   position: absolute;
-  bottom: 16px;           /* Más hacia adentro */
+  bottom: 16px;          
   right: 16px;
   width: 28px;
   height: 28px;
@@ -81,8 +79,6 @@ body, html, #root {
   border-right: 3px solid #39B49E;
   border-bottom-right-radius: 8px;
 }
-
-
   .login-logo {
     width: 180px;
     margin-bottom: 20px;
@@ -90,8 +86,8 @@ body, html, #root {
   
   .login-title {
     margin-bottom: 10px;
-    font-weight: 450 !important;       /* menos grueso */
-    font-size: 25px !important;        /* 🔽 tamaño reducido */
+    font-weight: 450 !important;       
+    font-size: 25px !important;        
   }
   .subtitle-login {
     margin-bottom: 20px;

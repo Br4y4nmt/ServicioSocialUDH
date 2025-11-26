@@ -2,9 +2,12 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../UserContext';
-import Swal from 'sweetalert2';
 import React, { useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  mostrarAlertaRolNoValido,
+  mostrarAlertaUsuarioNoRegistrado
+} from "../hooks/alerts/alertas";
 import './LoginPage.css';
 
 function LoginPage() {
@@ -81,12 +84,7 @@ function LoginPage() {
       } else if (rol === 'programa-academico') {
         navigate('/dashboard-programa-academico', { replace: true });
       } else {
-        await Swal.fire({
-          icon: 'error',
-          title: 'Rol no válido',
-          confirmButtonColor: '#d33',
-          timer: 2500,
-        });
+        await mostrarAlertaRolNoValido();
       }
 
     } catch (error) {
@@ -97,17 +95,7 @@ function LoginPage() {
         google.accounts.id.cancel();
         google.accounts.id.disableAutoSelect();
       }
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Usuario no registrado',
-        text: error.response?.data?.message || 'Tu cuenta no está registrada.',
-        confirmButtonColor: '#d33',
-        confirmButtonText: 'Cerrar',
-        allowOutsideClick: false,
-        allowEscapeKey: false
-      });
-
+      await mostrarAlertaUsuarioNoRegistrado(error.response?.data?.message);
     } finally {
       if (!unmounted.current) {
         setLoadingGoogle(false); 
@@ -163,13 +151,20 @@ useEffect(() => {
   return (
   <div className="login-page">
     <div className="image-container">
-      <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDH Labor Social" />
+      <picture>
+        <source srcSet="/SERVICIOSOCIAL1.webp" type="image/webp" />
+        <img
+          src="/SERVICIOSOCIAL1.png"
+          alt="Fondo UDH Labor Social"
+          width="1200"
+          height="800"
+          loading="lazy"
+        />
+      </picture>
     </div>
     <div className="form-container">
       <div className="login-card">
         <h2 className="login-title">Iniciar sesión</h2>
-
-
         <p className="register-text">¿Aún no tienes una cuenta?</p>
 
         <Link to="/register" style={{ textDecoration: 'none' }} className="link-no-style">

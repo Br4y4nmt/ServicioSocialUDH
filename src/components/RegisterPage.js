@@ -26,13 +26,11 @@ const handleRegister = async (e) => {
     ? parseInt(codigo.substring(1, 5), 10)
     : parseInt(codigo.substring(0, 4), 10);
 
-  // Validación: Año permitido
   if (isNaN(anio) || anio < 2021) {
     await mostrarAlertaCodigoNoPermitido();
     return;
   }
 
-  // Validación: WhatsApp válido
   if (!/^9\d{8}$/.test(whatsapp)) {
     await mostrarAlertaWhatsappInvalido();
     return;
@@ -41,7 +39,6 @@ const handleRegister = async (e) => {
   setIsSubmitting(true);
 
   try {
-    // Registrar usuario
     await axios.post('/api/auth/register', {
       email: `${codigo}@udh.edu.pe`,
       dni,
@@ -49,7 +46,6 @@ const handleRegister = async (e) => {
       codigo,
     });
 
-    // Éxito
     await mostrarAlertaRegistroExitoso();
 
     setTimeout(() => navigate('/login'), 2000);
@@ -60,11 +56,9 @@ const handleRegister = async (e) => {
       error.response ? error.response.data : error.message
     );
 
-    // Error: Servicio UDH caído
     if (error.response?.status === 503) {
       await mostrarAlertaServicioUDHNoDisponible();
     } 
-    // Error genérico
     else {
       await mostrarAlertaErrorRegistro(error.response?.data?.message);
     }
@@ -77,7 +71,16 @@ const handleRegister = async (e) => {
   return (
     <div className="register-page">
   <div className="image-container">
-    <img src="/SERVICIOSOCIAL1.png" alt="Fondo UDHLabor Social" />
+    <picture>
+        <source srcSet="/SERVICIOSOCIAL1.webp" type="image/webp" />
+        <img
+          src="/SERVICIOSOCIAL1.png"
+          alt="Fondo UDH Labor Social"
+          width="1200"
+          height="800"
+          loading="lazy"
+        />
+      </picture>  
   </div>
   <div className="form-container">
     <div className="register-card">

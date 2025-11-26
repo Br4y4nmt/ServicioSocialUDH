@@ -24,7 +24,26 @@ export const mostrarAlertaDemasiadoPronto = (fechaPermitida) => {
     confirmButtonText: "Entendido",
   });
 };
+export const mostrarAlertaRolNoValido = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Rol no válido',
+    confirmButtonColor: '#d33',
+    timer: 2500,
+  });
+};
 
+export const mostrarAlertaUsuarioNoRegistrado = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Usuario no registrado',
+    text: mensaje || 'Tu cuenta no está registrada.',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Cerrar',
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  });
+};
 /**
  * Alerta: fecha vencida para subir evidencia
  */
@@ -36,7 +55,6 @@ export const mostrarAlertaFechaVencida = (fechaPermitida) => {
     confirmButtonText: "Aceptar",
   });
 };
-
 /**
  * Alerta: falta seleccionar archivo de evidencia
  */
@@ -48,8 +66,6 @@ export const mostrarAlertaFaltaEvidencia = () => {
     confirmButtonText: "Aceptar",
   });
 };
-
-
 /**
  * Alerta: evidencia subida con éxito
  */
@@ -62,7 +78,6 @@ export const mostrarAlertaEvidenciaSubida = () => {
     showConfirmButton: false,
   });
 };
-
 /**
  * Alerta: error al subir evidencia
  */
@@ -74,7 +89,6 @@ export const mostrarAlertaErrorEvidencia = () => {
     confirmButtonText: "Aceptar",
   });
 };
-
 /**
  * Confirmación antes de aprobar una actividad
  */
@@ -88,15 +102,12 @@ export const confirmarAprobacionActividad = () => {
     cancelButtonText: "Cancelar",
   });
 };
-
 /**
  * Error genérico al aprobar actividad
  */
 export const mostrarErrorAprobacionActividad = () => {
   return Swal.fire("Error", "No se pudo aprobar la actividad.", "error");
 };
-
-
 /**
  * Alerta: observación registrada exitosamente
  */
@@ -193,5 +204,34 @@ export const mostrarAlertaErrorRegistro = (mensaje) => {
     title: "Error en el registro",
     text: mensaje || "No se pudo registrar. Intenta nuevamente.",
     confirmButtonColor: "#d33",
+  });
+};
+// Cuando aún no aceptan el plan
+export const mostrarAlertaSolicitudPendiente = () => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Solicitud pendiente',
+    text: 'El docente aún no ha aceptado tu solicitud.',
+    confirmButtonText: 'Entendido',
+  });
+};
+
+// Cuando la conformidad del plan aún no está aprobada
+export const mostrarAlertaConformidadPendiente = () => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Conformidad pendiente',
+    text: 'Tu asesor aún no ha aprobado el esquema plan.',
+    confirmButtonText: 'Entendido',
+  });
+};
+
+// Cuando aún no puede entrar al informe final
+export const mostrarAlertaAccesoRestringidoInformeFinal = () => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Acceso restringido',
+    text: 'Aún no puedes acceder al Informe Final. Tu carta de término aún no ha sido aprobada.',
+    confirmButtonText: 'Entendido',
   });
 };

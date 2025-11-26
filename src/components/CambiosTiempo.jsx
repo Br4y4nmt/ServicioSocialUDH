@@ -16,11 +16,9 @@ function CambiosTiempo() {
   const [editando, setEditando] = useState(null);
   const [nuevaFecha, setNuevaFecha] = useState("");
   const [guardando, setGuardando] = useState(false);
-
   const { user } = useUser();
   const token = user?.token;
 
-  // --- API: Estudiantes ---
   const fetchEstudiantes = async () => {
     try {
       if (!token) return;
@@ -29,12 +27,11 @@ function CambiosTiempo() {
       });
       setEstudiantes(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
-      console.error("❌ Error al obtener estudiantes:", error);
+      console.error("Error al obtener estudiantes:", error);
       setErrorMensaje("No se pudieron cargar los estudiantes.");
     }
   };
 
-  // --- API: Programas ---
   const fetchProgramas = async () => {
     try {
       if (!token) return;
@@ -43,7 +40,7 @@ function CambiosTiempo() {
       });
       setProgramas(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
-      console.error("❌ Error al obtener programas:", error);
+      console.error("Error al obtener programas:", error);
     }
   };
 
@@ -53,8 +50,7 @@ function CambiosTiempo() {
     fetchProgramas();
   }, [token]);
 
-  // --- Filtrado de estudiantes ---
-  const estudiantesFiltrados = estudiantes.filter((est) => {
+    const estudiantesFiltrados = estudiantes.filter((est) => {
     const texto = filtroEstudiantes.toLowerCase();
     const coincideTexto = est.nombre_estudiante?.toLowerCase().includes(texto);
     const coincidePrograma =
@@ -63,7 +59,6 @@ function CambiosTiempo() {
     return coincideTexto && coincidePrograma;
   });
 
-  // --- Abrir modal con fechas de cronograma ---
   const verDetalle = async (id_estudiante, nombre) => {
     try {
       setNombreEstudiante(nombre);
@@ -84,7 +79,7 @@ function CambiosTiempo() {
         setCronogramas([]);
       }
     } catch (error) {
-      console.error("❌ Error al obtener fechas del cronograma:", error);
+      console.error("Error al obtener fechas del cronograma:", error);
       setCronogramas([]);
     }
   };
@@ -100,7 +95,6 @@ function CambiosTiempo() {
     setNuevaFecha(fechaActual ? fechaActual.split("T")[0] : "");
   };
 
-  // ✅ Toast con estilo claro y elegante
   const mostrarToast = (mensaje) => {
     Swal.fire({
       toast: true,
@@ -119,13 +113,11 @@ function CambiosTiempo() {
     });
   };
 
-  // --- Guardar cambios ---
   const guardarFecha = async (id) => {
   try {
     const cronograma = cronogramas.find((item) => item.id === id);
     if (!cronograma) return;
 
-    // 🧠 Si no hay cambios en la fecha, no hacemos la llamada ni mostramos éxito
     const fechaOriginal = new Date(cronograma.fecha_fin_primero)
       .toISOString()
       .split("T")[0];
@@ -164,7 +156,6 @@ function CambiosTiempo() {
       );
       setEditando(null);
 
-      // ✅ Mostrar el toast de éxito
       Swal.fire({
         toast: true,
         position: "top-end",
@@ -178,7 +169,7 @@ function CambiosTiempo() {
       });
     }
   } catch (error) {
-    console.error("❌ Error al actualizar la fecha:", error);
+    console.error("Error al actualizar la fecha:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -293,7 +284,6 @@ function CambiosTiempo() {
         </div>
       </div>
 
-      {/* MODAL DE DETALLE */}
       {modalVisible && (
         <div className="modal-tiempo-overlay">
           <div className="modal-tiempo-content">
