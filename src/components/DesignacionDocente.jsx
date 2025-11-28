@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import './DashboardDocente.css';
 import PdfIcon from "../hooks/componentes/PdfIcon";
-import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
+import { VerBotonInline } from "../hooks/componentes/VerBoton";
 import { createPortal } from 'react-dom';
 
 

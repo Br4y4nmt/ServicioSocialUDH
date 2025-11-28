@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import SidebarDocente from '../components/SidebarDocente';
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import {
+  mostrarAlertaCelularInvalido,
+  mostrarAlertaSinCambios,
+  mostrarAlertaCelularActualizado,
+  mostrarAlertaErrorActualizarCelular,
+} from '../hooks/alerts/alertas';
 import './DashboardAlumno.css';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../UserContext';
+import { useUser } from '../UserContext';  
 
 function MiPerfilDocente() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [nombre, setNombre] = useState('');
-  const [facultades, setFacultades] = useState([]);
-  const [programas, setProgramas] = useState([]);
+  const [, setFacultades] = useState([]);
+  const [, setProgramas] = useState([]);
   const { user } = useUser();  
   const token = user?.token; 
-  const navigate = useNavigate();
 
   const [perfil, setPerfil] = useState({
     nombre_docente: '',
@@ -33,7 +36,7 @@ function MiPerfilDocente() {
     const usuario_id = localStorage.getItem('id_usuario');
     if (!usuario_id) return;
 
-   const fetchPerfil = async () => {
+  const fetchPerfil = async () => {
       try {
         const res = await axios.get(
           `/api/docentes/datos/usuario/${usuario_id}`,
@@ -59,7 +62,7 @@ function MiPerfilDocente() {
     };
 
 
-   const fetchFacultades = async () => {
+  const fetchFacultades = async () => {
       try {
         const res = await axios.get('/api/facultades', {
           headers: { Authorization: `Bearer ${token}` }
@@ -99,26 +102,15 @@ function MiPerfilDocente() {
   };
 
  const handleGuardar = async () => {
-
-  if (!/^\d{9}$/.test(perfil.celular)) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Número inválido',
-      text: 'El número celular debe tener exactamente 9 dígitos.',
-      confirmButtonColor: '#3085d6'
-    });
+    if (!/^\d{9}$/.test(perfil.celular)) {
+      mostrarAlertaCelularInvalido();
+      return;
+    }
+    if (perfil.celular === celularOriginal) {
+    mostrarAlertaSinCambios('No se realizaron cambios.');
     return;
   }
 
-  if (perfil.celular === celularOriginal) {
-    Swal.fire({
-      icon: 'info',
-      title: 'Sin cambios',
-      text: 'No se realizaron cambios.',
-      confirmButtonColor: '#3085d6'
-    });
-    return;
-  }
 
   try {
     const usuario_id = localStorage.getItem('id_usuario');
@@ -131,26 +123,14 @@ function MiPerfilDocente() {
       }
     );
 
-    setCelularOriginal(perfil.celular); 
+  setCelularOriginal(perfil.celular);
+  mostrarAlertaCelularActualizado();
 
-    Swal.fire({
-      icon: 'success',
-      title: '¡Actualizado!',
-      text: 'Celular actualizado correctamente.',
-      confirmButtonColor: '#3085d6'
-    });
   } catch (error) {
     console.error('Error al actualizar celular:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un error al actualizar el celular.',
-      confirmButtonColor: '#d33'
-    });
+    mostrarAlertaErrorActualizarCelular();
   }
 };
-
-
 
   return (
     <>

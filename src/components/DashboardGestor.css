@@ -110,22 +110,6 @@
   font-weight: 600;
 }
 
-.facultades-btn-agregar {
-  background-color: #1a237e;
-  color: white;
-  border: none;
-  padding: 6px 12px; 
-  font-size: 13px;   
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.facultades-btn-agregar:hover {
-  background-color: #0f164a;
-}
-
 .facultades-table {
   width: 100%;
   border-collapse: collapse;
@@ -332,21 +316,6 @@
    font-size: 22px; 
   font-weight: 700; 
   margin: 0; 
-}
-
-.programas-btn-agregar {
-  background-color: #1a237e;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.programas-btn-agregar:hover {
-  background-color: #0f164a;
 }
 
 .programas-form {
@@ -884,19 +853,6 @@
   margin: 0;
 }
 
-.labores-btn-agregar {
-  background-color: #1a237e;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.labores-btn-agregar:hover {
-  background-color: #0f164a;
-}
 .labores-table-wrapper {
   overflow-x: auto;
 }
@@ -1314,21 +1270,7 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-.agregar-btn {
-  background-color: #1e3a8a;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
 
-.agregar-btn:hover {
-  background-color: #1b3374;
-}
-
-/* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }

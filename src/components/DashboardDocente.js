@@ -6,7 +6,7 @@ import SidebarDocente from './SidebarDocente';
 import './DashboardDocente.css';
 import Swal from 'sweetalert2';
 import { useWelcomeToast } from '../hooks/alerts/useWelcomeToast';
-import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
+import VerBoton from "../hooks/componentes/VerBoton";
 import axios from 'axios';
 import QRCode from 'qrcode';
 import { useUser } from '../UserContext';

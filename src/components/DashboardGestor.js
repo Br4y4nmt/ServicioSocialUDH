@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import SidebarGestor from './SidebarGestor';
@@ -7,9 +7,21 @@ import ImpersonateLogin from './ImpersonateLogin';
 import CambiosTiempo from './CambiosTiempo';
 import CambioAsesor from "./CambioAsesor"; 
 import Dasborasd  from "./Dashboard";
+import FacultadNuevoModal from "./modals/FacultadNuevoModal";
+import ProgramaNuevoModal from "./modals/ProgramaNuevoModal"; 
+import DocenteNuevoModal from "./modals/DocenteNuevoModal";
+import FacultadEditarModal from "./modals/FacultadEditarModal";
+import ProgramaEditarModal from "./modals/ProgramaEditarModal";
+import EstudianteNuevoModal from "./modals/EstudianteNuevoModal";
+import LaborNuevoModal from "./modals/LaborNuevoModal";
+import LineaEditarModal from "./modals/LineaEditarModal";
+import LineaNuevoModal from "./modals/LineaNuevoModal";
+import LaborEditarModal from "./modals/LaborEditarModal";
+import DocenteEditarModal from "./modals/DocenteEditarModal";
+import SeguimientoModal from "./modals/SeguimientoModal";
 import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
-import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
+import VerBoton from "../hooks/componentes/VerBoton";
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
 import { useUser } from '../UserContext';
@@ -17,6 +29,7 @@ import { useUser } from '../UserContext';
 
 function DashboardGestor() {
   const [programas, setProgramas] = useState([]);
+  const [modalNuevaFacultadVisible, setModalNuevaFacultadVisible] = useState(false);
   const [programaSeleccionado, setProgramaSeleccionado] = useState('');
   const [nuevoPrograma, setNuevoPrograma] = useState('');
   const [editandoId, setEditandoId] = useState(null);
@@ -118,7 +131,13 @@ function DashboardGestor() {
     });
   }
 };
-const fetchEstudiantes = async () => {
+
+  const toggleSidebar = () => {
+    setCollapsed(prev => !prev);
+  };
+
+const fetchEstudiantes = useCallback(async () => {
+  if (!token) return;
   try {
     const res = await axios.get("/api/estudiantes", {
       headers: { Authorization: `Bearer ${token}` },
@@ -127,12 +146,14 @@ const fetchEstudiantes = async () => {
   } catch (error) {
     console.error("Error al obtener estudiantes:", error);
   }
-};
+}, [token]);
 
 useEffect(() => {
-  if (!token) return;
   fetchEstudiantes();
-}, [token]);
+}, [fetchEstudiantes]);
+
+
+
 const aceptarInforme = async (id) => {
   try {
     const informe = informesFinales.find((i) => i.id === id);
@@ -283,7 +304,7 @@ const aceptarInforme = async (id) => {
   }
 };
 
-const fetchSupervisores = async () => {
+const fetchSupervisores = useCallback(async () => {
   if (!token) return;
   try {
     const res = await axios.get('/api/trabajo-social/supervisores', {
@@ -293,7 +314,7 @@ const fetchSupervisores = async () => {
   } catch (error) {
     console.error('Error al cargar supervisores:', error);
   }
-};
+}, [token]);
 
 
   const verSeguimiento = async (usuario_id) => {
@@ -310,23 +331,8 @@ const fetchSupervisores = async () => {
     };
 
 
-
-useEffect(() => {
-  const fetchEstudiantes = async () => {
-    try {
-      const res = await axios.get('/api/estudiantes', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEstudiantes(res.data);
-    } catch (error) {
-      console.error('Error al obtener estudiantes:', error);
-    }
-  };
-
-  fetchEstudiantes();
-}, []);
-
-const fetchInformesFinales = async () => {
+const fetchInformesFinales = useCallback(async () => {
+  if (!token) return;
   try {
     const res = await axios.get('/api/trabajo-social/informes-finales', {
       headers: { Authorization: `Bearer ${token}` }
@@ -335,9 +341,10 @@ const fetchInformesFinales = async () => {
   } catch (error) {
     console.error('Error al cargar informes finales:', error);
   }
-};
+}, [token]);
 
-  const fetchLineas = async () => {
+const fetchLineas = useCallback(async () => {
+  if (!token) return;
   try {
     const res = await axios.get('/api/lineas', {
       headers: { Authorization: `Bearer ${token}` }
@@ -346,7 +353,7 @@ const fetchInformesFinales = async () => {
   } catch (error) {
     console.error('Error al cargar líneas de acción:', error);
   }
-};
+}, [token]);
 
 const crearLinea = async () => {
   if (!nuevaLinea.trim()) return;
@@ -421,19 +428,17 @@ const eliminarLinea = async (id) => {
 };
 
 
-  const fetchProgramas = async () => {
-    try {
-      const res = await axios.get('/api/programas', {
+const fetchProgramas = useCallback(async () => {
+  if (!token) return;
+  try {
+    const res = await axios.get('/api/programas', {
       headers: { Authorization: `Bearer ${token}` }
     });
-      setProgramas(res.data);
-    } catch (error) {
-      console.error('Error al cargar programas:', error);
-    }
-  };
-  const toggleSidebar = () => {
-    setCollapsed(prev => !prev);
-  };
+    setProgramas(res.data);
+  } catch (error) {
+    console.error('Error al cargar programas:', error);
+  }
+}, [token]);
 
 const crearPrograma = async () => {
   if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) {
@@ -578,16 +583,17 @@ const eliminarPrograma = async (id) => {
 
 
 
-  const fetchDocentes = async () => {
-    try {
-      const res = await axios.get('/api/docentes', {
+const fetchDocentes = useCallback(async () => {
+  if (!token) return;
+  try {
+    const res = await axios.get('/api/docentes', {
       headers: { Authorization: `Bearer ${token}` }
     });
-      setDocentes(res.data);
-    } catch (error) {
-      console.error('Error al cargar docentes:', error);
-    }
-  };
+    setDocentes(res.data);
+  } catch (error) {
+    console.error('Error al cargar docentes:', error);
+  }
+}, [token]);
 
 
 const crearDocente = async () => {
@@ -628,7 +634,6 @@ const crearDocente = async () => {
       }
     );
 
-    // Limpiar campos (ya no necesitas limpiar el DNI)
     setNuevoDocenteEmail('');
     setNuevoDocenteWhatsapp('');
     setNuevaFacultadDocente('');
@@ -675,7 +680,6 @@ const guardarEdicionPrograma = async () => {
     return;
   }
 
-  // Validación de formato de correo
   const correoValido = emailEditado.endsWith('@gmail.com') || emailEditado.endsWith('@udh.edu.pe');
   if (!correoValido) {
     Swal.fire({
@@ -702,7 +706,6 @@ const guardarEdicionPrograma = async () => {
       timer: 1800
     });
 
-    // Limpiar estado y cerrar modal
     setModalEditarProgramaVisible(false);
     setIdEditandoPrograma(null);
     setProgramaEditado('');
@@ -767,7 +770,7 @@ const eliminarDocente = async (id) => {
 useEffect(() => {
   const fetchProgramasPorFacultad = async () => {
     if (!nuevaFacultadDocente) {
-      setProgramas([]); // Limpia programas si no hay facultad seleccionada
+      setProgramas([]); 
       return;
     }
 
@@ -775,7 +778,7 @@ useEffect(() => {
       const res = await axios.get(`/api/programas/facultad/${nuevaFacultadDocente}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setProgramas(res.data); // ¡Cambia los programas mostrados!
+      setProgramas(res.data); 
     } catch (error) {
       console.error('Error al obtener programas filtrados:', error);
     }
@@ -796,7 +799,6 @@ const guardarEdicionDocente = async (id) => {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    // Mostrar alerta de éxito
     Swal.fire({
       icon: 'success',
       title: 'Docente actualizado',
@@ -805,7 +807,6 @@ const guardarEdicionDocente = async (id) => {
       showConfirmButton: false,
     });
 
-    // Limpiar estado y recargar lista
     setEditandoDocenteId(null);
     fetchDocentes();
 
@@ -828,16 +829,16 @@ const guardarEdicionDocente = async (id) => {
   }
 };
 
-  const fetchLabores = async () => {
-    try {
-      const res = await axios.get('/api/labores', {
+const fetchLabores = useCallback(async () => {
+  try {
+    const res = await axios.get('/api/labores', {
       headers: { Authorization: `Bearer ${token}` }
     });
-      setLabores(res.data);
-    } catch (error) {
-      console.error('Error al cargar labores sociales:', error);
-    }
-  };
+    setLabores(res.data);
+  } catch (error) {
+    console.error('Error al cargar labores sociales:', error);
+  }
+}, [token]);
 
   const crearLabor = async () => {
     if (!nuevaLabor.trim() || !lineaLabor) return;
@@ -913,21 +914,22 @@ const eliminarLabor = async (id) => {
   };
 
 
-  const fetchFacultades = async () => {
-    try {
-      const res = await axios.get('/api/facultades', {
+const fetchFacultades = useCallback(async () => {
+  if (!token) return;
+  try {
+    const res = await axios.get('/api/facultades', {
       headers: { Authorization: `Bearer ${token}` }
     });
-      setFacultades(res.data);
-    } catch (error) {
-      console.error('Error al cargar facultades:', error);
-    }
-  };
+    setFacultades(res.data);
+  } catch (error) {
+    console.error('Error al cargar facultades:', error);
+  }
+}, [token]);
 
   const crearFacultad = async () => {
     if (!nuevaFacultad.trim()) return;
     try {
-       await axios.post('/api/facultades', {
+      await axios.post('/api/facultades', {
       nombre_facultad: nuevaFacultad,
         }, {
           headers: { Authorization: `Bearer ${token}` }
@@ -1000,12 +1002,22 @@ useEffect(() => {
   fetchInformesFinales();
   fetchFacultades();
   fetchLineas();
-  fetchSupervisores();     
-}, [token]);
+  fetchSupervisores();
+}, [
+  token,
+  fetchProgramas,
+  fetchDocentes,
+  fetchLabores,
+  fetchInformesFinales,
+  fetchFacultades,
+  fetchLineas,
+  fetchSupervisores,
+]);
+
 
   return (
     <div className="layout-gestor">
-     <Header onToggleSidebar={toggleSidebar} />
+    <Header onToggleSidebar={toggleSidebar} />
     <SidebarGestor
       collapsed={collapsed}
       nombre="Nombre del Gestor"
@@ -1023,8 +1035,8 @@ useEffect(() => {
   <div className="facultades-header-left">
     <h2>Facultades</h2>
     <button
-      className="facultades-btn-agregar"
-      onClick={() => document.querySelector(".facultades-modal").classList.add("show")}
+      className="docentes-btn-agregar"
+      onClick={() => setModalNuevaFacultadVisible(true)}
     >
       Agregar
     </button>
@@ -1099,79 +1111,38 @@ useEffect(() => {
         </table>
       </div>
     </div>
-    {modalEditarVisible && (
-  <div className="facultades-modal show">
-    <div className="facultades-modal-content">
-      <h3>Editar Facultad</h3>
-      <input
-        type="text"
-        className="facultades-modal-input"
-        placeholder="Nuevo nombre de la facultad"
-        value={nombreEditado}
-        onChange={(e) => setNombreEditado(e.target.value)}
-      />
-      <div className="facultades-modal-actions">
-        <button
-          className="facultades-btn cancelar"
-          onClick={() => {
-            cancelarEdicion();
-            setModalEditarVisible(false);
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-        className="facultades-btn guardar"
-        onClick={async () => {
-          await guardarEdicionFacultad(editandoId);
-          setModalEditarVisible(false);
-        }}
-      >
-        Guardar
-      </button>
-      </div>
-    </div>
+  <FacultadEditarModal
+  isOpen={modalEditarVisible}
+  nombre={nombreEditado}
+  onChangeNombre={setNombreEditado}
+  onCancelar={() => {
+    cancelarEdicion();
+    setModalEditarVisible(false);
+  }}
+  onGuardar={async () => {
+    await guardarEdicionFacultad(editandoId);
+    setModalEditarVisible(false);
+  }}
+/>
+
+  <FacultadNuevoModal
+  isOpen={modalNuevaFacultadVisible}
+  nombreFacultad={nuevaFacultad}
+  onChangeNombre={setNuevaFacultad}
+  onClose={() => {
+    setModalNuevaFacultadVisible(false);
+    setNuevaFacultad("");
+  }}
+  onGuardar={async () => {
+    await crearFacultad();
+    setModalNuevaFacultadVisible(false);
+    setNuevaFacultad("");
+  }}
+/>
+
   </div>
 )}
 
-    {/* Modal personalizado */}
-    <div className="facultades-modal">
-      <div className="facultades-modal-content">
-        <h3>Nueva Facultad</h3>
-        <input
-          type="text"
-          className="facultades-modal-input"
-          placeholder="Nombre de la facultad"
-          value={nuevaFacultad}
-          onChange={(e) => setNuevaFacultad(e.target.value)}
-        />
-        <div className="facultades-modal-actions">
-          <button
-            className="facultades-btn cancelar"
-            onClick={() => {
-              document.querySelector(".facultades-modal").classList.remove("show");
-              setNuevaFacultad('');
-            }}
-          >
-            Cancelar
-          </button>
-          <button
-            className="facultades-btn guardar"
-            onClick={() => {
-              crearFacultad();
-              document.querySelector(".facultades-modal").classList.remove("show");
-            }}
-          >
-            Guardar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
-
- 
 {activeSection === 'programas' && (
   <div className="programas-container">
     <div className="programas-card">
@@ -1179,7 +1150,7 @@ useEffect(() => {
   <div className="programas-header-left">
     <h2>Programas Académicos</h2>
     <button
-      className="programas-btn-agregar"
+      className="docentes-btn-agregar"
       onClick={() => setModalProgramaVisible(true)}
     >
       Agregar
@@ -1240,7 +1211,7 @@ useEffect(() => {
             onClick={() => eliminarPrograma(prog.id_programa)}
             className="programas-btn eliminar"
           >
-           <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
                       <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
                     </svg>
           </button>
@@ -1255,147 +1226,63 @@ useEffect(() => {
   
 )}
 
-{modalEditarProgramaVisible && (
-  <div className="programas-modal show">
-    <div className="programas-modal-content">
-      <h3>Editar Programa Académico</h3>
-
-      <input
-        type="text"
-        className="programas-modal-input"
-        placeholder="Nombre del programa"
-        value={programaEditado}
-        onChange={(e) => setProgramaEditado(e.target.value)}
-        autoFocus
-      />
-
-      <select
-        className="programas-modal-select"
-        value={facultadEditada}
-        onChange={(e) => setFacultadEditada(e.target.value)}
-      >
-        <option value="">Selecciona una facultad</option>
-        {facultades.map((fac) => (
-          <option key={fac.id_facultad} value={fac.id_facultad}>
-            {fac.nombre_facultad}
-          </option>
-        ))}
-      </select>
-
-      <input
-        type="email"
-        className="programas-modal-input"
-        placeholder="Correo institucional"
-        value={emailEditado}
-        onChange={(e) => setEmailEditado(e.target.value)}
-      />
-
-      <div className="programas-modal-actions">
-        <button
-          className="programas-btn cancelar"
-          onClick={() => {
-            setModalEditarProgramaVisible(false);
-            setIdEditandoPrograma(null);
-            setProgramaEditado('');
-            setFacultadEditada('');
-            setEmailEditado('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="programas-btn guardar"
-          onClick={guardarEdicionPrograma}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+<ProgramaEditarModal
+  isOpen={modalEditarProgramaVisible}
+  nombre={programaEditado}
+  onChangeNombre={setProgramaEditado}
+  facultad={facultadEditada}
+  onChangeFacultad={setFacultadEditada}
+  email={emailEditado}
+  onChangeEmail={setEmailEditado}
+  facultades={facultades}
+  onClose={() => {
+    setModalEditarProgramaVisible(false);
+    setIdEditandoPrograma(null);
+    setProgramaEditado("");
+    setFacultadEditada("");
+    setEmailEditado("");
+  }}
+  onGuardar={guardarEdicionPrograma}
+/>
 
 
-{modalProgramaVisible && (
-  <div className="programas-modal show">
-    <div className="programas-modal-content">
-      <h3>Nuevo Programa Académico</h3>
+<ProgramaNuevoModal
+  isOpen={modalProgramaVisible}
+  nombrePrograma={nuevoPrograma}
+  onChangeNombrePrograma={setNuevoPrograma}
+  facultadPrograma={facultadPrograma}
+  onChangeFacultadPrograma={setFacultadPrograma}
+  emailPrograma={emailPrograma}
+  onChangeEmailPrograma={setEmailPrograma}
+  whatsappPrograma={whatsappPrograma}
+  onChangeWhatsappPrograma={(value) => {
+    if (/^\d{0,9}$/.test(value)) {
+      setWhatsappPrograma(value);
+    }
+  }}
+  facultades={facultades}
+  onClose={() => {
+    setModalProgramaVisible(false);
+    setNuevoPrograma("");
+    setFacultadPrograma("");
+    setEmailPrograma("");
+    setWhatsappPrograma("");
+  }}
+  onGuardar={() => {
+    if (whatsappPrograma.length !== 9) {
+      Swal.fire({
+        icon: "error",
+        title: "Número inválido",
+        text: "El número de WhatsApp debe tener exactamente 9 dígitos.",
+        confirmButtonColor: "#d33",
+      });
+      return;
+    }
+    crearPrograma();
+    setModalProgramaVisible(false);
+  }}
+/>
 
-      {/* Input del nombre */}
-      <input
-        type="text"
-        className="programas-modal-input"
-        placeholder="Nombre del programa"
-        value={nuevoPrograma}
-        onChange={(e) => setNuevoPrograma(e.target.value)}
-      />
-
-      {/* Select de facultades */}
-      <select
-        className="programas-modal-select"
-        value={facultadPrograma}
-        onChange={(e) => setFacultadPrograma(e.target.value)}
-      >
-        <option value="">Selecciona una facultad</option>
-        {facultades.map((fac) => (
-          <option key={fac.id_facultad} value={fac.id_facultad}>
-            {fac.nombre_facultad}
-          </option>
-        ))}
-      </select>
-      <input
-        type="email"
-        className="programas-modal-input"
-        placeholder="Correo institucional del programa"
-        value={emailPrograma}
-        onChange={(e) => setEmailPrograma(e.target.value)}
-      />
-      <input
-        type="text"
-        className="programas-modal-input"
-        placeholder="WhatsApp del programa"
-        value={whatsappPrograma}
-        onChange={(e) => {
-          const value = e.target.value;
-          if (/^\d{0,9}$/.test(value)) {
-            setWhatsappPrograma(value);
-          }
-        }}
-      />
-      <div className="programas-modal-actions">
-        <button
-          className="programas-btn cancelar"
-          onClick={() => {
-            setModalProgramaVisible(false);
-            setNuevoPrograma('');
-            setFacultadPrograma('');
-            setEmailPrograma('');
-            setWhatsappPrograma('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="programas-btn guardar"
-          onClick={() => {
-            if (whatsappPrograma.length !== 9) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Número inválido',
-                text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
-                confirmButtonColor: '#d33'
-              });
-              return;
-            }
-            crearPrograma();
-            setModalProgramaVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
 
 {activeSection === 'supervisores' && (
   <div className="docentes-container">
@@ -1688,6 +1575,8 @@ useEffect(() => {
     </div>
   </div>
 )}
+
+
 {activeSection === 'estudiantes' && (
   <div className="docentes-container">
     <div className="docentes-card">
@@ -1695,7 +1584,7 @@ useEffect(() => {
           <div className="docentes-header-left flex items-center gap-4">
     <h2>Estudiantes</h2>
     <button
-      className="agregar-btn"
+      className="docentes-btn-agregar"
       onClick={() => setModalEstudianteVisible(true)}
     >
       Agregar
@@ -1773,111 +1662,77 @@ useEffect(() => {
     </div>
   </div>
 )}
-{modalEstudianteVisible && (
-  <div className="docentes-modal show">
-    <div className="docentes-modal-content">
-      <h3>Agregar Estudiante</h3>
-      <input
-        type="text"
-        className="docentes-modal-input"
-        placeholder="Código Universitario (10 dígitos)"
-        value={codigoUniversitario}
-        maxLength={10}
-        onChange={(e) => {
-          const value = e.target.value;
-          if (/^\d{0,10}$/.test(value)) {
-            setCodigoUniversitario(value);
-          }
-        }}
-      />
-      <input
-        type="text"
-        className="docentes-modal-input"
-        placeholder="WhatsApp del estudiante (9 dígitos)"
-        value={nuevoDocenteWhatsapp}
-        maxLength={9}
-        onChange={(e) => {
-          const value = e.target.value;
-          if (/^\d{0,9}$/.test(value)) {
-            setNuevoDocenteWhatsapp(value);
-          }
-        }}
-      />
+<EstudianteNuevoModal
+  isOpen={modalEstudianteVisible}
+  codigo={codigoUniversitario}
+  onChangeCodigo={(value) => {
+    if (/^\d{0,10}$/.test(value)) {
+      setCodigoUniversitario(value);
+    }
+  }}
+  whatsapp={nuevoDocenteWhatsapp}
+  onChangeWhatsapp={(value) => {
+    if (/^\d{0,9}$/.test(value)) {
+      setNuevoDocenteWhatsapp(value);
+    }
+  }}
+  onClose={() => {
+    setModalEstudianteVisible(false);
+    setCodigoUniversitario('');
+    setNuevoDocenteWhatsapp('');
+  }}
+  onGuardar={async () => {
+    if (codigoUniversitario.length !== 10) {
+      Swal.fire({
+        icon: "error",
+        title: "Código inválido",
+        text: "El código universitario debe tener exactamente 10 dígitos.",
+      });
+      return;
+    }
 
-      <div className="docentes-modal-actions">
-        <button
-          className="docentes-btn cancelar"
-          onClick={() => {
-            setModalEstudianteVisible(false);
-            setCodigoUniversitario('');
-            setNuevoDocenteWhatsapp('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="docentes-btn guardar"
-          onClick={async () => {
-            if (codigoUniversitario.length !== 10) {
-              Swal.fire({
-                icon: "error",
-                title: "Código inválido",
-                text: "El código universitario debe tener exactamente 10 dígitos.",
-              });
-              return;
-            }
+    if (nuevoDocenteWhatsapp.length !== 9) {
+      Swal.fire({
+        icon: "error",
+        title: "Número inválido",
+        text: "El WhatsApp debe tener exactamente 9 dígitos.",
+      });
+      return;
+    }
 
-            if (nuevoDocenteWhatsapp.length !== 9) {
-              Swal.fire({
-                icon: "error",
-                title: "Número inválido",
-                text: "El WhatsApp debe tener exactamente 9 dígitos.",
-              });
-              return;
-            }
+    try {
+      const res = await axios.post(
+        "/api/auth/register-codigo",
+        {
+          codigo: codigoUniversitario,
+          whatsapp: nuevoDocenteWhatsapp,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-            try {
-              const res = await axios.post(
-                "/api/auth/register-codigo", 
-                { 
-                  codigo: codigoUniversitario, 
-                  whatsapp: nuevoDocenteWhatsapp 
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
+      Swal.fire({
+        icon: "success",
+        title: "Éxito",
+        text: res.data.message,
+      });
 
-              Swal.fire({
-                icon: "success",
-                title: "Éxito",
-                text: res.data.message,
-              });
+      await fetchEstudiantes();
+      setModalEstudianteVisible(false);
+      setCodigoUniversitario("");
+      setNuevoDocenteWhatsapp("");
+    } catch (error) {
+      console.error("Error registrando estudiante:", error);
 
-              // refrescar lista
-              await fetchEstudiantes();
-              setModalEstudianteVisible(false);
-              setCodigoUniversitario('');
-              setNuevoDocenteWhatsapp('');
-            } catch (error) {
-              console.error("❌ Error registrando estudiante:", error);
-
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.response?.data?.message || "No se pudo registrar el estudiante",
-              });
-            }
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text:
+          error.response?.data?.message ||
+          "No se pudo registrar el estudiante",
+      });
+    }
+  }}
+/>
 
 {activeSection === 'docentes' && (
   <div className="docentes-container">
@@ -1955,8 +1810,6 @@ useEffect(() => {
                     </select>
                   ) : (
                     (doc.ProgramaDelDocente?.nombre_programa || 'SIN PROGRAMA').toUpperCase()
-
-
                   )}
                 </td>
                <td className="docentes-acciones-cell">
@@ -1993,173 +1846,77 @@ useEffect(() => {
   </div>
 )}
 
-{modalEditarDocenteVisible && (
-  <div className="docentes-modal show">
-    <div className="docentes-modal-content">
-      <h3>Editar Docente</h3>
+<DocenteEditarModal
+  isOpen={modalEditarDocenteVisible}
+  nombre={nombreDocenteEditado}
+  onChangeNombre={setNombreDocenteEditado}
+  email={emailDocenteEditado}
+  onChangeEmail={setEmailDocenteEditado}
+  facultad={facultadDocenteEditada}
+  onChangeFacultad={setFacultadDocenteEditada}
+  programa={programaDocenteEditado}
+  onChangePrograma={setProgramaDocenteEditado}
+  facultades={facultades}
+  programas={programas}
+  onClose={() => {
+    setModalEditarDocenteVisible(false);
+    setEditandoDocenteId(null);
+    setNombreDocenteEditado("");
+    setEmailDocenteEditado("");
+    setFacultadDocenteEditada("");
+    setProgramaDocenteEditado("");
+  }}
+  onGuardar={() => {
+    guardarEdicionDocente(editandoDocenteId);
+    setModalEditarDocenteVisible(false);
+  }}
+/>
 
-      <input
-        type="text"
-        className="docentes-modal-input"
-        placeholder="Nombre del docente"
-        value={nombreDocenteEditado}
-        onChange={(e) => setNombreDocenteEditado(e.target.value)}
-        autoFocus
-      />
-         <input
-        type="email"
-        className="docentes-modal-input"
-        placeholder="Correo del docente"
-        value={emailDocenteEditado}
-        onChange={(e) => setEmailDocenteEditado(e.target.value)}
-      />
-      <select
-        className="docentes-modal-select"
-        value={facultadDocenteEditada}
-        onChange={(e) => setFacultadDocenteEditada(e.target.value)}
-      >
-        <option value="">Selecciona una facultad</option>
-        {facultades.map((fac) => (
-          <option key={fac.id_facultad} value={fac.id_facultad}>
-            {fac.nombre_facultad}
-          </option>
-        ))}
-      </select>
+<DocenteNuevoModal
+  isOpen={modalDocenteVisible}
+  email={nuevoDocenteEmail}
+  onChangeEmail={setNuevoDocenteEmail}
+  whatsapp={nuevoDocenteWhatsapp}
+  onChangeWhatsapp={(value) => {
+    if (/^\d{0,9}$/.test(value)) {
+      setNuevoDocenteWhatsapp(value);
+    }
+  }}
+  facultad={nuevaFacultadDocente}
+  onChangeFacultad={(value) => {
+    setNuevaFacultadDocente(value);
+    setNuevoProgramaDocente(""); 
+  }}
+  programa={nuevoProgramaDocente}
+  onChangePrograma={setNuevoProgramaDocente}
+  facultades={facultades}
+  programas={programas.filter(
+    (prog) => prog.id_facultad === parseInt(nuevaFacultadDocente || 0, 10)
+  )}
+  onClose={() => {
+    setModalDocenteVisible(false);
+    setNuevoDocenteEmail("");
+    setNuevoDocenteDni("");
+    setNuevoDocenteWhatsapp("");
+    setNuevaFacultadDocente("");
+    setNuevoProgramaDocente("");
+  }}
+  onGuardar={() => {
+    if (nuevoDocenteWhatsapp.length !== 9) {
+      Swal.fire({
+        icon: "error",
+        title: "Número inválido",
+        text: "El número de WhatsApp debe tener exactamente 9 dígitos.",
+        confirmButtonColor: "#d33",
+      });
+      return;
+    }
 
-      <select
-        className="docentes-modal-select"
-        value={programaDocenteEditado}
-        onChange={(e) => setProgramaDocenteEditado(e.target.value)}
-      >
-        <option value="">Selecciona un programa</option>
-        {programas.map((prog) => (
-          <option key={prog.id_programa} value={prog.id_programa}>
-            {prog.nombre_programa}
-          </option>
-        ))}
-      </select>
+    crearDocente();
+    setModalDocenteVisible(false);
+  }}
+/>
 
-      <div className="docentes-modal-actions">
-        <button
-          className="docentes-btn cancelar"
-          onClick={() => {
-            setModalEditarDocenteVisible(false);
-            setEditandoDocenteId(null);
-            setNombreDocenteEditado('');
-            setFacultadDocenteEditada('');
-            setProgramaDocenteEditado('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="docentes-btn guardar"
-          onClick={() => {
-            guardarEdicionDocente(editandoDocenteId);
-            setModalEditarDocenteVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{modalDocenteVisible && (
-  <div className="docentes-modal show">
-    <div className="docentes-modal-content">
-      <h3>Registrar Docente</h3>
-
-      <input
-        type="email"
-        className="docentes-modal-input"
-        placeholder="Email del docente"
-        value={nuevoDocenteEmail}
-        onChange={(e) => setNuevoDocenteEmail(e.target.value)}
-      />
-      <input
-        type="text"
-        className="docentes-modal-input"
-        placeholder="WhatsApp del docente"
-        value={nuevoDocenteWhatsapp}
-        onChange={(e) => {
-          const value = e.target.value;
-          // Solo números y máximo 9 dígitos
-          if (/^\d{0,9}$/.test(value)) {
-            setNuevoDocenteWhatsapp(value);
-          }
-        }}
-      />
-
-    <select
-      className="docentes-modal-select"
-      value={nuevaFacultadDocente}
-      onChange={(e) => {
-        setNuevaFacultadDocente(e.target.value);
-        setNuevoProgramaDocente(''); 
-      }}
-    >
-      <option value="">Selecciona una facultad</option>
-      {facultades.map((fac) => (
-        <option key={fac.id_facultad} value={fac.id_facultad}>
-          {fac.nombre_facultad}
-        </option>
-      ))}
-    </select>
-    <select
-      className="docentes-modal-select"
-      value={nuevoProgramaDocente}
-      onChange={(e) => setNuevoProgramaDocente(e.target.value)}
-    >
-      <option value="">Selecciona un programa académico</option>
-      {programas
-        .filter((prog) => prog.id_facultad === parseInt(nuevaFacultadDocente)) 
-        .map((prog) => (
-          <option key={prog.id_programa} value={prog.id_programa}>
-            {prog.nombre_programa}
-          </option>
-        ))}
-    </select>
-
-
-      <div className="docentes-modal-actions">
-        <button
-          className="docentes-btn cancelar"
-          onClick={() => {
-            setModalDocenteVisible(false);
-            setNuevoDocenteEmail('');
-            setNuevoDocenteDni('');
-            setNuevoDocenteWhatsapp('');
-            setNuevaFacultadDocente('');
-            setNuevoProgramaDocente('');
-          }}
-        >
-          Cancelar
-        </button>
-       <button
-          className="docentes-btn guardar"
-          onClick={() => {
-            if (nuevoDocenteWhatsapp.length !== 9) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Número inválido',
-                text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
-                confirmButtonColor: '#d33'
-              });
-              return;
-            }
-
-            crearDocente();
-            setModalDocenteVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
 {activeSection === 'cambios-tiempo' && (
   <CambiosTiempo />
 )}
@@ -2181,7 +1938,7 @@ useEffect(() => {
     <div className="labores-header">
   <div className="labores-header-title">
     <h2>Servicios Sociales</h2>
-    <button className="labores-btn-agregar" onClick={() => setModalLaborVisible(true)}>
+    <button className="docentes-btn-agregar" onClick={() => setModalLaborVisible(true)}>
       Agregar
     </button>
   </div>
@@ -2355,15 +2112,13 @@ useEffect(() => {
 )}
 
 
-
-
 {activeSection === 'lineas' && (
   <div className="labores-container">
     <div className="labores-card">
       <div className="labores-header">
         <div className="labores-header-title">
           <h2>Líneas de Acción</h2>
-          <button className="labores-btn-agregar" onClick={() => setModalLineaVisible(true)}>Agregar</button>
+          <button className="docentes-btn-agregar" onClick={() => setModalLineaVisible(true)}>Agregar</button>
         </div>
         <div className="labores-header-right">
           <label className="labores-search-label">
@@ -2426,236 +2181,76 @@ useEffect(() => {
   </div>
 )}
 
+<SeguimientoModal
+  isOpen={modalSeguimientoVisible}
+  seguimiento={seguimiento}
+  onClose={() => setModalSeguimientoVisible(false)}
+/>
 
+<LineaNuevoModal
+  isOpen={modalLineaVisible}
+  nombreLinea={nuevaLinea}
+  onChangeNombreLinea={setNuevaLinea}
+  onClose={() => {
+    setModalLineaVisible(false);
+    setNuevaLinea('');
+  }}
+  onGuardar={() => {
+    crearLinea();
+    setModalLineaVisible(false);
+  }}
+/>
 
-{modalSeguimientoVisible && seguimiento && (
-  <div className="seguimiento-overlay">
-    <div className="seguimiento-modal-box">
-      <h3 className="seguimiento-title">Seguimiento de {seguimiento.estudiante}</h3>
-      
-      <div className="seguimiento-info">
-        <p><span>Email:</span> {seguimiento.email}</p>
-        <p><span>Programa:</span> {seguimiento.programa}</p>
-      </div>
-      <ul className="seguimiento-timeline-horizontal">
-      {seguimiento.pasos.map((p, i) => (
-        <li key={i} className={`timeline-h-item timeline-${p.estado}`}>
-          <div className="timeline-h-marker"></div>
-          <div className="timeline-h-content">
-            <span className="timeline-h-title">
-              {p.paso}
-              <div className="tooltip-container">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                  className="icono-info" 
-                  viewBox="0 0 24 24" 
-                  width="16" height="16" 
-                  fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="16" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12.01" y2="8" />
-                </svg>
-                <div className="tooltip-box">
-                  {p.tooltip}
-                </div>
-              </div>
-            </span>
-            <span className="timeline-h-status">{p.estado.toUpperCase()}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
+<LineaEditarModal
+  isOpen={modalEditarLineaVisible}
+  nombreLinea={nombreLineaEditado}
+  onChangeNombreLinea={setNombreLineaEditado}
+  onClose={() => {
+    setModalEditarLineaVisible(false);
+    setIdEditandoLinea(null);
+  }}
+  onGuardar={() => {
+    guardarEdicionLinea(idEditandoLinea);
+    setModalEditarLineaVisible(false);
+  }}
+/>
 
-      <div className="seguimiento-actions">
-        <button 
-          className="seguimiento-btn-cerrar" 
-          onClick={() => setModalSeguimientoVisible(false)}
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+<LaborEditarModal
+  isOpen={modalEditarLaborVisible}
+  nombreLabor={nombreLaborEditado}
+  onChangeNombreLabor={setNombreLaborEditado}
+  lineaLabor={lineaLabor}
+  onChangeLineaLabor={setLineaLabor}
+  lineas={lineas}
+  onClose={() => {
+    setModalEditarLaborVisible(false);
+    setIdLaborEditando(null);
+    setNombreLaborEditado("");
+    setLineaLabor("");
+  }}
+  onGuardar={async () => {
+    await guardarEdicionLabor(idLaborEditando);
+    setModalEditarLaborVisible(false);
+  }}
+/>
 
-
-
-{modalLineaVisible && (
-  <div className="labores-modal show">
-    <div className="labores-modal-content">
-      <h3>Registrar Línea de Acción</h3>
-      <input
-        type="text"
-        className="labores-modal-input"
-        placeholder="Nombre de la línea"
-        value={nuevaLinea}
-        onChange={(e) => setNuevaLinea(e.target.value)}
-      />
-      <div className="labores-modal-actions">
-        <button
-          className="labores-btn cancelar"
-          onClick={() => {
-            setModalLineaVisible(false);
-            setNuevaLinea('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="labores-btn guardar"
-          onClick={() => {
-            crearLinea();
-            setModalLineaVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-{modalEditarLineaVisible && (
-  <div className="labores-modal show">
-    <div className="labores-modal-content">
-      <h3>Editar Línea de Acción</h3>
-      <input
-        type="text"
-        className="labores-modal-input"
-        placeholder="Nombre de la línea"
-        value={nombreLineaEditado}
-        onChange={(e) => setNombreLineaEditado(e.target.value)}
-      />
-      <div className="labores-modal-actions">
-        <button
-          className="labores-btn cancelar"
-          onClick={() => {
-            setModalEditarLineaVisible(false);
-            setIdEditandoLinea(null);
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="labores-btn guardar"
-          onClick={() => {
-            guardarEdicionLinea(idEditandoLinea);
-            setModalEditarLineaVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-{modalEditarLaborVisible && (
-  <div className="labores-modal show">
-    <div className="labores-modal-content">
-      <h3>Editar Labor Social</h3>
-
-      <input
-        type="text"
-        className="labores-modal-input"
-        placeholder="Nombre de la labor"
-        value={nombreLaborEditado}
-        onChange={(e) => setNombreLaborEditado(e.target.value)}
-      />
-
-      <select
-      className="labores-modal-select"
-      value={lineaLabor}
-      onChange={(e) => setLineaLabor(e.target.value)}
-    >
-      <option value="">-- Línea de Acción --</option>
-      {lineas.map((l) => (
-        <option key={l.id_linea} value={l.id_linea}>
-          {l.nombre_linea}
-        </option>
-      ))}
-    </select>
-
-
-      <div className="labores-modal-actions">
-        <button
-          className="labores-btn cancelar"
-          onClick={() => {
-            setModalEditarLaborVisible(false);
-            setIdLaborEditando(null);
-            setNombreLaborEditado('');
-            setLineaLabor('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="labores-btn guardar"
-          onClick={async () => {
-            await guardarEdicionLabor(idLaborEditando);
-            setModalEditarLaborVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{modalLaborVisible && (
-  <div className="labores-modal show">
-    <div className="labores-modal-content">
-      <h3>Registrar Servicio Social</h3>
-
-      <input
-        type="text"
-        className="labores-modal-input"
-        placeholder="Nombre del servicio social"
-        value={nuevaLabor}
-        onChange={(e) => setNuevaLabor(e.target.value)}
-      />
-
-      <select
-      className="labores-modal-select"
-      value={lineaLabor}
-      onChange={(e) => setLineaLabor(e.target.value)}
-    >
-      <option value="">-- Línea de Acción --</option>
-      {lineas.map((linea) => (
-        <option key={linea.id_linea} value={linea.id_linea}>
-          {linea.nombre_linea}
-        </option>
-      ))}
-    </select>
-
-
-      <div className="labores-modal-actions">
-        <button
-          className="labores-btn cancelar"
-          onClick={() => {
-            setModalLaborVisible(false);
-            setNuevaLabor('');
-            setLineaLabor('');
-          }}
-        >
-          Cancelar
-        </button>
-        <button
-          className="labores-btn guardar"
-          onClick={() => {
-            crearLabor();
-            setModalLaborVisible(false);
-          }}
-        >
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-)}   
+<LaborNuevoModal
+  isOpen={modalLaborVisible}
+  nombreLabor={nuevaLabor}
+  onChangeNombreLabor={setNuevaLabor}
+  lineaLabor={lineaLabor}
+  onChangeLineaLabor={setLineaLabor}
+  lineas={lineas}
+  onClose={() => {
+    setModalLaborVisible(false);
+    setNuevaLabor("");
+    setLineaLabor("");
+  }}
+  onGuardar={() => {
+    crearLabor();
+    setModalLaborVisible(false);
+  }}
+/>
       </div>
       </div>
   );

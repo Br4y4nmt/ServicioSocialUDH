@@ -3,10 +3,19 @@ import Header from './Header';
 import axios from 'axios';
 import SidebarDocente from './SidebarDocente';
 import './PerfilDocente.css';  
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom'; 
 import { useUser } from '../UserContext';
 import { cleanSignature } from '../utils/signatureCleanup';
+import {
+  mostrarErrorCargarPerfilDocente,
+  mostrarInfoProcesandoFirma,
+  mostrarAlertaFaltanDatosPerfilDocente,
+  mostrarAlertaDniInvalido,
+  mostrarAlertaCelularInvalido,
+  mostrarErrorSinIdUsuario,
+  mostrarRegistroDocenteExitoso,
+  mostrarErrorRegistroDocente,
+} from '../hooks/alerts/alertas';
 
 function DashboardDocente() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -70,11 +79,7 @@ useEffect(() => {
 
     } catch (err) {
       console.error('Error al obtener perfil:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'No se pudo cargar el perfil',
-        text: err.response?.data?.message || 'Intente nuevamente.',
-      });
+      mostrarErrorCargarPerfilDocente(err.response?.data?.message);
     }
   };
 
@@ -83,46 +88,30 @@ useEffect(() => {
   }
 }, [token]);
 
-
-  // Manejar el submit del formulario
   const handleSubmit = async (e) => {
   e.preventDefault();
   if (processingSignature) {
-  Swal.fire({ icon: 'info', title: 'Espera un momento', text: 'Estamos procesando tu firma.' });
+  mostrarInfoProcesandoFirma();
   return;
 }
+
   if (!nombre || !dni || !email || !facultad || !programaAcademico || !celular || !firma) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Faltan datos',
-      text: 'Por favor complete todos los campos, incluyendo la firma digital.'
-    });
-    return;
-  }
-      if (!/^\d{8}$/.test(dni)) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'DNI inválido',
-          text: 'Debe contener exactamente 8 dígitos numéricos.'
-        });
-        return;
-      }
-  if (!/^\d{9}$/.test(celular)) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Celular inválido',
-      text: 'Debe contener exactamente 9 dígitos numéricos.'
-    });
-    return;
-  }
+  mostrarAlertaFaltanDatosPerfilDocente();
+  return;
+}
+if (!/^\d{8}$/.test(dni)) {
+  mostrarAlertaDniInvalido();
+  return;
+}
+
+if (!/^\d{9}$/.test(celular)) {
+  mostrarAlertaCelularInvalido();
+  return;
+}
 
   const id_usuario = localStorage.getItem('id_usuario');
   if (!id_usuario) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se encontró el ID del usuario. Inicie sesión nuevamente.'
-    });
+    mostrarErrorSinIdUsuario();
     return;
   }
 
@@ -139,37 +128,26 @@ useEffect(() => {
     formData.append('id_usuario', id_usuario);
     formData.append('firma_digital', firma); 
 
-     await axios.put('/api/docentes', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`
-      }
-    });
-  localStorage.setItem('firma_docente_completa', 'true'); 
-    Swal.fire({
-      icon: 'success',
-      title: 'Registro Exitoso',
-      text: 'Su perfil se ha completado exitosamente.',
-      timer: 2000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-      allowOutsideClick: false
-    }).then(() => {
-      navigate('/dashboard-docente');
-    });
+  await axios.put('/api/docentes', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  localStorage.setItem('firma_docente_completa', 'true');
+
+  mostrarRegistroDocenteExitoso().then(() => {
+    navigate('/dashboard-docente');
+  });
 
   } catch (error) {
     console.error('Error al registrar docente:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un error al registrar el docente.',
-      confirmButtonColor: '#d33'
-    });
-  }finally {
+    mostrarErrorRegistroDocente();
+  } finally {
     setLoading(false);
   }
-};
+  };
 
 
 const handleCelularChange = (e) => {
@@ -191,7 +169,7 @@ const handleCelularChange = (e) => {
  {window.innerWidth <= 768 && !collapsed && (
   <div
     className="sidebar-overlay"
-    onClick={() => toggleSidebar()} // Llama a tu función para colapsar el sidebar
+    onClick={() => toggleSidebar()} 
   ></div>
 )}
       <Header onToggleSidebar={toggleSidebar} />
@@ -297,14 +275,13 @@ const handleCelularChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    // Preview inmediato
     const tempUrl = URL.createObjectURL(file);
     setFirmaPreview((prev) => {
       if (prev && prev.startsWith('blob:')) URL.revokeObjectURL(prev);
       return tempUrl;
     });
 
-    setProcessingSignature(true); // ← bloquea UI de firma
+    setProcessingSignature(true); 
 
     try {
       const { file: cleanedFile, previewUrl } = await cleanSignature(file, {
@@ -315,14 +292,13 @@ const handleCelularChange = (e) => {
       setFirma(cleanedFile);
       setFirmaPreview((prev) => {
         if (prev && prev.startsWith('blob:')) URL.revokeObjectURL(prev);
-        return previewUrl; // blob del PNG ya limpio
+        return previewUrl; 
       });
     } catch (err) {
       console.error('Limpieza falló, uso original:', err);
       setFirma(file);
-      // el preview temporal ya quedó
     } finally {
-      setProcessingSignature(false); // ← desbloquea UI de firma
+      setProcessingSignature(false); 
     }
   }}
   required

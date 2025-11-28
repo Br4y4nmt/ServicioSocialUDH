@@ -5,7 +5,12 @@ import axios from 'axios';
 import './DashboardAlumno.css';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
-import Swal from 'sweetalert2';
+import {
+  mostrarAlertaSinCambios,
+  mostrarAlertaCelularInvalido,
+  mostrarAlertaCelularActualizado,
+  mostrarAlertaErrorActualizarCelular,
+} from '../hooks/alerts/alertas';
 
 function MiPerfil() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -67,25 +72,17 @@ function MiPerfil() {
 
   const handleGuardar = async () => {
     if (perfil.celular === celularOriginal) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Sin cambios',
-        text: 'No se realizaron modificaciones.',
-        confirmButtonColor: '#3085d6'
-      });
-      return;
-    }
+    mostrarAlertaSinCambios('No se realizaron modificaciones.');
+    return;
+  }
+
 
     const celularRegex = /^\d{9}$/;
     if (!celularRegex.test(perfil.celular)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Celular inválido',
-        text: 'El número celular debe tener exactamente 9 dígitos.',
-        confirmButtonColor: '#d33'
-      });
+      mostrarAlertaCelularInvalido('El número celular debe tener exactamente 9 dígitos.');
       return;
     }
+
 
     try {
       const usuario_id = localStorage.getItem('id_usuario');
@@ -98,21 +95,11 @@ function MiPerfil() {
       );
 
       setCelularOriginal(perfil.celular);
+      mostrarAlertaCelularActualizado('Tu número celular ha sido actualizado correctamente.');
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Actualizado!',
-        text: 'Tu número celular ha sido actualizado correctamente.',
-        confirmButtonColor: '#28a745'
-      });
     } catch (error) {
       console.error('Error al actualizar celular:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo actualizar el número celular. Intenta nuevamente.',
-        confirmButtonColor: '#d33'
-      });
+      mostrarAlertaErrorActualizarCelular('No se pudo actualizar el número celular. Intenta nuevamente.');
     }
   };
 

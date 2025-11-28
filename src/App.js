@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from './utils/axiosConfig';
 import ProtectedRoute from './components/ProtectedRoute';
 import { UserProvider } from './UserContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';

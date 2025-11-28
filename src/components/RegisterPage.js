@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegisterPage.css'; 
-import Swal from 'sweetalert2';
 import {
   mostrarAlertaCodigoNoPermitido,
   mostrarAlertaWhatsappInvalido,

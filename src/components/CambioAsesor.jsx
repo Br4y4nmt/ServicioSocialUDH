@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./DashboardGestor.css";
@@ -16,7 +16,8 @@ function CambioAsesor() {
   const [asesorSeleccionado, setAsesorSeleccionado] = useState("");
   const [trabajoSeleccionado, setTrabajoSeleccionado] = useState(null);
   const [guardando, setGuardando] = useState(false);
-  const fetchTrabajos = async () => {
+
+  const fetchTrabajos = useCallback(async () => {
     try {
       if (!token) return;
       setCargando(true);
@@ -48,7 +49,7 @@ function CambioAsesor() {
     } finally {
       setCargando(false);
     }
-  };
+  }, [token]);
 
   const fetchAsesores = async () => {
     try {
@@ -125,9 +126,10 @@ function CambioAsesor() {
     }
   };
 
-  useEffect(() => {
-    if (user && token) fetchTrabajos();
-  }, [user, token]);
+useEffect(() => {
+  if (user && token) fetchTrabajos();
+}, [user, token, fetchTrabajos]);
+
 
   const trabajosFiltrados = trabajos.filter((t) =>
     t.nombre_estudiante?.toLowerCase().includes(filtro.toLowerCase())

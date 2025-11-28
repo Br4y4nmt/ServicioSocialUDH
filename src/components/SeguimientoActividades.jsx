@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import './DashboardAlumno.css';
@@ -46,7 +46,8 @@ const [actividadDetalle, setActividadDetalle] = useState(null);
 const [enviandoSolicitudTermino, setEnviandoSolicitudTermino] = useState(false);
 const [nombresMiembros, setNombresMiembros] = useState([]);
 
-const verCartasMiembros = async (trabajoId) => {
+const verCartasMiembros = useCallback(
+  async (trabajoId) => {
     if (!trabajoId || !token) return;
 
     try {
@@ -70,7 +71,10 @@ const verCartasMiembros = async (trabajoId) => {
       console.error('Error:', error);
       Swal.fire('Error', 'No se pudo cargar las cartas del grupo.', 'error');
     }
-  };
+  },
+  [token, estadoPlan] 
+);
+
   const obtenerNombresMiembros = async (correos) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
@@ -88,11 +92,14 @@ const verCartasMiembros = async (trabajoId) => {
     }
   };
 
- useEffect(() => {
-    if (solicitudEnviada && trabajoId) {
-      verCartasMiembros(trabajoId);
-    }
-  }, [solicitudEnviada, trabajoId, token]);
+useEffect(() => {
+  if (solicitudEnviada && trabajoId) {
+    verCartasMiembros(trabajoId);
+  }
+}, [solicitudEnviada, trabajoId, verCartasMiembros]);
+
+
+
   useEffect(() => {
     if (cartasMiembros.length > 0) {
       const correos = cartasMiembros.map(c => `${c.codigo_universitario}@udh.edu.pe`);

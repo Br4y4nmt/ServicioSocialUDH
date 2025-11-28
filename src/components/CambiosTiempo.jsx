@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Swal from "sweetalert2"; 
 import "./DashboardGestor.css";
@@ -19,7 +19,7 @@ function CambiosTiempo() {
   const { user } = useUser();
   const token = user?.token;
 
-  const fetchEstudiantes = async () => {
+  const fetchEstudiantes = useCallback(async () => {
     try {
       if (!token) return;
       const res = await axios.get(`/api/estudiantes`, {
@@ -30,9 +30,9 @@ function CambiosTiempo() {
       console.error("Error al obtener estudiantes:", error);
       setErrorMensaje("No se pudieron cargar los estudiantes.");
     }
-  };
+  }, [token]);
 
-  const fetchProgramas = async () => {
+  const fetchProgramas = useCallback(async () => {
     try {
       if (!token) return;
       const res = await axios.get(`/api/programas`, {
@@ -42,13 +42,14 @@ function CambiosTiempo() {
     } catch (error) {
       console.error("Error al obtener programas:", error);
     }
-  };
-
-  useEffect(() => {
-    if (!token) return;
-    fetchEstudiantes();
-    fetchProgramas();
   }, [token]);
+
+useEffect(() => {
+  if (!token) return;
+  fetchEstudiantes();
+  fetchProgramas();
+}, [token, fetchEstudiantes, fetchProgramas]);
+
 
     const estudiantesFiltrados = estudiantes.filter((est) => {
     const texto = filtroEstudiantes.toLowerCase();
@@ -149,25 +150,16 @@ function CambiosTiempo() {
     );
 
     if (res.status === 200) {
-      setCronogramas((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, fecha_fin_primero: nuevaFecha } : item
-        )
-      );
-      setEditando(null);
+  setCronogramas((prev) =>
+    prev.map((item) =>
+      item.id === id ? { ...item, fecha_fin_primero: nuevaFecha } : item
+    )
+  );
+  setEditando(null);
 
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: "Fecha actualizada correctamente",
-        showConfirmButton: false,
-        timer: 2200,
-        background: "#ffffff",
-        color: "#4b5563",
-        iconColor: "#22c55e",
-      });
-    }
+  mostrarToast("Fecha actualizada correctamente");
+}
+
   } catch (error) {
     console.error("Error al actualizar la fecha:", error);
     Swal.fire({

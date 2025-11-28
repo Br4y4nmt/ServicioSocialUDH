@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SidebarDocente from './SidebarDocente';
 import { useUser } from '../UserContext'; 
 import axios from 'axios';
-import VerBoton, { VerBotonInline } from "../hooks/componentes/VerBoton";
+import VerBoton from "../hooks/componentes/VerBoton";
 import Swal from 'sweetalert2';
 
 function RevisionPlanSocial() {
@@ -70,16 +70,10 @@ function RevisionPlanSocial() {
         });
       });
   }, [token]); 
-const obtenerNombresMiembros = async (correos) => {
-  try {
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
-      correos
-    });
-    setNombresMiembros(data);
-  } catch (error) {
-    console.error('Error al obtener nombres del grupo:', error);
-  }
-};
+
+
+
+
 const handleVerGrupo = async (trabajoId) => {
   try {
     const response = await axios.get(`/api/integrantes/${trabajoId}`, {

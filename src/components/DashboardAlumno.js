@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import SidebarAlumno from './SidebarAlumno';
 import ConformidadPlan from './ConformidadPlan';
@@ -92,7 +91,6 @@ function DashboardAlumno() {
   const [areasIntervencion, setAreasIntervencion] = useState('');
   const [ubicacionPoblacion, setUbicacionPoblacion] = useState('');
   const [areaInfluencia, setAreaInfluencia] = useState('');
-  const token = user?.token;
   const [imagenesAnexos, setImagenesAnexos] = useState({
     cartaAceptacion: null,
     datosContacto: null,
@@ -176,7 +174,7 @@ useEffect(() => {
   if (user?.token) {
     fetchLineas();
   }
-}, [user]);
+}, [user?.token]);
 
 useEffect(() => {
   if (facultades.length > 0 && facultadSeleccionada) {
@@ -291,7 +289,7 @@ useEffect(() => {
   if (user?.token) {
     fetchFacultades();
   }
-}, [user]);
+}, [user?.token]);
 
 
   const toggleSidebar = () => {
@@ -336,7 +334,7 @@ useEffect(() => {
   if (usuario_id && token) {
     verificarPrimeraVez();
   }
-}, [user]);
+}, [user?.id, user?.token]);
 
   const abrirModalActividad = () => {
     setNuevaActividad('');
@@ -378,7 +376,7 @@ useEffect(() => {
   if (usuario_id && token) {
     fetchDatosEstudiante();
   }
-}, [user]);
+}, [user?.id, user?.token]);
 
 useEffect(() => {
   const token = user?.token;
@@ -397,7 +395,7 @@ useEffect(() => {
   };
 
   fetchProgramas();
-}, [user]);
+}, [user?.token]);
 
 
   useEffect(() => {
@@ -407,16 +405,14 @@ useEffect(() => {
     }
   }, [docenteSeleccionado, docentes]); 
 
- const fetchTrabajoSocial = async () => {
+const fetchTrabajoSocial = React.useCallback(async () => {
   const usuario_id = user?.id;
   const token = user?.token;
   if (!usuario_id || !token) return;
 
   try {
     const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     if (res.data) {
@@ -437,7 +433,7 @@ useEffect(() => {
         setArchivoYaEnviado(true);
       }
 
-      const laborEncontrada = labores.find((l) => l.id_labores === res.data.labor_social_id);
+      const laborEncontrada = labores.find(l => l.id_labores === res.data.labor_social_id);
       if (laborEncontrada) {
         setNombreLaborSocial(laborEncontrada.nombre_labores);
       }
@@ -447,19 +443,18 @@ useEffect(() => {
   } catch (error) {
     console.error('Error al obtener los datos del trabajo social:', error);
   }
-};
-
+}, [user, labores]);
 
 useEffect(() => {
   fetchTrabajoSocial();
-}, [labores]);
+}, [fetchTrabajoSocial]);
 
   
 useEffect(() => {
-  const fetchEstadoTrabajoSocial = async () => {
-    const usuario_id = user?.id;
-    const token = user?.token;
+  const usuario_id = user?.id;
+  const token = user?.token;
 
+  const fetchEstadoTrabajoSocial = async () => {
     if (!usuario_id || !token) return;
 
     try {
@@ -477,13 +472,16 @@ useEffect(() => {
     }
   };
 
-  if (user) {
+  if (usuario_id && token) {
     fetchEstadoTrabajoSocial();
   }
-}, [user]);
+}, [user?.id, user?.token]);
+
 
 
 useEffect(() => {
+  const token = user?.token;
+
   if (programaSeleccionado && token) {
     const fetchDocentes = async () => {
       try {
@@ -499,7 +497,8 @@ useEffect(() => {
   } else {
     setDocentes([]);
   }
-}, [programaSeleccionado, token]);
+}, [programaSeleccionado, user?.token]);
+
 
 const handleGoToNextSection = () => {
   if (activeSection === 'designacion') {
@@ -559,7 +558,8 @@ useEffect(() => {
   } else {
     setLabores([]);
   }
-}, [lineaSeleccionada, token]);
+}, [lineaSeleccionada, user?.token]);
+
 
 
 const handleSolicitarAprobacion = async () => {
@@ -678,7 +678,7 @@ useEffect(() => {
   };
 
   obtenerActividades();
-}, [datosCargados, user]);
+}, [datosCargados, user?.id, user?.token]);
 
 
 
@@ -1089,7 +1089,7 @@ const handleVolverASubir = async (actividad) => {
   }
 
   try {
-    const res = await axios.delete(`/api/cronograma/evidencia/${actividad.id}`, {
+    await axios.delete(`/api/cronograma/evidencia/${actividad.id}`, {
       headers: { Authorization: `Bearer ${user.token}` }
     });
 
@@ -1127,7 +1127,7 @@ useEffect(() => {
   };
 
   fetchPlan();
-}, [user]);
+}, [user?.id, user?.token]);
 
   return (
     <>

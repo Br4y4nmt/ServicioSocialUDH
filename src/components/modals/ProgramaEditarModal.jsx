@@ -1,0 +1,69 @@
+import React from "react";
+
+function ProgramaEditarModal({
+  isOpen,
+  nombre,
+  onChangeNombre,
+  facultad,
+  onChangeFacultad,
+  email,
+  onChangeEmail,
+  facultades,
+  onClose,
+  onGuardar
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
+        <h3>Editar Programa Académico</h3>
+
+        {/* Nombre del programa */}
+        <input
+          type="text"
+          className="programas-modal-input"
+          placeholder="Nombre del programa"
+          value={nombre}
+          onChange={(e) => onChangeNombre(e.target.value)}
+          autoFocus
+        />
+
+        {/* Facultad */}
+        <select
+          className="programas-modal-select"
+          value={facultad}
+          onChange={(e) => onChangeFacultad(e.target.value)}
+        >
+          <option value="">Selecciona una facultad</option>
+          {facultades.map((fac) => (
+            <option key={fac.id_facultad} value={fac.id_facultad}>
+              {fac.nombre_facultad}
+            </option>
+          ))}
+        </select>
+
+        {/* Email */}
+        <input
+          type="email"
+          className="programas-modal-input"
+          placeholder="Correo institucional"
+          value={email}
+          onChange={(e) => onChangeEmail(e.target.value)}
+        />
+
+        {/* Botones */}
+        <div className="programas-modal-actions">
+          <button className="programas-btn cancelar" onClick={onClose}>
+            Cancelar
+          </button>
+          <button className="programas-btn guardar" onClick={onGuardar}>
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ProgramaEditarModal;

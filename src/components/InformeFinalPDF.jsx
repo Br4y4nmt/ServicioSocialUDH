@@ -1,110 +1,108 @@
-// src/components/alumno/InformeFinalPDF.jsx
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
-// Estilos del PDF
 const styles = StyleSheet.create({
-page: {
-  paddingTop: 40,
-  paddingBottom: 40,
-  paddingLeft: 60,     // antes 40
-  paddingRight: 60,    // antes 40
-  fontSize: 12,
-  fontFamily: 'Times-Roman',
-  lineHeight: 1.6,
-  textAlign: 'center',
-},
+  page: {
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingLeft: 60,
+    paddingRight: 60,
+    fontSize: 12,
+    fontFamily: 'Times-Roman',
+    lineHeight: 1.6,
+    textAlign: 'center',
+  },
   logoContainer: {
     alignItems: 'center',
     marginBottom: 10,
   },
-logoGrande: {
+  logoGrande: {
     width: 280,
     height: 180,
     marginVertical: 10,
   },
+
+  tableContainer: {
+    display: 'table',
+    width: '100%',
+    borderStyle: 'solid',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+    marginTop: 10,
+    fontSize: 11,
+  },
+  subHeaderIndented: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 4,
+    paddingLeft: 20,
+    textAlign: 'left',
+    textTransform: 'uppercase',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    minHeight: 20,
+  },
+
+  tableColHeader: {
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#f2f2f2',
+    padding: 6,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    minHeight: 28,
+    fontSize: 11,
+  },
+
+  anexosPage: {
+    fontSize: 30,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    display: 'flex',
+  },
+
+  anexosTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+
+  tableCol: {
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#ccc',
+    padding: 6,
+    textAlign: 'left',
+    flexWrap: 'wrap',
+    lineHeight: 1.3,
+    wordBreak: 'break-word',
+    fontSize: 10.5,
+  },
+
+  colActividad: { width: '25%' },
+  colJustificacion: { width: '25%' },
   colFecha: {
-  width: '10%',
-  fontSize: 10,
-  wordWrap: 'break-word'
-},
-colFechaFin: {
-  width: '10%',
-  fontSize: 10,
-  wordWrap: 'break-word'
-},
-
-tableContainer: {
-  display: 'table',
-  width: '100%',
-  borderStyle: 'solid',
-  borderColor: '#ccc', // ✅ color de borde más suave
-  borderWidth: 1,
-  borderRightWidth: 0,
-  borderBottomWidth: 0,
-  marginTop: 10,
-  fontSize: 11,
-},
-subHeaderIndented: {
-  fontSize: 12,
-  fontWeight: 'bold',
-  marginTop: 10,
-  marginBottom: 4,
-  paddingLeft: 20, // Sangría a la derecha
-  textAlign: 'left',
-  textTransform: 'uppercase',
-},
-tableRow: {
-  flexDirection: 'row',
-  minHeight: 20,
-},
-
-tableColHeader: {
-  borderStyle: 'solid',
-  borderBottomWidth: 1,
-  borderRightWidth: 1,
-  borderColor: '#ccc',
-  backgroundColor: '#f2f2f2', // ✅ tono gris claro (como Word)
-  padding: 6,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  minHeight: 28,
-  fontSize: 11,
-},
-
-anexosPage: {
-  fontSize: 30,
-  textAlign: 'center',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '100%',
-  display: 'flex',
-},
-
-anexosTitle: {
-  fontSize: 28,
-  fontWeight: 'bold',
-  textTransform: 'uppercase',
-},
-tableCol: {
-  borderStyle: 'solid',
-  borderBottomWidth: 1,
-  borderRightWidth: 1,
-  borderColor: '#ccc',
-  padding: 6,
-  textAlign: 'left',
-  flexWrap: 'wrap',
-  lineHeight: 1.3,
-  wordBreak: 'break-word',
-  fontSize: 10.5,
-},
-colActividad: { width: '25%' },
-colJustificacion: { width: '25%' },
-colFecha: { width: '10%', textAlign: 'center' },
-colFechaFin: { width: '10%', textAlign: 'center' },
-colResultados: { width: '30%' },
-
-
+    width: '10%',
+    fontSize: 10,
+    wordWrap: 'break-word',
+    textAlign: 'center',
+  },
+  colFechaFin: {
+    width: '10%',
+    fontSize: 10,
+    wordWrap: 'break-word',
+    textAlign: 'center',
+  },
+  colResultados: { width: '30%' },
 
   universidad: {
     fontSize: 13,
@@ -116,15 +114,14 @@ colResultados: { width: '30%' },
     fontWeight: 'bold',
     marginBottom: 2,
   },
-programaBold: {
-  fontSize: 14,
-  fontWeight: 'bold',
-  marginBottom: 10,
-  textAlign: 'center',
-  alignSelf: 'center',
-  maxWidth: '75%', // o menos si el texto es largo
-},
-
+  programaBold: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    alignSelf: 'center',
+    maxWidth: '75%',
+  },
 
   titulo: {
     fontSize: 14,
@@ -139,16 +136,16 @@ programaBold: {
     marginBottom: 4,
   },
   value: {
-    marginBottom: 5
+    marginBottom: 5,
   },
-dataContainer: {
-  textAlign: 'left',
-  marginTop: 60,
-  paddingLeft: 40,
-  fontSize: 13, // Aumentado (antes 12)
-},
+  dataContainer: {
+    textAlign: 'left',
+    marginTop: 60,
+    paddingLeft: 40,
+    fontSize: 13,
+  },
   label: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   labelBold: {
     fontWeight: 'bold',
@@ -165,9 +162,9 @@ dataContainer: {
     fontSize: 11,
   },
   section: {
-  marginBottom: 25,  // antes 15
-  textAlign: 'left',
-},
+    marginBottom: 25,
+    textAlign: 'left',
+  },
   line: {
     height: 1,
     backgroundColor: '#000',
@@ -176,9 +173,10 @@ dataContainer: {
   header: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 10,
   },
 });
+
 
 
 const InformeFinalPDF = ({

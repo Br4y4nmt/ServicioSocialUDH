@@ -235,3 +235,115 @@ export const mostrarAlertaAccesoRestringidoInformeFinal = () => {
     confirmButtonText: 'Entendido',
   });
 };
+
+// --- Perfil Docente ---
+
+// Error al cargar datos del perfil
+export const mostrarErrorCargarPerfilDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'No se pudo cargar el perfil',
+    text: mensaje || 'Intente nuevamente.',
+  });
+};
+
+// Info: firma en procesamiento
+export const mostrarInfoProcesandoFirma = () => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Espera un momento',
+    text: 'Estamos procesando tu firma.',
+  });
+};
+
+// Faltan datos en el formulario
+export const mostrarAlertaFaltanDatosPerfilDocente = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Faltan datos',
+    text: 'Por favor complete todos los campos, incluyendo la firma digital.',
+  });
+};
+
+// DNI inválido
+export const mostrarAlertaDniInvalido = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'DNI inválido',
+    text: 'Debe contener exactamente 8 dígitos numéricos.',
+  });
+};
+
+// Celular inválido
+export const mostrarAlertaCelularInvalido = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Celular inválido',
+    text: 'Debe contener exactamente 9 dígitos numéricos.',
+  });
+};
+// Sin cambios al actualizar (celular u otro dato)
+export const mostrarAlertaSinCambios = (mensaje = 'No se realizaron cambios.') => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Sin cambios',
+    text: mensaje,
+    confirmButtonColor: '#3085d6',
+  });
+};
+
+// Celular (u otro dato) actualizado correctamente
+export const mostrarAlertaCelularActualizado = (
+  mensaje = 'Celular actualizado correctamente.'
+) => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Actualizado!',
+    text: mensaje,
+    confirmButtonColor: '#28a745',
+  });
+};
+
+// Error al actualizar celular (u otro dato)
+export const mostrarAlertaErrorActualizarCelular = (
+  mensaje = 'Hubo un error al actualizar el celular.'
+) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje,
+    confirmButtonColor: '#d33',
+  });
+};
+
+// No se encontró el id_usuario en localStorage
+export const mostrarErrorSinIdUsuario = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'No se encontró el ID del usuario. Inicie sesión nuevamente.',
+  });
+};
+
+// Perfil de docente guardado correctamente
+export const mostrarRegistroDocenteExitoso = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Registro Exitoso',
+    text: 'Su perfil se ha completado exitosamente.',
+    timer: 2000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+  });
+};
+
+// Error al registrar/actualizar docente
+export const mostrarErrorRegistroDocente = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'Hubo un error al registrar el docente.',
+    confirmButtonColor: '#d33',
+  });
+};

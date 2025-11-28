@@ -15,8 +15,6 @@
   align-items: center;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   height: 100vh;      
-  
-  
 }
 
 .sidebar-gestor-box.collapsed {
@@ -121,7 +119,7 @@
   justify-content: space-between;
   border-radius: 6px;
   margin-top: 8px;
-  color: #1e293b; /* texto azul oscuro */
+  color: #1e293b; 
 }
 
 .sidebar-gestor-menu-title:hover {
@@ -142,12 +140,8 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.sidebar-gestor-submenu li:hover {
-  background-color: #e2e8f0; /* hover claro */
-}
-
 .sidebar-gestor-selected {
-  background-color: #0f172a; /* azul oscuro */
+  background-color: #0f172a; 
   color: #ffffff !important;
   font-weight: 600;
 }

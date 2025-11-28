@@ -1,4 +1,3 @@
-// src/pages/PerfilAlumno.js
 import React, { useState, useEffect, useRef } from 'react'; 
 import Header from '../components/Header';
 import SidebarAlumno from '../components/SidebarAlumno';
@@ -171,7 +170,7 @@ const handleCelularChange = (e) => {
   return (
     <>
       <Header onToggleSidebar={toggleSidebar} />
-       <SidebarAlumno
+      <SidebarAlumno
         collapsed={collapsed}
         nombre={nombre}
         onToggleSidebar={toggleSidebar}
@@ -213,7 +212,7 @@ const handleCelularChange = (e) => {
             </div>
             <div className="form-group">
               <label className="bold-text">Correo Institucional</label>
-               <input
+            <input
                 name="correo"
                 className="input-disabled"
                 value={perfil.correo}
@@ -266,7 +265,7 @@ const handleCelularChange = (e) => {
       </select>
     </div>
 
-           <div className="form-group">
+          <div className="form-group">
           <label className="bold-text">Facultad</label>
           <input
             name="facultad"

@@ -7,9 +7,9 @@ import axios from 'axios';
 function RevisionDocente() {
   const [collapsed, setCollapsed] = useState(false);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false); // Control del modal
-  const [selectedTrabajo, setSelectedTrabajo] = useState(null); // Trabajo seleccionado para edición
-  const [nuevoEstado, setNuevoEstado] = useState(''); // Estado editable
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [selectedTrabajo, setSelectedTrabajo] = useState(null);
+  const [nuevoEstado, setNuevoEstado] = useState(''); 
    const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
@@ -30,22 +30,21 @@ function RevisionDocente() {
         headers: { Authorization: `Bearer ${token}` }
       })
           .then(res => {
-            setTrabajosSociales(res.data); // Guarda los trabajos sociales
+            setTrabajosSociales(res.data); 
           })
       })
       .catch(error => {
         console.error('Error al obtener datos del docente o sus trabajos:', error);
       });
-  }, []);
+  }, [token]);
 
   const handleEdit = (trabajo) => {
-    setSelectedTrabajo(trabajo); // Establece el trabajo seleccionado
-    setNuevoEstado(trabajo.estado_plan_labor_social); // Prellena el campo del estado
-    setModalVisible(true); // Muestra el modal
+    setSelectedTrabajo(trabajo); 
+    setNuevoEstado(trabajo.estado_plan_labor_social);
+    setModalVisible(true);
   };
   const handleSave = () => {
     if (selectedTrabajo) {
-      // Aquí hacemos la petición PUT para actualizar el estado del trabajo social
       axios.put(
       `/api/trabajo-social/${selectedTrabajo.id}`,
       {
@@ -57,13 +56,12 @@ function RevisionDocente() {
       }
     )
       .then(() => {
-        // Actualiza el estado de la tabla con el nuevo valor de 'estado_plan_labor_social'
         setTrabajosSociales(prev =>
           prev.map(trabajo =>
             trabajo.id === selectedTrabajo.id ? { ...trabajo, estado_plan_labor_social: nuevoEstado } : trabajo
           )
         );
-        setModalVisible(false); // Cierra el modal después de guardar
+        setModalVisible(false);
       })
       .catch(error => {
         console.error('Error al actualizar el estado:', error);
