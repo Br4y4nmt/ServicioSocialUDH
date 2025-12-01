@@ -11,7 +11,7 @@
   }
   th, td {
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
   }
   
@@ -189,7 +189,7 @@
 .facultades-btn:hover {
   filter: brightness(0.9);
 }
-/* === MODAL === */
+
 .facultades-modal {
   position: fixed;
   top: 0;
@@ -341,7 +341,7 @@
 }
 
 .programas-table th {
-  text-align: left;
+  text-align: center;
   padding: 12px;
   color: #333;
 }
@@ -356,24 +356,6 @@
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
-}
-
-.programas-btn {
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  margin-right: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  color: white;
-}
-
-.programas-btn.editar {
-  background-color: #03a9f4;
-}
-
-.programas-btn.eliminar {
-  background-color: #ef5350;
 }
 
 .programas-btn.guardar {
@@ -575,20 +557,6 @@
   gap: 6px;
   align-items: center;
   justify-content: center;
-}
-
-.docentes-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.docentes-btn.editar {
-  background-color: #03a9f4;
-}
-
-.docentes-btn.eliminar {
-  background-color: #ef5350;
 }
 
 .docentes-btn.guardar {
@@ -877,16 +845,6 @@
   border-bottom: 1px solid #ddd;
 }
 
-
-.labores-btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  margin-right: 5px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
 .labores-btn.guardar {
   background-color: #388e3c;
   color: white;
@@ -905,16 +863,6 @@
 }
 .labores-btn.cancelar {
   background-color: #f57c00;
-  color: white;
-}
-
-.labores-btn.editar {
-  background-color: #1976d2;
-  color: white;
-}
-
-.labores-btn.eliminar {
-  background-color: #d32f2f;
   color: white;
 }
 
@@ -1015,7 +963,7 @@
   justify-content: center; 
   margin: 0 auto;       
 }
-/* Overlay */
+
 .seguimiento-overlay {
   position: fixed;
   top: 0;
@@ -1030,7 +978,6 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Modal Box */
 .seguimiento-modal-box {
   background: #fff;
   padding: 30px;
@@ -1041,17 +988,15 @@
   animation: slideUp 0.3s ease-out;
 }
 
-/* Title */
 .seguimiento-title {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 22px;
   text-align: center;
-  color: #1e3a8a; /* azul profesional */
+  color: #1e3a8a; 
   font-weight: bold;
 }
 
-/* Info básica */
 .seguimiento-info p {
   margin: 6px 0;
   font-size: 14px;
@@ -1062,7 +1007,6 @@
   color: #111;
 }
 
-/* Lista de pasos */
 .seguimiento-steps {
   list-style: none;
   padding: 0;
@@ -1080,7 +1024,6 @@
   font-weight: 500;
 }
 
-/* Estados */
 .seguimiento-aceptado {
   background: #e6f9ed;
   color: #1b5e20;
@@ -1105,7 +1048,6 @@
   border-left: 5px solid #9ca3af;
 }
 
-/* Botones */
 .seguimiento-actions {
   text-align: right;
   margin-top: 15px;
@@ -1126,7 +1068,7 @@
 .seguimiento-btn-cerrar:hover {
   background: #b71c1c;
 }
-/* Contenedor principal */
+
 .seguimiento-timeline-horizontal {
   display: flex;
   justify-content: space-between;
@@ -1137,20 +1079,18 @@
   position: relative;
 }
 
-/* Línea horizontal */
 .seguimiento-timeline-horizontal::before {
   content: '';
   position: absolute;
-  top: 18px; /* altura de la línea */
+  top: 18px; 
   left: 0;
   right: 0;
   height: 3px;
-  background: #e5e7eb; /* gris claro */
+  background: #e5e7eb; 
   z-index: 1;
   border-radius: 2px;
 }
 
-/* Cada ítem */
 .timeline-h-item {
   position: relative;
   text-align: center;
@@ -1158,20 +1098,18 @@
   z-index: 2;
 }
 
-/* Marcador circular */
 .timeline-h-marker {
   width: 22px;
   height: 22px;
   margin: 0 auto;
   border-radius: 50%;
-  background: #9ca3af; /* gris default */
+  background: #9ca3af; 
   border: 3px solid #fff;
   box-shadow: 0 0 0 3px #e5e7eb;
   position: relative;
   z-index: 3;
 }
 
-/* Contenido debajo del círculo */
 .timeline-h-content {
   margin-top: 35px;
 }
@@ -1191,7 +1129,6 @@
   color: #4b5563;
 }
 
-/* Colores por estado */
 .timeline-aceptado .timeline-h-marker {
   background: #22c55e;
   box-shadow: 0 0 0 3px #bbf7d0;
@@ -1212,39 +1149,36 @@
   box-shadow: 0 0 0 3px #fde68a;
 }
 
-/* Contenedor del icono y tooltip */
 .tooltip-container {
   display: inline-block;
   position: relative;
   margin-left: 6px;
   cursor: pointer;
-  color: #6b7280; /* gris */
+  color: #6b7280; 
 }
 
-/* Icono */
 .icono-info {
   vertical-align: middle;
   transition: color 0.2s;
 }
 .tooltip-container:hover .icono-info {
-  color: #2563eb; /* azul al hover */
+  color: #2563eb; 
 }
 
-/* Tooltip oculto por defecto */
 .tooltip-box {
   visibility: hidden;
   opacity: 0;
   min-width: 220px;
-  background: #111827;   /* fondo sólido oscuro */
-  color: #f9fafb;        /* texto blanco */
+  background: #111827;   
+  color: #f9fafb;      
   text-align: left;
   padding: 10px 12px;
   border-radius: 8px;
   border: none;
   position: absolute;
-  top: 28px;             /* debajo del icono */
+  top: 28px;           
   left: 50%;
-  transform: translateX(-50%) translateY(5px); /* centrado */
+  transform: translateX(-50%) translateY(5px); 
   box-shadow: 0 4px 12px rgba(0,0,0,0.35);
   font-size: 13px;
   line-height: 1.4;
@@ -1252,11 +1186,10 @@
   transition: opacity 0.2s, transform 0.2s;
 }
 
-/* Flechita hacia arriba */
 .tooltip-box::after {
   content: '';
   position: absolute;
-  top: -6px;   /* encima del tooltip */
+  top: -6px;   
   left: 50%;
   transform: translateX(-50%);
   border-width: 6px;
@@ -1264,7 +1197,6 @@
   border-color: transparent transparent #111827 transparent;
 }
 
-/* Mostrar al hover */
 .tooltip-container:hover .tooltip-box {
   visibility: visible;
   opacity: 1;
@@ -1294,9 +1226,6 @@
   background-color: #303f9f;
 }
 
-
-
-/* ===== MODAL CAMBIOS TIEMPO ===== */
 .modal-tiempo-overlay {
   position: fixed;
   top: 0;
@@ -1334,11 +1263,11 @@
   position: relative;
   overflow: hidden;
 }
-/* 2️⃣ Permitir scroll vertical dentro del contenido del modal */
+
 .modal-tiempo-content {
-  max-height: 80vh;          /* altura máxima del modal */
-  overflow-y: auto;          /* habilita scroll vertical */
-  overflow-x: hidden;        /* oculta el scroll horizontal */
+  max-height: 80vh;          
+  overflow-y: auto;          
+  overflow-x: hidden;        
 }
 .modal-tiempo-content h3 {
   font-size: 1.4rem;
@@ -1350,16 +1279,14 @@
   padding-bottom: 0.75rem;
 }
 
-/* ======= TABLA ======= */
 .modal-tiempo-table td {
-  white-space: normal;        /* permite saltos de línea */
-  word-break: break-word;     /* corta palabras muy largas */
-  max-width: 300px;           /* ajusta el ancho máximo si deseas */
+  white-space: normal;        
+  word-break: break-word;     
+  max-width: 300px;           
   line-height: 1.4;
-  vertical-align: top;        /* alinea arriba para texto multilínea */
+  vertical-align: top;        
 }
 
-/* ===== FORZAR COLOR ENCABEZADO SOLO EN ESTE MODAL ===== */
 .modal-tiempo-content table.modal-tiempo-table thead {
   background-color: #1b3374 !important;
 }
@@ -1386,27 +1313,23 @@
   color: #374151;
 }
 
-/* Hover suave */
 .modal-tiempo-table tbody tr:hover {
   background-color: #f3f4f6;
   transition: background-color 0.2s ease;
 }
 
-/* Mensaje vacío */
 .modal-tiempo-empty {
   text-align: center;
   color: #6b7280;
   margin-top: 1rem;
 }
 
-/* Footer */
 .modal-tiempo-footer {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-/* Botón cerrar */
 .modal-tiempo-btn-cerrar {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
@@ -1423,7 +1346,6 @@
   transform: translateY(-1px);
 }
 
-/* ===== ANIMACIONES ===== */
 @keyframes modalTiempoFadeIn {
   from {
     opacity: 0;
@@ -1474,25 +1396,7 @@
 .btn-guardar-fecha:hover {
   background: #15803d;
 }
-.btn-editar-icono {
-  background-color: #1b74e4;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.2s ease;
-}
 
-.btn-editar-icono:hover {
-  background-color: #155bc0;
-  transform: scale(1.05);
-}
-/* ===== BOTONES MODAL CAMBIO DE ASESOR ===== */
-
-/* Contenedor del footer del modal */
 .modal-tiempo-footer {
   display: flex;
   justify-content: center;
@@ -1501,7 +1405,6 @@
   margin-top: 1.8rem;
 }
 
-/* Botón Cancelar */
 .btn-cancelar-cambio-asesor {
   background-color: #dc2626;
   color: #fff;
@@ -1529,7 +1432,6 @@
   cursor: not-allowed;
 }
 
-/* Botón Guardar Cambio */
 .btn-guardar-cambio-asesor {
   background-color: #1b3374;
   color: #fff;
@@ -1557,7 +1459,6 @@
   cursor: not-allowed;
 }
 
-/* Suavizar interacción con ambos botones */
 .btn-cancelar-cambio-asesor,
 .btn-guardar-cambio-asesor {
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;

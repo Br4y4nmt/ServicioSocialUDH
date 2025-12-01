@@ -347,3 +347,622 @@ export const mostrarErrorRegistroDocente = () => {
     confirmButtonColor: '#d33',
   });
 };
+
+// Confirmación para eliminar designación de supervisor
+export const confirmarEliminacionDesignacionSupervisor = () => {
+  return Swal.fire({
+    title: '¿Eliminar designación?',
+    text: 'Se quitará la designación del docente supervisor.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+  });
+};
+
+// Éxito al eliminar designación de supervisor
+export const mostrarExitoEliminacionDesignacionSupervisor = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Eliminado',
+    text: 'La designación fue eliminada correctamente.',
+    timer: 2000,
+    showConfirmButton: false,
+  });
+};
+
+// Error al eliminar designación de supervisor
+export const mostrarErrorEliminacionDesignacionSupervisor = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo eliminar la designación.',
+  });
+};
+// --- Informes finales ---
+
+// Warning: no se pudieron obtener los integrantes del grupo
+export const mostrarAlertaIntegrantesNoDisponibles = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Servidor UDH sin respuesta',
+    text: 'No se pudieron obtener los integrantes del grupo. Intenta nuevamente más tarde.',
+    confirmButtonText: 'Aceptar',
+  });
+};
+
+// Error de conexión con el servidor UDH
+export const mostrarAlertaErrorConexionUDH = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error de conexión',
+    text: 'No se pudo conectar con el servidor de la UDH. Por favor, inténtalo más tarde.',
+    confirmButtonText: 'Aceptar',
+  });
+};
+
+// Éxito al aprobar informe final
+export const mostrarExitoInformeAprobado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Informe aprobado',
+    text: 'Los certificados fueron generados y guardados exitosamente.',
+    confirmButtonText: 'Aceptar',
+  });
+};
+
+// Error genérico al procesar el informe final
+export const mostrarErrorProcesarInforme = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'No se pudo procesar el informe.',
+    confirmButtonText: 'Aceptar',
+  });
+};
+// --- Líneas de Acción ---
+
+// Confirmación antes de eliminar línea
+export const confirmarEliminarLinea = () => {
+  return Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará la línea de acción permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+};
+
+// Línea eliminada correctamente
+export const mostrarLineaEliminada = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Eliminado!',
+    text: 'La línea de acción ha sido eliminada.',
+    confirmButtonColor: '#1a237e',
+    timer: 2000,
+    showConfirmButton: false
+  });
+};
+
+// Error al eliminar línea
+export const mostrarErrorEliminarLinea = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'No se pudo eliminar la línea de acción.',
+    confirmButtonColor: '#d33'
+  });
+};
+// --- Programas Académicos ---
+
+export const mostrarAlertaCamposIncompletosPrograma = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Campos incompletos',
+    text: 'Por favor completa todos los campos.',
+  });
+};
+
+export const mostrarAlertaCorreoProgramaInvalido = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Correo inválido',
+    text: 'Solo se permiten correos @gmail.com o @udh.edu.pe',
+    confirmButtonColor: '#d33',
+  });
+};
+
+export const mostrarAlertaWhatsappProgramaInvalido = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Número inválido',
+    text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+export const mostrarAlertaProgramaCreado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Programa creado exitosamente',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+
+export const mostrarAlertaCorreoProgramaDuplicado = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Correo duplicado',
+    text: 'Ya existe un usuario con ese correo.',
+  });
+};
+
+export const mostrarAlertaErrorPrograma400 = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'Ocurrió un error de validación.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+export const mostrarAlertaErrorProgramaDesconocido = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error desconocido',
+    text: 'Ocurrió un error inesperado.',
+    confirmButtonColor: '#d33',
+  });
+};
+// --- Eliminar Programa Académico ---
+
+export const confirmarEliminarPrograma = () => {
+  return Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el programa académico de forma permanente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+  });
+};
+
+export const mostrarAlertaProgramaEliminado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Programa eliminado',
+    text: 'El programa fue eliminado correctamente.',
+    confirmButtonColor: '#1a237e',
+  });
+};
+
+export const mostrarAlertaErrorEliminarPrograma = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'Ocurrió un error al eliminar el programa.',
+    confirmButtonColor: '#d33',
+  });
+};
+// --- Registro de Docente ---
+
+export const mostrarAlertaFaltanCamposDocente = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: '¡Faltan campos!',
+    text: 'Completa todos los campos incluyendo facultad y programa.',
+  });
+};
+
+export const mostrarAlertaDocenteRegistrado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Éxito!',
+    text: 'Docente registrado exitosamente.',
+  });
+};
+
+export const mostrarAlertaCorreoDuplicadoDocente = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Correo duplicado',
+    text: 'Ya existe un usuario registrado con ese correo.',
+  });
+};
+
+export const mostrarErrorRegistrarDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: '¡Error!',
+    text: mensaje || 'Error al registrar docente. Intenta nuevamente.',
+  });
+};
+// --- Edición de Programa Académico ---
+
+export const mostrarAlertaCamposIncompletosProgramaEdicion = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Campos incompletos',
+    text: 'Completa todos los campos requeridos.',
+  });
+};
+
+export const mostrarAlertaCorreoInvalidoPrograma = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Correo inválido',
+    text: 'El correo debe ser @gmail.com o @udh.edu.pe.',
+  });
+};
+
+export const mostrarAlertaProgramaActualizado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Programa actualizado',
+    showConfirmButton: false,
+    timer: 1800,
+  });
+};
+
+export const mostrarAlertaErrorActualizarPrograma = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo actualizar el programa.',
+  });
+};
+// --- Eliminación de Docente ---
+
+export const confirmarEliminarDocente = () => {
+  return Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará al docente permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+};
+
+export const mostrarDocenteEliminado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Docente eliminado!',
+    text: 'El docente fue eliminado correctamente.',
+    confirmButtonColor: '#1a237e',
+    timer: 2000,
+    showConfirmButton: false
+  });
+};
+
+export const mostrarErrorEliminarDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo eliminar el docente.',
+    confirmButtonColor: '#d33'
+  });
+};
+// --- Actualización de Docente ---
+
+export const mostrarDocenteActualizado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Docente actualizado',
+    text: 'Los datos del docente se actualizaron correctamente.',
+    timer: 2000,
+    showConfirmButton: false,
+  });
+};
+
+export const mostrarErrorCorreoDuplicadoAlActualizarDocente = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Correo duplicado',
+    text: 'Ya existe otro usuario registrado con este correo.',
+  });
+};
+
+export const mostrarErrorActualizarDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo actualizar el docente.',
+  });
+};
+// --- Eliminación de Labor Social ---
+
+export const confirmarEliminarLabor = () => {
+  return Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el servicio social permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+};
+
+export const mostrarLaborEliminada = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Servicio social eliminado!',
+    text: 'La labor fue eliminada correctamente.',
+    confirmButtonColor: '#1a237e',
+    timer: 2000,
+    showConfirmButton: false
+  });
+};
+
+export const mostrarErrorEliminarLabor = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo eliminar el servicio social.',
+    confirmButtonColor: '#d33'
+  });
+};
+// --- Eliminación de Facultad ---
+
+export const confirmarEliminarFacultad = () => {
+  return Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará la facultad permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+};
+
+export const mostrarFacultadEliminada = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Facultad eliminada!',
+    text: 'La facultad fue eliminada correctamente.',
+    confirmButtonColor: '#1a237e',
+    timer: 2000,
+    showConfirmButton: false
+  });
+};
+
+export const mostrarErrorEliminarFacultad = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo eliminar la facultad.',
+    confirmButtonColor: '#d33'
+  });
+};
+// --- Grupo / Integrantes ---
+
+export const mostrarErrorObtenerIntegrantesGrupo = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo cargar el grupo.',
+  });
+};
+// --- Solicitud de Revisión del Plan Social ---
+
+// Falta ID o token
+export const mostrarErrorSesionInvalida = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Sesión inválida',
+    text: 'No se encontró el ID de usuario o el token. Inicia sesión nuevamente.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+// No hay archivo seleccionado
+export const mostrarErrorArchivoNoSeleccionado = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Archivo no seleccionado',
+    text: 'Primero selecciona un archivo.',
+    confirmButtonColor: '#f59e0b',
+  });
+};
+
+// Error al enviar proyecto
+export const mostrarErrorEnviarProyecto = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error al enviar',
+    text: mensaje || 'Ocurrió un error al enviar tu plan.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+// Solicitud enviada correctamente
+export const mostrarExitoSolicitudRevision = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Revisión solicitada',
+    text: 'Tu proyecto ha sido enviado correctamente al asesor para su revisión.',
+    timer: 2500,
+    showConfirmButton: false,
+  });
+};
+
+// Evidencia seleccionada (solo mostrada al elegir archivo)
+export const mostrarAlertaEvidenciaSeleccionada = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Evidencia seleccionada',
+    text: 'No se ha enviado aún. Presiona el botón "Enviar" para confirmar.',
+    timer: 2000,
+    showConfirmButton: false,
+  });
+};
+export const mostrarAlertaSolicitudYaEnviada = () => {
+  return Swal.fire({
+    icon: "info",
+    title: "Solicitud ya enviada",
+    text: "Ya has enviado una solicitud. Espera la respuesta del docente.",
+    confirmButtonText: "Entendido",
+  });
+};
+
+export const mostrarAlertaSolicitudEnviada = () => {
+  return Swal.fire({
+    icon: "success",
+    title: "Solicitud enviada",
+    text: "Tu solicitud ha sido registrada correctamente.",
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+
+export const mostrarAlertaErrorEnviarSolicitud = (mensaje) => {
+  return Swal.fire({
+    icon: "error",
+    title: "Error al enviar",
+    text: mensaje || "Hubo un error al enviar la solicitud.",
+    confirmButtonColor: "#d33",
+  });
+};
+export const mostrarAlertaCompletarPerfilPrimeraVez = () => {
+  return Swal.fire({
+    title: '¡Bienvenido!',
+    text: 'Antes de continuar, debes completar tu perfil.',
+    icon: 'info',
+    confirmButtonText: 'Aceptar',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
+};
+export const mostrarExitoSolicitudCartaTermino = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Solicitud enviada',
+    text: 'Tu carta de término ha sido solicitada correctamente.',
+    timer: 2000,
+    showConfirmButton: false
+  });
+};
+export const mostrarErrorSolicitudCartaTermino = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'Hubo un problema al solicitar la carta de término.'
+  });
+};
+// --- Revisión de trabajos (Docente) ---
+
+export const mostrarExitoTrabajoAceptado = () => {
+  return Swal.fire({
+    icon: 'success',
+    title: '¡Trabajo aceptado!',
+    text: 'Has aceptado supervisar el trabajo del estudiante.',
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Entendido'
+  });
+};
+
+export const mostrarErrorGuardarCambiosTrabajo = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: '¡Error!',
+    text: mensaje || 'Ocurrió un problema al guardar los cambios o generar el documento.',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Aceptar'
+  });
+};
+// --- Perfil Docente / Carga inicial ---
+
+export const mostrarAlertaCompletarPerfilDocente = () => {
+  return Swal.fire({
+    title: '¡Bienvenido!',
+    text: 'Antes de continuar, debes completar tu perfil.',
+    icon: 'info',
+    confirmButtonText: 'Aceptar',
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  });
+};
+
+export const mostrarErrorObtenerTrabajosDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error al obtener trabajos sociales',
+    text: mensaje || 'No se pudo obtener los trabajos sociales del docente.',
+  });
+};
+
+export const mostrarErrorObtenerDatosDocente = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error al obtener datos del docente',
+    text: mensaje || 'No se pudo obtener la información del docente.',
+  });
+};
+// --- Revisión de Trabajos Sociales (Docente) ---
+
+export const confirmarAceptarEstudianteTrabajo = () => {
+  return Swal.fire({
+    title: '¿Estás seguro de aceptar al estudiante?',
+    text: 'Esta acción generará la carta de aceptación y no podrá ser revertida.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, aceptar',
+    cancelButtonText: 'Cancelar'
+  });
+};
+
+export const mostrarAlertaSinDatosGrupo = () => {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Sin datos de grupo',
+    text: 'No se encontraron integrantes del grupo. Intenta nuevamente más tarde.',
+    confirmButtonText: 'Aceptar'
+  });
+};
+
+export const mostrarErrorServidorUDHNoDisponible = () => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Servidor de UDH no disponible',
+    text: 'No se pudo contactar con el servidor de datos académicos. Inténtalo más tarde.',
+    confirmButtonText: 'Aceptar'
+  });
+};
+
+export const mostrarExitoCambioEstadoTrabajo = (nuevoEstado) => {
+  const textoEstado = nuevoEstado === 'aceptado' ? 'aceptado' : 'rechazado';
+  return Swal.fire({
+    icon: 'success',
+    title: `Trabajo ${textoEstado}`,
+    text: `Has marcado este trabajo como ${nuevoEstado}.`,
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Entendido'
+  });
+};
+
+export const mostrarErrorCambioEstadoTrabajo = (mensaje) => {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje || 'No se pudo actualizar el estado del trabajo.',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Aceptar'
+  });
+};

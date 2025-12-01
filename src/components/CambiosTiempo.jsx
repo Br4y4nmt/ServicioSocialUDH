@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Swal from "sweetalert2"; 
 import "./DashboardGestor.css";
+import VerBoton from "../hooks/componentes/VerBoton";
 import { useUser } from "../UserContext";
 
 function CambiosTiempo() {
@@ -241,26 +242,11 @@ useEffect(() => {
                           "SIN PROGRAMA"}
                       </td>
                       <td>
-                        <button
-                          className="btn-ver-pdf"
-                          onClick={() =>
-                            verDetalle(est.id_usuario, est.nombre_estudiante)
-                          }
-                          title="Ver detalle"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            fill="#2e2e2e"
-                            viewBox="0 0 24 24"
-                            className="icono-ojo"
-                          >
-                            <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
-                          </svg>
-                          <span>Ver</span>
-                        </button>
-                      </td>
+                      <VerBoton
+                        onClick={() => verDetalle(est.id_usuario, est.nombre_estudiante)}
+                        label="Ver"
+                      />
+                    </td>
                     </tr>
                   ))
                 ) : (

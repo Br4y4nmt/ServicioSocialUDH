@@ -21,10 +21,55 @@ import DocenteEditarModal from "./modals/DocenteEditarModal";
 import SeguimientoModal from "./modals/SeguimientoModal";
 import { pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
+import EditIcon from "../hooks/componentes/Icons/EditIcon";
+import DeleteIcon from "../hooks/componentes/Icons/DeleteIcon";
 import VerBoton from "../hooks/componentes/VerBoton";
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
 import { useUser } from '../UserContext';
+import {
+  confirmarEliminacionDesignacionSupervisor,
+  mostrarExitoEliminacionDesignacionSupervisor,
+  mostrarErrorEliminacionDesignacionSupervisor,
+  mostrarAlertaIntegrantesNoDisponibles,
+  mostrarAlertaErrorConexionUDH,
+  mostrarExitoInformeAprobado,
+  mostrarErrorProcesarInforme,
+  confirmarEliminarLinea,
+  mostrarLineaEliminada,
+  mostrarErrorEliminarLinea,
+  mostrarAlertaCamposIncompletosPrograma,
+  mostrarAlertaCorreoProgramaInvalido,
+  mostrarAlertaWhatsappProgramaInvalido,
+  mostrarAlertaProgramaCreado,
+  mostrarAlertaCorreoProgramaDuplicado,
+  mostrarAlertaErrorPrograma400,
+  mostrarAlertaErrorProgramaDesconocido,
+  confirmarEliminarPrograma,
+  mostrarAlertaProgramaEliminado,
+  mostrarAlertaErrorEliminarPrograma,
+  mostrarAlertaWhatsappInvalido,
+  mostrarAlertaFaltanCamposDocente,
+  mostrarAlertaDocenteRegistrado,
+  mostrarAlertaCorreoDuplicadoDocente,
+  mostrarErrorRegistrarDocente,
+  mostrarAlertaCamposIncompletosProgramaEdicion,
+  mostrarAlertaCorreoInvalidoPrograma,
+  mostrarAlertaProgramaActualizado,
+  mostrarAlertaErrorActualizarPrograma,
+  confirmarEliminarDocente,
+  mostrarDocenteEliminado,
+  mostrarErrorEliminarDocente,
+  mostrarDocenteActualizado,
+  mostrarErrorCorreoDuplicadoAlActualizarDocente,
+  mostrarErrorActualizarDocente,
+  confirmarEliminarLabor,
+  mostrarLaborEliminada,
+  mostrarErrorEliminarLabor,
+  confirmarEliminarFacultad,
+  mostrarFacultadEliminada,
+  mostrarErrorEliminarFacultad,
+} from "../hooks/alerts/alertas";
 
 
 function DashboardGestor() {
@@ -94,41 +139,23 @@ function DashboardGestor() {
   const { user } = useUser();
   const token = user?.token;
 
-  const eliminarSupervisor = async (id) => {
-  const confirmacion = await Swal.fire({
-    title: '¿Eliminar designación?',
-    text: 'Se quitará la designación del docente supervisor.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6'
-  });
-
+const eliminarSupervisor = async (id) => {
+  const confirmacion = await confirmarEliminacionDesignacionSupervisor();
   if (!confirmacion.isConfirmed) return;
 
   try {
     await axios.delete(`/api/trabajo-social/seleccionado/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     await fetchSupervisores();
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Eliminado',
-      text: 'La designación fue eliminada correctamente.',
-      timer: 2000,
-      showConfirmButton: false
-    });
+    await mostrarExitoEliminacionDesignacionSupervisor();
   } catch (error) {
     console.error('Error al eliminar designación:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: error.response?.data?.message || 'No se pudo eliminar la designación.'
-    });
+
+    const mensaje = error.response?.data?.message || 'No se pudo eliminar la designación.';
+    await mostrarErrorEliminacionDesignacionSupervisor(mensaje);
   }
 };
 
@@ -153,12 +180,11 @@ useEffect(() => {
 }, [fetchEstudiantes]);
 
 
-
 const aceptarInforme = async (id) => {
   try {
     const informe = informesFinales.find((i) => i.id === id);
     if (!informe) {
-      console.warn('⚠️ Informe no encontrado para el ID:', id);
+      console.warn('Informe no encontrado para el ID:', id);
       return;
     }
 
@@ -182,23 +208,13 @@ const aceptarInforme = async (id) => {
         estudiantes = response.data;
 
         if (!Array.isArray(estudiantes) || estudiantes.length === 0) {
-          await Swal.fire({
-            icon: 'warning',
-            title: 'Servidor UDH sin respuesta',
-            text: 'No se pudieron obtener los integrantes del grupo. Intenta nuevamente más tarde.',
-            confirmButtonText: 'Aceptar',
-          });
+          await mostrarAlertaIntegrantesNoDisponibles();
           return;
         }
 
       } catch (error) {
         console.error('Error al conectar con API UDH:', error);
-        await Swal.fire({
-          icon: 'error',
-          title: 'Error de conexión',
-          text: 'No se pudo conectar con el servidor de la UDH. Por favor, inténtalo más tarde.',
-          confirmButtonText: 'Aceptar',
-        });
+        await mostrarAlertaErrorConexionUDH();
         return; 
       }
 
@@ -207,6 +223,7 @@ const aceptarInforme = async (id) => {
           const nombreEstudiante = estudiante.nombre_completo;
           const codigo = estudiante.codigo_universitario;
           const correoPrincipal = informe.trabajo_social?.correo_institucional || informe.correo_institucional;
+
           if (estudiante.correo_institucional === correoPrincipal) {
             console.log(`⏩ Saltando estudiante principal: ${correoPrincipal}`);
             continue;
@@ -261,14 +278,14 @@ const aceptarInforme = async (id) => {
     };
 
     const blobPrincipal = await pdf(
-    <InformePDF
-      informe={informePrincipal}
-      qrImage={qrDataUrl}
-      verificationUrl={verificationUrl}
-    />
-  ).toBlob();
+      <InformePDF
+        informe={informePrincipal}
+        qrImage={qrDataUrl}
+        verificationUrl={verificationUrl}
+      />
+    ).toBlob();
 
- const formDataPrincipal = new FormData();
+    const formDataPrincipal = new FormData();
     formDataPrincipal.append('archivo', blobPrincipal, `certificado_final_${id}.pdf`);
     formDataPrincipal.append('trabajo_id', id);
 
@@ -287,22 +304,14 @@ const aceptarInforme = async (id) => {
 
     fetchInformesFinales();
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Informe aprobado',
-      text: 'Los certificados fueron generados y guardados exitosamente.',
-      confirmButtonText: 'Aceptar',
-    });
+    await mostrarExitoInformeAprobado();
 
   } catch (error) {
     console.error('Error general al aceptar informe:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudo procesar el informe.',
-    });
+    await mostrarErrorProcesarInforme();
   }
 };
+
 
 const fetchSupervisores = useCallback(async () => {
   if (!token) return;
@@ -317,7 +326,7 @@ const fetchSupervisores = useCallback(async () => {
 }, [token]);
 
 
-  const verSeguimiento = async (usuario_id) => {
+const verSeguimiento = async (usuario_id) => {
       try {
         const res = await axios.get(`/api/trabajo-social/seguimiento/${usuario_id}`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -328,7 +337,7 @@ const fetchSupervisores = useCallback(async () => {
         console.error("Error al obtener seguimiento:", error);
         Swal.fire("Error", "No se pudo obtener el seguimiento del trámite", "error");
       }
-    };
+  };
 
 
 const fetchInformesFinales = useCallback(async () => {
@@ -385,48 +394,24 @@ const guardarEdicionLinea = async (id) => {
   }
 };
 
-
-
 const eliminarLinea = async (id) => {
-  const resultado = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará la línea de acción permanentemente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  });
+  const resultado = await confirmarEliminarLinea();
 
-  if (resultado.isConfirmed) {
-    try {
-      await axios.delete(`/api/lineas/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  if (!resultado.isConfirmed) return;
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Eliminado!',
-        text: 'La línea de acción ha sido eliminada.',
-        confirmButtonColor: '#1a237e',
-        timer: 2000,
-        showConfirmButton: false
-      });
+  try {
+    await axios.delete(`/api/lineas/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      fetchLineas();
-    } catch (error) {
-      console.error('Error al eliminar línea de acción:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo eliminar la línea de acción.',
-        confirmButtonColor: '#d33'
-      });
-    }
+    mostrarLineaEliminada();
+    fetchLineas();
+
+  } catch (error) {
+    console.error('Error al eliminar línea de acción:', error);
+    mostrarErrorEliminarLinea();
   }
 };
-
 
 const fetchProgramas = useCallback(async () => {
   if (!token) return;
@@ -442,32 +427,18 @@ const fetchProgramas = useCallback(async () => {
 
 const crearPrograma = async () => {
   if (!nuevoPrograma.trim() || !facultadPrograma || !emailPrograma || !whatsappPrograma) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Campos incompletos',
-      text: 'Por favor completa todos los campos.',
-    });
+    mostrarAlertaCamposIncompletosPrograma();
     return;
   }
 
   const emailValido = /@(gmail\.com|udh\.edu\.pe)$/.test(emailPrograma);
   if (!emailValido) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Correo inválido',
-      text: 'Solo se permiten correos @gmail.com o @udh.edu.pe',
-      confirmButtonColor: '#d33'
-    });
+    mostrarAlertaCorreoProgramaInvalido();
     return;
   }
 
   if (whatsappPrograma.length !== 9) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Número inválido',
-      text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
-      confirmButtonColor: '#d33'
-    });
+    mostrarAlertaWhatsappProgramaInvalido();
     return;
   }
 
@@ -477,17 +448,12 @@ const crearPrograma = async () => {
       id_facultad: facultadPrograma,
       email: emailPrograma,
       whatsapp: whatsappPrograma,
-      rol_id: 4
+      rol_id: 4,
     }, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Programa creado exitosamente',
-      showConfirmButton: false,
-      timer: 2000
-    });
+    mostrarAlertaProgramaCreado();
 
     setNuevoPrograma('');
     setFacultadPrograma('');
@@ -499,88 +465,51 @@ const crearPrograma = async () => {
     console.error('Error al crear programa:', error);
 
     if (error.response?.status === 409) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo duplicado',
-        text: 'Ya existe un usuario con ese correo.',
-      });
+      mostrarAlertaCorreoProgramaDuplicado();
     } else if (error.response?.status === 400) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.response.data.message,
-        confirmButtonColor: '#d33'
-      });
+      mostrarAlertaErrorPrograma400(error.response.data.message);
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error desconocido',
-        text: 'Ocurrió un error inesperado.',
-        confirmButtonColor: '#d33'
-      });
+      mostrarAlertaErrorProgramaDesconocido();
     }
   }
 };
 
-  const guardarEdicionFacultad = async (id) => {
-    try {
-      await axios.put(`/api/facultades/${id}`, {
+const guardarEdicionFacultad = async (id) => {
+  try {
+    await axios.put(`/api/facultades/${id}`, {
       nombre_facultad: nombreEditado,
     }, {
       headers: { Authorization: `Bearer ${token}` }
     });
-      setEditandoId(null);
-      setNombreEditado('');
-      await fetchFacultades();
-    } catch (error) {
-      console.error('Error al actualizar facultad:', error);
-    }
-  };
-
-const eliminarPrograma = async (id) => {
-  const confirmacion = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará el programa académico de forma permanente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6'
-  });
-
-  if (confirmacion.isConfirmed) {
-    try {
-      await axios.delete(`/api/programas/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      await fetchProgramas(); 
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Programa eliminado',
-        text: 'El programa fue eliminado correctamente.',
-        confirmButtonColor: '#1a237e'
-      });
-
-    } catch (error) {
-      console.error('Error al eliminar programa:', error);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Ocurrió un error al eliminar el programa.',
-        confirmButtonColor: '#d33'
-      });
-    }
-  }
-};
-  const cancelarEdicion = () => {
     setEditandoId(null);
     setNombreEditado('');
-  };
+    await fetchFacultades();
+  } catch (error) {
+     console.error('Error al actualizar facultad:', error);
+  }
+};
 
+const eliminarPrograma = async (id) => {
+  const confirmacion = await confirmarEliminarPrograma();
+  if (!confirmacion.isConfirmed) return;
+
+  try {
+    await axios.delete(`/api/programas/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    await fetchProgramas();
+    mostrarAlertaProgramaEliminado();
+  } catch (error) {
+    console.error('Error al eliminar programa:', error);
+    mostrarAlertaErrorEliminarPrograma();
+  }
+};
+
+const cancelarEdicion = () => {
+  setEditandoId(null);
+  setNombreEditado('');
+};
 
 
 const fetchDocentes = useCallback(async () => {
@@ -603,20 +532,12 @@ const crearDocente = async () => {
     !nuevaFacultadDocente ||
     !nuevoProgramaDocente
   ) {
-    Swal.fire({
-      icon: 'warning',
-      title: '¡Faltan campos!',
-      text: 'Completa todos los campos incluyendo facultad y programa.',
-    });
+    mostrarAlertaFaltanCamposDocente();
     return;
   }
 
   if (nuevoDocenteWhatsapp.length !== 9) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Número inválido',
-      text: 'El número de WhatsApp debe tener exactamente 9 dígitos.',
-    });
+    mostrarAlertaWhatsappInvalido();
     return;
   }
 
@@ -639,72 +560,47 @@ const crearDocente = async () => {
     setNuevaFacultadDocente('');
     setNuevoProgramaDocente('');
 
-    Swal.fire({
-      icon: 'success',
-      title: '¡Éxito!',
-      text: 'Docente registrado exitosamente.',
-    });
-
+    mostrarAlertaDocenteRegistrado();
     fetchDocentes();
   } catch (error) {
     console.error('Error al registrar docente:', error);
 
     if (error.response?.status === 409) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo duplicado',
-        text: 'Ya existe un usuario registrado con ese correo.',
-      });
+      mostrarAlertaCorreoDuplicadoDocente();
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text:
-          error.response?.data?.message ||
-          'Error al registrar docente. Intenta nuevamente.',
-      });
+      mostrarErrorRegistrarDocente(error.response?.data?.message);
     }
   }
 };
-
-
-
-  
+ 
 const guardarEdicionPrograma = async () => {
   if (!programaEditado.trim() || !facultadEditada || !emailEditado.trim()) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Campos incompletos',
-      text: 'Completa todos los campos requeridos.',
-    });
+    mostrarAlertaCamposIncompletosProgramaEdicion();
     return;
   }
 
-  const correoValido = emailEditado.endsWith('@gmail.com') || emailEditado.endsWith('@udh.edu.pe');
+  const correoValido =
+    emailEditado.endsWith('@gmail.com') || emailEditado.endsWith('@udh.edu.pe');
+
   if (!correoValido) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Correo inválido',
-      text: 'El correo debe ser @gmail.com o @udh.edu.pe.',
-    });
+    mostrarAlertaCorreoInvalidoPrograma();
     return;
   }
 
   try {
-    await axios.put(`/api/programas/${idEditandoPrograma}`, {
-      nombre_programa: programaEditado,
-      id_facultad: facultadEditada,
-      email: emailEditado
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    await axios.put(
+      `/api/programas/${idEditandoPrograma}`,
+      {
+        nombre_programa: programaEditado,
+        id_facultad: facultadEditada,
+        email: emailEditado,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Programa actualizado',
-      showConfirmButton: false,
-      timer: 1800
-    });
+    mostrarAlertaProgramaActualizado();
 
     setModalEditarProgramaVisible(false);
     setIdEditandoPrograma(null);
@@ -716,56 +612,29 @@ const guardarEdicionPrograma = async () => {
   } catch (error) {
     console.error('Error al actualizar el programa académico:', error);
 
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: error.response?.data?.message || 'No se pudo actualizar el programa.',
-    });
+    mostrarAlertaErrorActualizarPrograma(error.response?.data?.message);
   }
 };
 
-  
-  
 const eliminarDocente = async (id) => {
-  const confirmacion = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará al docente permanentemente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  });
+  const confirmacion = await confirmarEliminarDocente();
 
-  if (confirmacion.isConfirmed) {
-    try {
-      await axios.delete(`/api/docentes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  if (!confirmacion.isConfirmed) return;
 
-      await fetchDocentes();
+  try {
+    await axios.delete(`/api/docentes/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Docente eliminado!',
-        text: 'El docente fue eliminado correctamente.',
-        confirmButtonColor: '#1a237e',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    } catch (error) {
-      console.error('Error al eliminar docente:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo eliminar el docente.',
-        confirmButtonColor: '#d33'
-      });
-    }
+    await fetchDocentes();
+
+    mostrarDocenteEliminado();
+
+  } catch (error) {
+    console.error('Error al eliminar docente:', error);
+    mostrarErrorEliminarDocente(error.response?.data?.message);
   }
 };
-
 
 useEffect(() => {
   const fetchProgramasPorFacultad = async () => {
@@ -799,13 +668,7 @@ const guardarEdicionDocente = async (id) => {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Docente actualizado',
-      text: 'Los datos del docente se actualizaron correctamente.',
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    mostrarDocenteActualizado();
 
     setEditandoDocenteId(null);
     fetchDocentes();
@@ -814,17 +677,9 @@ const guardarEdicionDocente = async (id) => {
     console.error('Error al actualizar docente:', error);
 
     if (error.response?.status === 409) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo duplicado',
-        text: 'Ya existe otro usuario registrado con este correo.',
-      });
+      mostrarErrorCorreoDuplicadoAlActualizarDocente();
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.response?.data?.message || 'No se pudo actualizar el docente.',
-      });
+      mostrarErrorActualizarDocente(error.response?.data?.message);
     }
   }
 };
@@ -856,63 +711,39 @@ const fetchLabores = useCallback(async () => {
     }
   };
 
+
 const eliminarLabor = async (id) => {
-  const confirmacion = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará el servicio social permanentemente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  });
+  const confirmacion = await confirmarEliminarLabor();
+  if (!confirmacion.isConfirmed) return;
 
-  if (confirmacion.isConfirmed) {
-    try {
-      await axios.delete(`/api/labores/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  try {
+    await axios.delete(`/api/labores/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      await fetchLabores();
+    await fetchLabores();
+    mostrarLaborEliminada();
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Servicio social eliminado!',
-        text: 'La labor fue eliminada correctamente.',
-        confirmButtonColor: '#1a237e',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    } catch (error) {
-      console.error('Error al eliminar labor social:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo eliminar el servicio social.',
-        confirmButtonColor: '#d33'
-      });
-    }
+  } catch (error) {
+    console.error('Error al eliminar labor social:', error);
+    mostrarErrorEliminarLabor(error.response?.data?.message);
   }
 };
 
-
-
-  const guardarEdicionLabor = async (id) => {
-    try {
-      await axios.put(`/api/labores/${id}`, {
-      nombre_labores: nombreLaborEditado,
-      linea_id: lineaLabor
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEditandoLaborId(null);
-      fetchLabores();
-    } catch (error) {
-      console.error('Error al actualizar labor social:', error);
-    }
-  };
-
+const guardarEdicionLabor = async (id) => {
+  try {
+    await axios.put(`/api/labores/${id}`, {
+    nombre_labores: nombreLaborEditado,
+    linea_id: lineaLabor
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setEditandoLaborId(null);
+    fetchLabores();
+  } catch (error) {
+    console.error('Error al actualizar labor social:', error);
+  }
+};
 
 const fetchFacultades = useCallback(async () => {
   if (!token) return;
@@ -926,7 +757,8 @@ const fetchFacultades = useCallback(async () => {
   }
 }, [token]);
 
-  const crearFacultad = async () => {
+
+const crearFacultad = async () => {
     if (!nuevaFacultad.trim()) return;
     try {
       await axios.post('/api/facultades', {
@@ -942,42 +774,20 @@ const fetchFacultades = useCallback(async () => {
   };
 
 const eliminarFacultad = async (id) => {
-  const confirmacion = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará la facultad permanentemente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  });
+  const confirmacion = await confirmarEliminarFacultad();
+  if (!confirmacion.isConfirmed) return;
 
-  if (confirmacion.isConfirmed) {
-    try {
-      await axios.delete(`/api/facultades/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  try {
+    await axios.delete(`/api/facultades/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      await fetchFacultades();
+    await fetchFacultades();
+    mostrarFacultadEliminada();
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Facultad eliminada!',
-        text: 'La facultad fue eliminada correctamente.',
-        confirmButtonColor: '#1a237e',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    } catch (error) {
-      console.error('Error al eliminar facultad:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo eliminar la facultad.',
-        confirmButtonColor: '#d33'
-      });
-    }
+  } catch (error) {
+    console.error('Error al eliminar facultad:', error);
+    mostrarErrorEliminarFacultad(error.response?.data?.message);
   }
 };
 
@@ -1015,7 +825,7 @@ useEffect(() => {
 ]);
 
 
-  return (
+return (
     <div className="layout-gestor">
     <Header onToggleSidebar={toggleSidebar} />
     <SidebarGestor
@@ -1055,8 +865,6 @@ useEffect(() => {
     </label>
   </div>
 </div>
-
-
       <div className="facultades-table-wrapper">
         <table className="facultades-table">
           <thead>
@@ -1082,28 +890,25 @@ useEffect(() => {
                   <span className="facultades-badge-activo">Activo</span>
                 </td>
                 <td>
-                <>
-                  <button
-                    onClick={() => {
-                      setEditandoId(f.id_facultad);
-                      setNombreEditado(f.nombre_facultad);
-                      setModalEditarVisible(true);
-                    }}
-                    className="facultades-btn editar"
-                  >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                                    </svg>
-                  </button>
-                  <button
-                    onClick={() => eliminarFacultad(f.id_facultad)}
-                    className="facultades-btn eliminar"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                                      <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                                    </svg>
-                  </button>
-                </>
+                  <>
+                    <button
+                      onClick={() => {
+                        setEditandoId(f.id_facultad);
+                        setNombreEditado(f.nombre_facultad);
+                        setModalEditarVisible(true);
+                      }}
+                      className="facultades-btn editar"
+                    >
+                      <EditIcon />
+                    </button>
+
+                    <button
+                      onClick={() => eliminarFacultad(f.id_facultad)}
+                      className="facultades-btn eliminar"
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </>
                 </td>
               </tr>
             ))}
@@ -1139,7 +944,6 @@ useEffect(() => {
     setNuevaFacultad("");
   }}
 />
-
   </div>
 )}
 
@@ -1180,50 +984,45 @@ useEffect(() => {
             <th>Acciones</th>
           </tr>
         </thead>
-
         <tbody>
-  {programas
-    .filter((prog) =>
-        (prog.nombre_programa || '').toLowerCase().includes(busquedaPrograma.toLowerCase())
-      )
-      .map((prog, index) => (
-    <tr key={prog.id_programa}>
-        <td>{index + 1}</td>
-        <td>{(prog.nombre_programa || '').toUpperCase()}</td>
-        <td>{(prog.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
-        <td>{prog.email || 'SIN CORREO'}</td>
-        <td>
-          <button
-            onClick={() => {
-              setIdEditandoPrograma(prog.id_programa);
-              setProgramaEditado(prog.nombre_programa);
-              setFacultadEditada(prog.Facultade?.id_facultad || '');
-              setEmailEditado(prog.email);
-              setModalEditarProgramaVisible(true);
-            }}
-            className="programas-btn editar"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                    </svg>
-          </button>
-          <button
-            onClick={() => eliminarPrograma(prog.id_programa)}
-            className="programas-btn eliminar"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                      <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                    </svg>
-          </button>
-        </td>
-      </tr>
-    ))}
-</tbody>
+          {programas
+            .filter((prog) =>
+                (prog.nombre_programa || '').toLowerCase().includes(busquedaPrograma.toLowerCase())
+              )
+              .map((prog, index) => (
+            <tr key={prog.id_programa}>
+                <td>{index + 1}</td>
+                <td>{(prog.nombre_programa || '').toUpperCase()}</td>
+                <td>{(prog.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
+                <td>{prog.email || 'SIN CORREO'}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    setIdEditandoPrograma(prog.id_programa);
+                    setProgramaEditado(prog.nombre_programa);
+                    setFacultadEditada(prog.Facultade?.id_facultad || '');
+                    setEmailEditado(prog.email);
+                    setModalEditarProgramaVisible(true);
+                  }}
+                  className="facultades-btn editar"
+                >
+                  <EditIcon />
+                </button>
+
+                <button
+                  onClick={() => eliminarPrograma(prog.id_programa)}
+                  className="facultades-btn eliminar"
+                >
+                  <DeleteIcon />
+                </button>
+              </td>
+              </tr>
+            ))}
+        </tbody>
         </table>
       </div>
     </div>
   </div>
-  
 )}
 
 <ProgramaEditarModal
@@ -1244,7 +1043,6 @@ useEffect(() => {
   }}
   onGuardar={guardarEdicionPrograma}
 />
-
 
 <ProgramaNuevoModal
   isOpen={modalProgramaVisible}
@@ -1282,7 +1080,6 @@ useEffect(() => {
     setModalProgramaVisible(false);
   }}
 />
-
 
 {activeSection === 'supervisores' && (
   <div className="docentes-container">
@@ -1417,12 +1214,10 @@ useEffect(() => {
                     <td>
                       <button
                         onClick={() => eliminarSupervisor(sup.id || sup.id_supervisor)}
-                        className="docentes-btn eliminar"
+                        className="facultades-btn eliminar"
                         title="Eliminar designación"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                          <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                        </svg>
+                        <DeleteIcon />
                       </button>
                     </td>
                   </tr>
@@ -1434,7 +1229,6 @@ useEffect(() => {
     </div>
   </div>
 )}
-
 
 
 {activeSection === 'informes-finales' && (
@@ -1662,6 +1456,7 @@ useEffect(() => {
     </div>
   </div>
 )}
+
 <EstudianteNuevoModal
   isOpen={modalEstudianteVisible}
   codigo={codigoUniversitario}
@@ -1814,28 +1609,24 @@ useEffect(() => {
                 </td>
                <td className="docentes-acciones-cell">
                 <button
-                  onClick={() => {
-                    setEditandoDocenteId(doc.id_docente);
-                    setNombreDocenteEditado(doc.nombre_docente);
-                    setEmailDocenteEditado(doc.email || '');
-                    setProgramaDocenteEditado(doc.programa_academico_id);
-                    setFacultadDocenteEditada(doc.facultad_id);
-                    setModalEditarDocenteVisible(true);
-                  }}
-                  className="docentes-btn editar"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                  </svg>
-                </button>
+                onClick={() => {
+                  setEditandoDocenteId(doc.id_docente);
+                  setNombreDocenteEditado(doc.nombre_docente);
+                  setEmailDocenteEditado(doc.email || '');
+                  setProgramaDocenteEditado(doc.programa_academico_id);
+                  setFacultadDocenteEditada(doc.facultad_id);
+                  setModalEditarDocenteVisible(true);
+                }}
+                className="facultades-btn editar"
+              >
+                <EditIcon />
+              </button>
                 <button
-                  onClick={() => eliminarDocente(doc.id_docente)}
-                  className="docentes-btn eliminar"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                  </svg>
-                </button>
+                onClick={() => eliminarDocente(doc.id_docente)}
+                className="facultades-btn eliminar"
+              >
+                <DeleteIcon />
+              </button>
               </td>
               </tr>
             ))}
@@ -2005,30 +1796,25 @@ useEffect(() => {
                   )}
                 </td>
                 <td>
-              <button
-                className="labores-btn editar"
-                onClick={() => {
-                  setIdLaborEditando(labor.id_labores);
-                  setNombreLaborEditado(labor.nombre_labores);
-                  setLineaLabor(labor.linea_accion_id);
-                  setModalEditarLaborVisible(true);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                </svg>
-                &nbsp;
-              </button>
-              <button
-                className="labores-btn eliminar"
-                onClick={() => eliminarLabor(labor.id_labores)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                  <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                </svg>
-                &nbsp;
-              </button>
-            </td>
+                <button
+                  className="facultades-btn editar"
+                  onClick={() => {
+                    setIdLaborEditando(labor.id_labores);
+                    setNombreLaborEditado(labor.nombre_labores);
+                    setLineaLabor(labor.linea_accion_id);
+                    setModalEditarLaborVisible(true);
+                  }}
+                >
+                  <EditIcon />
+                </button>
+
+                <button
+                  className="facultades-btn eliminar"
+                  onClick={() => eliminarLabor(labor.id_labores)}
+                >
+                  <DeleteIcon />
+                </button>
+              </td>
               </tr>
             ))}
           </tbody>
@@ -2037,7 +1823,6 @@ useEffect(() => {
     </div>
   </div>
 )}
-
 
 {activeSection === 'seguimiento.trami' && (
   <div className="docentes-container">
@@ -2084,23 +1869,10 @@ useEffect(() => {
                   <td>{est.email || 'SIN CORREO'}</td>
                   <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
                   <td>
-                    <button
-                        className="btn-ver-pdf"
-                        onClick={() => verSeguimiento(est.id_estudiante)}
-                        title="Ver detalle"
-                      >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        fill="#2e2e2e"
-                        viewBox="0 0 24 24"
-                        className="icono-ojo"
-                      >
-                        <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
-                      </svg>
-                      <span>Ver</span>
-                    </button>
+                    <VerBoton
+                    onClick={() => verSeguimiento(est.id_estudiante)}
+                    label="Ver"
+                  />
                   </td>
                 </tr>
               ))}
@@ -2110,7 +1882,6 @@ useEffect(() => {
     </div>
   </div>
 )}
-
 
 {activeSection === 'lineas' && (
   <div className="labores-container">
@@ -2150,28 +1921,24 @@ useEffect(() => {
                 <td>{index + 1}</td>
                   <td>{(l.nombre_linea || 'SIN NOMBRE').toUpperCase()}</td>
                  <td className="labores-acciones-cell">
-                <button
-                  className="docentes-btn editar"
-                  onClick={() => {
-                    setIdEditandoLinea(l.id_linea);
-                    setNombreLineaEditado(l.nombre_linea);
-                    setModalEditarLineaVisible(true);
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
-                  </svg>
-                </button>
+                  <button
+                    className="facultades-btn editar"
+                    onClick={() => {
+                      setIdEditandoLinea(l.id_linea);
+                      setNombreLineaEditado(l.nombre_linea);
+                      setModalEditarLineaVisible(true);
+                    }}
+                  >
+                    <EditIcon />
+                  </button>
 
-                <button
-                  className="docentes-btn eliminar"
-                  onClick={() => eliminarLinea(l.id_linea)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/>
-                  </svg>
-                </button>
-              </td>
+                  <button
+                    className="facultades-btn eliminar"
+                    onClick={() => eliminarLinea(l.id_linea)}
+                  >
+                    <DeleteIcon />
+                  </button>
+                </td>
                 </tr>
               ))}
           </tbody>

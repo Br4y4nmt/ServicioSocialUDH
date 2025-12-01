@@ -16,6 +16,27 @@ import PlanTrabajo from './PlanTrabajo';
 import { PDFDocument } from 'pdf-lib';
 import autoTable from 'jspdf-autotable';
 import { useUser } from '../UserContext';
+import ProyectoModal from "./modals/ProyectoModal";
+import ObservacionEstudianteModal from "./modals/ObservacionEstudianteModal";
+import GrupoModalAlumno from "./modals/GrupoModalAlumno";
+import EvidenciaModal from "./modals/EvidenciaModal";
+import ActividadModalAlumno from "./modals/ActividadModalAlumno";
+import {
+  mostrarErrorObtenerIntegrantesGrupo,
+  mostrarErrorSesionInvalida,
+  mostrarErrorArchivoNoSeleccionado,
+  mostrarErrorEnviarProyecto,
+  mostrarExitoSolicitudRevision,
+  mostrarAlertaEvidenciaSeleccionada,
+  mostrarAlertaSolicitudYaEnviada,
+  mostrarAlertaErrorEnviarSolicitud,
+  mostrarAlertaSolicitudEnviada,
+  mostrarErrorSinIdUsuario,
+  mostrarAlertaCompletarPerfilPrimeraVez,
+   mostrarExitoSolicitudCartaTermino,
+  mostrarErrorSolicitudCartaTermino
+} from "../hooks/alerts/alertas";
+
 function DashboardAlumno() {
   const { user } = useUser();
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
@@ -97,6 +118,7 @@ function DashboardAlumno() {
     organigrama: null,
     documentosAdicionales: null
   });
+  
 const handleFileChange = (e, tipo) => {
   const archivo = e.target.files[0];
   if (archivo) {
@@ -111,6 +133,8 @@ const handleFileChange = (e, tipo) => {
   }
 };
 useWelcomeToast();
+
+
 const obtenerIntegrantesDelGrupo = async () => {
   const usuario_id = user?.id;
   const token = user?.token;
@@ -118,22 +142,22 @@ const obtenerIntegrantesDelGrupo = async () => {
   if (!usuario_id || !token) return;
 
   try {
-    const response = await axios.get(`/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await axios.get(
+      `/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     setIntegrantesGrupoAlumno(response.data);
-    setModalGrupoVisible(true); 
+    setModalGrupoVisible(true);
   } catch (error) {
-    console.error('Error al obtener integrantes del grupo:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudo cargar el grupo.',
-    });
+    console.error("Error al obtener integrantes del grupo:", error);
+
+    const mensaje = error.response?.data?.message;
+    mostrarErrorObtenerIntegrantesGrupo(mensaje);
   }
 };
-
 
 const [activeSection, setActiveSection] = useState(() => {
   return localStorage.getItem('activeSectionAlumno') || 'designacion';
@@ -199,21 +223,21 @@ const handleSolicitarRevision = async () => {
   const token = user?.token;
 
   if (!usuario_id || !token) {
-    alert('No se encontró el ID de usuario o el token. Inicia sesión nuevamente.');
+    mostrarErrorSesionInvalida();
     return;
   }
 
   if (!proyectoFile) {
-    alert('Primero selecciona un archivo.');
+    mostrarErrorArchivoNoSeleccionado();
     return;
   }
 
   try {
-    await axios.post(`/api/cronograma/${usuario_id}`, {
-      actividades
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    await axios.post(
+      `/api/cronograma/${usuario_id}`,
+      { actividades },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     const formData = new FormData();
     formData.append('archivo_plan_social', proyectoFile);
@@ -222,17 +246,11 @@ const handleSolicitarRevision = async () => {
     await axios.post('/api/trabajo-social/subir-plan-social', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Revisión solicitada',
-      text: 'Tu proyecto ha sido enviado correctamente al asesor para su revisión.',
-      timer: 2500,
-      showConfirmButton: false
-    }).then(() => {
+    mostrarExitoSolicitudRevision().then(() => {
       setArchivoYaEnviado(true);
       setPdfDescargado(true);
       fetchTrabajoSocial();
@@ -240,10 +258,10 @@ const handleSolicitarRevision = async () => {
 
     setProyectoFile(null);
     setSolicitudEnviada(true);
-
+    
   } catch (err) {
     console.error('Error al enviar proyecto:', err);
-    alert('Ocurrió un error al enviar tu plan.');
+    mostrarErrorEnviarProyecto(err.response?.data?.message);
   }
 };
 
@@ -257,22 +275,17 @@ const handleEvidencia = (actividadId, index) => {
   input.onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const updated = [...actividadesSeguimiento];
     updated[index].archivoTemporalEvidencia = file;
     setActividadesSeguimiento(updated);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Evidencia seleccionada',
-      text: 'No se ha enviado aún. Presiona el botón "Enviar" para confirmar.',
-      timer: 2000,
-      showConfirmButton: false
-    });
-
+    mostrarAlertaEvidenciaSeleccionada(); 
   };
 
   input.click();
 };
+
 
 useEffect(() => {
   const fetchFacultades = async () => {
@@ -306,30 +319,22 @@ useEffect(() => {
   const usuario_id = user?.id;
   const token = user?.token;
 
-  const verificarPrimeraVez = async () => {
-    try {
-      const res = await axios.get(`/api/usuarios/${usuario_id}/primera-vez`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+const verificarPrimeraVez = async () => {
+  try {
+    const res = await axios.get(`/api/usuarios/${usuario_id}/primera-vez`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      if (res.data.primera_vez) {
-        Swal.fire({
-          title: '¡Bienvenido!',
-          text: 'Antes de continuar, debes completar tu perfil.',
-          icon: 'info',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = '/perfil';
-          }
-        });
+    if (res.data.primera_vez) {
+      const result = await mostrarAlertaCompletarPerfilPrimeraVez();
+      if (result.isConfirmed) {
+        window.location.href = '/perfil';
       }
-    } catch (err) {
-      console.error('Error al verificar primera vez:', err);
     }
-  };
+  } catch (err) {
+    console.error('Error al verificar primera vez:', err);
+  }
+};
 
   if (usuario_id && token) {
     verificarPrimeraVez();
@@ -561,71 +566,67 @@ useEffect(() => {
 }, [lineaSeleccionada, user?.token]);
 
 
-
 const handleSolicitarAprobacion = async () => {
   if (solicitudEnviada) {
-    alert('Ya has enviado la solicitud.');
+    mostrarAlertaSolicitudYaEnviada();
     return;
   }
 
   const usuario_id = user?.id;
 
   if (!usuario_id || !user?.token) {
-    alert('No se encontró el ID de usuario o token. Inicia sesión nuevamente.');
+    mostrarErrorSinIdUsuario();
     return;
   }
 
   try {
     const datos = {
-      usuario_id: parseInt(usuario_id),
-      facultad_id: parseInt(facultadSeleccionada),
-      programa_academico_id: parseInt(programaSeleccionado),
-      docente_id: parseInt(docenteSeleccionado),
-      labor_social_id: parseInt(laborSeleccionada),
+      usuario_id: Number(usuario_id),
+      facultad_id: Number(facultadSeleccionada),
+      programa_academico_id: Number(programaSeleccionado),
+      docente_id: Number(docenteSeleccionado),
+      labor_social_id: Number(laborSeleccionada),
       tipo_servicio_social: tipoServicio,
-      linea_accion_id: parseInt(lineaSeleccionada)
+      linea_accion_id: Number(lineaSeleccionada)
     };
 
-    const response = await axios.post('/api/trabajo-social', datos, {
+    const response = await axios.post("/api/trabajo-social", datos, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
     });
 
-    if (tipoServicio === 'grupal') {
+    // Guardar integrantes si el servicio es grupal
+    if (tipoServicio === "grupal") {
       const trabajoSocialId = response.data.id;
+
       if (!trabajoSocialId) {
-        console.warn('No se recibió el ID del trabajo social creado.');
+        mostrarAlertaErrorEnviarSolicitud("No se recibió el ID del trabajo social creado.");
         return;
       }
 
-      await axios.post('/api/integrantes', {
-        trabajo_social_id: trabajoSocialId,
-        correos: correosGrupo.filter(c => c.trim() !== '')
-      }, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-
-      console.log('Integrantes del grupo guardados correctamente.');
+      await axios.post(
+        "/api/integrantes",
+        {
+          trabajo_social_id: trabajoSocialId,
+          correos: correosGrupo.filter((c) => c.trim() !== "")
+        },
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
     }
 
     setSolicitudEnviada(true);
-    setEstadoPlan('pendiente');
+    setEstadoPlan("pendiente");
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Solicitud enviada',
-      text: 'Tu solicitud ha sido registrada correctamente.',
-      showConfirmButton: false,
-      timer: 2000
-    });
+    mostrarAlertaSolicitudEnviada();
 
   } catch (error) {
-    console.error('Error al enviar solicitud:', error);
-    alert('Hubo un error al enviar la solicitud.');
+    console.error("Error al enviar solicitud:", error);
+    mostrarAlertaErrorEnviarSolicitud();
   }
 };
-
 
 const mergePDFs = async (mainPdfBlob, anexos) => {
   const mainPdfBytes = await mainPdfBlob.arrayBuffer();
@@ -659,6 +660,8 @@ useEffect(() => {
     }
   }
 }, [activeSection, estadoConformidad, datosCargados]);
+
+
 useEffect(() => {
   const usuario_id = user?.id; 
 
@@ -698,7 +701,6 @@ useEffect(() => {
 }, [activeSection, estadoPlan, datosCargados]);
 
 const handleGenerarPDF = async () => {
-
   const camposRequeridos = [
     nombreInstitucion, nombreResponsable, lineaAccion, fechaPresentacion,
     periodoEstimado, introduccion, justificacion, objetivoGeneral,
@@ -731,7 +733,6 @@ const handleGenerarPDF = async () => {
     '5 MESES': 150,
     '6 MESES': 180
   };
-
 
   const diasRequeridos = periodoEnDias[periodoEstimado.toUpperCase()];
   const sumaDiasActividades = actividades.reduce((total, act) => {
@@ -788,8 +789,6 @@ if (lineas.length === 1) {
   doc.text(lineas[1], 105, 47, { align: 'center' });
 }
 
-
-  // Logo
   const logo = await fetch('/images/logonuevo.png')
     .then(res => res.blob())
     .then(blob => new Promise(resolve => {
@@ -1036,6 +1035,7 @@ link.href = url;
 link.download = 'PLAN-SERVICIO-SOCIAL-UDH.pdf';
 link.click();
 };
+
 const hayObservaciones = actividadesSeguimiento.some(
   (actividad) => actividad.estado === 'observado' && actividad.observacion
 );
@@ -1049,7 +1049,6 @@ const solicitarCartaTermino = async () => {
   if (!usuario_id || !token) return;
 
   try {
-
     const { data } = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -1059,29 +1058,22 @@ const solicitarCartaTermino = async () => {
       throw new Error("No se encontró el ID del trabajo social.");
     }
 
-    await axios.patch(`/api/trabajo-social/${trabajoId}/solicitar-carta-termino`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    await axios.patch(
+      `/api/trabajo-social/${trabajoId}/solicitar-carta-termino`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     setEstadoSolicitudTermino('solicitada');
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Solicitud enviada',
-      text: 'Tu carta de término ha sido solicitada correctamente.',
-      timer: 2000,
-      showConfirmButton: false
-    });
+    mostrarExitoSolicitudCartaTermino();
 
   } catch (error) {
     console.error('Error al solicitar carta:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema al solicitar la carta de término.'
-    });
+    mostrarErrorSolicitudCartaTermino();
   }
 };
+
 const handleVolverASubir = async (actividad) => {
   if (!actividad) {
     Swal.fire('Error', 'No hay actividad seleccionada para eliminar la evidencia.', 'error');
@@ -1107,7 +1099,6 @@ const handleVolverASubir = async (actividad) => {
     Swal.fire('Error', 'No se pudo eliminar la evidencia.', 'error');
   }
 };
-
 
 useEffect(() => {
   const usuarioId = user?.id;
@@ -1193,8 +1184,6 @@ useEffect(() => {
   })()}
 </h1>
 
-  
-   
 {activeSection === 'reglamento' && (
   <div className="dashboard-container">
     <Reglamento />
@@ -1369,11 +1358,9 @@ useEffect(() => {
   />
 )}   
 </div>  
-
-
 )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>
-  {/* Botón ANTERIOR */}
+
+<div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>
   {activeSection !== 'designacion' && (
     <button
       className="boton-anterior"
@@ -1388,7 +1375,6 @@ useEffect(() => {
     </button>
   )}
 
-  {/* Botón SIGUIENTE */}
   {activeSection !== 'informe-final' && (
     <button 
       className="boton-siguiente" 
@@ -1400,320 +1386,60 @@ useEffect(() => {
 
 </div>
       </main>
-{modalObservacionEstudianteVisible && (
-  <div className="modal-observacion-overlay">
-    <div className="modal-observacion-content">
-      <h3 style={{ marginBottom: '10px' }}>Observación del Docente</h3>
-      <p style={{ color: '#4A5568' }}>{observacionSeleccionada}</p>
 
-      <div className="modal-observacion-actions">
-        <button
-          className="modal-observacion-btn-volver-subir"
-          onClick={() => handleVolverASubir(actividadSeleccionada)}
-          disabled={!actividadSeleccionada}
-        >
-          Volver a subir
-        </button>
-        <button
-          className="modal-observacion-btn-cerrar-estudiante"
-          onClick={() => setModalObservacionEstudianteVisible(false)}
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-  {modalActividadVisible && (
-  <div className="modal-overlay-alumno">
-    <div className="modal-content-alumno">
-      <h3>Agregar Actividad</h3>
-
-      <div className="form-group">
-        <label className="bold-text">Actividad</label>
-        <input
-        type="text"
-        className="input-estilo-select"
-        style={{ width: '100%' }}  
-        value={nuevaActividad}
-        onChange={(e) => setNuevaActividad(e.target.value)}
-        placeholder="Ingrese nombre de la actividad"
-      />
-      </div>
-      <div className="form-group">
-  <label className="bold-text">Justificación</label>
-  <textarea
-    className="input-estilo-select"
-    value={nuevaJustificacion}
-    onChange={(e) => setNuevaJustificacion(e.target.value)}
-    placeholder="Describa aquí..."
-  />
-</div>
-
-      <div className="form-group">
-        <label className="bold-text">Fecha Estimada</label>
-        <input
-          type="date"
-          className="input-estilo-select"
-          value={nuevaFecha}
-          onChange={(e) => setNuevaFecha(e.target.value)}
-          min={new Date().toISOString().split('T')[0]} 
-        />
-      </div>
-<div className="form-group">
-  <label className="bold-text">Fecha Fin</label>
-  <input
-  type="date"
-  className="input-estilo-select"
-  value={nuevaFechaFin}
-  onChange={(e) => setNuevaFechaFin(e.target.value)}
-  min={new Date().toISOString().split('T')[0]}
+<ObservacionEstudianteModal
+  visible={modalObservacionEstudianteVisible}
+  observacionSeleccionada={observacionSeleccionada}
+  actividadSeleccionada={actividadSeleccionada}
+  onVolverAsubir={handleVolverASubir}
+  onClose={() => setModalObservacionEstudianteVisible(false)}
 />
-</div>
-      <div className="form-group">
-  <label className="bold-text">Resultados Esperados</label>
-  <textarea
-    className="input-estilo-select"
-    value={nuevosResultados}
-    onChange={(e) => setNuevosResultados(e.target.value)}
-    placeholder="Describa aquí los resultados..."
-  />
-</div>
 
-      <div className="modal-actions-alumno">
-        <button
-      onClick={async () => {
-      if (nuevaActividad.trim() === '' || nuevaFecha.trim() === '') {
-        await Swal.fire({
-          icon: 'warning',
-          title: 'Campos incompletos',
-          text: 'Completa todos los campos obligatorios antes de guardar.',
-          confirmButtonText: 'Aceptar'
-        });
-        return;
-      }
+<ActividadModalAlumno
+  visible={modalActividadVisible}
+  nuevaActividad={nuevaActividad}
+  setNuevaActividad={setNuevaActividad}
+  nuevaJustificacion={nuevaJustificacion}
+  setNuevaJustificacion={setNuevaJustificacion}
+  nuevaFecha={nuevaFecha}
+  setNuevaFecha={setNuevaFecha}
+  nuevaFechaFin={nuevaFechaFin}
+  setNuevaFechaFin={setNuevaFechaFin}
+  nuevosResultados={nuevosResultados}
+  setNuevosResultados={setNuevosResultados}
+  editIndex={editIndex}
+  setEditIndex={setEditIndex}
+  actividades={actividades}
+  setActividades={setActividades}
+  onClose={() => setModalActividadVisible(false)}
+/>
 
-      const fechaInicio = new Date(nuevaFecha);
-      const fechaFin = new Date(nuevaFechaFin);
+<GrupoModalAlumno
+  visible={modalGrupoVisible}
+  solicitudEnviada={solicitudEnviada}
+  integrantesGrupoAlumno={integrantesGrupoAlumno}
+  correosGrupo={correosGrupo}
+  setCorreosGrupo={setCorreosGrupo}
+  onClose={() => setModalGrupoVisible(false)}
+/>
 
-      if (nuevaFechaFin.trim() !== '') {
-        const diferenciaMs = fechaFin - fechaInicio;
-        const diasDiferencia = diferenciaMs / (1000 * 60 * 60 * 24);
+<EvidenciaModal
+  visible={modalVisible}
+  imagen={imagenModal}
+  onClose={() => setModalVisible(false)}
+/>
 
-         if (diasDiferencia > 30) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'Duración excedida',
-        text: 'Cada actividad puede durar como máximo 30 días.',
-        confirmButtonText: 'Entendido'
-        });
-        return;
-      }
-
-      if (diasDiferencia < 0) {
-        await Swal.fire({
-          icon: 'error',
-          title: 'Fechas inválidas',
-          text: 'La fecha fin no puede ser anterior a la fecha de inicio.',
-          confirmButtonText: 'Corregir'
-        });
-        return;
-      }
-    }
-
-    const nuevaFila = {
-      actividad: nuevaActividad,
-      fecha: nuevaFecha,
-      fechaFin: nuevaFechaFin,
-      justificacion: nuevaJustificacion,
-      resultados: nuevosResultados, 
-    };
-    
-
-    if (editIndex !== null) {
-      const copia = [...actividades];
-      copia[editIndex] = nuevaFila;
-      setActividades(copia);
-    } else {
-      setActividades([...actividades, nuevaFila]);
-    }
-
-   setNuevaActividad('');
-    setNuevaFecha('');
-    setNuevaFechaFin('');
-    setNuevosResultados('');
-    setNuevaJustificacion('');
-    setEditIndex(null);
-    setModalActividadVisible(false);
-    
+<ProyectoModal
+  visible={modalProyectoVisible}
+  proyectoFile={proyectoFile}
+  pdfGenerado={pdfGenerado}
+  onFileChange={handleProyectoFileChange}
+  onClose={() => setModalProyectoVisible(false)}
+  onCancel={() => {
+    setProyectoFile(null);
+    cerrarModalProyecto();
   }}
->
-  Guardar
-</button>
-        <button onClick={() => setModalActividadVisible(false)}>Cancelar</button>
-        
-      </div>
-    </div>
-  </div>
-)}
-
-{modalGrupoVisible && (
-  <div className="modal-grupo-elegante-overlay">
-    <div className="modal-grupo-elegante-content">
-      <h3 className="modal-grupo-elegante-title">Integrantes del Grupo</h3>
-
-      {solicitudEnviada ? (
-        <ul className="lista-integrantes">
-        {integrantesGrupoAlumno.length > 0 ? (
-          integrantesGrupoAlumno.map((integrante, index) => (
-            <li key={index}>{integrante.correo_institucional}</li>
-          ))
-        ) : (
-          <li>No hay integrantes registrados.</li>
-        )}
-      </ul>
-
-      ) : (
-        correosGrupo.map((correo, index) => (
-          <div className="modal-grupo-elegante-field" key={index}>
-            <label className="modal-grupo-elegante-label">
-              Correo institucional #{index + 1}
-            </label>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <input
-                type="text"
-                className="modal-grupo-elegante-input"
-                placeholder="Ingrese el Código Universitario"
-                value={correo.replace('@udh.edu.pe', '')}
-                onChange={(e) => {
-                  const input = e.target.value.replace(/\D/g, '');
-                  if (input.length <= 10) {
-                    const nuevos = [...correosGrupo];
-                    nuevos[index] = input.length === 10 ? `${input}@udh.edu.pe` : input;
-                    setCorreosGrupo(nuevos);
-                  }
-                }}
-                onBlur={() => {
-                  const codigo = correo.replace('@udh.edu.pe', '');
-                  if (codigo.length > 0 && codigo.length < 10) {
-                    Swal.fire({
-                      icon: 'warning',
-                      title: 'Código incompleto',
-                      text: 'El código debe tener exactamente 10 dígitos.',
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: 'Entendido'
-                    });
-                  }
-                }}
-              />
-              <span style={{ marginLeft: '6px', fontSize: '14px', color: '#555' }}>
-                @udh.edu.pe
-              </span>
-            </div>
-          </div>
-        ))
-      )}
-
-      <div
-        className="modal-grupo-elegante-actions"
-        style={{
-          justifyContent:
-            solicitudEnviada || correosGrupo.length >= 10 ? 'center' : 'space-between',
-          display: 'flex',
-          gap: '10px'
-        }}
-      >
-        {!solicitudEnviada && correosGrupo.length < 10 && (
-          <button
-            onClick={() => {
-              if (correosGrupo.length >= 10) {
-                Swal.fire({
-                  icon: 'warning',
-                  title: 'Límite alcanzado',
-                  text: 'Solo se permiten hasta 4 integrantes en el grupo.',
-                  confirmButtonColor: '#3085d6',
-                  confirmButtonText: 'Entendido'
-                });
-              } else {
-                setCorreosGrupo([...correosGrupo, '']);
-              }
-            }}
-            className="modal-grupo-elegante-btn agregar"
-          >
-            + Agregar otro
-          </button>
-        )}
-
-        <button
-          onClick={() => {
-            if (!solicitudEnviada) {
-              const filtrados = correosGrupo.filter((correo) => {
-                const codigo = correo.replace('@udh.edu.pe', '');
-                return codigo.length === 10;
-              });
-              setCorreosGrupo(filtrados);
-            }
-            setModalGrupoVisible(false);
-          }}
-          className="modal-grupo-elegante-btn aceptar"
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-{modalVisible && (
-  <div className="modal-evidencia-overlay">
-    <div className="modal-evidencia-content mejorado">
-      <h3 className="modal-evidencia-title">Evidencia</h3>
-      <div className="modal-evidencia-img-wrapper">
-        <img src={imagenModal} alt="Evidencia" className="modal-evidencia-img" />
-      </div>
-      <div className="modal-evidencia-actions">
-        <button
-          onClick={() => setModalVisible(false)}
-          className="modal-evidencia-btn-cerrar"
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{modalProyectoVisible && (
-  <div className="modal-overlay-alumno">
-    <div className="modal-content-alumno">
-      <h3>Subir Proyecto</h3>
-      <input type="file" accept="application/pdf" onChange={handleProyectoFileChange} />
-      {proyectoFile && <p>Archivo seleccionado: {proyectoFile.name}</p>}
-
-      {/* Mostrar el archivo PDF generado si está disponible */}
-      {pdfGenerado && (
-        <div>
-          <h4>PDF Generado</h4>
-          <a href={pdfGenerado} target="_blank" rel="noopener noreferrer">
-            Ver PDF generado
-          </a>
-        </div>
-      )}
-
-      <div className="modal-actions-alumno">
-        <button onClick={() => setModalProyectoVisible(false)}>Aceptar</button>
-        <button onClick={() => {
-          setProyectoFile(null);
-          cerrarModalProyecto();
-        }}>Cancelar</button>
-      </div>
-    </div>
-  </div>
-)}
-
+/>
     </>
     
   );

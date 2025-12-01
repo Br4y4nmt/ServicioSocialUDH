@@ -191,7 +191,7 @@ useEffect(() => {
                       </td>
                       <td>
                         <button
-                          className="btn-editar-icono"
+                          className="facultades-btn editar"
                           onClick={() => abrirModal(t)}
                           title="Cambiar asesor"
                         >
