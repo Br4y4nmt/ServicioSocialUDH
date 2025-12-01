@@ -177,60 +177,61 @@ const formularioCompleto = () => {
       </span>
       <h3>Designación De Docente Supervisor</h3>
     </div>
-              <div className="form-group">
-             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <label className="bold-text">Tipo de Servicio Social</label>
-      {tipoServicio === 'grupal' && (
+  <div className="form-group">
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+    <label className="bold-text" htmlFor="tipo-servicio">
+      Tipo de Servicio Social
+    </label>
+    {tipoServicio === 'grupal' && (
       <VerBotonInline
-          onClick={() => {
-            if (solicitudEnviada) obtenerIntegrantesDelGrupo();
-            else setModalGrupoVisible(true);
-          }}
-          label="Ver"
-        />
-)}
-      </div>
-      
-        <select
-        value={tipoServicio}
-        onChange={(e) => {
-          const value = e.target.value;
-          setTipoServicio(value);
-          if (value === 'grupal') {
-            setModalGrupoVisible(true);
-          }
+        onClick={() => {
+          if (solicitudEnviada) obtenerIntegrantesDelGrupo();
+          else setModalGrupoVisible(true);
         }}
-        disabled={solicitudEnviada}
-        className={`input-estilo-select texto-mayuscula ${tipoServicio ? 'select-filled' : ''}`}
-      >
-          <option value="">Seleccione una opción</option>
-          <option value="individual">Individual</option>
-          <option value="grupal">Grupal</option>
-        </select>
+        label="Ver"
+      />
+    )}
+  </div>
+ <select
+    id="tipo-servicio"              
+    value={tipoServicio}
+    onChange={(e) => {
+      const value = e.target.value;
+      setTipoServicio(value);
+      if (value === 'grupal') setModalGrupoVisible(true);
+    }}
+    disabled={solicitudEnviada}
+    className={`input-estilo-select texto-mayuscula ${tipoServicio ? 'select-filled' : ''}`}
+  >
+    <option value="">Seleccione una opción</option>
+    <option value="individual">Individual</option>
+    <option value="grupal">Grupal</option>
+  </select>
       </div>
-      
                         <div className="form-group">
                         <label className="bold-text"> Facultad</label>
                             <select
-                            value={facultadSeleccionada}
-                            disabled={true}
-                            className={`input-estilo-select texto-mayuscula ${facultadSeleccionada ? 'select-filled' : ''}`}
-                          >
-                            <option value="">Seleccione Facultad</option>
-                            {facultades.map((facultad) => (
-                              <option key={facultad.id_facultad} value={facultad.id_facultad}>
-                                {facultad.nombre_facultad}
-                              </option>
-                            ))}
-                          </select>
+                        id="facultad"                  
+                        value={facultadSeleccionada}
+                        disabled={true}
+                        className={`input-estilo-select texto-mayuscula ${facultadSeleccionada ? 'select-filled' : ''}`}
+                      >
+                        <option value="">Seleccione Facultad</option>
+                        {facultades.map((facultad) => (
+                          <option key={facultad.id_facultad} value={facultad.id_facultad}>
+                            {facultad.nombre_facultad}
+                          </option>
+                        ))}
+                      </select>
                         </div>
           
                         <div className="form-group">
                         <label className="bold-text"> Programa Académico</label>
-                          <select
+                         <select
+                          id="programa"
                           value={programaSeleccionado}
                           disabled={true}
-                           className={`input-estilo-select texto-mayuscula ${programaSeleccionado ? 'select-filled' : ''}`}
+                          className={`input-estilo-select texto-mayuscula ${programaSeleccionado ? 'select-filled' : ''}`}
                         >
                           <option value="">Seleccione Programa Académico</option>
                           {programas.map((programa) => (
@@ -242,71 +243,73 @@ const formularioCompleto = () => {
                         </div>
                         <div className="form-group">
                           <label className="bold-text">Seleccione Docente Supervisor</label>
-                          <select
-                      value={docenteSeleccionado}
-                      onChange={(e) => {
-                        const id = e.target.value;
-                        setDocenteSeleccionado(id);
-                        const docente = docentes.find(d => d.id_docente === id);
-                        setNombreDocente(docente ? docente.nombre_docente : '');
-                      }}
-                      disabled={solicitudEnviada}
-                      className={`input-estilo-select texto-mayuscula ${docenteSeleccionado ? 'select-filled' : ''}`}
-                    >
-                      <option value="">Seleccione Docente Supervisor</option>
-                      {docentes.map((docente) => (
-                        <option key={docente.id_docente} value={docente.id_docente}>
-                          {docente.nombre_docente}
-                        </option>
-                      ))}
-                    </select>
+                           <select
+                            id="docente"
+                            value={docenteSeleccionado}
+                            onChange={(e) => {
+                              const id = e.target.value;
+                              setDocenteSeleccionado(id);
+                              const docente = docentes.find((d) => d.id_docente === id);
+                              setNombreDocente(docente ? docente.nombre_docente : '');
+                            }}
+                            disabled={solicitudEnviada}
+                            className={`input-estilo-select texto-mayuscula ${docenteSeleccionado ? 'select-filled' : ''}`}
+                          >
+                            <option value="">Seleccione Docente Supervisor</option>
+                            {docentes.map((docente) => (
+                              <option key={docente.id_docente} value={docente.id_docente}>
+                                {docente.nombre_docente}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                           <div className="form-group">
                   <label className="bold-text">Línea de Acción</label>
-                  <select
-                    value={lineaSeleccionada}
-                    onChange={(e) => {
-                      setLineaSeleccionada(e.target.value);
-                      setLaborSeleccionada('');
-                    }}
-                    disabled={solicitudEnviada}
-                    className={`input-estilo-select texto-mayuscula ${lineaSeleccionada ? 'select-filled' : ''}`}
-
-                  >
-                    <option value="">Seleccione Línea de Acción</option>
-                    {lineas.map((linea) => (
-                      <option key={linea.id_linea} value={linea.id_linea}>
-                        {linea.nombre_linea}
-                      </option>
-                    ))}
-                  </select>
+                   <select
+                  id="linea-accion"
+                  value={lineaSeleccionada}
+                  onChange={(e) => {
+                    setLineaSeleccionada(e.target.value);
+                    setLaborSeleccionada('');
+                  }}
+                  disabled={solicitudEnviada}
+                  className={`input-estilo-select texto-mayuscula ${lineaSeleccionada ? 'select-filled' : ''}`}
+                >
+                  <option value="">Seleccione Línea de Acción</option>
+                  {lineas.map((linea) => (
+                    <option key={linea.id_linea} value={linea.id_linea}>
+                      {linea.nombre_linea}
+                    </option>
+                  ))}
+                </select>
                 </div>
                         <div className="form-group">
                           <label className="bold-text">Servicios Sociales</label>
                           <select
-                        value={laborSeleccionada}
-                        onChange={(e) => {
-                          const id = e.target.value;
-                          setLaborSeleccionada(id);
-
-                          const labor = labores.find((l) => l.id_labores === parseInt(id));
-                          setNombreLaborSocial(labor ? labor.nombre_labores : '');
-                        }}
-                        disabled={solicitudEnviada}
-                        className={`input-estilo-select texto-mayuscula ${laborSeleccionada ? 'select-filled' : ''}`}
-                      >
-                        <option value="">Seleccione Servicio Social</option>
-                        {labores
-                          .filter((labor) =>
-                            lineaSeleccionada !== '' &&
-                            labor.linea_accion_id === parseInt(lineaSeleccionada)
-                          )
-                          .map((labor) => (
-                            <option key={labor.id_labores} value={labor.id_labores}>
-                              {labor.nombre_labores}
-                            </option>
-                        ))}
-                      </select>
+                          id="servicio-social"
+                          value={laborSeleccionada}
+                          onChange={(e) => {
+                            const id = e.target.value;
+                            setLaborSeleccionada(id);
+                            const labor = labores.find((l) => l.id_labores === parseInt(id));
+                            setNombreLaborSocial(labor ? labor.nombre_labores : '');
+                          }}
+                          disabled={solicitudEnviada}
+                          className={`input-estilo-select texto-mayuscula ${laborSeleccionada ? 'select-filled' : ''}`}
+                        >
+                          <option value="">Seleccione Servicio Social</option>
+                          {labores
+                            .filter(
+                              (labor) =>
+                                lineaSeleccionada !== '' &&
+                                labor.linea_accion_id === parseInt(lineaSeleccionada)
+                            )
+                            .map((labor) => (
+                              <option key={labor.id_labores} value={labor.id_labores}>
+                                {labor.nombre_labores}
+                              </option>
+                            ))}
+                        </select>
                         </div>
           
      {formularioCompleto() && !solicitudEnviada && (

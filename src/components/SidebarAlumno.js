@@ -49,9 +49,18 @@ function SidebarAlumno({
       ${collapsed ? 'collapsed' : ''} 
       ${!collapsed && window.innerWidth <= 768 ? 'show' : ''}`}
   >
-    <button className="toggle-btn" onClick={onToggleSidebar}>
-      <i className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
-    </button>
+    <button
+    type="button"
+    className="toggle-btn"
+    onClick={onToggleSidebar}
+    aria-label={collapsed ? 'Abrir menú lateral' : 'Cerrar menú lateral'}
+    aria-expanded={!collapsed}
+  >
+    <i
+      className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}
+      aria-hidden="true"
+    ></i>
+  </button>
 
     {!collapsed && (
       <>
