@@ -74,7 +74,14 @@ function ConformidadPlan({
        <div className="plan-info">
          
            <div className="plan-icon-img">
-            <img src="/images/persona.png" alt="Persona" className="persona-img" />
+            <img
+              src="/images/persona.png"
+              alt="Persona"
+              className="persona-img"
+              width={330}          
+              height={330}
+              fetchpriority="high" 
+            />
           </div>
          <div className="plan-details">
            <div className="plan-info-box">

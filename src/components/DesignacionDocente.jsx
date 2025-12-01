@@ -209,7 +209,9 @@ const formularioCompleto = () => {
   </select>
       </div>
                         <div className="form-group">
-                        <label className="bold-text"> Facultad</label>
+                        <label className="bold-text" htmlFor="facultad">
+                          Facultad
+                        </label>
                             <select
                         id="facultad"                  
                         value={facultadSeleccionada}
@@ -226,7 +228,9 @@ const formularioCompleto = () => {
                         </div>
           
                         <div className="form-group">
-                        <label className="bold-text"> Programa Académico</label>
+                        <label className="bold-text" htmlFor="programa">
+                          Programa Académico
+                        </label>
                          <select
                           id="programa"
                           value={programaSeleccionado}
@@ -242,7 +246,9 @@ const formularioCompleto = () => {
                         </select>
                         </div>
                         <div className="form-group">
-                          <label className="bold-text">Seleccione Docente Supervisor</label>
+                          <label className="bold-text" htmlFor="docente">
+                            Seleccione Docente Supervisor
+                          </label>
                            <select
                             id="docente"
                             value={docenteSeleccionado}
@@ -264,7 +270,9 @@ const formularioCompleto = () => {
                           </select>
                         </div>
                           <div className="form-group">
-                  <label className="bold-text">Línea de Acción</label>
+                  <label className="bold-text" htmlFor="linea-accion">
+                  Línea de Acción
+                </label>
                    <select
                   id="linea-accion"
                   value={lineaSeleccionada}
@@ -284,7 +292,9 @@ const formularioCompleto = () => {
                 </select>
                 </div>
                         <div className="form-group">
-                          <label className="bold-text">Servicios Sociales</label>
+                          <label className="bold-text" htmlFor="servicio-social">
+                            Servicios Sociales
+                          </label>
                           <select
                           id="servicio-social"
                           value={laborSeleccionada}
