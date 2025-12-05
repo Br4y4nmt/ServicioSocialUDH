@@ -1391,7 +1391,7 @@ useEffect(() => {
   visible={modalObservacionEstudianteVisible}
   observacionSeleccionada={observacionSeleccionada}
   actividadSeleccionada={actividadSeleccionada}
-  onVolverAsubir={handleVolverASubir}
+  onVolverASubir={handleVolverASubir} 
   onClose={() => setModalObservacionEstudianteVisible(false)}
 />
 

@@ -69,6 +69,7 @@ const cerrarModalGrupo = () => {
   setModalGrupoVisible(false);
   setIntegrantesGrupo([]);
 };
+
 const convertirImagenABase64 = (url) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -340,6 +341,15 @@ const handleAbrirObservacion = (actividadId) => {
 };
 
 const handleEnviarObservacion = () => {
+  if (!observacion.trim()) {
+    Swal.fire(
+      "Observación requerida",
+      "Debes ingresar una observación antes de enviar.",
+      "warning"
+    );
+    return;
+  }
+
   axios.patch(
     `/api/cronograma/${actividadSeleccionadaId}/observacion`,
     { observacion },
@@ -353,6 +363,7 @@ const handleEnviarObservacion = () => {
           : act
       )
     );
+
     mostrarAlertaObservacionRegistrada();
     setModalObservacionVisible(false);
     setObservacion('');
@@ -362,6 +373,7 @@ const handleEnviarObservacion = () => {
     mostrarErrorGuardarObservacion();
   });
 };
+
 
 const generarPDFBlobTermino = async (html, filename) => {
   const contenedor = document.createElement('div');
@@ -604,6 +616,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   </div>
 )}
 
+
 {modalVisible && (
   <div className="modal-cronograma-overlay">
     <div className="modal-cronograma-content">
@@ -667,6 +680,8 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
     </div>
   </div>
 )}
+
+
 {modalEvidenciaVisible && (
   <div className="modal-evidencia-overlay">
     <div className="modal-evidencia-content">
@@ -680,6 +695,8 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
     </div>
   </div>
 )}
+
+
 {modalObservacionVisible && (
   <div className="modal-observacion-overlay">
     <div className="modal-observacion-content">

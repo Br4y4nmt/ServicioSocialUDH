@@ -1,4 +1,3 @@
-// src/components/modals/ObservacionEstudianteModal.jsx
 import React from "react";
 
 function ObservacionEstudianteModal({

@@ -107,7 +107,7 @@ button.btn-primary, button.btn-danger {
 }
 
 .dropdown-item:last-child {
-  margin-bottom: 0; /* Sin margen en el último elemento */
+  margin-bottom: 0; 
 }
 .swal2-container {
   z-index: 100000 !important;
