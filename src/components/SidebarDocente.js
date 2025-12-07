@@ -95,13 +95,13 @@ function SidebarDocente({
                       className={isRevision ? 'selected-docente' : ''}
                       onClick={() => navigate('/dashboard-docente')}
                     >
-                      Revisión del plan
+                      Solicitudes de supervisión
                     </li>
                     <li
                       className={isConformidad ? 'selected-docente' : ''}
                       onClick={() => navigate('/revision-documento-docente')}
                     >
-                      Conformidad de Documento
+                      Revisión del plan
                     </li>
                   </ul>
                 )}
