@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect} from 'react';
 import './DashboardDocente.css';
 import PdfIcon from "../hooks/componentes/PdfIcon";
 import { VerBotonInline } from "../hooks/componentes/VerBoton";
-import { createPortal } from 'react-dom';
+import MotivoRechazoModal from "../components/modals/MotivoRechazoModal";
+import {
+  mostrarExitoEleccionEliminada,
+  mostrarErrorEliminarEleccion,
+  mostrarInfoSinCartasGrupo,
+  mostrarErrorCargarCartasGrupo,
+  confirmarEnviarSolicitud,
+  confirmarEliminarEleccion
+} from "../hooks/alerts/alertas";
 
 
 function DesignacionDocente({
@@ -39,9 +46,9 @@ function DesignacionDocente({
   const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
   const [cartasMiembros, setCartasMiembros] = useState([]);
-  
-  const abrirModalMotivoRechazo = async () => {
-  if (!trabajoId) return;
+
+const abrirModalMotivoRechazo = async () => {
+  if (!trabajoId || !token) return; // 
 
   try {
     const resp = await fetch(
@@ -71,38 +78,40 @@ function DesignacionDocente({
 };
 
 const eliminarEleccion = async () => {
+  if (!trabajoId || !token) return;
+
   try {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/api/trabajo-social/seleccionado/${trabajoId}`,
       {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
-    if (!response.ok) {
-      throw new Error('Error al eliminar elección');
-    }
+    if (!response.ok) throw new Error("Error al eliminar elección");
 
-    Swal.fire('Eliminado', 'La elección fue eliminada correctamente.', 'success');
+    await mostrarExitoEleccionEliminada();
 
-    setTipoServicio('');
-    setDocenteSeleccionado('');
-    setNombreDocente('');
-    setLineaSeleccionada('');
-    setLaborSeleccionada('');
-    setNombreLaborSocial('');
-    localStorage.removeItem('trabajo_id');
+    setTipoServicio("");
+    setDocenteSeleccionado("");
+    setNombreDocente("");
+    setLineaSeleccionada("");
+    setLaborSeleccionada("");
+    setNombreLaborSocial("");
+    localStorage.removeItem("trabajo_id");
+
     window.location.reload();
-
   } catch (error) {
     console.error(error);
-    Swal.fire('Error', 'No se pudo eliminar la elección.', 'error');
+    mostrarErrorEliminarEleccion();
   }
 };
+
+
 const obtenerNombresMiembros = async (codigos) => {
   try {
     const correos = codigos.map(cod => `${cod}@udh.edu.pe`);
@@ -140,13 +149,13 @@ const verCartasMiembros = async (trabajoId) => {
     } else {
       setCartasMiembros([]);
       if (estadoPlan === 'aceptado' && tipoServicio === 'grupal') {
-        Swal.fire('Sin cartas', 'No se encontraron cartas de aceptación del grupo.', 'info');
-      }
+          mostrarInfoSinCartasGrupo();
+        }
     }
-  } catch (error) {
-    console.error('Error:', error);
-    Swal.fire('Error', 'No se pudo cargar las cartas del grupo.', 'error');
-  }
+  }  catch (error) {
+  console.error('Error:', error);
+  mostrarErrorCargarCartasGrupo();
+}
 };
 
   useEffect(() => {
@@ -167,6 +176,7 @@ const formularioCompleto = () => {
     laborSeleccionada
   );
 };
+
 
 
   return (
@@ -326,23 +336,13 @@ const formularioCompleto = () => {
       <div className="form-group">
         <button 
           className="btn-solicitar-aprobaciones"
-          onClick={() => {
-            Swal.fire({
-              title: '¿Estás seguro?',
-              text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados.',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Sí, enviar',
-              cancelButtonText: 'Cancelar'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                setLoadingSolicitud(true);
-                Promise.resolve(handleSolicitarAprobacion())
-                  .finally(() => setLoadingSolicitud(false));
-              }
-            });
+          onClick={async () => {
+            const result = await confirmarEnviarSolicitud();
+            if (result.isConfirmed) {
+              setLoadingSolicitud(true);
+              Promise.resolve(handleSolicitarAprobacion())
+                .finally(() => setLoadingSolicitud(false));
+            }
           }}
           disabled={loadingSolicitud} 
         >
@@ -404,27 +404,19 @@ const formularioCompleto = () => {
             ) : estadoPlan === "rechazado" ? (
               <>
               <p className="texto-cursiva" style={{ color: "#d32f2f" }}>
-                El docente ha rechazado tu solicitud. Por favor revisa los datos y vuelve a intentarlo o contacta a tu docente asesor.
+                El docente ha rechazado tu solicitud. Por favor revisa los datos y vuelve a intentarlo o contacta a tu docente supervisor.
               </p>
               <div className="contenedor-eliminar">
               <button
               className="btn-eliminar-eleccion"
-              onClick={() => {
-                Swal.fire({
-                  title: '¿Eliminar elección?',
-                  text: 'Esto eliminará tu elección y podrás comenzar de nuevo. Se recomienda conversar previamente con el docente supervisor antes de realizar una nueva elección',
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonText: 'Sí, eliminar',
-                  cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    eliminarEleccion(); 
-                  }
-                });
-              }}
+              onClick={async () => {
+              const result = await confirmarEliminarEleccion();
+              if (result.isConfirmed) {
+                eliminarEleccion();
+              }
+            }}
             >
-              Seleccionar nuevo asesor
+              Seleccionar nuevo supervisor
             </button>
             </div>
             </>
@@ -447,7 +439,7 @@ const formularioCompleto = () => {
       <i className="fas fa-check"></i>
     </span>
 
-      <h3>Documentos para la designación de asesor</h3>
+      <h3>Documentos para la designación de supervisor</h3>
       <div className="info-tooltip">
       <svg
         className="info-icon-svg"
@@ -535,36 +527,12 @@ const formularioCompleto = () => {
 ))}
   </div>
   )}
-  {modalMotivoVisible &&
-  createPortal(
-    (
-      <div className="motivo-rechazo-modal-overlay">
-        <div className="motivo-rechazo-modal">
-          <h3 className="motivo-rechazo-title">MOTIVO DEL RECHAZO</h3>
+  <MotivoRechazoModal
+  visible={modalMotivoVisible}
+  motivo={motivoRechazo}
+  onClose={() => setModalMotivoVisible(false)}
+/>
 
-          <textarea
-            className="motivo-rechazo-textarea"
-            readOnly
-            value={
-              motivoRechazo ||
-              'Ocurrió un error al cargar el motivo de rechazo. Inténtelo más tarde.'
-            }
-          />
-
-          <div className="motivo-rechazo-footer">
-            <button
-              className="motivo-rechazo-btn-cerrar"
-              onClick={() => setModalMotivoVisible(false)}
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </div>
-    ),
-    document.body   
-  )
-}
     </>
   );
 }

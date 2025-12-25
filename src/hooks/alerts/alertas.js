@@ -1,9 +1,5 @@
-// src/hooks/alerts/alertas.js
 import Swal from "sweetalert2";
 
-/**
- * Alerta de recomendación para la evidencia (la de la cámara)
- */
 export const mostrarRecomendacionEvidencia = () => {
   return Swal.fire({
     icon: "info",
@@ -13,9 +9,85 @@ export const mostrarRecomendacionEvidencia = () => {
   });
 };
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 2200,
+  timerProgressBar: true,
+  background: "#ffffff",
+  color: "#4b5563",
+});
+
+export const toastSuccess = (title, opts = {}) =>
+  Toast.fire({
+    icon: "success",
+    title: title || "Operación exitosa",
+    iconColor: "#22c55e",
+    ...opts,
+  });
+
+export const toastError = (title, opts = {}) =>
+  Toast.fire({
+    icon: "error",
+    title: title || "Ocurrió un error",
+    iconColor: "#dc2626",
+    ...opts,
+  });
+
 /**
- * Alerta: demasiado pronto para subir evidencia
+ * Alertas normales (modal)
  */
+export const alertError = (title, text, opts = {}) =>
+  Swal.fire({
+    icon: "error",
+    title: title || "Error",
+    text: text || "Ocurrió un error",
+    confirmButtonColor: "#dc2626",
+    ...opts,
+  });
+
+export const alertWarning = (title, text, opts = {}) =>
+  Swal.fire({
+    icon: "warning",
+    title: title || "Atención",
+    text: text || "",
+    confirmButtonColor: "#f59e0b",
+    ...opts,
+  });
+
+export const alertSuccess = (title, text, opts = {}) =>
+  Swal.fire({
+    icon: "success",
+    title: title || "Listo",
+    text: text || "",
+    confirmButtonColor: "#22c55e",
+    ...opts,
+  });
+
+/**
+ * Si luego quieres confirmaciones reutilizables:
+ */
+export const confirmDialog = async ({
+  title = "¿Estás seguro?",
+  text = "Esta acción no se puede deshacer.",
+  confirmButtonText = "Sí, continuar",
+  cancelButtonText = "Cancelar",
+  icon = "question",
+} = {}) => {
+  const result = await Swal.fire({
+    icon,
+    title,
+    text,
+    showCancelButton: true,
+    confirmButtonText,
+    cancelButtonText,
+    confirmButtonColor: "#2563eb",
+    cancelButtonColor: "#6b7280",
+  });
+  return result.isConfirmed;
+};
+
 export const mostrarAlertaDemasiadoPronto = (fechaPermitida) => {
   return Swal.fire({
     icon: "warning",
@@ -44,9 +116,7 @@ export const mostrarAlertaUsuarioNoRegistrado = (mensaje) => {
     allowEscapeKey: false
   });
 };
-/**
- * Alerta: fecha vencida para subir evidencia
- */
+
 export const mostrarAlertaFechaVencida = (fechaPermitida) => {
   return Swal.fire({
     icon: "error",
@@ -913,7 +983,6 @@ export const mostrarErrorObtenerDatosDocente = (mensaje) => {
     text: mensaje || 'No se pudo obtener la información del docente.',
   });
 };
-// --- Revisión de Trabajos Sociales (Docente) ---
 
 export const confirmarAceptarEstudianteTrabajo = () => {
   return Swal.fire({
@@ -966,3 +1035,49 @@ export const mostrarErrorCambioEstadoTrabajo = (mensaje) => {
     confirmButtonText: 'Aceptar'
   });
 };
+
+
+export const mostrarExitoEleccionEliminada = () =>
+  Swal.fire({
+    icon: "success",
+    title: "Eliminado",
+    text: "La elección fue eliminada correctamente.",
+    timer: 1500,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  });
+
+
+export const mostrarErrorEliminarEleccion = () =>
+  Swal.fire("Error", "No se pudo eliminar la elección.", "error");
+
+export const mostrarInfoSinCartasGrupo = () =>
+  Swal.fire("Sin cartas", "No se encontraron cartas de aceptación del grupo.", "info");
+
+export const mostrarErrorCargarCartasGrupo = () =>
+  Swal.fire("Error", "No se pudo cargar las cartas del grupo.", "error");
+
+// Confirmación enviar solicitud
+export const confirmarEnviarSolicitud = () =>
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Una vez enviada la solicitud, no podrás modificar los datos seleccionados.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, enviar",
+    cancelButtonText: "Cancelar",
+  });
+
+// Confirmación eliminar elección
+export const confirmarEliminarEleccion = () =>
+  Swal.fire({
+    title: "¿Eliminar elección?",
+    text:
+      "Esto eliminará tu elección y podrás comenzar de nuevo. Se recomienda conversar previamente con el docente supervisor antes de realizar una nueva elección",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  });

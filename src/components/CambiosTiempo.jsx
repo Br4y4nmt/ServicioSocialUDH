@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import "./DashboardGestor.css";
 import VerBoton from "../hooks/componentes/VerBoton";
 import { useUser } from "../UserContext";
+import CambiosTiempoModal from "../components/modals/CambiosTiempoModal";
+import PageSkeleton from "../components/loaders/PageSkeleton"; 
 
 function CambiosTiempo() {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -17,19 +19,27 @@ function CambiosTiempo() {
   const [editando, setEditando] = useState(null);
   const [nuevaFecha, setNuevaFecha] = useState("");
   const [guardando, setGuardando] = useState(false);
+  const [cargando, setCargando] = useState(false);
   const { user } = useUser();
   const token = user?.token;
 
   const fetchEstudiantes = useCallback(async () => {
     try {
       if (!token) return;
+
+      setCargando(true);
+      setErrorMensaje("");
+
       const res = await axios.get(`/api/estudiantes`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setEstudiantes(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error("Error al obtener estudiantes:", error);
       setErrorMensaje("No se pudieron cargar los estudiantes.");
+    } finally {
+      setCargando(false);
     }
   }, [token]);
 
@@ -45,14 +55,13 @@ function CambiosTiempo() {
     }
   }, [token]);
 
-useEffect(() => {
-  if (!token) return;
-  fetchEstudiantes();
-  fetchProgramas();
-}, [token, fetchEstudiantes, fetchProgramas]);
+  useEffect(() => {
+    if (!token) return;
+    fetchEstudiantes();
+    fetchProgramas();
+  }, [token, fetchEstudiantes, fetchProgramas]);
 
-
-    const estudiantesFiltrados = estudiantes.filter((est) => {
+  const estudiantesFiltrados = estudiantes.filter((est) => {
     const texto = filtroEstudiantes.toLowerCase();
     const coincideTexto = est.nombre_estudiante?.toLowerCase().includes(texto);
     const coincidePrograma =
@@ -111,68 +120,67 @@ useEffect(() => {
       customClass: {
         popup: "swal2-toast-custom",
       },
-      iconColor: "#22c55e", 
+      iconColor: "#22c55e",
     });
   };
 
   const guardarFecha = async (id) => {
-  try {
-    const cronograma = cronogramas.find((item) => item.id === id);
-    if (!cronograma) return;
+    try {
+      const cronograma = cronogramas.find((item) => item.id === id);
+      if (!cronograma) return;
 
-    const fechaOriginal = new Date(cronograma.fecha_fin_primero)
-      .toISOString()
-      .split("T")[0];
+      const fechaOriginal = new Date(cronograma.fecha_fin_primero)
+        .toISOString()
+        .split("T")[0];
 
-    if (fechaOriginal === nuevaFecha) {
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "info",
-        title: "No se realizaron cambios en la fecha",
-        showConfirmButton: false,
-        timer: 1800,
-        background: "#ffffff",
-        color: "#4b5563",
-        iconColor: "#22c55e",
-      });
-      setEditando(null);
-      return;
-    }
-
-    setGuardando(true);
-
-    const res = await axios.put(
-      `/api/trabajo-social/actualizar-fecha/${id}`,
-      { fecha_fin_primero: nuevaFecha },
-      {
-        headers: { Authorization: `Bearer ${token}` },
+      if (fechaOriginal === nuevaFecha) {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "info",
+          title: "No se realizaron cambios en la fecha",
+          showConfirmButton: false,
+          timer: 1800,
+          background: "#ffffff",
+          color: "#4b5563",
+          iconColor: "#22c55e",
+        });
+        setEditando(null);
+        return;
       }
-    );
 
-    if (res.status === 200) {
-  setCronogramas((prev) =>
-    prev.map((item) =>
-      item.id === id ? { ...item, fecha_fin_primero: nuevaFecha } : item
-    )
-  );
-  setEditando(null);
+      setGuardando(true);
 
-  mostrarToast("Fecha actualizada correctamente");
-}
+      const res = await axios.put(
+        `/api/trabajo-social/actualizar-fecha/${id}`,
+        { fecha_fin_primero: nuevaFecha },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-  } catch (error) {
-    console.error("Error al actualizar la fecha:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "No se pudo actualizar la fecha.",
-      confirmButtonColor: "#dc2626",
-    });
-  } finally {
-    setGuardando(false);
-  }
-};
+      if (res.status === 200) {
+        setCronogramas((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, fecha_fin_primero: nuevaFecha } : item
+          )
+        );
+        setEditando(null);
+
+        mostrarToast("Fecha actualizada correctamente");
+      }
+    } catch (error) {
+      console.error("Error al actualizar la fecha:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar la fecha.",
+        confirmButtonColor: "#dc2626",
+      });
+    } finally {
+      setGuardando(false);
+    }
+  };
 
   return (
     <div className="docentes-container">
@@ -213,7 +221,9 @@ useEffect(() => {
         </div>
 
         <div className="docentes-table-wrapper">
-          {errorMensaje ? (
+          {cargando ? (
+            <PageSkeleton topBlocks={["sm", "md", "lg"]} xlRows={3} showChip lastXL />
+          ) : errorMensaje ? (
             <div style={{ padding: "1rem", color: "red", textAlign: "center" }}>
               {errorMensaje}
             </div>
@@ -229,6 +239,7 @@ useEffect(() => {
                   <th>Acción</th>
                 </tr>
               </thead>
+
               <tbody>
                 {estudiantesFiltrados.length > 0 ? (
                   estudiantesFiltrados.map((est, index) => (
@@ -242,11 +253,13 @@ useEffect(() => {
                           "SIN PROGRAMA"}
                       </td>
                       <td>
-                      <VerBoton
-                        onClick={() => verDetalle(est.id_usuario, est.nombre_estudiante)}
-                        label="Ver"
-                      />
-                    </td>
+                        <VerBoton
+                          onClick={() =>
+                            verDetalle(est.id_usuario, est.nombre_estudiante)
+                          }
+                          label="Ver"
+                        />
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -262,94 +275,18 @@ useEffect(() => {
         </div>
       </div>
 
-      {modalVisible && (
-        <div className="modal-tiempo-overlay">
-          <div className="modal-tiempo-content">
-            <h3>Fechas de {nombreEstudiante}</h3>
-
-            {cronogramas.length > 0 ? (
-              <table className="modal-tiempo-table">
-                <thead>
-                  <tr>
-                    <th>Nº</th>
-                    <th>Actividad</th>
-                    <th>Fecha Fin</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cronogramas.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.actividad || "—"}</td>
-                      <td>
-                        {editando === item.id ? (
-                          <input
-                            type="date"
-                            className="modal-tiempo-input-fecha"
-                            value={
-                              nuevaFecha ||
-                              new Date(item.fecha_fin_primero)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                            onChange={(e) => setNuevaFecha(e.target.value)}
-                          />
-                        ) : (
-                          (() => {
-                            const fechaISO = new Date(item.fecha_fin_primero)
-                              .toISOString()
-                              .split("T")[0];
-                            const [yyyy, mm, dd] = fechaISO.split("-");
-                            return `${dd}/${mm}/${yyyy}`;
-                          })()
-                        )}
-                      </td>
-                      <td className="modal-tiempo-acciones">
-                        {editando === item.id ? (
-                          <button
-                            className="btn-guardar-fecha"
-                            onClick={() => guardarFecha(item.id)}
-                            disabled={guardando}
-                          >
-                            💾
-                          </button>
-                        ) : (
-                          <button
-                            className="btn-editar-icono"
-                            onClick={() =>
-                              iniciarEdicion(item.id, item.fecha_fin_primero)
-                            }
-                            title="Editar fecha"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="18"
-                              height="18"
-                              fill="white"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1.25 1.25 0 0 0 0-1.77l-2.34-2.34a1.25 1.25 0 0 0-1.77 0l-1.83 1.83 3.75 3.75 1.19-1.19z" />
-                            </svg>
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="modal-tiempo-empty">No hay fechas registradas.</p>
-            )}
-
-            <div className="modal-tiempo-footer">
-              <button className="modal-tiempo-btn-cerrar" onClick={cerrarModal}>
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CambiosTiempoModal
+        visible={modalVisible}
+        nombreEstudiante={nombreEstudiante}
+        cronogramas={cronogramas}
+        editando={editando}
+        nuevaFecha={nuevaFecha}
+        setNuevaFecha={setNuevaFecha}
+        iniciarEdicion={iniciarEdicion}
+        guardarFecha={guardarFecha}
+        guardando={guardando}
+        onClose={cerrarModal}
+      />
     </div>
   );
 }

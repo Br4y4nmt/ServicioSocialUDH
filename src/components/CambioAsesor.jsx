@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 import "./DashboardGestor.css";
+import { alertError, alertWarning, toastSuccess } from "../hooks/alerts/alertas";
 import { useUser } from "../UserContext";
+import CambioAsesorModal from "../components/modals/CambioAsesorModal";
+import PageSkeleton from "../components/loaders/PageSkeleton"; 
 
 function CambioAsesor() {
   const { user } = useUser();
@@ -20,6 +22,7 @@ function CambioAsesor() {
   const fetchTrabajos = useCallback(async () => {
     try {
       if (!token) return;
+
       setCargando(true);
       setErrorMensaje("");
 
@@ -37,15 +40,10 @@ function CambioAsesor() {
       setTrabajos(data);
     } catch (error) {
       const mensaje =
-        error.response?.data?.message ||
-        "No se pudieron cargar los registros.";
+        error.response?.data?.message || "No se pudieron cargar los registros.";
+
       setErrorMensaje(mensaje);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: mensaje,
-        confirmButtonColor: "#dc2626",
-      });
+      alertError("Error", mensaje);
     } finally {
       setCargando(false);
     }
@@ -78,58 +76,35 @@ function CambioAsesor() {
 
   const guardarCambioAsesor = async () => {
     if (!asesorSeleccionado) {
-      Swal.fire({
-        icon: "warning",
-        title: "Seleccione un asesor",
-        text: "Debe elegir un asesor antes de guardar.",
-        confirmButtonColor: "#f59e0b",
-      });
+      alertWarning("Seleccione un asesor", "Debe elegir un asesor antes de guardar.");
       return;
     }
 
     try {
       setGuardando(true);
+
       const res = await axios.put(
         `/api/trabajo-social/cambio-asesor/${trabajoSeleccionado.id}`,
         { nuevo_docente_id: asesorSeleccionado },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (res.status === 200) {
-        Swal.fire({
-          toast: true,
-          position: "top-end",
-          icon: "success",
-          title: "Asesor actualizado correctamente",
-          showConfirmButton: false,
-          timer: 2200,
-          background: "#ffffff",
-          color: "#4b5563",
-          iconColor: "#22c55e",
-        });
-
+        toastSuccess("Asesor actualizado correctamente");
         cerrarModal();
         fetchTrabajos();
       }
     } catch (error) {
       console.error("Error al actualizar asesor:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error al actualizar",
-        text: "No se pudo actualizar el asesor.",
-        confirmButtonColor: "#dc2626",
-      });
+      alertError("Error al actualizar", "No se pudo actualizar el asesor.");
     } finally {
       setGuardando(false);
     }
   };
 
-useEffect(() => {
-  if (user && token) fetchTrabajos();
-}, [user, token, fetchTrabajos]);
-
+  useEffect(() => {
+    if (user && token) fetchTrabajos();
+  }, [user, token, fetchTrabajos]);
 
   const trabajosFiltrados = trabajos.filter((t) =>
     t.nombre_estudiante?.toLowerCase().includes(filtro.toLowerCase())
@@ -159,9 +134,7 @@ useEffect(() => {
 
         <div className="docentes-table-wrapper">
           {cargando ? (
-            <div style={{ textAlign: "center", padding: "1rem" }}>
-              🔄 Cargando registros...
-            </div>
+            <PageSkeleton topBlocks={["sm"]} xlRows={3} showChip lastXL />
           ) : errorMensaje ? (
             <div style={{ padding: "1rem", color: "red", textAlign: "center" }}>
               {errorMensaje}
@@ -177,6 +150,7 @@ useEffect(() => {
                   <th>Acción</th>
                 </tr>
               </thead>
+
               <tbody>
                 {trabajosFiltrados.length > 0 ? (
                   trabajosFiltrados.map((t, index) => (
@@ -210,10 +184,7 @@ useEffect(() => {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="5"
-                      style={{ textAlign: "center", padding: "1rem" }}
-                    >
+                    <td colSpan="5" style={{ textAlign: "center", padding: "1rem" }}>
                       No se encontraron estudiantes aceptados.
                     </td>
                   </tr>
@@ -223,53 +194,17 @@ useEffect(() => {
           )}
         </div>
       </div>
-      
-      {modalVisible && (
-        <div className="modal-tiempo-overlay">
-          <div className="modal-tiempo-content">
-            <h3>
-              Cambiar asesor de{" "}
-              <span style={{ color: "#2e9e7f" }}>
-                {trabajoSeleccionado?.nombre_estudiante}
-              </span>
-            </h3>
 
-            <label className="docentes-search-label" style={{ marginTop: "1rem" }}>
-              Asesores disponibles:
-              <select
-                className="select-profesional"
-                value={asesorSeleccionado}
-                onChange={(e) => setAsesorSeleccionado(e.target.value)}
-              >
-                <option value="">Seleccione un asesor</option>
-                {asesores.map((a) => (
-                  <option key={a.id_docente} value={a.id_docente}>
-                    {a.nombre_docente}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <div className="modal-tiempo-footer">
-                <button
-                    className="btn-cancelar-cambio-asesor"
-                    onClick={cerrarModal}
-                    disabled={guardando}
-                >
-                    Cancelar
-                </button>
-
-                <button
-                    className="btn-guardar-cambio-asesor"
-                    onClick={guardarCambioAsesor}
-                    disabled={guardando}
-                >
-                    {guardando ? "Guardando..." : "Guardar cambio"}
-                </button>
-                </div>
-          </div>
-        </div>
-      )}
+      <CambioAsesorModal
+        visible={modalVisible}
+        onClose={cerrarModal}
+        onSave={guardarCambioAsesor}
+        guardando={guardando}
+        trabajoSeleccionado={trabajoSeleccionado}
+        asesores={asesores}
+        asesorSeleccionado={asesorSeleccionado}
+        setAsesorSeleccionado={setAsesorSeleccionado}
+      />
     </div>
   );
 }
