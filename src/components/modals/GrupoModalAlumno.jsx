@@ -1,4 +1,3 @@
-// src/components/modals/GrupoModalAlumno.jsx
 import React from "react";
 import Swal from "sweetalert2";
 
@@ -40,7 +39,7 @@ function GrupoModalAlumno({
   return (
     <div className="modal-grupo-elegante-overlay">
       <div className="modal-grupo-elegante-content">
-        <h3 className="modal-grupo-elegante-title">Integrantes del Grupo</h3>
+        <h3 className="modal-grupo-elegante-title">Integrantes del grupo</h3>
 
         {solicitudEnviada ? (
           <ul className="lista-integrantes">
@@ -56,7 +55,7 @@ function GrupoModalAlumno({
           correosGrupo.map((correo, index) => (
             <div className="modal-grupo-elegante-field" key={index}>
               <label className="modal-grupo-elegante-label">
-                Correo institucional #{index + 1}
+                Correo institucional N°{index + 1}
               </label>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
@@ -66,10 +65,45 @@ function GrupoModalAlumno({
                   value={correo.replace("@udh.edu.pe", "")}
                   onChange={(e) => {
                     const input = e.target.value.replace(/\D/g, "");
+
                     if (input.length <= 10) {
                       const nuevos = [...correosGrupo];
-                      nuevos[index] =
-                        input.length === 10 ? `${input}@udh.edu.pe` : input;
+
+                      if (input.length === 10) {
+                        const correoCompleto = `${input}@udh.edu.pe`;
+
+                        const existe = correosGrupo.some(
+                          (correo, i) => correo === correoCompleto && i !== index
+                        );
+
+                        if (existe) {
+                          Swal.fire({
+                          toast: true,
+                          position: "bottom-start", 
+                          icon: "warning",
+                          title: "Este integrante ya fue agregado al grupo",
+                          showConfirmButton: false,
+                          timer: 3000,
+                          timerProgressBar: true,
+                          background: "#ffffff",     
+                          color: "#1f2937",          
+                          iconColor: "#f59e0b",      
+                          didOpen: (toast) => {
+                            toast.addEventListener("mouseenter", Swal.stopTimer);
+                            toast.addEventListener("mouseleave", Swal.resumeTimer);
+                          },
+                        });
+
+                          nuevos[index] = "";
+                          setCorreosGrupo(nuevos);
+                          return;
+                        }
+
+                        nuevos[index] = correoCompleto;
+                      } else {
+                        nuevos[index] = input;
+                      }
+
                       setCorreosGrupo(nuevos);
                     }
                   }}

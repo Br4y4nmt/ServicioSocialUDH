@@ -113,7 +113,7 @@ useEffect(() => {
         <div className="seguimiento-container">
 
             <p style={{ marginBottom: '15px', color: '#4A5568', textAlign: 'center' }}>
-                A continuación se muestra el cronograma previamente registrado en tu plan de servicio social
+                Cronograma previamente registrado en tu plan de servicio social
             </p>
           <div className="tabla-cronograma-wrapper-se">
             <table className="tabla-cronograma-se">
@@ -477,28 +477,26 @@ useEffect(() => {
 </div>
 
 
- {cartasMiembros.map((carta, index) => (
+{cartasMiembros.map((carta, index) => (
   <div key={index} className="documento-card">
     <div className="documento-info">
       <PdfIcon />
       <span className="titulo-pdf">
         DOCUMENTO DE APROBACION DE ACTIVIDADES (
-        {
-          (() => {
-            const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
-            const miembro = nombresMiembros.find(n =>
-              n.correo?.trim().toLowerCase() === correo
-            );
-            return miembro && miembro.nombre && miembro.nombre !== 'NO ENCONTRADO'
-              ? miembro.nombre
-              : 'NOMBRE NO DISPONIBLE';
-          })()
-        }
+        {(() => {
+          const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
+          const miembro = nombresMiembros.find(
+            (n) => n.correo?.trim().toLowerCase() === correo
+          );
+          return miembro && miembro.nombre && miembro.nombre !== "NO ENCONTRADO"
+            ? miembro.nombre
+            : "NOMBRE NO DISPONIBLE";
+        })()}
         )
       </span>
     </div>
+
     <div className="acciones-doc">
-      <div className="acciones-doc">
       <VerBotonInline
         onClick={() =>
           window.open(
@@ -509,11 +507,9 @@ useEffect(() => {
       />
       <span className="estado-tramitado">Tramitado</span>
     </div>
-
-      <span className="estado-tramitado">Tramitado</span>
-    </div>
   </div>
 ))}
+
   </div>
 )}
 {modalActividadVisible && actividadDetalle && ReactDOM.createPortal(

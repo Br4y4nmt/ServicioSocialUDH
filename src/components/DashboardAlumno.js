@@ -119,6 +119,23 @@ function DashboardAlumno() {
     documentosAdicionales: null
   });
   
+
+  const toastWarning = (mensaje) => {
+    Swal.fire({
+      toast: true,
+      position: "bottom-start",
+      icon: "warning",
+      title: mensaje,
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      background: "#ffffff",
+      color: "#1f2937",
+      iconColor: "#f59e0b",
+    });
+  };
+
+
 const handleFileChange = (e, tipo) => {
   const archivo = e.target.files[0];
   if (archivo) {
@@ -566,6 +583,8 @@ useEffect(() => {
 }, [lineaSeleccionada, user?.token]);
 
 
+
+
 const handleSolicitarAprobacion = async () => {
   if (solicitudEnviada) {
     mostrarAlertaSolicitudYaEnviada();
@@ -573,13 +592,21 @@ const handleSolicitarAprobacion = async () => {
   }
 
   const usuario_id = user?.id;
+  const token = user?.token;
 
-  if (!usuario_id || !user?.token) {
+  if (!usuario_id || !token) {
     mostrarErrorSinIdUsuario();
     return;
   }
 
   try {
+    const correosLimpios =
+      tipoServicio === "grupal"
+        ? correosGrupo
+            .map((c) => String(c || "").trim().toLowerCase())
+            .filter(Boolean)
+        : [];
+
     const datos = {
       usuario_id: Number(usuario_id),
       facultad_id: Number(facultadSeleccionada),
@@ -587,46 +614,45 @@ const handleSolicitarAprobacion = async () => {
       docente_id: Number(docenteSeleccionado),
       labor_social_id: Number(laborSeleccionada),
       tipo_servicio_social: tipoServicio,
-      linea_accion_id: Number(lineaSeleccionada)
+      linea_accion_id: Number(lineaSeleccionada),
+      correos: correosLimpios,
     };
 
-    const response = await axios.post("/api/trabajo-social", datos, {
-      headers: {
-        Authorization: `Bearer ${user.token}`
-      }
+    await axios.post("/api/trabajo-social", datos, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    // Guardar integrantes si el servicio es grupal
-    if (tipoServicio === "grupal") {
-      const trabajoSocialId = response.data.id;
-
-      if (!trabajoSocialId) {
-        mostrarAlertaErrorEnviarSolicitud("No se recibió el ID del trabajo social creado.");
-        return;
-      }
-
-      await axios.post(
-        "/api/integrantes",
-        {
-          trabajo_social_id: trabajoSocialId,
-          correos: correosGrupo.filter((c) => c.trim() !== "")
-        },
-        {
-          headers: { Authorization: `Bearer ${user.token}` }
-        }
-      );
-    }
 
     setSolicitudEnviada(true);
     setEstadoPlan("pendiente");
-
     mostrarAlertaSolicitudEnviada();
-
   } catch (error) {
     console.error("Error al enviar solicitud:", error);
-    mostrarAlertaErrorEnviarSolicitud();
+
+    const status = error.response?.status;
+    const data = error.response?.data;
+
+    if (status === 409 && Array.isArray(data?.duplicados)) {
+      toastWarning(
+        `Correos duplicados: ${data.duplicados
+          .map((c) => c.split("@")[0])
+          .join(", ")}`
+      );
+
+      setCorreosGrupo((prev) =>
+        prev.filter(
+          (c) => !data.duplicados.includes(String(c).trim().toLowerCase())
+        )
+      );
+
+      return;
+    }
+
+    mostrarAlertaErrorEnviarSolicitud(
+      data?.message || "Error al enviar solicitud"
+    );
   }
 };
+
 
 const mergePDFs = async (mainPdfBlob, anexos) => {
   const mainPdfBytes = await mainPdfBlob.arrayBuffer();

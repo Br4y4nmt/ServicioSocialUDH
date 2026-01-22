@@ -108,6 +108,15 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                 {openMenu === 0 && (
                   <ul className="sidebar-gestor-submenu">
                     <li
+                      className={activeSection === 'informes-finales' ? 'sidebar-gestor-selected' : ''}
+                      onClick={() => setActiveSection('informes-finales')}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <FinalReportIcon size={18} color="#2e9e7f" />
+                        Informes Finales
+                      </span>
+                    </li>
+                    <li
                       className={activeSection === 'facultades' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('facultades')}
                     >
@@ -161,15 +170,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                         Estudiantes
                       </span>
                     </li>
-                    <li
-                      className={activeSection === 'informes-finales' ? 'sidebar-gestor-selected' : ''}
-                      onClick={() => setActiveSection('informes-finales')}
-                    >
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <FinalReportIcon size={18} color="#2e9e7f" />
-                        Informes Finales
-                      </span>
-                    </li>
+                
                     <li
                       className={activeSection === 'supervisores' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('supervisores')}

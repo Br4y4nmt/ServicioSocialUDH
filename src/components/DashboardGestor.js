@@ -92,6 +92,7 @@ function DashboardGestor() {
   // eslint-disable-next-line no-unused-vars
   const [, setNuevoDocenteDni] = useState('');
   const [emailDocenteEditado, setEmailDocenteEditado] = useState('');
+  const [aprobandoId, setAprobandoId] = useState(null);
   const [nuevaFacultadDocente, setNuevaFacultadDocente] = useState('');
   const [nuevoProgramaDocente, setNuevoProgramaDocente] = useState('');
   const [nuevoDocenteWhatsapp, setNuevoDocenteWhatsapp] = useState('');
@@ -181,6 +182,10 @@ useEffect(() => {
 
 
 const aceptarInforme = async (id) => {
+
+   if (aprobandoId === id) return; 
+
+  setAprobandoId(id);
   try {
     const informe = informesFinales.find((i) => i.id === id);
     if (!informe) {
@@ -1319,7 +1324,7 @@ return (
                     <span className="no-generado">NO GENERADO</span>
                   )}
                 </td>
-                  <td>
+                  <td> 
                     {inf.certificado_final ? (
                       <VerBoton
                         label="Ver"
@@ -1341,15 +1346,25 @@ return (
                         <button
                           className="btn-accion aceptar"
                           onClick={() => aceptarInforme(inf.id)}
+                          disabled={aprobandoId === inf.id}
                         >
-                          Aprobar
+                          {aprobandoId === inf.id ? (
+                            <span className="btn-spinner-wrap">
+                              <span className="btn-spinner" />
+                              Generando...
+                            </span>
+                          ) : (
+                            "Aprobar"
+                          )}
                         </button>
+
                         <button
-                          className="btn-accion rechazar"
-                          onClick={() => rechazarInforme(inf.id)}
-                        >
-                          Rechazar
-                        </button>
+                        className="btn-accion rechazar"
+                        onClick={() => rechazarInforme(inf.id)}
+                        disabled={aprobandoId === inf.id}
+                      >
+                        Rechazar
+                      </button>
                       </>
                     ) : (
                       <span
