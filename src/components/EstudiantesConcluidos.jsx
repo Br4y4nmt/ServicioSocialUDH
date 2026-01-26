@@ -13,10 +13,12 @@ function EstudiantesConcluidos({
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const { user } = useUser();
   const token = user?.token;
+
   const [estudiantesLocal, setEstudiantesLocal] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
+  const [udhDown, setUdhDown] = useState(false);
 
   // Toast reusable
   const Toast = Swal.mixin({
@@ -31,16 +33,28 @@ function EstudiantesConcluidos({
     const fetchFinalizados = async () => {
       if (!token) return;
       setLoading(true);
+      setError(null);
+
       try {
         const res = await axios.get('/api/trabajo-social/estudiantes-finalizados', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
+        // guardar flag udhDown que manda el backend
+        setUdhDown(!!res.data?.meta?.udhDown);
+
         const data = res.data?.data || [];
-        const mapped = data.map((item) => {
+
+        // ✅ Creamos filas para: estudiante principal + integrantes si es grupal
+        const mapped = data.flatMap((item) => {
           const est = item.estudiante || {};
-          return {
+          const trabajo = item.trabajo || {};
+
+          const filaPrincipal = {
+            rowType: 'estudiante',
             id_estudiante: est.id_estudiante || null,
+            id_integrante: null,
+
             nombre_estudiante: est.nombre_estudiante,
             dni: est.dni,
             email: est.email,
@@ -49,14 +63,55 @@ function EstudiantesConcluidos({
             sede: est.sede,
             modalidad: est.modalidad,
             estado: est.estado,
+
             programa: est.programa || null,
-            trabajo: item.trabajo || null,
+            trabajo,
           };
+
+          // Si NO es grupal, solo devolvemos la fila principal
+          if ((trabajo.tipo_servicio_social || '').toString().trim().toLowerCase() !== 'grupal') {
+            return [filaPrincipal];
+          }
+
+          // Si es grupal, agregamos integrantes como filas extra
+          const integrantes = Array.isArray(trabajo.integrantes_grupo) ? trabajo.integrantes_grupo : [];
+
+          const filasIntegrantes = integrantes.map((ig) => ({
+            rowType: 'integrante',
+            id_estudiante: null,
+            id_integrante: ig?.__integrante_grupo?.id_integrante || null,
+
+            nombre_estudiante: ig?.nombre_estudiante || null,
+            dni: ig?.dni || null,
+            email: ig?.email || null,
+            codigo: ig?.codigo || null,
+            celular: ig?.celular || null,
+            sede: ig?.sede || null,
+            modalidad: ig?.modalidad || null,
+
+            // ✅ Este estado debe venir desde BD (integrantes_grupo.estado)
+            estado: ig?.estado || null,
+
+            programa: ig?.programa || null,
+            trabajo,
+            __integrante_grupo: ig?.__integrante_grupo || null,
+          }));
+
+          return [filaPrincipal, ...filasIntegrantes];
         });
 
         setEstudiantesLocal(mapped);
       } catch (err) {
         console.error('Error fetching estudiantes-finalizados:', err);
+        // si el backend responde 503/502/504, marcar UDH caído
+        const status = err?.response?.status;
+        if (status === 503 || status === 502 || status === 504) {
+          setUdhDown(true);
+          setError(null);
+          setLoading(false);
+          return;
+        }
+
         setError('No se pudieron cargar los estudiantes finalizados');
       } finally {
         setLoading(false);
@@ -66,11 +121,14 @@ function EstudiantesConcluidos({
     fetchFinalizados();
   }, [token]);
 
-  const actualizarEstado = async (id_estudiante, nuevoEstado) => {
+  // ✅ Ahora actualiza ESTUDIANTE o INTEGRANTE según lo que venga
+  const actualizarEstado = async ({ id_estudiante, id_integrante }, nuevoEstado) => {
     if (!token) return;
 
+    const estadoFinal = String(nuevoEstado || '').toUpperCase().trim();
+
     // Solo confirmamos cuando pasa a ATENDIDO (según tu flujo)
-    if (nuevoEstado === 'ATENDIDO') {
+    if (estadoFinal === 'ATENDIDO') {
       const confirm = await Swal.fire({
         title: '¿Confirmar cambio?',
         text: 'Se marcará como ATENDIDO.',
@@ -81,38 +139,39 @@ function EstudiantesConcluidos({
         reverseButtons: true,
       });
 
-      if (!confirm.isConfirmed) {
-        // Canceló: no hacemos nada (y el select se "resetea" porque el value es fijo NO_ATENDIDO)
-        return;
-      }
+      if (!confirm.isConfirmed) return;
     }
 
-    try {
-      setUpdatingId(id_estudiante);
+    const rowId = id_estudiante || id_integrante;
 
+    try {
+      setUpdatingId(rowId);
+
+      // ✅ Usamos tu PATCH (opción 2) que recibe ids por body
+      // Si tu backend sigue en /api/estudiantes/:id/estado, puedes dejar /0/estado
       await axios.patch(
-        `/api/estudiantes/${id_estudiante}/estado`,
-        { estado: nuevoEstado },
+        `/api/estudiantes/0/estado`,
+        { id_estudiante, id_integrante, estado: estadoFinal },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setEstudiantesLocal((prev) =>
-        prev.map((e) =>
-          e.id_estudiante === id_estudiante ? { ...e, estado: nuevoEstado } : e
-        )
+        prev.map((e) => {
+          const same =
+            (id_estudiante && e.id_estudiante === id_estudiante) ||
+            (id_integrante && e.id_integrante === id_integrante);
+
+          return same ? { ...e, estado: estadoFinal } : e;
+        })
       );
 
       Toast.fire({
         icon: 'success',
-        title: `Estado actualizado a ${nuevoEstado.replace('_', ' ')}`,
+        title: `Estado actualizado a ${estadoFinal.replace('_', ' ')}`,
       });
     } catch (err) {
       console.error('Error actualizando estado:', err);
-
-      Toast.fire({
-        icon: 'error',
-        title: 'No se pudo actualizar el estado',
-      });
+      Toast.fire({ icon: 'error', title: 'No se pudo actualizar el estado' });
     } finally {
       setUpdatingId(null);
     }
@@ -153,15 +212,22 @@ function EstudiantesConcluidos({
           </label>
         </div>
 
-        {loading && (
-          <div className="no-generado">Cargando estudiantes...</div>
-        )}
+        {loading && <div className="no-generado">Cargando estudiantes...</div>}
 
         {error && (
-          <div className="no-generado" style={{ color: '#a13039' }}>{error}</div>
+          <div className="no-generado" style={{ color: '#a13039' }}>
+            {error}
+          </div>
         )}
 
-        <div className="docentes-table-wrapper">
+        {udhDown && (
+          <div className="no-generado" style={{ color: '#a13039' }}>
+            Servidor universitario en mantenimiento. Intente más tarde.
+          </div>
+        )}
+
+        {!udhDown && (
+          <div className="docentes-table-wrapper">
           <table className="docentes-table">
             <thead className="docentes-table-thead">
               <tr>
@@ -178,9 +244,11 @@ function EstudiantesConcluidos({
             <tbody>
               {(estudiantesLocal.length ? estudiantesLocal : estudiantes)
                 .filter((est) => {
+                  const texto = (filtroEstudiantes || '').toLowerCase().trim();
+
                   const coincideTexto =
-                    est.nombre_estudiante?.toLowerCase().includes(filtroEstudiantes.toLowerCase()) ||
-                    est.dni?.includes(filtroEstudiantes);
+                    (est.nombre_estudiante || '').toLowerCase().includes(texto) ||
+                    (est.dni || '').toString().includes(texto);
 
                   const estado = (est.estado || '').toString().trim().toLowerCase();
 
@@ -193,46 +261,76 @@ function EstudiantesConcluidos({
 
                   return coincideTexto && coincideEstado;
                 })
-                .map((est, index) => (
-                  <tr key={est.id_estudiante}>
-                    <td>{index + 1}</td>
-                    <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
-                    <td>{est.dni || '—'}</td>
-                    <td>{est.email || 'SIN CORREO'}</td>
-                    <td>{est.celular || '—'}</td>
-                    <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
-                    <td>
-                      {(() => {
-                        const estadoLower = (est.estado || '').toString().trim().toLowerCase();
-                        const disabled = updatingId === est.id_estudiante;
+                .map((est, index) => {
+                  const rowKey = `${est.rowType}-${est.id_estudiante || est.id_integrante || index}`;
+                  const rowId = est.id_estudiante || est.id_integrante;
 
-                        // SOLO si está NO ATENDIDO aparece el select
-                        if (estadoLower === 'no_atendido' || estadoLower === 'no atendido') {
-                          return (
-                            <select
-                              className="select-estado-estudiante"
-                              value="NO_ATENDIDO"
-                              disabled={disabled}
-                              onChange={(e) => actualizarEstado(est.id_estudiante, e.target.value)}
-                            >
-                              <option value="NO_ATENDIDO">NO ATENDIDO</option>
-                              <option value="ATENDIDO">ATENDIDO</option>
-                            </select>
-                          );
-                        }
+                  return (
+                    <tr key={rowKey}>
+                      <td>{index + 1}</td>
 
-                        if (estadoLower === 'atendido') {
-                          return <span className="badge-estado-estudiantes aprobado">ATENDIDO</span>;
-                        }
+                      <td>
+                        {est.nombre_estudiante || 'SIN NOMBRE'}
+                        {est.rowType === 'integrante' && (
+                          <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.7 }}>
+                            (Integrante)
+                          </span>
+                        )}
+                        {est.rowType === 'estudiante' &&
+                          (est.trabajo?.tipo_servicio_social || '').toLowerCase() === 'grupal' && (
+                            <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.7 }}>
+                              (Grupo)
+                            </span>
+                          )}
+                      </td>
 
-                        return <span className="badge-estado-estudiantes">—</span>;
-                      })()}
-                    </td>
-                  </tr>
-                ))}
+                      <td>{est.dni || '—'}</td>
+                      <td>{est.email || 'SIN CORREO'}</td>
+                      <td>{est.celular || '—'}</td>
+                      <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
+
+                      <td>
+                        {(() => {
+                          const estadoLower = (est.estado || '').toString().trim().toLowerCase();
+                          const disabled = updatingId === rowId;
+
+                          // SOLO si está NO ATENDIDO aparece el select
+                          if (estadoLower === 'no_atendido' || estadoLower === 'no atendido') {
+                            return (
+                              <select
+                                className="select-estado-estudiante"
+                                value="NO_ATENDIDO"
+                                disabled={disabled}
+                                onChange={(e) =>
+                                  actualizarEstado(
+                                    {
+                                      id_estudiante: est.id_estudiante,
+                                      id_integrante: est.id_integrante,
+                                    },
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <option value="NO_ATENDIDO">NO ATENDIDO</option>
+                                <option value="ATENDIDO">ATENDIDO</option>
+                              </select>
+                            );
+                          }
+
+                          if (estadoLower === 'atendido') {
+                            return <span className="badge-estado-estudiantes aprobado">ATENDIDO</span>;
+                          }
+
+                          return <span className="badge-estado-estudiantes">—</span>;
+                        })()}
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </div>
   );
