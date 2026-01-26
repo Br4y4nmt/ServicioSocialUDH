@@ -41,7 +41,8 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
       "lineas",
       "informes-finales",
       "estudiantes",
-      "supervisores"
+      "supervisores",
+      "estudiantes-concluidos"
     ].includes(activeSection)) {
       setOpenMenu(0);
     } else {
@@ -117,6 +118,15 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       </span>
                     </li>
                     <li
+                      className={activeSection === 'estudiantes-concluidos' ? 'sidebar-gestor-selected' : ''}
+                      onClick={() => setActiveSection('estudiantes-concluidos')}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <SupervisorCheckIcon size={18} color="#2e9e7f" />
+                        Estudiantes concluidos
+                      </span>
+                    </li>
+                    <li
                       className={activeSection === 'facultades' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('facultades')}
                     >
@@ -170,7 +180,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                         Estudiantes
                       </span>
                     </li>
-                
+
                     <li
                       className={activeSection === 'supervisores' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('supervisores')}

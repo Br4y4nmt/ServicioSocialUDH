@@ -26,6 +26,7 @@ import DeleteIcon from "../hooks/componentes/Icons/DeleteIcon";
 import VerBoton from "../hooks/componentes/VerBoton";
 import InformePDF from '../components/InformefinalProgramaPDF';
 import './DashboardGestor.css';
+import EstudiantesConcluidos from './EstudiantesConcluidos';
 import { useUser } from '../UserContext';
 import {
   confirmarEliminacionDesignacionSupervisor,
@@ -1470,6 +1471,18 @@ return (
       </div>
     </div>
   </div>
+)}
+
+{activeSection === 'estudiantes-concluidos' && (
+  <EstudiantesConcluidos
+    estudiantes={estudiantes}
+    filtroEstudiantes={filtroEstudiantes}
+    setFiltroEstudiantes={setFiltroEstudiantes}
+    programas={programas}
+    programaSeleccionado={programaSeleccionado}
+    setProgramaSeleccionado={setProgramaSeleccionado}
+    setModalEstudianteVisible={setModalEstudianteVisible}
+  />
 )}
 
 <EstudianteNuevoModal

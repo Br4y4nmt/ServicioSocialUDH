@@ -435,13 +435,15 @@
 }
 
 .badge-estado.aceptado{
-  background:#38a169;   
-  color:#fff;
+  background-color: #D3F8EA;
+  color: #2c885d;
+  border-color: #A7EFCF;
 }
 
 .badge-estado.rechazado{
-  background:#ef4444;   
-  color:#fff;
+  background-color: #F8D7DA;
+  color: #a13039;
+  border-color: #F1AEB5;
 }
 
 
@@ -718,25 +720,30 @@
   fill: #2e2e2e;
 }
 .badge-estado {
-  display: inline-block;
-  padding: 6px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
-  min-width: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .4px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .badge-estado.aprobado {
-  background-color: #4CAF50; 
+  background-color: #D3F8EA;
+  color: #2c885d;
+  border-color: #A7EFCF;
 }
 
 .badge-estado.rechazado {
-  background-color: #f44336; 
+  background-color: #F8D7DA;
+  color: #a13039;
+  border-color: #F1AEB5;
 }
 
 .select-profesional {
@@ -1532,6 +1539,75 @@
   );
   animation: shimmer 1.2s infinite;
 }
+/* ===============================
+   BADGE ESTADO – ESTUDIANTES
+   =============================== */
+
+.badge-estado-estudiantes{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.select-estado-estudiante{
+  width: fit-content;         /* se ajusta al texto */
+  display: inline-block;
+  padding: 6px 26px 6px 10px !important; /* derecha grande para la flecha */
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  border: 1px solid #F1AEB5;
+  background: #F8D7DA;
+  color: #842029;
+  cursor: pointer;
+  outline: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%23842029' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+/* evita que TODOS los selects se estiren en la tabla */
+td select{
+  width: auto !important;
+}
+.select-estado-estudiante option{
+  background: #fff;   
+  color: #111;       
+}
+
+.select-estado-estudiante:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ATENDIDO */
+.badge-estado-estudiantes.aprobado{
+  background-color: #D3F8EA;
+  color: #2c885d;
+  border-color: #A7EFCF;
+}
+
+/* NO ATENDIDO */
+.badge-estado-estudiantes.rechazado{
+  background-color: #F8D7DA;
+  color: #a13039;
+  border-color: #F1AEB5;
+}
+
+
 
 @keyframes shimmer {
   0% { left: -40%; }
