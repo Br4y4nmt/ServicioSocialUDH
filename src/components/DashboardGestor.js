@@ -246,7 +246,18 @@ const aceptarInforme = async (id) => {
             },
           };
 
-          const blob = await pdf(<InformePDF informe={informePersonalizado} />).toBlob();
+          const verificationUrlMiembro =
+            `${process.env.REACT_APP_API_URL}/api/certificados-final/${trabajoId}/${codigo}`; 
+          const qrMiembro = await QRCode.toDataURL(verificationUrlMiembro);
+
+          const blob = await pdf(
+            <InformePDF
+              informe={informePersonalizado}
+              qrImage={qrMiembro}
+              verificationUrl={verificationUrlMiembro}
+            />
+          ).toBlob();
+
 
           const formData = new FormData();
           formData.append('archivo', blob, `certificado_final_${codigo}.pdf`);
@@ -269,7 +280,8 @@ const aceptarInforme = async (id) => {
 
     const nombreEstudiantePrincipal = informe.Estudiante?.nombre_estudiante || 'Estudiante';
     const nombreFacultad = informe.ProgramasAcademico?.Facultade?.nombre_facultad || 'Facultad';
-    const verificationUrl = `${process.env.REACT_APP_API_URL}/verificar/${id}`;
+    const verificationUrl =
+    `${process.env.REACT_APP_API_URL}/api/trabajo-social/certificado-final/${id}`;
     const qrDataUrl = await QRCode.toDataURL(verificationUrl);
 
     const informePrincipal = {

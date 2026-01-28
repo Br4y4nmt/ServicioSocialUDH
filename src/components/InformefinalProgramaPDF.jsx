@@ -1,11 +1,12 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
-// Formato de fecha en español
 const formatearFechaLarga = (fecha) => {
   const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-  const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-                 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const meses = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
 
   const diaSemana = dias[fecha.getDay()];
   const dia = fecha.getDate();
@@ -17,84 +18,113 @@ const formatearFechaLarga = (fecha) => {
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
+    position: 'relative',
+    paddingTop: 55,
+    paddingBottom: 55,
+    paddingLeft: 55,
+    paddingRight: 55,
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
+
+  // Borde doble elegante (dos rectángulos)
+  borderOuter: {
+    position: 'absolute',
+    top: 18,
+    left: 18,
+    right: 18,
+    bottom: 18,
+    borderWidth: 2.2,
+    borderColor: '#1f4e79',
+  },
+  borderInner: {
+    position: 'absolute',
+    top: 28,
+    left: 28,
+    right: 28,
+    bottom: 28,
+    borderWidth: 1,
+    borderColor: '#1f4e79',
+  },
+
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   logo: {
     width: 250,
     height: 100,
-    marginBottom: 10,
+    marginBottom: 6,
+    objectFit: 'contain',
   },
+
   title: {
     fontSize: 22,
     textAlign: 'center',
     marginBottom: 6,
     fontFamily: 'Times-Roman',
   },
+
   separator: {
     width: '100%',
     borderBottom: '1 solid black',
     marginVertical: 8,
   },
-  subtitle: {
+
+  // ===== BLOQUE SEGÚN CAPTURA =====
+  constanciaTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Times-Bold',
     textAlign: 'center',
-    marginTop: 5,
-    fontFamily: 'Times-Roman',
-  },
-  subsubtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginTop: 15,
-    marginBottom: 20,
-    fontFamily: 'Times-Roman',
-  },
-  paragraph: {
-    fontSize: 12,
-    textAlign: 'justify',
+    textTransform: 'uppercase',
+    marginTop: 6,
     marginBottom: 10,
-    lineHeight: 1.5,
-    fontFamily: 'Times-Roman',
-    paddingHorizontal: 30,
   },
+
+  otorgadoA: {
+    fontSize: 14,
+    fontFamily: 'Times-Roman',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+
+  studentName: {
+    fontSize: 18,
+    fontFamily: 'Times-Bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    marginBottom: 10,
+  },
+
+  paragraphCenter: {
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 1.4,
+    fontFamily: 'Times-Roman',
+    width: '92%',
+    marginBottom: 10,
+  },
+
   paragraphLeft: {
     fontSize: 12,
     textAlign: 'left',
     fontFamily: 'Times-Roman',
-    width: '100%',
-    paddingHorizontal: 30,
-    marginBottom: 20,
+    width: '92%',
+    marginBottom: 12,
   },
+
   dateRight: {
-    width: '100%',
+    width: '92%',
     fontSize: 12,
     textAlign: 'right',
-    paddingRight: 30,
     fontFamily: 'Times-Roman',
-    marginTop: 30,
+    marginTop: 0,
   },
-  section: {
-    marginTop: 20,
-    width: '100%',
-    paddingHorizontal: 30,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  value: {
-    fontSize: 12,
-    marginBottom: 4,
-  },
+
+  // Firma centrada
   firmaContainer: {
-    marginTop: 40,
+    marginTop: 28,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
@@ -102,52 +132,71 @@ const styles = StyleSheet.create({
   firmaImage: {
     width: 200,
     height: 80,
+    objectFit: 'contain',
   },
- qrContainer: {
-  position: 'absolute',
-  bottom: 30,
-  left: 30,
-  flexDirection: 'row',
-  alignItems: 'center',
-  width: '60%',
-},
 
-qrImage: {
-  width: 60,        // ⬅️ antes 80
-  height: 60,       // ⬅️ antes 80
-  marginRight: 0,
-},
+  // QR absoluto abajo-izquierda (dentro del padding de la página)
+  qrContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 55,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '55%',
+  },
+  qrImage: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    objectFit: 'contain',
+  },
+  qrText: {
+    fontSize: 8,
+    fontFamily: 'Times-Roman',
+    flexShrink: 1,
+    maxWidth: '75%',
+    lineHeight: 1.2,
+  },
 
-qrText: {
-  fontSize: 8,      // ⬅️ antes 10
-  fontFamily: 'Times-Roman',
-  flexShrink: 1,
-  maxWidth: '75%',
-  wordBreak: 'break-all',
-  lineHeight: 1.2,
-},
-
+  section: {
+    marginTop: 10,
+    width: '100%',
+  },
 });
 
 const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
-  const nombre = informe.Estudiante?.nombre_estudiante || 'N/A';
-  const programa = informe.ProgramasAcademico?.nombre_programa || 'N/A';
+  const nombre = (informe?.Estudiante?.nombre_estudiante || 'N/A').toUpperCase();
+  const programa = (informe?.ProgramasAcademico?.nombre_programa || 'N/A').toUpperCase();
   const fechaFormateada = formatearFechaLarga(new Date());
 
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
+        {/* Borde doble */}
+        <View style={styles.borderOuter} fixed />
+        <View style={styles.borderInner} fixed />
+
         <View style={styles.logoContainer}>
           <Image src="/images/logoSS.png" style={styles.logo} />
         </View>
 
+        {/* TÍTULO PRINCIPAL NO SE TOCA */}
         <Text style={styles.title}>Oficina Servicio Social Universitario</Text>
         <View style={styles.separator} />
-        <Text style={styles.subtitle}>CONSTANCIA DE HABER CONCLUIDO EL SERVICIO SOCIAL UNIVERSITARIO</Text>
-        <Text style={styles.subsubtitle}>Hace constar:</Text>
 
-        <Text style={styles.paragraph}>
-          Que el (la) alumno (a) {nombre} del Programa Académico {programa}, de la Universidad de Huánuco, acreditó un total de 96 horas efectivas de Servicio Social Universitario.
+        {/* ✅ AQUÍ VA EL ORDEN COMO LA CAPTURA */}
+        <Text style={styles.constanciaTitle}>
+          CONSTANCIA DE CONCLUSIÓN DEL SERVICIO SOCIAL UNIVERSITARIO
+        </Text>
+
+        <Text style={styles.otorgadoA}>Otorgado a:</Text>
+
+        <Text style={styles.studentName}>{nombre}</Text>
+
+        <Text style={styles.paragraphCenter}>
+          del Programa Académico{' '}
+          <Text style={{ fontFamily: 'Times-Bold' }}>{programa}</Text>, de la Universidad de Huánuco, por haber
+          acreditado un total de 96 horas efectivas de Servicio Social Universitario.
         </Text>
 
         <Text style={styles.paragraphLeft}>
@@ -160,19 +209,20 @@ const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
         <View style={styles.firmaContainer}>
           <Image src="/images/firma.jpg" style={styles.firmaImage} />
         </View>
+
+        {/* QR */}
         {qrImage && verificationUrl && (
-        <View style={styles.qrContainer}>
-          <Image src={qrImage} style={styles.qrImage} />
-          <Text style={styles.qrText}>
-            Documento: CONSTANCIA DE SERVICIO SOCIAL UNIVERSITARIO{'\n'}
-            URL de Verificación:{'\n'}
-            {verificationUrl}
-          </Text>
-        </View>
-      )}
-        {/* Datos internos */}
-        <View style={styles.section}>
-        </View>
+          <View style={styles.qrContainer}>
+            <Image src={qrImage} style={styles.qrImage} />
+            <Text style={styles.qrText}>
+              Documento: CONSTANCIA DE SERVICIO SOCIAL UNIVERSITARIO{'\n'}
+              URL de Verificación:{'\n'}
+              {verificationUrl}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.section} />
       </Page>
     </Document>
   );
