@@ -32,8 +32,8 @@ function SeguimientoServicioDocente() {
   const [observacion, setObservacion] = useState('');
   const [actividadSeleccionadaId, setActividadSeleccionadaId] = useState(null);
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
-  const [planPDF] = useState(null);
-  const [fechaPDF] = useState('');
+  //const [planPDF] = useState(null);
+  //const [fechaPDF] = useState('');
   const { user } = useUser();  
   const token = user?.token; 
   const [firmaDocente, setFirmaDocente] = useState('');

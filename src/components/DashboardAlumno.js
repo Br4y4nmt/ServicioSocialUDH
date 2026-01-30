@@ -379,6 +379,7 @@ useEffect(() => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const estudiante = res.data;
+      setFacultadSeleccionada(String(estudiante.facultad_id)); 
       setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
       setProgramaSeleccionado(estudiante.programa_academico_id);
       setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
@@ -436,7 +437,6 @@ const fetchTrabajoSocial = React.useCallback(async () => {
     const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-
     if (res.data) {
       setFacultadSeleccionada(res.data.facultad_id);
       setProgramaSeleccionado(res.data.programa_academico_id);
