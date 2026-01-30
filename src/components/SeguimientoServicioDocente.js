@@ -161,14 +161,14 @@ const generarHTML = async (
 
       <div class="bloque-firma">
         <p class="firma-etiqueta">Atentamente,</p>
-        <img src="${firmaDocente}" style="width:150px;margin-top:90px;margin-bottom:-15px;" />
+        <img src="${firmaDocente}" style="width:150px;margin-top:70px;margin-bottom:-15px;" />
         <p class="firma-docente">
           <em>${localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE'}</em>
         </p>
       </div>
 
       <!-- QR PARA INTEGRANTE -->
-      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 20px; padding-left: 30px;">
+      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 30px; padding-left: 30px;">
         <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
         <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
           <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
@@ -523,11 +523,11 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
 
     <div class="bloque-firma">
       <p class="firma-etiqueta">Atentamente,</p>
-      <img src="${firmaDocente}" style="width:150px;margin-top:90px;margin-bottom:-15px;" />
+      <img src="${firmaDocente}" style="width:150px;margin-top:70px;margin-bottom:-15px;" />
       <p class="firma-docente"><em>${nombreDocente}</em></p>
     </div>
   </div>
-   <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 20px; padding-left: 30px;">
+   <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 30px; padding-left: 30px;">
           <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
           <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
             <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
