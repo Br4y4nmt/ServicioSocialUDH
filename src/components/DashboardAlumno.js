@@ -379,9 +379,9 @@ useEffect(() => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const estudiante = res.data;
-      setFacultadSeleccionada(estudiante.facultad_id);
+      setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
       setProgramaSeleccionado(estudiante.programa_academico_id);
-      setNombreFacultad(estudiante.Facultade?.nombre_facultad || '');
+      setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
       setNombrePrograma(estudiante.ProgramasAcademico?.nombre_programa || '');
       setNombreCompleto(estudiante.nombre_estudiante);
       setCodigoUniversitario(estudiante.codigo);

@@ -17,8 +17,8 @@
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
     padding: 24px 32px;
-    max-width: 800px; /* antes estaba limitado a menos */
-    margin: 0 auto;    /* centrado horizontal */
+    max-width: 800px; 
+    margin: 0 auto;    
   }
   .perfil-docente-subtitle {
     font-size: 20px;
@@ -40,7 +40,7 @@
     color: #333;
   }
   .input-minuscula {
-    text-transform: lowercase !important; /* Sobrescribe la regla general */
+    text-transform: lowercase !important;
   }
   
   .perfil-docente-field input,
@@ -49,11 +49,11 @@
     border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 14px;
-    text-transform: uppercase; /* ← convierte texto a mayúsculas */
+    text-transform: uppercase; 
   }
   .editable-hint {
   font-size: 12px;
-  color: #6c757d; /* gris suave */
+  color: #6c757d; 
   margin-top: 4px;
   display: block;
 }
@@ -77,7 +77,7 @@
   
   .perfil-docente-btn.guardar {
     display: block;
-    margin: 30px auto 10px auto;  /* centrado y espaciado */
+    margin: 30px auto 10px auto;  
     padding: 10px 20px;
     background-color: #1a237e;
     color: white;
@@ -138,7 +138,7 @@
 }
 
 .firma-upload-box.is-busy {
-  pointer-events: none; /* bloquea interacción */
+  pointer-events: none;
 }
 
 .firma-busy-overlay {
@@ -182,7 +182,6 @@
   max-height: 260px;
   object-fit: contain;
   display: block;
-  /* checkerboard para ver transparencia */
   background-image:
     linear-gradient(45deg, #e9e9e9 25%, transparent 25%),
     linear-gradient(-45deg, #e9e9e9 25%, transparent 25%),
@@ -193,37 +192,36 @@
 }
 
 .firma-alert {
-  border: 1px solid #c34b4b;   /* línea un poco más fina   */
-  border-radius: 20px;         /* curvatura más discreta   */
-  padding: 6px 12px;           /* menos alto y ancho       */
-  margin: 0 auto 1rem;         /* reduce la separación     */
-  max-width: 380px;            /* hace el cuadro más corto */
+  border: 1px solid #c34b4b;  
+  border-radius: 20px;         
+  padding: 6px 12px;           
+  margin: 0 auto 1rem;         
+  max-width: 380px;            
   background-color: #fff4f4;
   color: #a22b2b;
-  font-size: 0.85rem;          /* texto ligeramente menor  */
+  font-size: 0.85rem;         
   font-style: italic;
-  text-align: center;          /* centra el texto          */
+  text-align: center;          
 }
 
 .firma-alert strong {
   font-weight: 600;
   margin-right: 4px;
-  /* font-style: normal; <-- ❌ ELIMINA o comenta esta línea */
 }
 
 
 .firma-preview-img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;  /* 👈 Ajusta la imagen dentro del contenedor sin deformarla */
+  object-fit: contain;  
   pointer-events: none;
   user-select: none;
 }
 
 .firma-upload-box {
   width: 100%;
-  max-width: 400px; /* o el tamaño exacto que desees */
-  height: 180px;     /* Altura fija */
+  max-width: 400px; 
+  height: 180px;     
   background-color: #f7f9fa;
   border: 1px dashed #ccc;
   border-radius: 8px;
@@ -235,7 +233,7 @@
   justify-content: center;
   position: relative;
   text-align: center;
-  overflow: hidden; /* 👈 Evita que la imagen se desborde */
+  overflow: hidden; 
 }
 
 

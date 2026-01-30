@@ -109,6 +109,19 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                 {openMenu === 0 && (
                   <ul className="sidebar-gestor-submenu">
                     <li
+                      className={
+                        activeSection === "dasborasd"
+                          ? "sidebar-gestor-selected sidebar-gestor-menu-simple"
+                          : "sidebar-gestor-menu-simple"
+                      }
+                      onClick={() => setActiveSection("dasborasd")}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <DashboardIcon size={20} color="#2e9e7f" />
+                        Dashboard
+                      </span>
+                    </li>
+                    <li
                       className={activeSection === 'informes-finales' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('informes-finales')}
                     >
@@ -224,19 +237,6 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <CambioAsesorIcon size={18} color="#2e9e7f" />
                         Cambio de Asesor
-                      </span>
-                    </li>
-                    <li
-                      className={
-                        activeSection === "dasborasd"
-                          ? "sidebar-gestor-selected sidebar-gestor-menu-simple"
-                          : "sidebar-gestor-menu-simple"
-                      }
-                      onClick={() => setActiveSection("dasborasd")}
-                    >
-                      <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <DashboardIcon size={20} color="#2e9e7f" />
-                        Dashboard
                       </span>
                     </li>
                   </ul>

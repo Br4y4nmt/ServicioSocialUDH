@@ -607,10 +607,6 @@ function ConformidadPlan({
     </>
   )}
 </button>
-
-
-
-
        </div>
        
      </div>

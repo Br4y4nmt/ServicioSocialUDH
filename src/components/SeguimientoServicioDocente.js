@@ -20,7 +20,6 @@ import {
 } from "../hooks/alerts/alertas";
 
 
-
 function SeguimientoServicioDocente() {
   const [collapsed, setCollapsed] = useState(false);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
@@ -41,6 +40,8 @@ function SeguimientoServicioDocente() {
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [nombresMiembros, setNombresMiembros] = useState([]);
+  const [isAprobando, setIsAprobando] = useState(false);
+  const [progresoAprobacion, setProgresoAprobacion] = useState({ actual: 0, total: 0, mensaje: '' });
 
 
   const handleVerGrupo = async (trabajoId) => {
@@ -100,51 +101,85 @@ const generarQRBase64 = async (url) => {
   }
 };
 
-const generarHTML = async (nombreEstudiante, programa, facultad, labor, firmaDocente) => `
-  <html>
-    <head>
-      <style>
-        ${await fetch('/styles/carta-aceptacion.css').then(r => r.text())}
-      </style>
-    </head>
-    <body>
-      <div class="carta-aceptacion">
-        <div class="encabezado-udh">
-          <div class="logo-container">
-            <img src="/images/logonuevo.png" alt="Logo UDH" class="logo-udh" />
-          </div>
-          <div class="separador-vertical"></div>
-          <div class="facultad-container">
-            <p class="texto-facultad">
-              FACULTAD DE ${facultad.toUpperCase() || '--------'}
-            </p>
-          </div>
-          <div class="separador-vertical"></div>
-          <div class="programa-container">
-            <p class="texto-programa">
-              P. A. DE ${programa.toUpperCase() || '--------'}
-            </p>
-          </div>
+const generarHTML = async (
+  nombreEstudiante,
+  programa,
+  facultad,
+  labor,
+  firmaDocente,
+  qrBase64,
+  urlVerificacion
+) => `
+<html>
+  <head>
+    <style>
+      ${await fetch('/styles/carta-aceptacion.css').then(r => r.text())}
+    </style>
+  </head>
+  <body>
+    <div class="carta-aceptacion">
+      <div class="encabezado-udh">
+        <div class="logo-container">
+          <img src="/images/logonuevo.png" alt="Logo UDH" class="logo-udh" />
         </div>
-        <hr class="linea-separadora" />
-        <p class="carta-fecha">Huánuco, ${new Date().toLocaleDateString('es-PE')}</p>
-        <h1 class="titulo-documento">APROBACION DE ACTIVIDADES SERVICIO SOCIAL</h1>
-        <p class="parrafo-cartasss">De mi consideración:</p>
-        <p class="parrafo-cartas">
-          Reciba un cordial saludo, por medio de la presente se deja constancia que el estudiante <strong>${nombreEstudiante}</strong>,
-          del programa académico de <strong>${programa}</strong>, perteneciente a la facultad de <strong>${facultad}</strong>,
-           ha culminado satisfactoriamente sus actividades del servicio social denominado"<strong>${labor}</strong>".
-        </p>
-        <p class="parrafo-carta">Se extiende la presente a solicitud del interesado(a), para los fines que estime convenientes.</p>
-        <p class="parrafo-cartass">Sin otro particular, me despido con las muestras de mi especial consideración y estima.</p>
-        <div class="bloque-firma">
-          <p class="firma-etiqueta">Atentamente,</p>
-          <img src="${firmaDocente}" style="width:150px;margin-top:90px;margin-bottom: -15px;" />
-          <p class="firma-docente"><em>${localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE'}</em></p>
+        <div class="separador-vertical"></div>
+        <div class="facultad-container">
+          <p class="texto-facultad">
+            FACULTAD DE ${facultad.toUpperCase() || '--------'}
+          </p>
+        </div>
+        <div class="separador-vertical"></div>
+        <div class="programa-container">
+          <p class="texto-programa">
+            P. A. DE ${programa.toUpperCase() || '--------'}
+          </p>
         </div>
       </div>
-    </body>
-  </html>
+
+      <hr class="linea-separadora" />
+
+      <p class="carta-fecha">Huánuco, ${new Date().toLocaleDateString('es-PE')}</p>
+      <h1 class="titulo-documento">APROBACIÓN DE ACTIVIDADES SERVICIO SOCIAL</h1>
+
+      <p class="parrafo-cartasss">De mi consideración:</p>
+
+      <p class="parrafo-cartas">
+        Reciba un cordial saludo, por medio de la presente se deja constancia que el estudiante
+        <strong>${nombreEstudiante}</strong>, del programa académico de
+        <strong>${programa}</strong>, perteneciente a la facultad de
+        <strong>${facultad}</strong>, ha culminado satisfactoriamente sus actividades
+        del servicio social denominado "<strong>${labor}</strong>".
+      </p>
+
+      <p class="parrafo-carta">
+        Se extiende la presente a solicitud del interesado(a), para los fines que estime convenientes.
+      </p>
+
+      <p class="parrafo-cartass">
+        Sin otro particular, me despido con las muestras de mi especial consideración y estima.
+      </p>
+
+      <div class="bloque-firma">
+        <p class="firma-etiqueta">Atentamente,</p>
+        <img src="${firmaDocente}" style="width:150px;margin-top:90px;margin-bottom:-15px;" />
+        <p class="firma-docente">
+          <em>${localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE'}</em>
+        </p>
+      </div>
+
+      <!-- QR PARA INTEGRANTE -->
+      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 20px; padding-left: 30px;">
+        <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
+        <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+          <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
+          <strong>URL de Verificación:</strong><br/>
+          ${urlVerificacion}
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
 `;
 
 const toggleSidebar = () => {
@@ -152,109 +187,157 @@ const toggleSidebar = () => {
     return !prev;
   });
 };
-const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
-  try {
-     if (nuevoEstado === 'rechazada') {
-      const result = await confirmarRechazoSolicitudTermino();
-      if (!result.isConfirmed) return; 
-    }
-    await axios.patch(`/api/trabajo-social/${trabajoId}/respuesta-carta-termino`, {
-      solicitud_termino: nuevoEstado
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
 
-    setTrabajosSociales(prev =>
-      prev.map(t => t.id === trabajoId ? { ...t, solicitud_termino: nuevoEstado } : t)
+
+const actualizarSolicitud = async (trabajoId, nuevoEstado, plan) => {
+  if (isAprobando) return;
+
+  try {
+    if (nuevoEstado === "rechazada") {
+      const result = await confirmarRechazoSolicitudTermino();
+      if (!result.isConfirmed) return;
+    }
+
+    if (nuevoEstado === "aprobada") {
+      setIsAprobando(true);
+      setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Iniciando aprobación..." });
+
+      await new Promise((r) => setTimeout(r, 50));
+    }
+
+    await axios.patch(
+      `/api/trabajo-social/${trabajoId}/respuesta-carta-termino`,
+      { solicitud_termino: nuevoEstado },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Solicitud actualizada',
-      text: `La solicitud fue ${nuevoEstado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente.`
-    });
+    setTrabajosSociales((prev) =>
+      prev.map((t) => (t.id === trabajoId ? { ...t, solicitud_termino: nuevoEstado } : t))
+    );
 
-    if (nuevoEstado === 'aprobada') {
-      if (plan.tipo_servicio_social === 'grupal') {
+    if (nuevoEstado === "aprobada") {
+      if (plan.tipo_servicio_social === "grupal") {
+        setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Obteniendo integrantes..." });
 
         const { data: integrantes } = await axios.get(`/api/integrantes/${plan.id}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         let datosEnriquecidos;
         try {
+          setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Conectando con servidor UDH..." });
+
           const response = await axios.get(
             `${process.env.REACT_APP_API_URL}/api/integrantes/${plan.id}/enriquecido`,
-            {
-              headers: { Authorization: `Bearer ${token}` }
-            }
+            { headers: { Authorization: `Bearer ${token}` } }
           );
           datosEnriquecidos = response.data;
         } catch (error) {
-          console.error('Error al conectar con API UDH:', error);
+          console.error("Error al conectar con API UDH:", error);
           await Swal.fire({
-            icon: 'error',
-            title: 'Servidor UDH inalcanzable',
-            text: 'La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.',
+            icon: "error",
+            title: "Servidor UDH inalcanzable",
+            text: "La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.",
           });
           return;
         }
 
         if (!Array.isArray(datosEnriquecidos) || datosEnriquecidos.length === 0) {
           await Swal.fire({
-            icon: 'warning',
-            title: 'Servidor UDH no respondió',
-            text: 'No se pudieron obtener los datos de los integrantes. Intenta más tarde.',
+            icon: "warning",
+            title: "Servidor UDH no respondió",
+            text: "No se pudieron obtener los datos de los integrantes. Intenta más tarde.",
           });
           return;
         }
-        await generarYSubirCartaTermino(plan, firmaDocente);
-        for (const integrante of integrantes) {
-          if (integrante.usuario_id === plan.usuario_id) continue;
 
-          const codigo = integrante.correo_institucional.split('@')[0];
-          const info = datosEnriquecidos.find(est => est.codigo_universitario === codigo);
-          if (!info) {
-            console.warn(`⚠️ No se encontró info enriquecida para el código: ${codigo}`);
-            continue;
-          }
+        setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Generando carta del estudiante principal..." });
+        await generarYSubirCartaTermino(plan, firmaDocente);
+
+        const integrantesFiltrados = integrantes.filter((i) => i.usuario_id !== plan.usuario_id);
+        const total = integrantesFiltrados.length;
+        let contador = 0;
+
+        for (const integrante of integrantesFiltrados) {
+          contador++;
+
+          const codigo = integrante.correo_institucional.split("@")[0];
+          const info = datosEnriquecidos.find((est) => est.codigo_universitario === codigo);
+
+          setProgresoAprobacion({
+            actual: contador,
+            total,
+            mensaje: `Generando carta de integrante ${contador}/${total}...`,
+          });
+
+          if (!info) continue;
 
           const nombreEstudiante = info.nombre_completo;
+          const urlVerificacion = `${process.env.REACT_APP_API_URL}/api/trabajo-social/documento-termino/${plan.id}?codigo=${codigo}`;
+          const qrBase64 = await generarQRBase64(urlVerificacion);
 
           const html = await generarHTML(
             nombreEstudiante,
             info.programa,
             info.facultad,
-            plan.LaboresSociale?.nombre_labores || '--------',
-            firmaDocente
+            plan.LaboresSociale?.nombre_labores || "--------",
+            firmaDocente,
+            qrBase64,
+            urlVerificacion
           );
-          const blob = await generarPDFBlobTermino(html, `Carta_Termino_${nombreEstudiante}.pdf`);
-          const formData = new FormData();
-          formData.append('archivo', blob, `Carta_Termino_${nombreEstudiante}.pdf`);
-          formData.append('trabajo_id', plan.id);
-          formData.append('codigo_universitario', codigo);
 
-          await axios.post('/api/cartas-termino', formData, {
+          const blob = await generarPDFBlobTermino(html, `Carta_Termino_${nombreEstudiante}.pdf`);
+
+          const formData = new FormData();
+          formData.append("archivo", blob, `Carta_Termino_${nombreEstudiante}.pdf`);
+          formData.append("trabajo_id", plan.id);
+          formData.append("codigo_universitario", codigo);
+
+          await axios.post("/api/cartas-termino", formData, {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           });
         }
+
+        setProgresoAprobacion({ actual: total, total, mensaje: "Proceso finalizado." });
       } else {
+        setProgresoAprobacion({ actual: 0, total: 1, mensaje: "Generando carta..." });
         await generarYSubirCartaTermino(plan, firmaDocente);
+        setProgresoAprobacion({ actual: 1, total: 1, mensaje: "Proceso finalizado." });
       }
     }
+    if (nuevoEstado === "aprobada") {
+      setIsAprobando(false);
+      setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
+      await new Promise((r) => setTimeout(r, 50)); 
+    }
+    await Swal.fire({
+    icon: "success",
+    title: "Solicitud actualizada",
+    text: `La solicitud fue ${nuevoEstado === "aprobada" ? "aprobada" : "rechazada"} correctamente.`,
+    timer: 2500,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
 
   } catch (error) {
-    console.error('Error al actualizar solicitud:', error);
+    console.error("Error al actualizar solicitud:", error);
+    setIsAprobando(false);
+    setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
+
     Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudo actualizar la solicitud de término.'
+      icon: "error",
+      title: "Error",
+      text: "No se pudo actualizar la solicitud de término.",
     });
   }
 };
+
+
 
   useEffect(() => {
     const usuarioId = localStorage.getItem('id_usuario');
@@ -428,7 +511,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
     <hr class="linea-separadora" />
 
     <p class="carta-fecha">Huánuco, ${new Date().toLocaleDateString('es-PE')}</p>
-    <h1 class="titulo-documento">APROBACION DE ACTIVIDADES SERVICIO SOCIAL</h1>
+    <h1 class="titulo-documento">APROBACIÓN DE ACTIVIDADES SERVICIO SOCIAL</h1>
     <p class="parrafo-cartasss">De mi consideración:</p>
     <p class="parrafo-cartas">
       Reciba un cordial saludo, por medio de la presente se deja constancia que el estudiante <strong>${plan.Estudiante?.nombre_estudiante || '--------'}</strong>,
@@ -444,7 +527,7 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
       <p class="firma-docente"><em>${nombreDocente}</em></p>
     </div>
   </div>
-   <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 40px; padding-left: 30px;">
+   <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: 20px; padding-left: 30px;">
           <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
           <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
             <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
@@ -537,22 +620,24 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
                   {plan.solicitud_termino === 'solicitada' ? (
                   <div className="contenedor-botones-termino">
                     <button
-                      className="btn-aceptar-termino"
-                      onClick={async () => {
-                        const result = await confirmarAceptarSolicitudTermino();
-                        if (result.isConfirmed) {
-                          actualizarSolicitud(plan.id, "aprobada", plan);
-                        }
-                      }}
-                    >
-                      Aceptar
-                    </button>
-                    <button
-                      className="btn-rechazar-termino"
-                      onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
-                    >
-                      Rechazar
-                    </button>
+                    className="btn-aceptar-termino"
+                    disabled={isAprobando}
+                    onClick={async () => {
+                      const result = await confirmarAceptarSolicitudTermino();
+                      if (result.isConfirmed) {
+                        actualizarSolicitud(plan.id, "aprobada", plan);
+                      }
+                    }}
+                  >
+                    {isAprobando ? 'Procesando...' : 'Aceptar'}
+                  </button>
+                   <button
+                    className="btn-rechazar-termino"
+                    disabled={isAprobando}
+                    onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
+                  >
+                    Rechazar
+                  </button>
                   </div>
           ) : (
             <span className="estado-termino">
@@ -577,6 +662,8 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
           </div>
         </div>
       </main>
+
+
 {modalGrupoVisible && (
   <div className="modal-grupo-overlay">
     <div className="modal-grupo-content">
@@ -652,8 +739,17 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
                     <button className="btn-estado-observado" disabled>Observado</button>
                   ) : item.evidencia ? (
                     <div className="estado-acciones">
-                      <button className="btn-aprobar-estado" onClick={() => handleAprobar(item.id)}>Aprobar</button>
-                      <button className="btn-observar-estado" onClick={() => handleAbrirObservacion(item.id)}>Observar</button>
+                      <button className="btn-aprobar-estado" disabled={isAprobando} onClick={() => handleAprobar(item.id)}>
+                        Aprobar
+                      </button>
+                      <button
+                        className="btn-observar-estado"
+                        disabled={isAprobando}
+                        onClick={() => handleAbrirObservacion(item.id)}
+                      >
+                        Observar
+                      </button>
+
                     </div>
                   ) : (
                     <span style={{ fontSize: '12px', color: '#aaa' }}>Sin evidencia</span>
@@ -715,66 +811,36 @@ const generarYSubirCartaTermino = async (plan, firmaDocente) => {
   </div>
 )}
 
-{planPDF && (
-  <div id="carta-termino-pdf" style={{ display: 'none' }}>
-    <div className="carta-pdf">
-      {/* ENCABEZADO DINÁMICO */}
-      <div className="encabezado-udh">
-  <div className="logo-container">
-    <img src="/images/logonuevo.png" alt="Logo UDH" className="logo-udh" />
-  </div>
+{isAprobando && (
+  <div className="overlay-loading">
+    <div className="loading-box">
+      <div className="spinner" />
 
-  <div className="separador-vertical" />
+      <p className="loading-title">Generando documentos...</p>
+      <p className="loading-subtitle">{progresoAprobacion.mensaje}</p>
 
-  <div className="facultad-container">
-    <p className="texto-facultad">
-      FACULTAD DE: {planPDF.Facultad?.nombre_facultad?.toUpperCase() || 'NO DISPONIBLE'}
-    </p>
-  </div>
+      {progresoAprobacion.total > 0 && (
+        <>
+          <div className="loading-progress">
+            <div
+              className="loading-progress__bar"
+              style={{
+                width: `${Math.round((progresoAprobacion.actual / progresoAprobacion.total) * 100)}%`,
+              }}
+            />
+          </div>
 
-  <div className="separador-vertical" />
+          <p className="loading-subtitle">
+            Progreso: {progresoAprobacion.actual}/{progresoAprobacion.total}
+          </p>
+        </>
+      )}
 
-  <div className="programa-container">
-    <p className="texto-programa">
-      P. A. DE {planPDF.ProgramasAcademico?.nombre_programa?.toUpperCase() || 'NO DISPONIBLE'}
-    </p>
-  </div>
-</div>
-      <hr className="linea-separadora" />
-
-      {/* CUERPO DE LA CARTA */}
-      <p className="fecha-derecha">Huánuco, {fechaPDF}</p>
-      <h3 className="titulo-documento">CARTA DE TÉRMINO DEL SERVICIO SOCIAL</h3>
-      
-      <p className="parrafo-carta">
-        De mi consideración:
-      </p>
-      <p className="parrafo-carta">
-        Reciba un cordial saludo, por medio de la presente se deja constancia que el estudiante <strong>{planPDF.Estudiante?.nombre_estudiante || '--------'}</strong>, 
-        del programa académico de <strong>{planPDF.ProgramasAcademico?.nombre_programa || '--------'}</strong>, perteneciente a la facultad de 
-        <strong> {planPDF.Facultad?.nombre_facultad || '--------'}</strong>, ha culminado satisfactoriamente su servicio social denominado 
-        "<strong>{planPDF.LaboresSociale?.nombre_labores || '--------'}</strong>".
-      </p>
-      <p className="parrafo-carta">
-  Se extiende la presente a solicitud del interesado(a), para los fines que estime convenientes.
-</p>
-      <p className="parrafo-cartass">
-  Sin otro particular, me despido con las muestras de mi especial consideración y estima.
-</p>
-      <div className="bloque-firma">
-  <p className="firma-etiqueta">Atentamente,</p>
-  <img
-    src={firmaDocente}
-    alt="Firma del docente"
-    style={{ width: '150px', marginTop: '80px', marginBottom: '5px' }}
-  />
-  <p className="firma-docente">
-    <em>{localStorage.getItem('nombre_usuario') || 'Docente responsable'}</em>
-  </p>
-</div>
+      <p className="loading-hint">No cierres esta ventana hasta que termine.</p>
     </div>
   </div>
 )}
+
     </>
   );
 }

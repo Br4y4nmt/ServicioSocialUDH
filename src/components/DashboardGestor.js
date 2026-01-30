@@ -120,7 +120,7 @@ function DashboardGestor() {
   const [lineaLabor, setLineaLabor] = useState('');
   const [modalEstudianteVisible, setModalEstudianteVisible] = useState(false);
   const [codigoUniversitario, setCodigoUniversitario] = useState('');
-  const [activeSection, setActiveSection] = useState('facultades');
+  const [activeSection, setActiveSection] = useState('dasborasd');
   const [facultades, setFacultades] = useState([]);
   const [nuevaFacultad, setNuevaFacultad] = useState('');
   const [lineas, setLineas] = useState([]);

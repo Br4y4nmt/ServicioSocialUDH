@@ -78,10 +78,6 @@ body, html, #root {
   border-right: 3px solid #39B49E;
   border-bottom-right-radius: 8px;
 }
-  .login-logo {
-    width: 180px;
-    margin-bottom: 20px;
-  }
   
   .login-title {
     margin-bottom: 10px;
