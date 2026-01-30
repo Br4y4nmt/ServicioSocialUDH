@@ -166,18 +166,15 @@ const generarHTML = async (
           <em>${localStorage.getItem('nombre_usuario') || 'DOCENTE RESPONSABLE'}</em>
         </p>
       </div>
-
-      <!-- QR PARA INTEGRANTE -->
-      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: -10px; padding-left: 0px;">
-        <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
-        <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
-          <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
-          <strong>URL de Verificación:</strong><br/>
-          ${urlVerificacion}
-        </div>
-      </div>
-
     </div>
+    <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: -10px; padding-left: 0px;">
+          <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
+          <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+            <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
+            <strong>URL de Verificación:</strong><br/>
+            ${urlVerificacion}
+          </div>
+        </div>
   </body>
 </html>
 `;
