@@ -1081,3 +1081,20 @@ export const confirmarEliminarEleccion = () =>
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
   });
+
+
+export const confirmarCambioRegistro = (registroHabilitadoActual) => {
+  const accion = registroHabilitadoActual ? "deshabilitar" : "habilitar";
+
+  return Swal.fire({
+    title: "¿Confirmar acción?",
+    text: `¿Estás seguro que deseas ${accion} el registro de estudiantes?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, confirmar",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    confirmButtonColor: "#2B77C0",
+    cancelButtonColor: "#ef4444",
+  });
+};

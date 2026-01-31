@@ -23,9 +23,14 @@ import {
   Cell,
   Legend,
 } from "recharts";
-
+import { Switch, Chip, Divider } from "@mui/material";
 import axios from "axios";
 import { useUser } from "../UserContext";  
+import {
+  confirmarCambioRegistro,
+  toastSuccess,
+  toastError,
+} from "../hooks/alerts/alertas";
 
 function Dasborasd() {
   const { user } = useUser();           
@@ -39,6 +44,8 @@ function Dasborasd() {
   const [programaSeleccionado, setProgramaSeleccionado] = useState(null);
   const [topProgramas, setTopProgramas] = useState([]);
   const [topLineasAccion, setTopLineasAccion] = useState([]);
+  const [registroHabilitado, setRegistroHabilitado] = useState(true);
+  const [loadingRegistro, setLoadingRegistro] = useState(false);
   const totalEstudiantesProgramas = porPrograma.reduce(
   (sum, item) => sum + (item.total || 0),
   0
@@ -289,7 +296,55 @@ useEffect(() => {
 const coloresPrograma = ["#06b6d4", "#14b8a6"];
 
 
+const fetchEstadoRegistro = async () => {
+  try {
+    if (!token) return;
 
+    const res = await axios.get("/api/system-config/registro", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setRegistroHabilitado(!!res.data.registro_habilitado);
+  } catch (error) {
+    console.error("Error obteniendo estado de registro:", error);
+  }
+};
+
+const toggleRegistro = async () => {
+  if (!token) return;
+
+  const result = await confirmarCambioRegistro(registroHabilitado);
+  if (!result.isConfirmed) return;
+
+  try {
+    setLoadingRegistro(true);
+
+    const nuevoValor = registroHabilitado ? 0 : 1;
+
+    const res = await axios.put(
+      "/api/system-config/registro",
+      { registro_habilitado: nuevoValor },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setRegistroHabilitado(!!res.data.registro_habilitado);
+
+    toastSuccess(
+      nuevoValor === 1
+        ? "Registro habilitado correctamente"
+        : "Registro deshabilitado correctamente"
+    );
+  } catch (error) {
+    console.error("Error actualizando estado de registro:", error);
+
+    toastError("No se pudo actualizar el estado del registro");
+  } finally {
+    setLoadingRegistro(false);
+  }
+};
+useEffect(() => {
+  fetchEstadoRegistro();
+}, [token]);
 return (
   <Box sx={{ p: 3 }}>
     <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -645,8 +700,8 @@ return (
     </div>
   </Paper>
 </Grid>
+</Grid>
 
-    </Grid>
     <Paper elevation={3} className="table-card">
   <div className="table-card-header">
     <Typography
@@ -681,6 +736,67 @@ return (
 </div>
 
 </Paper>
+<Grid container spacing={2} sx={{ mt: 2 }}>
+<Grid item xs={12} sx={{ width: "100%" }}>
+  <Paper elevation={3} className="config-card">
+    <div className="config-card-top">
+      <div className="config-card-titlewrap">
+        <div className="config-card-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3a4 4 0 100 8 4 4 0 000-8z" />
+            <path d="M4.5 21a7.5 7.5 0 0115 0" />
+          </svg>
+        </div>
+
+        <div>
+          <Typography className="config-card-title">
+            Registro de estudiantes
+          </Typography>
+          <Typography className="config-card-subtitle">
+            Controla si los alumnos pueden crear cuenta en el sistema
+          </Typography>
+        </div>
+      </div>
+
+      <div className="config-card-actions">
+        <span
+          className={
+            registroHabilitado
+              ? "config-chip chip-on"
+              : "config-chip chip-off"
+          }
+        >
+          {registroHabilitado ? "HABILITADO" : "DESHABILITADO"}
+        </span>
+
+        <Switch
+          checked={registroHabilitado}
+          onChange={toggleRegistro}
+          disabled={loadingRegistro}
+        />
+      </div>
+    </div>
+
+    <div className="config-card-bottom">
+      <span
+        className={
+          registroHabilitado
+            ? "config-status status-on"
+            : "config-status status-off"
+        }
+      >
+        {registroHabilitado
+          ? "Actualmente el registro está activo."
+          : "Registro desactivado: nadie podrá registrarse."}
+      </span>
+
+      {loadingRegistro && (
+        <span className="config-loading">Actualizando…</span>
+      )}
+    </div>
+  </Paper>
+</Grid>
+</Grid>
   </Box>
 );
 
