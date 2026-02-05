@@ -9,6 +9,7 @@ import {
   mostrarInfoSinCartasGrupo,
   mostrarErrorCargarCartasGrupo,
   confirmarEnviarSolicitud,
+  mostrarAlertaFaltaIntegrantesGrupo,
   confirmarEliminarEleccion
 } from "../hooks/alerts/alertas";
 
@@ -37,6 +38,7 @@ function DesignacionDocente({
   cartaAceptacionPdf,
   lineaSeleccionada,
   setLineaSeleccionada,
+  correosGrupo, 
   lineas
 }) {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -48,7 +50,7 @@ function DesignacionDocente({
   const [cartasMiembros, setCartasMiembros] = useState([]);
 
 const abrirModalMotivoRechazo = async () => {
-  if (!trabajoId || !token) return; // 
+  if (!trabajoId || !token) return; 
 
   try {
     const resp = await fetch(
@@ -76,6 +78,23 @@ const abrirModalMotivoRechazo = async () => {
 
   setModalMotivoVisible(true);
 };
+
+const validarGrupoAntesDeEnviar = async () => {
+  if (tipoServicio !== "grupal") return true;
+
+  const correosValidos = (correosGrupo || [])
+    .map((c) => String(c || "").trim().toLowerCase())
+    .filter((c) => /^\d{10}@udh\.edu\.pe$/.test(c));
+
+  if (correosValidos.length < 1) {
+    await mostrarAlertaFaltaIntegrantesGrupo();
+    return false;
+  }
+
+  return true;
+};
+
+
 
 const eliminarEleccion = async () => {
   if (!trabajoId || !token) return;
@@ -193,14 +212,15 @@ const formularioCompleto = () => {
       Tipo de Servicio Social
     </label>
     {tipoServicio === 'grupal' && (
-      <VerBotonInline
-        onClick={() => {
-          if (solicitudEnviada) obtenerIntegrantesDelGrupo();
-          else setModalGrupoVisible(true);
-        }}
-        label="Ver"
-      />
-    )}
+    <VerBotonInline
+      onClick={async () => {
+        setModalGrupoVisible(true);
+        await obtenerIntegrantesDelGrupo();
+      }}
+      label="Ver"
+    />
+
+      )}
   </div>
  <select
     id="tipo-servicio"              
@@ -337,13 +357,16 @@ const formularioCompleto = () => {
         <button 
           className="btn-solicitar-aprobaciones"
           onClick={async () => {
-            const result = await confirmarEnviarSolicitud();
-            if (result.isConfirmed) {
-              setLoadingSolicitud(true);
-              Promise.resolve(handleSolicitarAprobacion())
-                .finally(() => setLoadingSolicitud(false));
-            }
-          }}
+          const okGrupo = await validarGrupoAntesDeEnviar();
+          if (!okGrupo) return;
+
+          const confirmado = await confirmarEnviarSolicitud();
+          if (!confirmado.isConfirmed) return;
+
+          setLoadingSolicitud(true);
+          Promise.resolve(handleSolicitarAprobacion())
+            .finally(() => setLoadingSolicitud(false));
+        }}
           disabled={loadingSolicitud} 
         >
           {loadingSolicitud ? (

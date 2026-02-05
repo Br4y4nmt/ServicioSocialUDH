@@ -60,13 +60,13 @@ function ProgramaNuevoModal({
 
         <div className="programas-modal-actions">
           <button
-            className="programas-btn cancelar"
+            className="docentes-btn cancelar"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="programas-btn guardar"
+            className="docentes-btn guardar"
             onClick={onGuardar}
           >
             Guardar

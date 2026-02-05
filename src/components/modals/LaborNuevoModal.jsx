@@ -40,14 +40,14 @@ function LaborNuevoModal({
 
         <div className="labores-modal-actions">
           <button
-            className="labores-btn cancelar"
+            className="docentes-btn cancelar"
             type="button"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="labores-btn guardar"
+            className="docentes-btn guardar"
             type="button"
             onClick={onGuardar}
           >

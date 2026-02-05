@@ -22,7 +22,6 @@ import GrupoModalAlumno from "./modals/GrupoModalAlumno";
 import EvidenciaModal from "./modals/EvidenciaModal";
 import ActividadModalAlumno from "./modals/ActividadModalAlumno";
 import {
-  mostrarErrorObtenerIntegrantesGrupo,
   mostrarErrorSesionInvalida,
   mostrarErrorArchivoNoSeleccionado,
   mostrarErrorEnviarProyecto,
@@ -32,8 +31,9 @@ import {
   mostrarAlertaErrorEnviarSolicitud,
   mostrarAlertaSolicitudEnviada,
   mostrarErrorSinIdUsuario,
+  mostrarAlertaFaltaIntegrantesGrupo,
   mostrarAlertaCompletarPerfilPrimeraVez,
-   mostrarExitoSolicitudCartaTermino,
+  mostrarExitoSolicitudCartaTermino,
   mostrarErrorSolicitudCartaTermino
 } from "../hooks/alerts/alertas";
 
@@ -104,6 +104,8 @@ function DashboardAlumno() {
   const [correosGrupo, setCorreosGrupo] = useState(['']);
   const [periodoEstimado, setPeriodoEstimado] = useState('');
   const [introduccion, setIntroduccion] = useState('');
+  const [loadingGrupo, setLoadingGrupo] = useState(false);
+  const [mensajeGrupo, setMensajeGrupo] = useState("");
   const [integrantesGrupoAlumno, setIntegrantesGrupoAlumno] = useState([]);
   const [nombreEntidad, setNombreEntidad] = useState('');
   const [misionVision, setMisionVision] = useState('');
@@ -151,30 +153,51 @@ const handleFileChange = (e, tipo) => {
 };
 useWelcomeToast();
 
-
 const obtenerIntegrantesDelGrupo = async () => {
   const usuario_id = user?.id;
   const token = user?.token;
 
-  if (!usuario_id || !token) return;
+  if (!usuario_id || !token) {
+    const data = { integrantes: [], message: "Sesión inválida." };
+    setIntegrantesGrupoAlumno([]);
+    setMensajeGrupo(data.message);
+    return data;
+  }
+
+  setLoadingGrupo(true);
+  setMensajeGrupo("");
 
   try {
     const response = await axios.get(
       `/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    setIntegrantesGrupoAlumno(response.data);
-    setModalGrupoVisible(true);
+    const data = response.data ?? { integrantes: [], message: null };
+
+    const integrantes = Array.isArray(data.integrantes) ? data.integrantes : [];
+    setIntegrantesGrupoAlumno(integrantes);
+    setMensajeGrupo(data.message || (integrantes.length === 0 ? "No hay integrantes registrados." : ""));
+
+    return { integrantes, message: data.message };
   } catch (error) {
     console.error("Error al obtener integrantes del grupo:", error);
+    const msg =
+      error?.response?.data?.message ||
+      "No se pudo obtener la información del grupo.";
 
-    const mensaje = error.response?.data?.message;
-    mostrarErrorObtenerIntegrantesGrupo(mensaje);
+    setIntegrantesGrupoAlumno([]);
+    setMensajeGrupo(msg);
+
+    return { integrantes: [], message: msg };
+  } finally {
+    setLoadingGrupo(false);
   }
 };
+
+
+
+
 
 const [activeSection, setActiveSection] = useState(() => {
   return localStorage.getItem('activeSectionAlumno') || 'designacion';
@@ -600,12 +623,20 @@ const handleSolicitarAprobacion = async () => {
   }
 
   try {
-    const correosLimpios =
+    const correosValidos =
       tipoServicio === "grupal"
-        ? correosGrupo
+        ? (correosGrupo || [])
             .map((c) => String(c || "").trim().toLowerCase())
-            .filter(Boolean)
+            .filter((c) => /^\d{10}@udh\.edu\.pe$/.test(c))
         : [];
+
+    if (tipoServicio === "grupal" && correosValidos.length < 1) {
+      await mostrarAlertaFaltaIntegrantesGrupo();
+      return;
+    }
+
+    // ✅ Quita duplicados por si acaso
+    const correosUnicos = [...new Set(correosValidos)];
 
     const datos = {
       usuario_id: Number(usuario_id),
@@ -615,7 +646,7 @@ const handleSolicitarAprobacion = async () => {
       labor_social_id: Number(laborSeleccionada),
       tipo_servicio_social: tipoServicio,
       linea_accion_id: Number(lineaSeleccionada),
-      correos: correosLimpios,
+      correos: correosUnicos,
     };
 
     await axios.post("/api/trabajo-social", datos, {
@@ -652,6 +683,7 @@ const handleSolicitarAprobacion = async () => {
     );
   }
 };
+
 
 
 const mergePDFs = async (mainPdfBlob, anexos) => {
@@ -1367,6 +1399,8 @@ useEffect(() => {
     programas={programas}
     programaSeleccionado={programaSeleccionado}
     docentes={docentes}
+    correosGrupo={correosGrupo}           
+    setCorreosGrupo={setCorreosGrupo}     
     trabajoId={planSeleccionado?.id}
     docenteSeleccionado={docenteSeleccionado}
     setDocenteSeleccionado={setDocenteSeleccionado}
@@ -1446,6 +1480,8 @@ useEffect(() => {
   integrantesGrupoAlumno={integrantesGrupoAlumno}
   correosGrupo={correosGrupo}
   setCorreosGrupo={setCorreosGrupo}
+  loadingGrupo={loadingGrupo}     
+  mensajeGrupo={mensajeGrupo}     
   onClose={() => setModalGrupoVisible(false)}
 />
 

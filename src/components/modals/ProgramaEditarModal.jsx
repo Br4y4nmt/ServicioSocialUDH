@@ -19,7 +19,6 @@ function ProgramaEditarModal({
       <div className="programas-modal-content">
         <h3>Editar Programa Académico</h3>
 
-        {/* Nombre del programa */}
         <input
           type="text"
           className="programas-modal-input"
@@ -29,7 +28,6 @@ function ProgramaEditarModal({
           autoFocus
         />
 
-        {/* Facultad */}
         <select
           className="programas-modal-select"
           value={facultad}
@@ -43,7 +41,6 @@ function ProgramaEditarModal({
           ))}
         </select>
 
-        {/* Email */}
         <input
           type="email"
           className="programas-modal-input"
@@ -52,12 +49,11 @@ function ProgramaEditarModal({
           onChange={(e) => onChangeEmail(e.target.value)}
         />
 
-        {/* Botones */}
         <div className="programas-modal-actions">
-          <button className="programas-btn cancelar" onClick={onClose}>
+          <button className="docentes-btn cancelar" onClick={onClose}>
             Cancelar
           </button>
-          <button className="programas-btn guardar" onClick={onGuardar}>
+          <button className="docentes-btn guardar" onClick={onGuardar}>
             Guardar
           </button>
         </div>

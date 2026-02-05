@@ -22,13 +22,13 @@ function FacultadEditarModal({
         />
         <div className="facultades-modal-actions">
           <button
-            className="facultades-btn cancelar"
+            className="docentes-btn cancelar"
             onClick={onCancelar}
           >
             Cancelar
           </button>
           <button
-            className="facultades-btn guardar"
+            className="docentes-btn guardar"
             onClick={onGuardar}
           >
             Guardar

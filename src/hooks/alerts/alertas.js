@@ -1098,3 +1098,13 @@ export const confirmarCambioRegistro = (registroHabilitadoActual) => {
     cancelButtonColor: "#ef4444",
   });
 };
+
+
+export const mostrarAlertaFaltaIntegrantesGrupo = () =>
+  Swal.fire({
+    icon: "warning",
+    title: "Grupo incompleto",
+    text: "Si eliges la opción grupal, debes registrar al menos 1 integrante en tu grupo.",
+    confirmButtonText: "Entendido",
+    confirmButtonColor: "#f59e0b",
+  });
