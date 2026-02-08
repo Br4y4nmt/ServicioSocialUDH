@@ -25,7 +25,7 @@ const handleRegister = async (e) => {
     ? parseInt(codigo.substring(1, 5), 10)
     : parseInt(codigo.substring(0, 4), 10);
 
-  if (isNaN(anio) || anio < 2021) {
+  if (isNaN(anio) || anio < 2019) {
     await mostrarAlertaCodigoNoPermitido();
     return;
   }

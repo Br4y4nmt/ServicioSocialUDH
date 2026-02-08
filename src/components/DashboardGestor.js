@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import SearchInput from './SearchInput';
+import { buscarSinTildes } from '../utils/textUtils';
 import SidebarGestor from './SidebarGestor';
 import Header from '../components/Header';
 import ImpersonateLogin from './ImpersonateLogin';
@@ -103,8 +105,6 @@ function DashboardGestor() {
   const [busquedaLabor, setBusquedaLabor] = useState('');
   const [modalEditarDocenteVisible, setModalEditarDocenteVisible] = useState(false);
   const [facultadDocenteEditada, setFacultadDocenteEditada] = useState('');
-  const [busquedaPrograma, setBusquedaPrograma] = useState('');
-  const [busquedaFacultad, setBusquedaFacultad] = useState('');
   const [modalEditarProgramaVisible, setModalEditarProgramaVisible] = useState(false);
   const [idEditandoPrograma, setIdEditandoPrograma] = useState(null);
   const [facultadEditada, setFacultadEditada] = useState('');
@@ -869,19 +869,6 @@ return (
       Agregar
     </button>
   </div>
-
-  <div className="facultades-header-right">
-    <label className="facultades-search-label">
-      Buscar:
-      <input
-          type="text"
-          className="facultades-search-input"
-          placeholder=""
-          value={busquedaFacultad}
-          onChange={(e) => setBusquedaFacultad(e.target.value)}
-        />
-    </label>
-  </div>
 </div>
       <div className="facultades-table-wrapper">
         <table className="facultades-table">
@@ -895,9 +882,6 @@ return (
           </thead>
           <tbody>
           {facultades
-          .filter(f =>
-              (f.nombre_facultad || '').toLowerCase().includes(busquedaFacultad.toLowerCase())
-            )
           .map((f, index) => (
             <tr key={f.id_facultad}>
               <td>{index + 1}</td>
@@ -978,18 +962,6 @@ return (
       Agregar
     </button>
   </div>
-
-  <div className="programas-header-right">
-    <label className="programas-search-label">
-      Buscar:
-      <input
-        type="text"
-        className="programas-search-input"
-        value={busquedaPrograma}
-        onChange={(e) => setBusquedaPrograma(e.target.value)}
-      />
-    </label>
-  </div>
 </div>
       <div className="programas-table-wrapper">
         <table className="programas-table">
@@ -1004,9 +976,6 @@ return (
         </thead>
         <tbody>
           {programas
-            .filter((prog) =>
-                (prog.nombre_programa || '').toLowerCase().includes(busquedaPrograma.toLowerCase())
-              )
               .map((prog, index) => (
             <tr key={prog.id_programa}>
                 <td>{index + 1}</td>
@@ -1108,16 +1077,13 @@ return (
         </div>
 
         <div className="docentes-header-right">
-          <label className="docentes-search-label">
-            Buscar:
-            <input
-              type="text"
-              className="docentes-search-input"
-              placeholder="Nombre del estudiante"
-              value={busquedaSupervisor}
-              onChange={(e) => setBusquedaSupervisor(e.target.value)}
-            />
-          </label>
+          <SearchInput
+            value={busquedaSupervisor}
+            onChange={setBusquedaSupervisor}
+            placeholder="Nombre del estudiante"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
         </div>
 
         <label className="docentes-search-label">
@@ -1154,9 +1120,7 @@ return (
           <tbody>
             {(supervisores || [])
               .filter((sup) =>
-                (sup.estudiante?.nombre_estudiante || '')
-                  .toLowerCase()
-                  .includes((busquedaSupervisor || '').toLowerCase())
+                buscarSinTildes(sup.estudiante?.nombre_estudiante || '', busquedaSupervisor || '')
               )
               .filter((sup) => {
                 if (!programaSupervisor) return true;
@@ -1257,16 +1221,13 @@ return (
           <h2>Informes Finales</h2>
         </div>
         <div className="docentes-header-right">
-          <label className="docentes-search-label">
-            Buscar:
-            <input
-              type="text"
-              className="docentes-search-input"
-              placeholder="Nombre del estudiante"
-              value={busquedaDocente}
-              onChange={(e) => setBusquedaDocente(e.target.value)}
-            />
-          </label>
+          <SearchInput
+            value={busquedaDocente}
+            onChange={setBusquedaDocente}
+            placeholder="Nombre del estudiante"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
         </div>
         <div className="docentes-header-right">
       <label className="docentes-search-label">
@@ -1312,7 +1273,7 @@ return (
               : true;  
           })
           .filter((inf) =>
-            (inf.Estudiante?.nombre_estudiante || '').toLowerCase().includes(busquedaDocente.toLowerCase())
+            buscarSinTildes(inf.Estudiante?.nombre_estudiante || '', busquedaDocente)
           )
               .map((inf, index) => (
                 <tr key={inf.id}>
@@ -1412,18 +1373,14 @@ return (
       Agregar
     </button>
   </div>
-        
         <div className="docentes-header-right">
-          <label className="docentes-search-label">
-            Buscar:
-            <input
-              type="text"
-              className="docentes-search-input-es"
-              placeholder="Nombre del estudiante o DNI"
-              value={filtroEstudiantes}
-              onChange={(e) => setFiltroEstudiantes(e.target.value)}
-            />
-          </label>
+          <SearchInput
+            value={filtroEstudiantes}
+            onChange={setFiltroEstudiantes}
+            placeholder="Nombre del estudiante o DNI"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
         </div>
 
         <label className="docentes-search-label">
@@ -1459,7 +1416,7 @@ return (
             {estudiantes
               .filter((est) => {
                 const coincideTexto =
-                  est.nombre_estudiante?.toLowerCase().includes(filtroEstudiantes.toLowerCase()) ||
+                  buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
                   est.dni?.includes(filtroEstudiantes);
 
                 const coincidePrograma =
@@ -1580,17 +1537,14 @@ return (
           </button> }
         </div>
         <div className="docentes-header-right">
-    <label className="docentes-search-label">
-      Buscar:
-      <input
-        type="text"
-        className="docentes-search-input"
-        placeholder="Nombre del docente"
-        value={busquedaDocente}
-        onChange={(e) => setBusquedaDocente(e.target.value)}
-      />
-    </label>
-  </div>
+          <SearchInput
+            value={busquedaDocente}
+            onChange={setBusquedaDocente}
+            placeholder="Nombre del docente"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
+        </div>
       </div>
       
       <div className="docentes-table-wrapper">
@@ -1608,7 +1562,7 @@ return (
           <tbody>
           {docentes
           .filter((doc) =>
-            (doc.nombre_docente || '').toLowerCase().includes(busquedaDocente.toLowerCase())
+            buscarSinTildes(doc.nombre_docente || '', busquedaDocente)
           )
          .map((doc, index) => (
           <tr key={doc.id_docente}>
@@ -1774,17 +1728,14 @@ return (
     </button>
   </div>
   <div className="labores-header-right">
-  <label className="labores-search-label">
-    Buscar:
-    <input
-      type="text"
-      className="labores-search-input"
-      placeholder="Nombre de la labor"
+    <SearchInput
       value={busquedaLabor}
-      onChange={(e) => setBusquedaLabor(e.target.value)}
+      onChange={setBusquedaLabor}
+      placeholder="Nombre de la labor"
+      label="Buscar:"
+      className="labores-search-label"
     />
-  </label>
-</div>
+  </div>
 </div>
       <div className="labores-table-wrapper">
         <table className="labores-table">
@@ -1799,8 +1750,7 @@ return (
           <tbody>
           {labores
   .filter((labor) =>
-    (labor.nombre_labores || '').toLowerCase().includes(busquedaLabor.toLowerCase())
-
+    buscarSinTildes(labor.nombre_labores || '', busquedaLabor)
   )
   .map((labor,index) => (
               <tr key={labor.id_labores}>
@@ -1873,16 +1823,13 @@ return (
         </div>
 
         <div className="docentes-header-right">
-          <label className="docentes-search-label">
-            Buscar:
-            <input
-              type="text"
-              className="docentes-search-input-es"
-              placeholder="Nombre del estudiante"
-              value={filtroEstudiantes}
-              onChange={(e) => setFiltroEstudiantes(e.target.value)}
-            />
-          </label>
+          <SearchInput
+            value={filtroEstudiantes}
+            onChange={setFiltroEstudiantes}
+            placeholder="Nombre del estudiante"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
         </div>
       </div>
 
@@ -1900,7 +1847,7 @@ return (
           <tbody>
             {estudiantes
               .filter((est) =>
-                est.nombre_estudiante?.toLowerCase().includes(filtroEstudiantes.toLowerCase())
+                buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes)
               )
               .map((est, index) => (
                 <tr key={est.id_estudiante}>
@@ -1932,16 +1879,13 @@ return (
           <button className="docentes-btn-agregar" onClick={() => setModalLineaVisible(true)}>Agregar</button>
         </div>
         <div className="labores-header-right">
-          <label className="labores-search-label">
-            Buscar:
-            <input
-              type="text"
-              className="labores-search-input"
-              placeholder="Nombre de la línea"
-              value={busquedaLinea}
-              onChange={(e) => setBusquedaLinea(e.target.value)}
-            />
-          </label>
+          <SearchInput
+            value={busquedaLinea}
+            onChange={setBusquedaLinea}
+            placeholder="Nombre de la línea"
+            label="Buscar:"
+            className="labores-search-label"
+          />
         </div>
       </div>
       <div className="labores-table-wrapper">
@@ -1955,7 +1899,7 @@ return (
           </thead>
           <tbody>
             {lineas
-              .filter((l) => (l.nombre_linea || '').toLowerCase().includes(busquedaLinea.toLowerCase()))
+              .filter((l) => buscarSinTildes(l.nombre_linea || '', busquedaLinea))
               .map((l, index) => (
               <tr key={l.id_linea}>
                 <td>{index + 1}</td>

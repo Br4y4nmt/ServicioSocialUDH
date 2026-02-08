@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import SearchInput from './SearchInput';
+import { buscarSinTildes } from '../utils/textUtils';
 import "./DashboardGestor.css";
 import VerBoton from "../hooks/componentes/VerBoton";
 import { useUser } from "../UserContext";
@@ -62,8 +64,7 @@ function CambiosTiempo() {
   }, [token, fetchEstudiantes, fetchProgramas]);
 
   const estudiantesFiltrados = estudiantes.filter((est) => {
-    const texto = filtroEstudiantes.toLowerCase();
-    const coincideTexto = est.nombre_estudiante?.toLowerCase().includes(texto);
+    const coincideTexto = buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes);
     const coincidePrograma =
       programaSeleccionado === "" ||
       est.programa?.nombre_programa === programaSeleccionado;
@@ -191,16 +192,13 @@ function CambiosTiempo() {
           </div>
 
           <div className="docentes-header-right">
-            <label className="docentes-search-label">
-              Buscar:
-              <input
-                type="text"
-                className="docentes-search-input-es"
-                placeholder="Nombre del estudiante"
-                value={filtroEstudiantes}
-                onChange={(e) => setFiltroEstudiantes(e.target.value)}
-              />
-            </label>
+            <SearchInput
+              value={filtroEstudiantes}
+              onChange={setFiltroEstudiantes}
+              placeholder="Nombre del estudiante"
+              label="Buscar:"
+              className="docentes-search-label"
+            />
           </div>
 
           <label className="docentes-search-label">

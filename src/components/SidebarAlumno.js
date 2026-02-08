@@ -18,16 +18,24 @@ function SidebarAlumno({
   setActiveSection, 
   estadoPlan, 
   estadoConformidad,
-  estadoSolicitudTermino 
+  estadoSolicitudTermino,
+  isPerfilIncompleto = false
 }) {
 
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [openMenu, setOpenMenu] = useState(0);
+  const [openMenu, setOpenMenu] = useState(null);
   
 
   useEffect(() => {
     const foto = localStorage.getItem('foto_perfil');
     if (foto) setFotoPerfil(foto);
+    
+    // Si el perfil está incompleto, no abrir ningún menú
+    if (isPerfilIncompleto) {
+      setOpenMenu(null);
+      return;
+    }
+    
     if (activeSection === 'designacion' || activeSection === 'conformidad') {
       setOpenMenu(0); 
     } else if (activeSection === 'seguimiento') {
@@ -36,10 +44,14 @@ function SidebarAlumno({
       setOpenMenu(2); 
     } else if (activeSection === 'informe-final') {
       setOpenMenu(2); 
+    } else {
+      setOpenMenu(null);
     }
-  }, [activeSection]);
+  }, [activeSection, isPerfilIncompleto]);
 
   const toggleMenu = (index) => {
+    // Si el perfil está incompleto, no permitir abrir menús
+    if (isPerfilIncompleto) return;
     setOpenMenu(openMenu === index ? null : index);
   };
   
@@ -80,7 +92,8 @@ function SidebarAlumno({
             <li className="menu-item">
               <button 
                 onClick={() => toggleMenu(0)} 
-                className={`menu-title ${openMenu === 0 ? "menu-title--active" : ""}`}
+                className={`menu-title ${openMenu === 0 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                disabled={isPerfilIncompleto}
               >
                 <PlanIcon size={32} color="#2e9e7f" />
                 Plan de Servicio Social
@@ -121,7 +134,11 @@ function SidebarAlumno({
             </li>
 
             <li className="menu-item">
-              <button onClick={() => toggleMenu(1)} className={`menu-title ${openMenu === 1 ? "menu-title--active" : ""}`}>
+              <button 
+                onClick={() => toggleMenu(1)} 
+                className={`menu-title ${openMenu === 1 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                disabled={isPerfilIncompleto}
+              >
                 <ExecutionIcon size={32} color="#2e9e7f" />
                 Ejecución
                 <i
@@ -151,7 +168,11 @@ function SidebarAlumno({
             </li>
 
             <li className="menu-item">
-              <button onClick={() => toggleMenu(2)} className={`menu-title ${openMenu === 2 ? "menu-title--active" : ""}`}>
+              <button 
+                onClick={() => toggleMenu(2)} 
+                className={`menu-title ${openMenu === 2 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                disabled={isPerfilIncompleto}
+              >
                 <ReportIcon size={32} color="#2e9e7f" />
                 Informe Final
                 <i
@@ -185,7 +206,11 @@ function SidebarAlumno({
             </li>
 
             <li className="menu-item">
-              <button onClick={() => toggleMenu(3)} className={`menu-title ${openMenu === 3 ? "menu-title--active" : ""}`}>
+              <button 
+                onClick={() => toggleMenu(3)} 
+                className={`menu-title ${openMenu === 3 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                disabled={isPerfilIncompleto}
+              >
                 <DocumentIcon size={32} color="#2e9e7f" />
                 Documentos
                 <i

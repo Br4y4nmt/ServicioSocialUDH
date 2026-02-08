@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import SearchInput from './SearchInput';
+import { buscarSinTildes } from '../utils/textUtils';
 import "./DashboardGestor.css";
 import { alertError, alertWarning, toastSuccess } from "../hooks/alerts/alertas";
 import { useUser } from "../UserContext";
@@ -107,7 +109,7 @@ function CambioAsesor() {
   }, [user, token, fetchTrabajos]);
 
   const trabajosFiltrados = trabajos.filter((t) =>
-    t.nombre_estudiante?.toLowerCase().includes(filtro.toLowerCase())
+    buscarSinTildes(t.nombre_estudiante || '', filtro)
   );
 
   return (
@@ -119,16 +121,13 @@ function CambioAsesor() {
           </div>
 
           <div className="docentes-header-right">
-            <label className="docentes-search-label">
-              Buscar:
-              <input
-                type="text"
-                className="docentes-search-input-es"
-                placeholder="Nombre del estudiante"
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-              />
-            </label>
+            <SearchInput
+              value={filtro}
+              onChange={setFiltro}
+              placeholder="Nombre del estudiante"
+              label="Buscar:"
+              className="docentes-search-label"
+            />
           </div>
         </div>
 

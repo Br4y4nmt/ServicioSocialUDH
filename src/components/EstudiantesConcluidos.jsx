@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../UserContext';
 import Swal from 'sweetalert2';
+import SearchInput from './SearchInput';
+import { buscarSinTildes } from '../utils/textUtils';
 
 function EstudiantesConcluidos({
   estudiantes,
@@ -186,16 +188,13 @@ function EstudiantesConcluidos({
           </div>
 
           <div className="docentes-header-right">
-            <label className="docentes-search-label">
-              Buscar:
-              <input
-                type="text"
-                className="docentes-search-input-es"
-                placeholder="Nombre del estudiante o DNI"
-                value={filtroEstudiantes}
-                onChange={(e) => setFiltroEstudiantes(e.target.value)}
-              />
-            </label>
+            <SearchInput
+              value={filtroEstudiantes}
+              onChange={setFiltroEstudiantes}
+              placeholder="Nombre del estudiante o DNI"
+              label="Buscar:"
+              className="docentes-search-label"
+            />
           </div>
 
           <label className="docentes-search-label">
@@ -244,11 +243,9 @@ function EstudiantesConcluidos({
             <tbody>
               {(estudiantesLocal.length ? estudiantesLocal : estudiantes)
                 .filter((est) => {
-                  const texto = (filtroEstudiantes || '').toLowerCase().trim();
-
                   const coincideTexto =
-                    (est.nombre_estudiante || '').toLowerCase().includes(texto) ||
-                    (est.dni || '').toString().includes(texto);
+                    buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
+                    (est.dni || '').toString().includes(filtroEstudiantes);
 
                   const estado = (est.estado || '').toString().trim().toLowerCase();
 

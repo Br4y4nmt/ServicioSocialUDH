@@ -5,6 +5,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './DashboardAlumno.css';
 import { useUser } from '../UserContext';
+import { toastCelularRequerido, toastModalidadRequerida, toastSedeRequerida, toastCelularInvalido } from '../hooks/alerts/alertas';
 
 function PerfilAlumno() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -59,41 +60,21 @@ function PerfilAlumno() {
 
 
     if (!celular) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campo obligatorio',
-        text: 'Por favor ingrese su número de celular.',
-        confirmButtonColor: '#d33'
-      });
+      toastCelularRequerido();
       return;
     }
   if (!modalidadSeleccionada) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Campo obligatorio',
-      text: 'Por favor seleccione una modalidad.',
-      confirmButtonColor: '#d33'
-    });
+    toastModalidadRequerida();
     return;
   }
   const celularRegex = /^\d{9}$/;
   if (!celularRegex.test(celular)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Celular inválido',
-      text: 'El número de celular debe contener exactamente 9 dígitos.',
-      confirmButtonColor: '#d33'
-    });
+    toastCelularInvalido();
     return;
   }
 
   if (!sedeSeleccionada) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Campo obligatorio',
-      text: 'Por favor seleccione una sede.',
-      confirmButtonColor: '#d33'
-    });
+    toastSedeRequerida();
     return;
   }
 
@@ -176,6 +157,7 @@ const handleCelularChange = (e) => {
         onToggleSidebar={toggleSidebar}
         activeSection={'perfil'}
         setActiveSection={() => {}}
+        isPerfilIncompleto={true}
       />
       <main className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         
@@ -274,8 +256,6 @@ const handleCelularChange = (e) => {
             disabled
           />
         </div>
-
-
 
           <div className="form-group">
         <label className="bold-text">Programa Académico</label>

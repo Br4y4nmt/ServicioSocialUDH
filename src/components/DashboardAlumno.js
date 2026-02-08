@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SidebarAlumno from './SidebarAlumno';
 import ConformidadPlan from './ConformidadPlan';
 import Header from './Header';
@@ -9,12 +9,10 @@ import './ModalGlobal.css';
 import Swal from 'sweetalert2';
 import InformeFinal from './InformeFinal'; 
 import SeguimientoActividades from './SeguimientoActividades'
-import jsPDF from 'jspdf';
 import { useWelcomeToast } from '../hooks/alerts/useWelcomeToast';
 import Reglamento from './Reglamento';
 import PlanTrabajo from './PlanTrabajo';
-import { PDFDocument } from 'pdf-lib';
-import autoTable from 'jspdf-autotable';
+import { generarPlanServicioSocialPDF } from '../services/planPdfService';
 import { useUser } from '../UserContext';
 import ProyectoModal from "./modals/ProyectoModal";
 import ObservacionEstudianteModal from "./modals/ObservacionEstudianteModal";
@@ -26,7 +24,6 @@ import {
   mostrarErrorArchivoNoSeleccionado,
   mostrarErrorEnviarProyecto,
   mostrarExitoSolicitudRevision,
-  mostrarAlertaEvidenciaSeleccionada,
   mostrarAlertaSolicitudYaEnviada,
   mostrarAlertaErrorEnviarSolicitud,
   mostrarAlertaSolicitudEnviada,
@@ -36,90 +33,94 @@ import {
   mostrarExitoSolicitudCartaTermino,
   mostrarErrorSolicitudCartaTermino
 } from "../hooks/alerts/alertas";
+import { useFormularioPlan } from '../hooks/useFormularioPlan';
+import { useGrupoAlumno } from '../hooks/useGrupoAlumno';
+import { useActividadesCronograma } from '../hooks/useActividadesCronograma';
 
 function DashboardAlumno() {
   const { user } = useUser();
-  const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
+  // ── Custom Hooks ──
+  const {
+    introduccion, setIntroduccion, justificacion, setJustificacion,
+    objetivoGeneral, setObjetivoGeneral, objetivosEspecificos, setObjetivosEspecificos,
+    metodologiaIntervencion, setMetodologiaIntervencion,
+    recursosRequeridos, setRecursosRequeridos, resultadosEsperados, setResultadosEsperados,
+    nombreEntidad, setNombreEntidad, misionVision, setMisionVision,
+    areasIntervencion, setAreasIntervencion, ubicacionPoblacion, setUbicacionPoblacion,
+    areaInfluencia, setAreaInfluencia, fechaPresentacion, setFechaPresentacion,
+    periodoEstimado, setPeriodoEstimado, nombreInstitucion, setNombreInstitucion,
+    nombreResponsable, setNombreResponsable, lineaAccion, setLineaAccion,
+    antecedentes, setAntecedentes, conclusionesInforme, setConclusionesInforme,
+    recomendacionesInforme, setRecomendacionesInforme, anexosInforme, setAnexosInforme,
+    areaInfluenciaInforme, setAreaInfluenciaInforme,
+    recursosUtilizadosInforme, setRecursosUtilizadosInforme,
+    metodologiaInforme, setMetodologiaInforme,
+    objetivoGeneralInforme, setObjetivoGeneralInforme,
+    objetivosEspecificosInforme, setObjetivosEspecificosInforme,
+    imagenesAnexos, setImagenesAnexos,
+  } = useFormularioPlan();
+
+  const {
+    correosGrupo, setCorreosGrupo,
+    loadingGrupo, mensajeGrupo,
+    integrantesGrupoAlumno,
+    modalGrupoVisible, setModalGrupoVisible,
+    obtenerIntegrantesDelGrupo,
+  } = useGrupoAlumno();
+
+  const [datosCargados, setDatosCargados] = useState(false);
+
+  const {
+    actividades, setActividades,
+    actividadesSeguimiento, setActividadesSeguimiento,
+    actividadSeleccionada, setActividadSeleccionada,
+    editIndex, setEditIndex,
+    nuevaActividad, setNuevaActividad,
+    nuevaFecha, setNuevaFecha,
+    nuevaFechaFin, setNuevaFechaFin,
+    nuevaJustificacion, setNuevaJustificacion,
+    nuevosResultados, setNuevosResultados,
+    modalActividadVisible, setModalActividadVisible,
+    hayObservaciones, todasAprobadas,
+    abrirModalActividad,
+    handleEvidencia,
+    handleVolverASubir: volverASubirEvidencia,
+  } = useActividadesCronograma({ datosCargados });
+
+  // ── Estado local restante ──
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [pdfDescargado, setPdfDescargado] = useState(false);
   const [nombre, setNombre] = useState('');
-  const [conclusionesInforme, setConclusionesInforme] = useState('');
-  const [recomendacionesInforme, setRecomendacionesInforme] = useState('');
-  const [anexosInforme, setAnexosInforme] = useState('');
   const [programas, setProgramas] = useState([]);
-  const [nuevaFechaFin, setNuevaFechaFin] = useState('');
   const [programaSeleccionado, setProgramaSeleccionado] = useState('');
   const [docentes, setDocentes] = useState([]);
-  const [labores, setLabores] = useState([]); 
-  const [docenteSeleccionado, setDocenteSeleccionado] = useState(''); 
+  const [labores, setLabores] = useState([]);
+  const [docenteSeleccionado, setDocenteSeleccionado] = useState('');
   const [archivoYaEnviado, setArchivoYaEnviado] = useState(false);
   const [solicitudEnviada, setSolicitudEnviada] = useState(false);
   const [laborSeleccionada, setLaborSeleccionada] = useState('');
   const [estadoPlan, setEstadoPlan] = useState('');
-  const [datosCargados, setDatosCargados] = useState(false);
   const [cartaAceptacionPdf, setCartaAceptacionPdf] = useState('');
   const [facultades, setFacultades] = useState([]);
   const [planSeleccionado, setPlanSeleccionado] = useState(null);
   const [nombreLaborSocial, setNombreLaborSocial] = useState('');
   const [modalProyectoVisible, setModalProyectoVisible] = useState(false);
   const [proyectoFile, setProyectoFile] = useState(null);
-  const [fechaPresentacion, setFechaPresentacion] = useState('');
-  const [justificacion, setJustificacion] = useState('');
-  const [objetivoGeneral, setObjetivoGeneral] = useState('');
-  const [areaInfluenciaInforme, setAreaInfluenciaInforme] = useState('');
-  const [recursosUtilizadosInforme, setRecursosUtilizadosInforme] = useState('');
-  const [metodologiaInforme, setMetodologiaInforme] = useState('');
-  const [objetivosEspecificos, setObjetivosEspecificos] = useState('');
-  const [metodologiaIntervencion, setMetodologiaIntervencion] = useState('');
-  const [recursosRequeridos, setRecursosRequeridos] = useState('');
-  const [resultadosEsperados, setResultadosEsperados] = useState('');
   const [pdfGenerado, setPdfGenerado] = useState(null);
   const [lineas, setLineas] = useState([]);
-  const [nombreInstitucion, setNombreInstitucion] = useState('');
-  const [nombreResponsable, setNombreResponsable] = useState('');
-  const [lineaAccion, setLineaAccion] = useState('');
   const [estadoConformidad, setEstadoConformidad] = useState('');
   const [estadoSolicitudTermino, setEstadoSolicitudTermino] = useState('no_solicitada');
-  const [modalActividadVisible, setModalActividadVisible] = useState(false);
-  const [nuevaActividad, setNuevaActividad] = useState('');
-  const [nuevaFecha, setNuevaFecha] = useState('');
-  const [antecedentes, setAntecedentes] = useState('');
-  const [objetivoGeneralInforme, setObjetivoGeneralInforme] = useState('');
-  const [objetivosEspecificosInforme, setObjetivosEspecificosInforme] = useState('');
-  const [actividades, setActividades] = useState([]);
-  const [editIndex, setEditIndex] = useState(null); 
   const [lineaSeleccionada, setLineaSeleccionada] = useState('');
   const [imagenModal, setImagenModal] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [actividadesSeguimiento, setActividadesSeguimiento] = useState([]);
   const [facultadSeleccionada, setFacultadSeleccionada] = useState('');
   const [nombreFacultad, setNombreFacultad] = useState('');
   const [nombrePrograma, setNombrePrograma] = useState('');
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [codigoUniversitario, setCodigoUniversitario] = useState('');
-  const [nuevaJustificacion, setNuevaJustificacion] = useState('');
-  const [nuevosResultados, setNuevosResultados] = useState('');
   const [tipoServicio, setTipoServicio] = useState('');
-  const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
-  const [correosGrupo, setCorreosGrupo] = useState(['']);
-  const [periodoEstimado, setPeriodoEstimado] = useState('');
-  const [introduccion, setIntroduccion] = useState('');
-  const [loadingGrupo, setLoadingGrupo] = useState(false);
-  const [mensajeGrupo, setMensajeGrupo] = useState("");
-  const [integrantesGrupoAlumno, setIntegrantesGrupoAlumno] = useState([]);
-  const [nombreEntidad, setNombreEntidad] = useState('');
-  const [misionVision, setMisionVision] = useState('');
   const [modalObservacionEstudianteVisible, setModalObservacionEstudianteVisible] = useState(false);
   const [observacionSeleccionada, setObservacionSeleccionada] = useState('');
-  const [areasIntervencion, setAreasIntervencion] = useState('');
-  const [ubicacionPoblacion, setUbicacionPoblacion] = useState('');
-  const [areaInfluencia, setAreaInfluencia] = useState('');
-  const [imagenesAnexos, setImagenesAnexos] = useState({
-    cartaAceptacion: null,
-    datosContacto: null,
-    organigrama: null,
-    documentosAdicionales: null
-  });
   
 
   const toastWarning = (mensaje) => {
@@ -152,52 +153,6 @@ const handleFileChange = (e, tipo) => {
   }
 };
 useWelcomeToast();
-
-const obtenerIntegrantesDelGrupo = async () => {
-  const usuario_id = user?.id;
-  const token = user?.token;
-
-  if (!usuario_id || !token) {
-    const data = { integrantes: [], message: "Sesión inválida." };
-    setIntegrantesGrupoAlumno([]);
-    setMensajeGrupo(data.message);
-    return data;
-  }
-
-  setLoadingGrupo(true);
-  setMensajeGrupo("");
-
-  try {
-    const response = await axios.get(
-      `/api/integrantes/estudiante/actual?usuario_id=${usuario_id}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    const data = response.data ?? { integrantes: [], message: null };
-
-    const integrantes = Array.isArray(data.integrantes) ? data.integrantes : [];
-    setIntegrantesGrupoAlumno(integrantes);
-    setMensajeGrupo(data.message || (integrantes.length === 0 ? "No hay integrantes registrados." : ""));
-
-    return { integrantes, message: data.message };
-  } catch (error) {
-    console.error("Error al obtener integrantes del grupo:", error);
-    const msg =
-      error?.response?.data?.message ||
-      "No se pudo obtener la información del grupo.";
-
-    setIntegrantesGrupoAlumno([]);
-    setMensajeGrupo(msg);
-
-    return { integrantes: [], message: msg };
-  } finally {
-    setLoadingGrupo(false);
-  }
-};
-
-
-
-
 
 const [activeSection, setActiveSection] = useState(() => {
   return localStorage.getItem('activeSectionAlumno') || 'designacion';
@@ -306,27 +261,6 @@ const handleSolicitarRevision = async () => {
 };
 
 
-const handleEvidencia = (actividadId, index) => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.capture = 'environment';
-
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const updated = [...actividadesSeguimiento];
-    updated[index].archivoTemporalEvidencia = file;
-    setActividadesSeguimiento(updated);
-
-    mostrarAlertaEvidenciaSeleccionada(); 
-  };
-
-  input.click();
-};
-
-
 useEffect(() => {
   const fetchFacultades = async () => {
     try {
@@ -348,12 +282,6 @@ useEffect(() => {
   const toggleSidebar = () => {
     setCollapsed(prev => !prev);
   };
-
-  useEffect(() => {
-    const nombreUsuario = localStorage.getItem('nombre_usuario') || 'NOMBRE DEL ALUMNO';
-    setNombre(nombreUsuario);
-  }, []);
-
 
 useEffect(() => {
   const usuario_id = user?.id;
@@ -381,15 +309,6 @@ const verificarPrimeraVez = async () => {
   }
 }, [user?.id, user?.token]);
 
-  const abrirModalActividad = () => {
-    setNuevaActividad('');
-    setNuevaJustificacion('');
-    setNuevaFecha('');
-    setNuevosResultados('');
-    setEditIndex(null);
-    setModalActividadVisible(true);
-  };
-
 useEffect(() => {
   const usuario_id = user?.id;
   const token = user?.token;
@@ -403,10 +322,9 @@ useEffect(() => {
       });
       const estudiante = res.data;
       setFacultadSeleccionada(String(estudiante.facultad_id)); 
+      setProgramaSeleccionado(String(estudiante.programa_academico_id));
       setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
-      setProgramaSeleccionado(estudiante.programa_academico_id);
-      setNombreFacultad(estudiante.facultad?.nombre_facultad || '');
-      setNombrePrograma(estudiante.ProgramasAcademico?.nombre_programa || '');
+      setNombrePrograma(estudiante.programa?.nombre_programa || '');
       setNombreCompleto(estudiante.nombre_estudiante);
       setCodigoUniversitario(estudiante.codigo);
 
@@ -424,34 +342,19 @@ useEffect(() => {
   }
 }, [user?.id, user?.token]);
 
+
 useEffect(() => {
-  const token = user?.token;
+  if (!docenteSeleccionado || docentes.length === 0) return;
 
-  const fetchProgramas = async () => {
-    if (!token) return;
+  const docente = docentes.find(
+    (d) => String(d.id_docente) === String(docenteSeleccionado)
+  );
 
-    try {
-      const res = await axios.get('/api/programas', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProgramas(res.data);
-    } catch (error) {
-      console.error('Error al obtener todos los programas académicos:', error);
-    }
-  };
-
-  fetchProgramas();
-}, [user?.token]);
+  setNombreDocente(docente?.nombre_docente || '');
+}, [docenteSeleccionado, docentes]);
 
 
-  useEffect(() => {
-    if (docenteSeleccionado && docentes.length > 0) {
-      const docente = docentes.find((d) => d.id_docente === docenteSeleccionado);
-      setNombreDocente(docente ? docente.nombre_docente : '');
-    }
-  }, [docenteSeleccionado, docentes]); 
-
-const fetchTrabajoSocial = React.useCallback(async () => {
+const fetchTrabajoSocial = useCallback(async () => {
   const usuario_id = user?.id;
   const token = user?.token;
   if (!usuario_id || !token) return;
@@ -460,68 +363,44 @@ const fetchTrabajoSocial = React.useCallback(async () => {
     const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (res.data) {
-      setFacultadSeleccionada(res.data.facultad_id);
-      setProgramaSeleccionado(res.data.programa_academico_id);
-      setDocenteSeleccionado(res.data.docente_id);
-      setLineaSeleccionada(res.data.linea_accion_id);
-      setLaborSeleccionada(res.data.labor_social_id);
-      setTipoServicio(res.data.tipo_servicio_social);
-      setCartaAceptacionPdf(res.data.carta_aceptacion_pdf);
-      setEstadoPlan(res.data.estado_plan_labor_social);
-      setEstadoSolicitudTermino(res.data.solicitud_termino);
-      setEstadoConformidad(res.data.conformidad_plan_social);
-      setSolicitudEnviada(true);
-      setLineaAccion(res.data.linea_accion || '');
 
-      if (res.data.archivo_plan_social) {
-        setArchivoYaEnviado(true);
-      }
+    const plan = res.data;
 
-      const laborEncontrada = labores.find(l => l.id_labores === res.data.labor_social_id);
-      if (laborEncontrada) {
-        setNombreLaborSocial(laborEncontrada.nombre_labores);
-      }
-
+    if (!plan || !plan.id) {
+      setPlanSeleccionado(null);
       setDatosCargados(true);
+      return;
     }
+
+    setPlanSeleccionado(plan);
+    setFacultadSeleccionada(String(plan.facultad_id || ''));
+    setProgramaSeleccionado(String(plan.programa_academico_id || ''));
+    setDocenteSeleccionado(String(plan.docente_id || ''));
+    setLineaSeleccionada(String(plan.linea_accion_id || ''));
+    setLaborSeleccionada(String(plan.labor_social_id || ''));
+    setTipoServicio(plan.tipo_servicio_social || '');
+    setCartaAceptacionPdf(plan.carta_aceptacion_pdf || '');
+    setEstadoPlan(plan.estado_plan_labor_social || '');
+    setEstadoSolicitudTermino(plan.solicitud_termino || 'no_solicitada');
+    setEstadoConformidad(plan.conformidad_plan_social || '');
+    setSolicitudEnviada(true);
+    setLineaAccion(plan.linea_accion || '');
+
+    if (plan.archivo_plan_social) setArchivoYaEnviado(true);
+
+    const laborEncontrada = labores.find(l => l.id_labores === plan.labor_social_id);
+    if (laborEncontrada) setNombreLaborSocial(laborEncontrada.nombre_labores);
+
+    setDatosCargados(true);
   } catch (error) {
     console.error('Error al obtener los datos del trabajo social:', error);
   }
-}, [user, labores]);
+}, [user?.id, user?.token, labores, setLineaAccion]);
+
 
 useEffect(() => {
   fetchTrabajoSocial();
 }, [fetchTrabajoSocial]);
-
-  
-useEffect(() => {
-  const usuario_id = user?.id;
-  const token = user?.token;
-
-  const fetchEstadoTrabajoSocial = async () => {
-    if (!usuario_id || !token) return;
-
-    try {
-      const res = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (res.data?.estado_plan_labor_social) {
-        setEstadoPlan(res.data.estado_plan_labor_social);
-      }
-    } catch (error) {
-      console.error('Error al obtener estado del trabajo social:', error);
-    }
-  };
-
-  if (usuario_id && token) {
-    fetchEstadoTrabajoSocial();
-  }
-}, [user?.id, user?.token]);
-
 
 
 useEffect(() => {
@@ -571,17 +450,18 @@ const handleGoToNextSection = () => {
       });
     }
   } else if (activeSection === 'seguimiento') {
-    if (todasAprobadas && estadoSolicitudTermino === 'aprobada') {
-      setActiveSection('informe-final');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); 
-      Swal.fire({
-        icon: 'info',
-        title: 'Acceso restringido',
-        text: 'Debes completar y obtener la aprobación de todas las actividades antes de continuar.',
-        confirmButtonText: 'Entendido'
-      });
-    }
+  if (todasAprobadas && estadoSolicitudTermino === 'aprobada') {
+    setActiveSection('informe-final');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    Swal.fire({
+      icon: 'info',
+      title: 'Acceso restringido',
+      text: 'Debes completar y obtener la aprobación de todas las actividades antes de continuar.',
+      confirmButtonText: 'Entendido'
+    });
   }
+}
 };
 
 useEffect(() => {
@@ -634,8 +514,6 @@ const handleSolicitarAprobacion = async () => {
       await mostrarAlertaFaltaIntegrantesGrupo();
       return;
     }
-
-    // ✅ Quita duplicados por si acaso
     const correosUnicos = [...new Set(correosValidos)];
 
     const datos = {
@@ -684,26 +562,6 @@ const handleSolicitarAprobacion = async () => {
   }
 };
 
-
-
-const mergePDFs = async (mainPdfBlob, anexos) => {
-  const mainPdfBytes = await mainPdfBlob.arrayBuffer();
-  const mainPdfDoc = await PDFDocument.load(mainPdfBytes);
-
-  for (const anexo of anexos) {
-    if (!anexo) continue;
-
-    const anexoBytes = await anexo.arrayBuffer();
-    const anexoDoc = await PDFDocument.load(anexoBytes);
-
-    const copiedPages = await mainPdfDoc.copyPages(anexoDoc, anexoDoc.getPageIndices());
-    copiedPages.forEach((page) => mainPdfDoc.addPage(page));
-  }
-
-  const mergedPdfBytes = await mainPdfDoc.save();
-  return new Blob([mergedPdfBytes], { type: 'application/pdf' });
-};
-
 useEffect(() => {
   if (activeSection === 'seguimiento' && datosCargados) {
     if (estadoConformidad !== 'aceptado') {
@@ -718,29 +576,6 @@ useEffect(() => {
     }
   }
 }, [activeSection, estadoConformidad, datosCargados]);
-
-
-useEffect(() => {
-  const usuario_id = user?.id; 
-
-  if (!usuario_id || !datosCargados || !user?.token) return;
-
-  const obtenerActividades = async () => {
-    try {
-      const res = await axios.get(`/api/cronograma/${usuario_id}`, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-      if (Array.isArray(res.data)) {
-        setActividadesSeguimiento(res.data);
-      }
-    } catch (error) {
-      console.error('Error al obtener actividades desde la BD:', error);
-    }
-  };
-
-  obtenerActividades();
-}, [datosCargados, user?.id, user?.token]);
-
 
 
 useEffect(() => {
@@ -759,363 +594,58 @@ useEffect(() => {
 }, [activeSection, estadoPlan, datosCargados]);
 
 const handleGenerarPDF = async () => {
-  const camposRequeridos = [
-    nombreInstitucion, nombreResponsable, lineaAccion, fechaPresentacion,
-    periodoEstimado, introduccion, justificacion, objetivoGeneral,
-    objetivosEspecificos, nombreEntidad, misionVision, areasIntervencion,
-    ubicacionPoblacion, areaInfluencia, metodologiaIntervencion,
-    recursosRequeridos, resultadosEsperados
-  ];
+  const result = await generarPlanServicioSocialPDF({
+    imagenesAnexos,
+    actividades,
+    nombreInstitucion,
+    nombreResponsable,
+    lineaAccion,
+    fechaPresentacion,
+    periodoEstimado,
+    introduccion,
+    justificacion,
+    objetivoGeneral,
+    objetivosEspecificos,
+    nombreEntidad,
+    misionVision,
+    areasIntervencion,
+    ubicacionPoblacion,
+    areaInfluencia,
+    metodologiaIntervencion,
+    recursosRequeridos,
+    resultadosEsperados,
+    nombreFacultad,
+    nombrePrograma,
+    nombreLaborSocial,
+    nombreCompleto,
+    codigoUniversitario,
+  });
 
-    if (!imagenesAnexos.cartaAceptacion) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Falta el ANEXO',
-        text: 'Debes adjuntar el convenio de Cooperación Institucional antes de generar el PDF.',
-      });
-      return;
-    }
+  if (!result) return;
 
-    const camposVacios = camposRequeridos.some(campo => campo.trim() === '') || actividades.length === 0;
-    if (camposVacios) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campos incompletos',
-        text: 'Completa todos los campos del esquema plan y agrega al menos una actividad antes de generar el PDF.',
-      });
-      return;
-    }
+  const { url, file } = result;
 
-  const periodoEnDias = {
-    '4 MESES': 120,
-    '5 MESES': 150,
-    '6 MESES': 180
-  };
+  setPdfGenerado(url);
+  setProyectoFile(file);
+  setPdfDescargado(true);
 
-  const diasRequeridos = periodoEnDias[periodoEstimado.toUpperCase()];
-  const sumaDiasActividades = actividades.reduce((total, act) => {
-    const fechaInicio = new Date(act.fecha);
-    const fechaFin = new Date(act.fechaFin);
-    const diffEnMs = fechaFin - fechaInicio;
-    const diffDias = diffEnMs / (1000 * 60 * 60 * 24);
-    return total + (diffDias > 0 ? diffDias : 0);
-  }, 0);
-
-  if (sumaDiasActividades < diasRequeridos) {
-    await Swal.fire({
-      icon: 'warning',
-      title: 'Duración insuficiente',
-      text: `La suma total de tus actividades es de ${Math.floor(sumaDiasActividades)} días, pero el periodo estimado es de ${diasRequeridos} días.`,
-      confirmButtonText: 'Corregir'
-    });
-    return;
-  } 
-  const actividadesOrdenadas = [...actividades].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-  for (let i = 1; i < actividadesOrdenadas.length; i++) {
-    const anteriorFin = new Date(actividadesOrdenadas[i - 1].fechaFin);
-    const actualInicio = new Date(actividadesOrdenadas[i].fecha);
-
-    if (actualInicio < anteriorFin) {
-      await Swal.fire({
-        icon: 'warning',
-        title: 'Fechas traslapadas',
-        text: `La actividad "${actividadesOrdenadas[i].actividad}" comienza antes de que termine la actividad anterior.`,
-        confirmButtonText: 'Corregir'
-      });
-      return;
-    }
-  }
-  const doc = new jsPDF();
-  const altoPagina = doc.internal.pageSize.getHeight(); 
-
-  doc.setFont('times');
-  doc.setFontSize(12);
-  doc.text('UNIVERSIDAD DE HUÁNUCO', 105, 20, { align: 'center' });
-  doc.setFont('times', 'bold');
-  doc.setFontSize(14);
-  doc.text(`FACULTAD DE ${nombreFacultad.toUpperCase()}`, 105, 30, { align: 'center' });
-  doc.setFont('times', 'bold');
-  doc.setFontSize(14);
-
-const textoPrograma = `PROGRAMA ACADÉMICO DE ${nombrePrograma.toUpperCase()}`;
-const lineas = doc.splitTextToSize(textoPrograma, 160); 
-
-if (lineas.length === 1) {
-  doc.text(lineas[0], 105, 40, { align: 'center' });
-} else {
-  doc.text(lineas[0], 105, 40, { align: 'center' });
-  doc.text(lineas[1], 105, 47, { align: 'center' });
-}
-
-  const logo = await fetch('/images/logonuevo.png')
-    .then(res => res.blob())
-    .then(blob => new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    }));
-
-doc.addImage(logo, 'PNG', 56, 50, 90, 60); 
-
-  doc.setFontSize(16);
-  doc.text('PLAN SERVICIO SOCIAL UDH', 105, 120, { align: 'center' });
-
-    doc.setLineWidth(0.5); 
-    doc.line(30, 125, 180, 125); 
-    doc.setFontSize(14);
-    doc.setFont('times', 'bolditalic');
-    doc.text(`"${nombreLaborSocial}"`, 105, 132, { align: 'center' });
-    doc.line(30, 137, 180, 137); 
-    doc.setFontSize(12);
-
-    const yInicial = 155;
-    const saltoLinea = 10;
-    let yActual = yInicial;
-
-    const escribirCampoa = (label, valor, y) => {
-      doc.setFont('times', 'bold');
-      doc.text(label, 25, y); 
-      doc.setFont('times', 'normal');
-      doc.text(valor, 80, y); 
-    };
-
-
-escribirCampoa('Nombre Completo:', nombreCompleto, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Código Universitario:', codigoUniversitario, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Nombre de la Institución:', nombreInstitucion, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Responsable Institucional:', nombreResponsable, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Línea de Acción:', lineaAccion, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Fecha de Presentación:', fechaPresentacion, yActual);
-yActual += saltoLinea;
-
-escribirCampoa('Periodo Estimado:', periodoEstimado, yActual);
-
-  doc.setFontSize(12);
-  doc.text('HUÁNUCO - PERÚ', 105, 270, { align: 'center' });
-  doc.text('2025', 105, 278, { align: 'center' });
-  doc.addPage();
-    doc.setFont('times', 'bold');
-    doc.setFontSize(14);
-    const tituloIntro = 'INTRODUCCIÓN';
-    const anchoTitulo = doc.getTextWidth(tituloIntro);
-    const yTitulo = 60;
-    doc.text(tituloIntro, (doc.internal.pageSize.getWidth() - anchoTitulo) / 2, yTitulo);
-
-    doc.setFont('times', 'normal');
-    doc.setFontSize(12);
-    const introLineas = doc.splitTextToSize(introduccion, 170);
-    const yContenido = yTitulo + 20;
-    doc.text(introLineas, 30, yContenido); 
-    doc.addPage();
-
-let y = 20;
-doc.setFontSize(12);
-doc.setFont('times', 'bold');
-doc.text('1. JUSTIFICACIÓN', 20, y);
-doc.setFont('times', 'normal');
-y += 12; 
-const lineasJustificacion = doc.splitTextToSize(justificacion, 170);
-doc.text(lineasJustificacion, 20, y);
-y += lineasJustificacion.length * 6 + 4;
-doc.setFont('times', 'bold');
-doc.text('2. OBJETIVOS', 20, y);
-y += 12; 
-
-doc.setFont('times', 'bold');
-doc.text('2.1 OBJETIVO GENERAL:', 25, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasObjGeneral = doc.splitTextToSize(objetivoGeneral, 170);
-doc.text(lineasObjGeneral, 25, y);
-y += lineasObjGeneral.length * 6 + 4;
-
-doc.setFont('times', 'bold');
-doc.text('2.2 OBJETIVOS ESPECÍFICOS:', 25, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasObjEspecificos = doc.splitTextToSize(objetivosEspecificos, 170);
-const margenInferior = 20; 
-const altoContenido = lineasObjEspecificos.length * 6;
-
-if (y + altoContenido > altoPagina - margenInferior) {
-  doc.addPage();
-  y = 20; 
-}
-
-doc.text(lineasObjEspecificos, 25, y);
-y += altoContenido + 4;
-
-doc.setFont('times', 'bold');
-doc.text('3. MARCO INSTITUCIONAL', 20, y);
-y += 12;
-
-const marcoSubsecciones = [
-  ['3.1 NOMBRE DE LA ENTIDAD:', nombreEntidad],
-  ['3.2 MISIÓN Y VISIÓN:', misionVision],
-  ['3.3 SERVICIOS:', areasIntervencion],
-  ['3.4 ÁREAS DE INTERVENCIÓN O SERVICIOS QUE OFRECE:', areasIntervencion],
-  ['3.5 UBICACIÓN Y POBLACIÓN:', ubicacionPoblacion],
-];
-
-for (const [titulo, texto] of marcoSubsecciones) {
-  doc.setFont('times', 'bold');
-  doc.text(titulo, 25, y);
-  doc.setFont('times', 'normal');
-  y += 6;
-  const lineasSub = doc.splitTextToSize(texto, 170);
-
-  const altoContenido = lineasSub.length * 6;
-  const margenInferior = 20;
-  if (y + altoContenido > altoPagina - margenInferior) {
-    doc.addPage();
-    y = 20;
-  }
-  doc.text(lineasSub, 25, y);
-  y += altoContenido + 4;
-
-  if (y > altoPagina - margenInferior) {
-    doc.addPage();
-    y = 20;
-  }
-}
-
-doc.setFont('times', 'bold');
-doc.text('4. ÁREA DE INFLUENCIA', 20, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasArea = doc.splitTextToSize(areaInfluencia, 170);
-
-const altoContenidoArea = lineasArea.length * 6;
-if (y + altoContenidoArea > altoPagina - margenInferior) {
-  doc.addPage();
-  y = 20;
-}
-doc.text(lineasArea, 20, y);
-y += altoContenidoArea + 4;
-
-doc.setFont('times', 'bold');
-doc.text('5. METODOLOGÍA DE INTERVENCIÓN', 20, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasMetodo = doc.splitTextToSize(metodologiaIntervencion, 170);
-doc.text(lineasMetodo, 20, y);
-y += lineasMetodo.length * 6 + 4;
-
-doc.setFont('times', 'bold');
-doc.text('6. RECURSOS REQUERIDOS', 20, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasRecursos = doc.splitTextToSize(recursosRequeridos, 170);
-
-const altoContenidoRecursos = lineasRecursos.length * 6;
-if (y + altoContenidoRecursos > altoPagina - margenInferior) {
-  doc.addPage();
-  y = 20;
-}
-doc.text(lineasRecursos, 20, y);
-y += altoContenidoRecursos + 4;
-
-doc.setFont('times', 'bold');
-doc.text('7. RESULTADOS ESPERADOS', 20, y);
-doc.setFont('times', 'normal');
-y += 6;
-const lineasResultados = doc.splitTextToSize(resultadosEsperados, 170);
-const altoContenidoResultados = lineasResultados.length * 6;
-if (y + altoContenidoResultados > altoPagina - margenInferior) {
-  doc.addPage();
-  y = 20;
-}
-doc.text(lineasResultados, 20, y);
-y += altoContenidoResultados + 4;
-
-doc.addPage('a4', 'landscape'); 
-const anchoPagina = doc.internal.pageSize.getWidth();
-doc.setFont('times', 'bold');
-doc.setFontSize(18);
-doc.text('CRONOGRAMA DE ACTIVIDADES', anchoPagina / 2, 80, { align: 'center' });
-autoTable(doc, {
-  startY: 90,
-  margin: { left: 25, right: 25 }, 
-  tableWidth: 'wrap', 
-  head: [['Actividad', 'Justificación', 'Fecha Estimada', 'Fecha Fin', 'Resultados Esperados']],
-  body: actividades.map((a) => [
-    a.actividad,
-    a.justificacion,
-    a.fecha,
-    a.fechaFin || '',
-    a.resultados
-  ]),
-  styles: { fontSize: 11, halign: 'center', valign: 'middle' },
-  headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold', fontSize: 12 },
-  alternateRowStyles: { fillColor: [240, 240, 240] },
-  columnStyles: {
-    0: { halign: 'left', cellWidth: 60 },  
-    1: { halign: 'left', cellWidth: 60 },  
-    2: { halign: 'center', cellWidth: 32 },
-    3: { halign: 'center', cellWidth: 32 },
-    4: { halign: 'left', cellWidth: 60 },  
-  }
-});
-
-doc.addPage('a4', 'portrait');
-doc.setFont('times', 'bold');
-doc.setFontSize(40);
-doc.text('ANEXOS', 105, 150, { align: 'center' }); 
-
- const pdfBlob = doc.output('blob');
- const anexos = [
-  imagenesAnexos.cartaAceptacion,
-  imagenesAnexos.datosContacto,
-  imagenesAnexos.organigrama,
-  imagenesAnexos.documentosAdicionales
-];
-
-const mergedBlob = await mergePDFs(pdfBlob, anexos);
-const url = URL.createObjectURL(mergedBlob);
-const archivoFinal = new File([mergedBlob], 'PLAN-SERVICIO-SOCIAL-UDH.pdf', { type: 'application/pdf' });
-
-setPdfGenerado(url);
-setProyectoFile(archivoFinal);
-setPdfDescargado(true);
-
-const link = document.createElement('a');
-link.href = url;
-link.download = 'PLAN-SERVICIO-SOCIAL-UDH.pdf';
-link.click();
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'PLAN-SERVICIO-SOCIAL-UDH.pdf';
+  link.click();
 };
 
-const hayObservaciones = actividadesSeguimiento.some(
-  (actividad) => actividad.estado === 'observado' && actividad.observacion
-);
-const todasAprobadas = actividadesSeguimiento.length > 0 &&
-  actividadesSeguimiento.every((actividad) => actividad.estado === 'aprobado');
 
 const solicitarCartaTermino = async () => {
-  const usuario_id = user?.id;
   const token = user?.token;
+  const trabajoId = planSeleccionado?.id;
 
-  if (!usuario_id || !token) return;
+  if (!token || !trabajoId) {
+    mostrarErrorSolicitudCartaTermino();
+    return;
+  }
 
   try {
-    const { data } = await axios.get(`/api/trabajo-social/usuario/${usuario_id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    const trabajoId = data.id;
-    if (!trabajoId) {
-      throw new Error("No se encontró el ID del trabajo social.");
-    }
-
     await axios.patch(
       `/api/trabajo-social/${trabajoId}/solicitar-carta-termino`,
       {},
@@ -1123,7 +653,6 @@ const solicitarCartaTermino = async () => {
     );
 
     setEstadoSolicitudTermino('solicitada');
-
     mostrarExitoSolicitudCartaTermino();
 
   } catch (error) {
@@ -1133,50 +662,9 @@ const solicitarCartaTermino = async () => {
 };
 
 const handleVolverASubir = async (actividad) => {
-  if (!actividad) {
-    Swal.fire('Error', 'No hay actividad seleccionada para eliminar la evidencia.', 'error');
-    return;
-  }
-
-  try {
-    await axios.delete(`/api/cronograma/evidencia/${actividad.id}`, {
-      headers: { Authorization: `Bearer ${user.token}` }
-    });
-
-    Swal.fire('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.', 'success');
-
-    const actualizadas = actividadesSeguimiento.map((a) =>
-      a.id === actividad.id
-        ? { ...a, evidencia: null, estado: 'pendiente', archivoTemporalEvidencia: null }
-        : a
-    );
-    setActividadesSeguimiento(actualizadas);
-    setModalObservacionEstudianteVisible(false);
-  } catch (error) {
-    console.error(error);
-    Swal.fire('Error', 'No se pudo eliminar la evidencia.', 'error');
-  }
+  const success = await volverASubirEvidencia(actividad);
+  if (success) setModalObservacionEstudianteVisible(false);
 };
-
-useEffect(() => {
-  const usuarioId = user?.id;
-  const token = user?.token;
-
-  if (!usuarioId || !token) return;
-
-  const fetchPlan = async () => {
-    try {
-      const res = await axios.get(`/api/trabajo-social/usuario/${usuarioId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPlanSeleccionado(res.data);
-    } catch (err) {
-      console.error('Error al obtener plan:', err);
-    }
-  };
-
-  fetchPlan();
-}, [user?.id, user?.token]);
 
   return (
     <>
@@ -1388,34 +876,35 @@ useEffect(() => {
 )}
 
  {activeSection === 'designacion' && (
-  <DesignacionDocente
-    tipoServicio={tipoServicio}
-    obtenerIntegrantesDelGrupo={obtenerIntegrantesDelGrupo}
-    setTipoServicio={setTipoServicio}
-    solicitudEnviada={solicitudEnviada}
-    setModalGrupoVisible={setModalGrupoVisible}
-    facultades={facultades}
-    facultadSeleccionada={facultadSeleccionada}
-    programas={programas}
-    programaSeleccionado={programaSeleccionado}
-    docentes={docentes}
-    correosGrupo={correosGrupo}           
-    setCorreosGrupo={setCorreosGrupo}     
-    trabajoId={planSeleccionado?.id}
-    docenteSeleccionado={docenteSeleccionado}
-    setDocenteSeleccionado={setDocenteSeleccionado}
-    setNombreDocente={setNombreDocente}
-    labores={labores}
-    laborSeleccionada={laborSeleccionada}
-    setLaborSeleccionada={setLaborSeleccionada}
-    setNombreLaborSocial={setNombreLaborSocial}
-    handleSolicitarAprobacion={handleSolicitarAprobacion}
-    estadoPlan={estadoPlan}
-    setLineaSeleccionada={setLineaSeleccionada}
-    lineas={lineas}
-    cartaAceptacionPdf={cartaAceptacionPdf}
-    lineaSeleccionada={lineaSeleccionada}
-  />
+<DesignacionDocente
+  tipoServicio={tipoServicio}
+  obtenerIntegrantesDelGrupo={obtenerIntegrantesDelGrupo}
+  setTipoServicio={setTipoServicio}
+  solicitudEnviada={solicitudEnviada}
+  setModalGrupoVisible={setModalGrupoVisible}
+  facultadSeleccionada={facultadSeleccionada}
+  programaSeleccionado={programaSeleccionado}
+  nombreFacultad={nombreFacultad}
+  nombrePrograma={nombrePrograma}
+  docentes={docentes}
+  correosGrupo={correosGrupo}
+  setCorreosGrupo={setCorreosGrupo}
+  trabajoId={planSeleccionado?.id}
+  docenteSeleccionado={docenteSeleccionado}
+  setDocenteSeleccionado={setDocenteSeleccionado}
+  setNombreDocente={setNombreDocente}
+  labores={labores}
+  laborSeleccionada={laborSeleccionada}
+  setLaborSeleccionada={setLaborSeleccionada}
+  setNombreLaborSocial={setNombreLaborSocial}
+  handleSolicitarAprobacion={handleSolicitarAprobacion}
+  estadoPlan={estadoPlan}
+  setLineaSeleccionada={setLineaSeleccionada}
+  lineas={lineas}
+  cartaAceptacionPdf={cartaAceptacionPdf}
+  lineaSeleccionada={lineaSeleccionada}
+/>
+
 )}   
 </div>  
 )}

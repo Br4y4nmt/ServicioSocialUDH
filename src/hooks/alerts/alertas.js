@@ -913,7 +913,9 @@ export const mostrarAlertaCompletarPerfilPrimeraVez = () => {
     title: '¡Bienvenido!',
     text: 'Antes de continuar, debes completar tu perfil.',
     icon: 'info',
+    iconColor: '#39B49E',
     confirmButtonText: 'Aceptar',
+    confirmButtonColor: '#011B4B',
     allowOutsideClick: false,
     allowEscapeKey: false,
   });
@@ -1107,4 +1109,33 @@ export const mostrarAlertaFaltaIntegrantesGrupo = () =>
     text: "Si eliges la opción grupal, debes registrar al menos 1 integrante en tu grupo.",
     confirmButtonText: "Entendido",
     confirmButtonColor: "#f59e0b",
+  });
+
+// Toasts para validaciones de perfil alumno
+export const toastCelularRequerido = () =>
+  Toast.fire({
+    icon: "warning",
+    title: "Ingrese su número de celular",
+    iconColor: "#f59e0b",
+  });
+
+export const toastModalidadRequerida = () =>
+  Toast.fire({
+    icon: "warning",
+    title: "Seleccione una modalidad",
+    iconColor: "#f59e0b",
+  });
+
+export const toastSedeRequerida = () =>
+  Toast.fire({
+    icon: "warning",
+    title: "Seleccione una sede",
+    iconColor: "#f59e0b",
+  });
+
+export const toastCelularInvalido = () =>
+  Toast.fire({
+    icon: "error",
+    title: "El celular debe tener 9 dígitos",
+    iconColor: "#dc2626",
   });

@@ -1,28 +1,27 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
+import axios from 'axios';
+import { useUser } from '../UserContext';
 import './DashboardDocente.css';
 import PdfIcon from "../hooks/componentes/PdfIcon";
 import { VerBotonInline } from "../hooks/componentes/VerBoton";
 import MotivoRechazoModal from "../components/modals/MotivoRechazoModal";
+import { useCartasAceptacion } from "../hooks/useCartasAceptacion";
+import { useGrupoNombres } from "../hooks/useGrupoNombres";
 import {
   mostrarExitoEleccionEliminada,
   mostrarErrorEliminarEleccion,
-  mostrarInfoSinCartasGrupo,
-  mostrarErrorCargarCartasGrupo,
   confirmarEnviarSolicitud,
   mostrarAlertaFaltaIntegrantesGrupo,
   confirmarEliminarEleccion
 } from "../hooks/alerts/alertas";
-
 
 function DesignacionDocente({
   tipoServicio,
   setTipoServicio,
   solicitudEnviada,
   setModalGrupoVisible,
-  facultades,
   trabajoId,
   facultadSeleccionada,
-  programas,
   programaSeleccionado,
   docentes,
   obtenerIntegrantesDelGrupo,
@@ -38,23 +37,42 @@ function DesignacionDocente({
   cartaAceptacionPdf,
   lineaSeleccionada,
   setLineaSeleccionada,
-  correosGrupo, 
-  lineas
+  correosGrupo,
+  lineas,
+  nombreFacultad,
+  nombrePrograma
 }) {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user } = useUser();
   const token = user?.token;
   const [loadingSolicitud, setLoadingSolicitud] = useState(false);
-  const [nombresMiembros, setNombresMiembros] = useState([]);
   const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
-  const [cartasMiembros, setCartasMiembros] = useState([]);
 
-const abrirModalMotivoRechazo = async () => {
+  // Mapas memoizados para O(1) en onChange de selects
+  const docentesPorId = useMemo(() => {
+    const map = {};
+    for (const d of docentes) map[String(d.id_docente)] = d.nombre_docente;
+    return map;
+  }, [docentes]);
+
+  const laboresPorId = useMemo(() => {
+    const map = {};
+    for (const l of labores) map[l.id_labores] = l.nombre_labores;
+    return map;
+  }, [labores]);
+
+  // Custom hooks: lógica de cartas y nombres de grupo
+  const { cartasMiembros, nombresMiembros, resetCartas } = useCartasAceptacion(
+    trabajoId, solicitudEnviada, estadoPlan, tipoServicio, token
+  );
+  const { getNombreMiembro } = useGrupoNombres(nombresMiembros);
+
+const abrirModalMotivoRechazo = useCallback(async () => {
   if (!trabajoId || !token) return; 
 
   try {
-    const resp = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/trabajo-social/motivo-rechazo/${trabajoId}`,
+    const { data } = await axios.get(
+      `/api/trabajo-social/motivo-rechazo/${trabajoId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -62,24 +80,17 @@ const abrirModalMotivoRechazo = async () => {
       }
     );
 
-    const data = await resp.json();
-
-    if (!resp.ok) {
-      setMotivoRechazo(data.message || 'No se encontró un motivo registrado.');
-    } else {
-      setMotivoRechazo(data.motivo || 'No se encontró un motivo registrado.');
-    }
+    setMotivoRechazo(data.motivo || 'No se encontró un motivo registrado.');
   } catch (error) {
     console.error(error);
-    setMotivoRechazo(
-      'Ocurrió un error al cargar el motivo de rechazo. Inténtelo más tarde.'
-    );
+    const mensaje = error.response?.data?.message || 'Ocurrió un error al cargar el motivo de rechazo. Inténtelo más tarde.';
+    setMotivoRechazo(mensaje);
   }
 
   setModalMotivoVisible(true);
-};
+}, [trabajoId, token]);
 
-const validarGrupoAntesDeEnviar = async () => {
+const validarGrupoAntesDeEnviar = useCallback(async () => {
   if (tipoServicio !== "grupal") return true;
 
   const correosValidos = (correosGrupo || [])
@@ -92,26 +103,22 @@ const validarGrupoAntesDeEnviar = async () => {
   }
 
   return true;
-};
+}, [tipoServicio, correosGrupo]);
 
 
 
-const eliminarEleccion = async () => {
+const eliminarEleccion = useCallback(async () => {
   if (!trabajoId || !token) return;
 
   try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/trabajo-social/seleccionado/${trabajoId}`,
+    await axios.delete(
+      `/api/trabajo-social/seleccionado/${trabajoId}`,
       {
-        method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
     );
-
-    if (!response.ok) throw new Error("Error al eliminar elección");
 
     await mostrarExitoEleccionEliminada();
 
@@ -121,82 +128,18 @@ const eliminarEleccion = async () => {
     setLineaSeleccionada("");
     setLaborSeleccionada("");
     setNombreLaborSocial("");
+    resetCartas();
     localStorage.removeItem("trabajo_id");
-
-    window.location.reload();
   } catch (error) {
     console.error(error);
     mostrarErrorEliminarEleccion();
   }
-};
+}, [trabajoId, token, setTipoServicio, setDocenteSeleccionado, setNombreDocente, setLineaSeleccionada, setLaborSeleccionada, setNombreLaborSocial, resetCartas]);
 
-
-const obtenerNombresMiembros = async (codigos) => {
-  try {
-    const correos = codigos.map(cod => `${cod}@udh.edu.pe`);
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ correos })
-    });
-    const data = await response.json();
-    setNombresMiembros(data); 
-
-  } catch (error) {
-    console.error('Error al obtener nombres:', error);
-    setNombresMiembros([]); 
-  }
-};
-const verCartasMiembros = async (trabajoId) => {
-  if (!trabajoId) return;
-
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/cartas-aceptacion/grupo/${trabajoId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    const data = await response.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      setCartasMiembros(data);
-      const codigos = data.map((c) => c.codigo_universitario);
-       obtenerNombresMiembros(codigos);
-    } else {
-      setCartasMiembros([]);
-      if (estadoPlan === 'aceptado' && tipoServicio === 'grupal') {
-          mostrarInfoSinCartasGrupo();
-        }
-    }
-  }  catch (error) {
-  console.error('Error:', error);
-  mostrarErrorCargarCartasGrupo();
-}
-};
-
-  useEffect(() => {
-    if (solicitudEnviada && trabajoId) {
-      verCartasMiembros(trabajoId);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [solicitudEnviada, trabajoId]);
-
-
-const formularioCompleto = () => {
-  return (
-    tipoServicio &&
-    facultadSeleccionada &&
-    programaSeleccionado &&
-    docenteSeleccionado &&
-    lineaSeleccionada &&
-    laborSeleccionada
-  );
-};
-
-
+  // Memoizar validación del formulario completo
+  const formularioCompleto = useMemo(() => (
+    Boolean(tipoServicio && docenteSeleccionado && lineaSeleccionada && laborSeleccionada)
+  ), [tipoServicio, docenteSeleccionado, lineaSeleccionada, laborSeleccionada]);
 
   return (
     <>
@@ -242,38 +185,26 @@ const formularioCompleto = () => {
                         <label className="bold-text" htmlFor="facultad">
                           Facultad
                         </label>
-                            <select
-                        id="facultad"                  
-                        value={facultadSeleccionada}
-                        disabled={true}
-                        className={`input-estilo-select texto-mayuscula ${facultadSeleccionada ? 'select-filled' : ''}`}
-                      >
-                        <option value="">Seleccione Facultad</option>
-                        {facultades.map((facultad) => (
-                          <option key={facultad.id_facultad} value={facultad.id_facultad}>
-                            {facultad.nombre_facultad}
-                          </option>
-                        ))}
-                      </select>
+                        <input
+                          type="text"
+                          value={nombreFacultad || ''}
+                          readOnly
+                          className="input-disabled-pru texto-mayuscula"
+                        />
+                        <input type="hidden" value={facultadSeleccionada} />
                         </div>
           
                         <div className="form-group">
                         <label className="bold-text" htmlFor="programa">
                           Programa Académico
                         </label>
-                         <select
-                          id="programa"
-                          value={programaSeleccionado}
-                          disabled={true}
-                          className={`input-estilo-select texto-mayuscula ${programaSeleccionado ? 'select-filled' : ''}`}
-                        >
-                          <option value="">Seleccione Programa Académico</option>
-                          {programas.map((programa) => (
-                            <option key={programa.id_programa} value={programa.id_programa}>
-                              {programa.nombre_programa}
-                            </option>
-                          ))}
-                        </select>
+                        <input
+                          type="text"
+                          value={nombrePrograma || ''}
+                          readOnly
+                          className="input-disabled-pru texto-mayuscula"
+                        />
+                        <input type="hidden" value={programaSeleccionado} />
                         </div>
                         <div className="form-group">
                           <label className="bold-text" htmlFor="docente">
@@ -285,8 +216,7 @@ const formularioCompleto = () => {
                             onChange={(e) => {
                               const id = e.target.value;
                               setDocenteSeleccionado(id);
-                              const docente = docentes.find((d) => d.id_docente === id);
-                              setNombreDocente(docente ? docente.nombre_docente : '');
+                              setNombreDocente(docentesPorId[id] || '');
                             }}
                             disabled={solicitudEnviada}
                             className={`input-estilo-select texto-mayuscula ${docenteSeleccionado ? 'select-filled' : ''}`}
@@ -331,8 +261,7 @@ const formularioCompleto = () => {
                           onChange={(e) => {
                             const id = e.target.value;
                             setLaborSeleccionada(id);
-                            const labor = labores.find((l) => l.id_labores === parseInt(id));
-                            setNombreLaborSocial(labor ? labor.nombre_labores : '');
+                            setNombreLaborSocial(laboresPorId[parseInt(id)] || '');
                           }}
                           disabled={solicitudEnviada}
                           className={`input-estilo-select texto-mayuscula ${laborSeleccionada ? 'select-filled' : ''}`}
@@ -352,7 +281,7 @@ const formularioCompleto = () => {
                         </select>
                         </div>
           
-     {formularioCompleto() && !solicitudEnviada && (
+     {formularioCompleto && !solicitudEnviada && (
       <div className="form-group">
         <button 
           className="btn-solicitar-aprobaciones"
@@ -364,8 +293,11 @@ const formularioCompleto = () => {
           if (!confirmado.isConfirmed) return;
 
           setLoadingSolicitud(true);
-          Promise.resolve(handleSolicitarAprobacion())
-            .finally(() => setLoadingSolicitud(false));
+          try {
+            await handleSolicitarAprobacion();
+          } finally {
+            setLoadingSolicitud(false);
+          }
         }}
           disabled={loadingSolicitud} 
         >
@@ -512,25 +444,15 @@ const formularioCompleto = () => {
 </div>
 
 
-   {cartasMiembros.map((carta, index) => (
-  <div key={index} className="documento-card">
+   {cartasMiembros.map((carta) => (
+  <div key={carta.id || carta.nombre_archivo_pdf} className="documento-card">
     
     <div className="documento-info">
       <PdfIcon />
 
       <span className="titulo-pdf">
         CARTA DE ACEPTACION (
-          {
-            (() => {
-              const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
-              const miembro = nombresMiembros.find(n =>
-                n.correo?.trim().toLowerCase() === correo
-              );
-              return miembro?.nombre && miembro.nombre !== "NO ENCONTRADO"
-                ? miembro.nombre
-                : carta.codigo_universitario;
-            })()
-          }
+        {getNombreMiembro(carta.codigo_universitario)}
         )
       </span>
     </div>

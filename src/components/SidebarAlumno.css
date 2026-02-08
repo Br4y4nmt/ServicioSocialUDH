@@ -177,6 +177,17 @@
 .menu-title i {
   font-size: 16px;
 }
+
+/* Estilos para menús deshabilitados cuando el perfil está incompleto */
+.menu-disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+.menu-disabled:hover {
+  background-color: transparent !important;
+}
 .sidebar-nav ul li {
   margin-bottom: 10px;
   font-size: 0.95rem;

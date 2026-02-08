@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./Dashboard.css"; 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -23,7 +23,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import { Switch, Chip, Divider } from "@mui/material";
+import { Switch } from "@mui/material";
 import axios from "axios";
 import { useUser } from "../UserContext";  
 import {
@@ -296,7 +296,7 @@ useEffect(() => {
 const coloresPrograma = ["#06b6d4", "#14b8a6"];
 
 
-const fetchEstadoRegistro = async () => {
+const fetchEstadoRegistro = useCallback(async () => {
   try {
     if (!token) return;
 
@@ -308,7 +308,7 @@ const fetchEstadoRegistro = async () => {
   } catch (error) {
     console.error("Error obteniendo estado de registro:", error);
   }
-};
+}, [token]);
 
 const toggleRegistro = async () => {
   if (!token) return;
@@ -344,7 +344,7 @@ const toggleRegistro = async () => {
 };
 useEffect(() => {
   fetchEstadoRegistro();
-}, [token]);
+}, [fetchEstadoRegistro]);
 return (
   <Box sx={{ p: 3 }}>
     <Grid container spacing={2} sx={{ mb: 2 }}>

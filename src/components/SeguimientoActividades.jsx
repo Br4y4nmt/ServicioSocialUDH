@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import './DashboardAlumno.css';
@@ -17,6 +17,8 @@ import { useUser } from '../UserContext';
 import ReactDOM from 'react-dom';
 import EvidenciaCameraIcon from "../hooks/componentes/Icons/EvidenciaCameraIcon";
 import CheckSuccessIcon from "../hooks/componentes/Icons/CheckSuccessIcon";
+import InfoTooltipIcon from "../hooks/componentes/Icons/InfoTooltipIcon";
+import SpinnerIcon from "../hooks/componentes/Icons/SpinnerIcon";
 
 
 const SeguimientoActividades = ({
@@ -32,9 +34,7 @@ const SeguimientoActividades = ({
   setObservacionSeleccionada,
   setModalObservacionEstudianteVisible,
   setActividadesSeguimiento,
-  actividadSeleccionada,
-  setActividadSeleccionada,
-  handleVolverASubir
+  setActividadSeleccionada
 }) => {
 
 const [cartasMiembros, setCartasMiembros] = useState([]);
@@ -43,8 +43,7 @@ const solicitudEnviada = planSeleccionado !== null;
 const trabajoId = planSeleccionado?.id;
 const { user } = useUser(); 
 const token = user?.token; 
-const [cargandoEvidencia, setCargandoEvidencia] = useState([]);
-const [modalActividadVisible, setModalActividadVisible] = useState(false);
+const [cargandoEvidencia, setCargandoEvidencia] = useState({});
 const [actividadDetalle, setActividadDetalle] = useState(null);
 const [enviandoSolicitudTermino, setEnviandoSolicitudTermino] = useState(false);
 const [nombresMiembros, setNombresMiembros] = useState([]);
@@ -54,13 +53,10 @@ const verCartasMiembros = useCallback(
     if (!trabajoId || !token) return;
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/cartas-termino/grupo/${trabajoId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }  
-        }
+      const { data } = await axios.get(
+        `/api/cartas-termino/grupo/${trabajoId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      const data = await response.json();
 
       if (Array.isArray(data) && data.length > 0) {
         setCartasMiembros(data);
@@ -78,22 +74,25 @@ const verCartasMiembros = useCallback(
   [token, estadoPlan] 
 );
 
-  const obtenerNombresMiembros = async (correos) => {
+  const obtenerNombresMiembros = useCallback(async (correos) => {
+    if (!correos?.length || !token) return;
+    
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ correos })
-      });
-
-      const data = await response.json();
+      const { data } = await axios.post(
+        '/api/estudiantes/grupo-nombres',
+        { correos },
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          } 
+        }
+      );
       setNombresMiembros(data);
     } catch (error) {
       console.error('Error al obtener nombres de los miembros:', error);
     }
-  };
+  }, [token]);
 
 useEffect(() => {
   if (solicitudEnviada && trabajoId) {
@@ -108,7 +107,111 @@ useEffect(() => {
       const correos = cartasMiembros.map(c => `${c.codigo_universitario}@udh.edu.pe`);
       obtenerNombresMiembros(correos);
     }
-  }, [cartasMiembros]);
+  }, [cartasMiembros, obtenerNombresMiembros]);
+
+  const nombresPorCorreos = useMemo(() => {
+    const map = {};
+    for (const n of nombresMiembros) {
+      const key = (n.correo || '').trim().toLowerCase();
+      map[key] = n.nombre;
+    }
+    return map;
+  }, [nombresMiembros]);
+
+  const getNombreMiembro = useCallback((codigoUniversitario) => {
+    const correo = `${codigoUniversitario}@udh.edu.pe`.trim().toLowerCase();
+    const nombre = nombresPorCorreos[correo];
+    return nombre && nombre !== "NO ENCONTRADO" ? nombre : "NOMBRE NO DISPONIBLE";
+  }, [nombresPorCorreos]);
+
+  // Memoizar map de actividades por ID para búsqueda O(1)
+  const actividadPorId = useMemo(() => {
+    const map = new Map();
+    actividadesSeguimiento.forEach(a => map.set(a.id, a));
+    return map;
+  }, [actividadesSeguimiento]);
+
+  const handleEnviarEvidencia = useCallback(async (actividadId) => {
+    if (cargandoEvidencia[actividadId]) return;
+
+    setCargandoEvidencia(prev => ({ ...prev, [actividadId]: true }));
+
+    const actividad = actividadPorId.get(actividadId);
+    if (!actividad) {
+      setCargandoEvidencia(prev => ({ ...prev, [actividadId]: false }));
+      return;
+    }
+
+    const hoy = new Date();
+    const fechaPermitida = new Date(actividad.fecha_fin_primero);
+    const diferenciaEnMs = hoy - fechaPermitida;
+    const diferenciaEnDias = Math.floor(diferenciaEnMs / (1000 * 60 * 60 * 24));
+    const fechaPermitidaStr = actividad.fecha_fin_primero?.substring(0, 10);
+
+    try {
+      if (diferenciaEnDias < -5) {
+        await mostrarAlertaDemasiadoPronto(fechaPermitidaStr);
+        return;
+      }
+
+      if (diferenciaEnDias > 10) {
+        await mostrarAlertaFechaVencida(fechaPermitidaStr);
+        return;
+      }
+
+      if (!actividad.archivoTemporalEvidencia) {
+        await mostrarAlertaFaltaEvidencia();
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('evidencia', actividad.archivoTemporalEvidencia);
+      const fechaHoy = new Date().toISOString().split('T')[0];
+      formData.append('fecha_fin', fechaHoy);
+      formData.append('estado', 'pendiente');
+
+      const res = await axios.post(
+        `/api/cronograma/evidencia/${actividad.id}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setActividadesSeguimiento(prev =>
+        prev.map(a =>
+          a.id === actividadId
+            ? {
+                ...a,
+                evidencia: res.data.filename,
+                fecha_fin: fechaHoy,
+                estado: 'pendiente',
+                archivoTemporalEvidencia: null
+              }
+            : a
+        )
+      );
+
+      await mostrarAlertaEvidenciaSubida();
+    } catch (error) {
+      console.error('Error al subir evidencia:', error);
+      await mostrarAlertaErrorEvidencia();
+    } finally {
+      setCargandoEvidencia(prev => ({ ...prev, [actividadId]: false }));
+    }
+  }, [token, cargandoEvidencia, setActividadesSeguimiento, actividadPorId]);
+
+  const handleVerDetalleActividad = useCallback((actividad) => {
+    setActividadDetalle(actividad);
+  }, []);
+
+  const handleSeleccionarEvidencia = useCallback(async (actividadId, index) => {
+    await mostrarRecomendacionEvidencia();
+    handleEvidencia(actividadId, index);
+  }, [handleEvidencia]);
+
+  const handleVerEvidencia = useCallback((evidenciaFilename) => {
+    setImagenModal(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${evidenciaFilename}`);
+    setModalVisible(true);
+  }, [setImagenModal, setModalVisible]);
     return (
         <div className="seguimiento-container">
 
@@ -133,13 +236,10 @@ useEffect(() => {
                 <tbody>
                     {actividadesSeguimiento.length > 0 ? (
                         actividadesSeguimiento.map((item, index) => (
-                            <tr key={index}>                                
+                            <tr key={item.id}>                                
                                <td
                                 className="celda-actividad-clickable"
-                                onClick={() => {
-                                    setActividadDetalle(item);
-                                    setModalActividadVisible(true);
-                                }}
+                                onClick={() => handleVerDetalleActividad(item)}
                                 title="Ver detalles"
                                 >
                                 {item.actividad.length > 10 ? item.actividad.slice(0, 10) + '...' : item.actividad}
@@ -175,10 +275,7 @@ useEffect(() => {
                                             </span>
                                             <VerBoton
                                             label="Ver"
-                                            onClick={() => {
-                                                setImagenModal(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${item.evidencia}`);
-                                                setModalVisible(true);
-                                            }}
+                                            onClick={() => handleVerEvidencia(item.evidencia)}
                                         />
                                         </div>
                                     ) : item.archivoTemporalEvidencia ? (
@@ -188,10 +285,7 @@ useEffect(() => {
 
                                     ) : (
                                         <button
-                                          onClick={async () => {
-                                            await mostrarRecomendacionEvidencia();
-                                            handleEvidencia(item.id, index);
-                                          }}
+                                          onClick={() => handleSeleccionarEvidencia(item.id, index)}
                                           className="btn-evidencia-camara"
                                           title="Seleccionar evidencia"
                                         >
@@ -223,111 +317,21 @@ useEffect(() => {
                                         Observado
                                     </button>
                                     ) : (
-                                        
     <button
-  onClick={async () => {
-    if (cargandoEvidencia[index]) return;
-
-    const newCargando = [...cargandoEvidencia];
-    newCargando[index] = true;
-    setCargandoEvidencia(newCargando);
-
-    const actividad = actividadesSeguimiento[index];
-    const hoy = new Date();
-    const fechaPermitida = new Date(actividad.fecha_fin_primero);
-    const diferenciaEnMs = hoy - fechaPermitida;
-    const diferenciaEnDias = Math.floor(diferenciaEnMs / (1000 * 60 * 60 * 24));
-
-    const fechaPermitidaStr = actividad.fecha_fin_primero?.substring(0, 10);
-
-    if (diferenciaEnDias < -5) {
-      await mostrarAlertaDemasiadoPronto(fechaPermitidaStr);
-      newCargando[index] = false;
-      setCargandoEvidencia(newCargando);
-      return;
-    }
-
-    if (diferenciaEnDias > 10) {
-      await mostrarAlertaFechaVencida(fechaPermitidaStr);
-      newCargando[index] = false;
-      setCargandoEvidencia(newCargando);
-      return;
-    }
-
-    if (!actividad.archivoTemporalEvidencia) {
-      await mostrarAlertaFaltaEvidencia();
-      newCargando[index] = false;
-      setCargandoEvidencia(newCargando);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('evidencia', actividad.archivoTemporalEvidencia);
-    const fechaHoy = new Date().toISOString().split('T')[0];
-    formData.append('fecha_fin', fechaHoy);
-    formData.append('estado', 'pendiente');
-
-    try {
-      const res = await axios.post(
-        `/api/cronograma/evidencia/${actividad.id}`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
-      const updated = [...actividadesSeguimiento];
-      updated[index].evidencia = res.data.filename;
-      updated[index].fecha_fin = fechaHoy;
-      updated[index].estado = 'pendiente';
-      updated[index].archivoTemporalEvidencia = null;
-      setActividadesSeguimiento(updated);
-
-      await mostrarAlertaEvidenciaSubida();
-
-    } catch (error) {
-      console.error('Error al subir evidencia:', error);
-      await mostrarAlertaErrorEvidencia();
-
-    } finally {
-      newCargando[index] = false;
-      setCargandoEvidencia(newCargando);
-    }
-  }}
-  className="btn-enviar-evidenciasss"
-  title="Enviar evidencia"
-  disabled={cargandoEvidencia[index]}
->
-  {cargandoEvidencia[index] ? (
-    <>
-      <svg className="spinner" width="16" height="16" viewBox="0 0 50 50">
-        <circle
-          cx="25"
-          cy="25"
-          r="20"
-          fill="none"
-          stroke="#4A5568"
-          strokeWidth="5"
-          strokeDasharray="90 150"
-          strokeLinecap="round"
-        >
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            dur="0.75s"
-            from="0 25 25"
-            to="360 25 25"
-            repeatCount="indefinite"
-          />
-        </circle>
-      </svg>
-      <span style={{ marginLeft: '8px' }}>Enviando...</span>
-    </>
-  ) : (
-    'Enviar'
-  )}
-</button>
-
+      onClick={() => handleEnviarEvidencia(item.id)}
+      className="btn-enviar-evidenciasss"
+      title="Enviar evidencia"
+      disabled={cargandoEvidencia[item.id]}
+    >
+      {cargandoEvidencia[item.id] ? (
+        <>
+          <SpinnerIcon />
+          <span style={{ marginLeft: '8px' }}>Enviando...</span>
+        </>
+      ) : (
+        'Enviar'
+      )}
+    </button>
      )}
     </td>
                                 {hayObservaciones && (
@@ -445,11 +449,7 @@ useEffect(() => {
         {cartasMiembros.length > 1 ? 'Cartas de término del grupo' : 'DOCUMENTOS DE APROBACIÓN DE ACTIVIDADES'}
       </h3>
       <div className="info-tooltip">
-        <svg className="info-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75Z" fill="currentColor"></path>
-          <path d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z" fill="currentColor"></path>
-          <path fillRule="evenodd" clipRule="evenodd" d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z" fill="currentColor"></path>
-        </svg>
+        <InfoTooltipIcon />
         <div className="tooltip-text">
           Aquí podrás visualizar las cartas de término generadas para todos los miembros del grupo.
         </div>
@@ -478,20 +478,12 @@ useEffect(() => {
 
 
 {cartasMiembros.map((carta, index) => (
-  <div key={index} className="documento-card">
+  <div key={carta.codigo_universitario} className="documento-card">
     <div className="documento-info">
       <PdfIcon />
       <span className="titulo-pdf">
         DOCUMENTO DE APROBACION DE ACTIVIDADES (
-        {(() => {
-          const correo = `${carta.codigo_universitario}@udh.edu.pe`.trim().toLowerCase();
-          const miembro = nombresMiembros.find(
-            (n) => n.correo?.trim().toLowerCase() === correo
-          );
-          return miembro && miembro.nombre && miembro.nombre !== "NO ENCONTRADO"
-            ? miembro.nombre
-            : "NOMBRE NO DISPONIBLE";
-        })()}
+        {getNombreMiembro(carta.codigo_universitario)}
         )
       </span>
     </div>
@@ -512,7 +504,7 @@ useEffect(() => {
 
   </div>
 )}
-{modalActividadVisible && actividadDetalle && ReactDOM.createPortal(
+{actividadDetalle && ReactDOM.createPortal(
   <div className="detalle-actividad-overlay">
     <div className="detalle-actividad-modal">
       <h3>Detalle de Actividad</h3>
@@ -528,7 +520,7 @@ useEffect(() => {
       <p><strong>Fecha Término:</strong> {actividadDetalle.fecha_fin || 'Sin completar'}</p>
       <p><strong>Resultados Esperados:</strong> {actividadDetalle.resultados}</p>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button className="detalle-actividad-btn-cerrar" onClick={() => setModalActividadVisible(false)}>
+        <button className="detalle-actividad-btn-cerrar" onClick={() => setActividadDetalle(null)}>
           Cerrar
         </button>
       </div>

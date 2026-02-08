@@ -1,6 +1,9 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import './DashboardAlumno.css';
+import Lottie from "lottie-react";
+import studyAnim from "../assets/study.json";
+
 
 function ConformidadPlan({
   estadoConformidad,
@@ -74,13 +77,13 @@ function ConformidadPlan({
        <div className="plan-info">
          
            <div className="plan-icon-img">
-            <img
-              src="/images/persona.png"
-              alt="Persona"
-              className="persona-img"
-              width={330}          
-              height={330}
-              fetchpriority="high" 
+            <Lottie
+              animationData={studyAnim}
+              loop
+              autoplay
+              rendererSettings={{
+                preserveAspectRatio: "xMidYMid slice"
+              }}
             />
           </div>
          <div className="plan-details">
@@ -89,7 +92,7 @@ function ConformidadPlan({
              <i className="fas fa-user-tie text-azul text-4xl mb-3"></i>
            </div>
            <h4>Docente Supervisor</h4>
-           <p>{nombreDocente}</p>
+           <p>{nombreDocente || 'Cargando docente...'}</p>
          </div>
          <div className="plan-info-box">
      <div className="plan-icon">
@@ -242,7 +245,7 @@ function ConformidadPlan({
           className="input-estilo-select"
           value={fechaPresentacion}
           onChange={(e) => setFechaPresentacion(e.target.value)}
-          min={new Date().toISOString().split('T')[0]} // ⬅️ impide retroceder
+          min={new Date().toISOString().split('T')[0]}
         />
        </div>  
      </div>
@@ -372,6 +375,7 @@ function ConformidadPlan({
          Agregar <i className="fas fa-plus"></i>
        </button>
        </div>
+       <div className="tabla-cronograma-wrapper">
        <table className="tabla-cronograma">
          <thead>
            <tr>
@@ -454,6 +458,7 @@ function ConformidadPlan({
      ))}
    </tbody>
        </table>
+       </div>
       
      </div>
    )}
