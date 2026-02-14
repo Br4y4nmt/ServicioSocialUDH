@@ -1,5 +1,5 @@
 import React from "react";
-import '../../components/DashboardDocente.css';
+import '../../components/docente/DashboardDocente.css';
 
 
 function PdfIcon({ className = "icono-pdf-svg" }) {

@@ -1,0 +1,180 @@
+.perfil-docente-container {
+    padding: 24px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f5fa;
+  }
+  
+  .perfil-docente-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    padding: 24px 32px;
+    max-width: 800px; 
+    margin: 0 auto;    
+  }
+  .perfil-docente-subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .perfil-docente-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+  
+  .perfil-docente-field label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+    
+  .perfil-docente-field input,
+  .perfil-docente-field select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    text-transform: uppercase; 
+  }
+  .editable-hint {
+  font-size: 12px;
+  color: #6c757d; 
+  margin-top: 4px;
+  display: block;
+}
+
+  .perfil-docente-field input::placeholder {
+    text-transform: none;
+    color: #aaa;
+  }
+  
+  /* Botones */
+  .perfil-docente-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: white;
+  }
+  
+  .perfil-docente-btn.guardar {
+    display: block;
+    margin: 30px auto 10px auto;  
+    padding: 10px 20px;
+    background-color: #1a237e;
+    color: white;
+    font-weight: 500;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .perfil-docente-btn.guardar:hover {
+    background-color: #0f164a;
+  }
+  
+  .perfil-docente-btn.siguiente {
+    background-color: #39b49e;
+    margin-top: 20px;
+  }
+  
+  .perfil-docente-btn.siguiente:hover {
+    background-color: #2e9886;
+  }
+  
+  .perfil-docente-footer {
+    margin-top: 24px;
+    text-align: right;
+  }
+  .firma-section {
+  text-align: center;
+  margin: 2rem auto;
+}
+
+.firma-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: center;
+}
+  /* Spinner (single definition) */
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(0,0,0,.2);
+    border-top-color: rgba(0,0,0,.6);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto;
+  }
+  .spinner-lg { width: 28px; height: 28px; border-width: 4px; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Upload / preview box */
+  .firma-upload-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    min-height: 180px;
+    height: 180px;
+    background-color: #f7f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  .firma-upload-box.is-busy { pointer-events: none; }
+  .firma-upload-box:hover { background-color: #eef2f3; }
+  .firma-upload-box svg { margin-bottom: 0.5rem; }
+  .firma-upload-box p { font-size: 14px; color: #555; margin: 0; }
+  .firma-upload-box p span { font-size: 12px; color: #888; }
+
+  .firma-busy-overlay {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,.65);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem;
+    border-radius: 12px; backdrop-filter: blur(1px);
+  }
+  .busy-text { color: #333; font-size: .95rem; }
+
+  /* Preview image */
+  .firma-preview-img {
+    max-width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    background-image:
+      linear-gradient(45deg, #e9e9e9 25%, transparent 25%),
+      linear-gradient(-45deg, #e9e9e9 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e9e9e9 75%),
+      linear-gradient(-45deg, transparent 75%, #e9e9e9 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+  }
+
+  .firma-alert {
+    border: 1px solid #c34b4b; border-radius: 20px; padding: 6px 12px; margin: 0 auto 1rem; max-width: 380px;
+    background-color: #fff4f4; color: #a22b2b; font-size: 0.85rem; font-style: italic; text-align: center;
+  }
+  .firma-alert strong { font-weight: 600; margin-right: 4px; }
+
+  .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .firma-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }

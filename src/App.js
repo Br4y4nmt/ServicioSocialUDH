@@ -1,24 +1,22 @@
 import React from 'react';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/routes/ProtectedRoute';
 import { UserProvider } from './UserContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-import DashboardDocente from './components/DashboardDocente';
-import DashboardAlumno from './components/DashboardAlumno';
+import LoginPage from './components/auth/Login/LoginPage';
+import RegisterPage from './components/auth/Register/RegisterPage';
+import DashboardDocente from './components/docente/DashboardDocente';
+import DashboardAlumno from './components/alumno/DashboardAlumno';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DocumentosTrabajo from './components/DocumentosTrabajo';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import MiPerfilDocente from './components/MiPerfilDocente';
-import SeguimientoServicioDocente from './components/SeguimientoServicioDocente';
-import DashboardGestor from './components/DashboardGestor';
-import DashboardProgramaAcademico from './components/DashboardProgramaAcademico';
-import RevisionPlanSocial from './components/RevisionPlanSocial';
-import RevisionDocente from './components/RevisionDocente';
-import PerfilDocente from './components/PerfilDocente';
-import MiPerfil from './components/MiPerfil';
-import Dasborasd from "./components/Dashboard";
-import PerfilAlumno from './components/PerfilAlumno';
+import MiPerfilDocente from './components/docente/MiPerfilDocente';
+import SeguimientoServicioDocente from './components/docente/sections/SeguimientoServicioDocente';
+import DashboardGestor from './components/gestor/DashboardGestor';
+import RevisionPlanSocial from './components/docente/sections/RevisionPlanSocial';
+import PerfilDocente from './components/docente/PerfilDocente';
+import MiPerfil from './components/alumno/MiPerfil';
+import Dasborasd from "./components/gestor/sections/Dashboard";
+import PerfilAlumno from './components/alumno/PerfilAlumno';
 import './App.css';
 
 function App() {
@@ -51,16 +49,6 @@ function App() {
         <Route path="/mi-perfil-docente" element={
           <ProtectedRoute allowedRoles={['docente supervisor']}>
             <MiPerfilDocente />
-          </ProtectedRoute>
-        } />
-        <Route path="/revision-docente" element={
-          <ProtectedRoute allowedRoles={['docente supervisor']}>
-            <RevisionDocente />
-          </ProtectedRoute>
-        } />
-         <Route path="/dashboard-programa-academico" element={
-          <ProtectedRoute allowedRoles={['programa-academico']}>
-            <DashboardProgramaAcademico />
           </ProtectedRoute>
         } />
         <Route path="/mi-perfil" element={

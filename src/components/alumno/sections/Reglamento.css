@@ -1,0 +1,121 @@
+.check-circle-plan {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #10b981;
+  color: white;
+  font-size: 13px;
+  border: 2px solid #10b981;
+  flex-shrink: 0;
+  align-self: flex-start; 
+  margin-top: 2px;  
+  margin-right: 12px;       
+}
+.tooltip-text {
+  visibility: hidden;
+  width: 260px;
+  background-color: #ffffff;
+  color: #333;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; 
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.info-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.reglamento-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap; 
+}
+
+.reglamento-datos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.reglamento-acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.titulo-reglamento {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  letter-spacing: 0.5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.etiqueta-vigente {
+  background-color: #38A169;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+@media (max-width: 1024px) {
+  .titulo-reglamento {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .titulo-reglamento {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-reglamento {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .reglamento-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reglamento-acciones {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .btn-ver-documento-inline {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}

@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { PDFDocument } from "pdf-lib";
 import Swal from "sweetalert2";
+import { alertWarning } from "../hooks/alerts/alertas";
 
 
 export async function generarPlanServicioSocialPDF({
@@ -51,11 +52,7 @@ export async function generarPlanServicioSocialPDF({
   ];
 
   if (!imagenesAnexos?.cartaAceptacion) {
-    await Swal.fire({
-      icon: "warning",
-      title: "Falta el ANEXO",
-      text: "Debes adjuntar el convenio de Cooperación Institucional antes de generar el PDF.",
-    });
+    await alertWarning('Falta el ANEXO', 'Debes adjuntar el convenio de Cooperación Institucional antes de generar el PDF.');
     return null;
   }
 
@@ -65,11 +62,7 @@ export async function generarPlanServicioSocialPDF({
     actividades.length === 0;
 
   if (camposVacios) {
-    await Swal.fire({
-      icon: "warning",
-      title: "Campos incompletos",
-      text: "Completa todos los campos del esquema plan y agrega al menos una actividad antes de generar el PDF.",
-    });
+    await alertWarning('Campos incompletos', 'Completa todos los campos del esquema plan y agrega al menos una actividad antes de generar el PDF.');
     return null;
   }
 
@@ -89,18 +82,13 @@ export async function generarPlanServicioSocialPDF({
   }, 0);
 
   if (diasRequeridos && sumaDiasActividades < diasRequeridos) {
-    await Swal.fire({
-      icon: "warning",
-      title: "Duración insuficiente",
-      text: `La suma total de tus actividades es de ${Math.floor(
-        sumaDiasActividades
-      )} días, pero el periodo estimado es de ${diasRequeridos} días.`,
-      confirmButtonText: "Corregir",
-    });
+    await alertWarning(
+      'Duración insuficiente',
+      `La suma total de tus actividades es de ${Math.floor(sumaDiasActividades)} días, pero el periodo estimado es de ${diasRequeridos} días.`
+    );
     return null;
   }
 
-  // Validar traslapes
   const actividadesOrdenadas = [...actividades].sort(
     (a, b) => new Date(a.fecha) - new Date(b.fecha)
   );

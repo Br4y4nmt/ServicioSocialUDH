@@ -1,6 +1,6 @@
-// src/components/modals/ActividadModalAlumno.jsx
 import React from "react";
 import Swal from "sweetalert2";
+import { alertWarning, alertError } from "../../hooks/alerts/alertas";
 
 function ActividadModalAlumno({
   visible,
@@ -26,12 +26,12 @@ function ActividadModalAlumno({
 
   const handleGuardar = async () => {
     if (nuevaActividad.trim() === "" || nuevaFecha.trim() === "") {
-      await Swal.fire({
-        icon: "warning",
-        title: "Campos incompletos",
-        text: "Completa todos los campos obligatorios antes de guardar.",
-        confirmButtonText: "Aceptar",
-      });
+      await alertWarning('Campos incompletos', 'Completa todos los campos obligatorios antes de guardar.');
+      return;
+    }
+
+    if ((nuevaFechaFin || '').trim() === '') {
+      await alertWarning('Fecha fin requerida', 'Ingresa la fecha fin de la actividad.');
       return;
     }
 
@@ -43,22 +43,12 @@ function ActividadModalAlumno({
       const diasDiferencia = diferenciaMs / (1000 * 60 * 60 * 24);
 
       if (diasDiferencia > 30) {
-        await Swal.fire({
-          icon: "error",
-          title: "Duración excedida",
-          text: "Cada actividad puede durar como máximo 30 días.",
-          confirmButtonText: "Entendido",
-        });
+        await alertError('Duración excedida', 'Cada actividad puede durar como máximo 30 días.');
         return;
       }
 
       if (diasDiferencia < 0) {
-        await Swal.fire({
-          icon: "error",
-          title: "Fechas inválidas",
-          text: "La fecha fin no puede ser anterior a la fecha de inicio.",
-          confirmButtonText: "Corregir",
-        });
+        await alertError('Fechas inválidas', 'La fecha fin no puede ser anterior a la fecha de inicio.');
         return;
       }
     }

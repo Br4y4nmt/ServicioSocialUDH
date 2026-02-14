@@ -1,4 +1,3 @@
-// src/components/modals/ModalDeclinar.jsx
 import React from "react";
 
 function ModalDeclinar({

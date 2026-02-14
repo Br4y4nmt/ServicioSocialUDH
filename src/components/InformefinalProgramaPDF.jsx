@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  // Borde doble elegante (dos rectángulos)
   borderOuter: {
     position: 'absolute',
     top: 18,
@@ -72,7 +71,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
 
-  // ===== BLOQUE SEGÚN CAPTURA =====
   constanciaTitle: {
     fontSize: 14,
     fontFamily: 'Times-Bold',
@@ -122,7 +120,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
 
-  // Firma centrada
   firmaContainer: {
     marginTop: 28,
     alignItems: 'center',
@@ -135,7 +132,6 @@ const styles = StyleSheet.create({
     objectFit: 'contain',
   },
 
-  // QR absoluto abajo-izquierda (dentro del padding de la página)
   qrContainer: {
     position: 'absolute',
     bottom: 40,
@@ -172,7 +168,6 @@ const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
-        {/* Borde doble */}
         <View style={styles.borderOuter} fixed />
         <View style={styles.borderInner} fixed />
 
@@ -180,11 +175,9 @@ const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
           <Image src="/images/logoSS.png" style={styles.logo} />
         </View>
 
-        {/* TÍTULO PRINCIPAL NO SE TOCA */}
         <Text style={styles.title}>Oficina Servicio Social Universitario</Text>
         <View style={styles.separator} />
 
-        {/* ✅ AQUÍ VA EL ORDEN COMO LA CAPTURA */}
         <Text style={styles.constanciaTitle}>
           CONSTANCIA DE CONCLUSIÓN DEL SERVICIO SOCIAL UNIVERSITARIO
         </Text>
@@ -205,12 +198,10 @@ const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
 
         <Text style={styles.dateRight}>{fechaFormateada}</Text>
 
-        {/* Firma */}
         <View style={styles.firmaContainer}>
           <Image src="/images/firma.jpg" style={styles.firmaImage} />
         </View>
 
-        {/* QR */}
         {qrImage && verificationUrl && (
           <View style={styles.qrContainer}>
             <Image src={qrImage} style={styles.qrImage} />

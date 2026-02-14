@@ -1,0 +1,42 @@
+.search-input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.search-input-field {
+  padding: 8px 10px;   
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.2;    
+  min-width: 200px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input-field:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.search-input-field::placeholder {
+  color: #999;
+}
+
+.docentes-search-label.search-input-label,
+.labores-search-label.search-input-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.docentes-search-label.search-input-label .search-input-field,
+.labores-search-label.search-input-label .search-input-field {
+  min-width: 250px;
+}

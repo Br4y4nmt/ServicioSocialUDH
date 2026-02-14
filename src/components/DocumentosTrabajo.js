@@ -14,11 +14,7 @@ function DocumentosTrabajo() {
         const archivo = res.data.carta_aceptacion_pdf;
         if (archivo) {
           const url = `/uploads/planes_labor_social/${archivo}`;
-
-          // Abrir en nueva pestaña
           window.open(url, '_blank');
-
-          // Descargar automáticamente
           const link = document.createElement('a');
           link.href = url;
           link.download = archivo;
