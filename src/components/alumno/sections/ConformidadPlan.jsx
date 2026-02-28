@@ -638,16 +638,7 @@ function ConformidadPlan({
 
     {estadoConformidad === 'aceptado' && (
   <>
-    <div
-      style={{
-        color: '#319795',
-        fontStyle: 'italic',
-        fontWeight: 400,
-        marginLeft: '0px',
-        marginTop: '4px',
-        fontSize: '14px'
-      }}
-    >
+    <div className="texto-cursiva">
       El docente supervisor ha aceptado tu solicitud, continúa al siguiente paso para poder confirmar tu plan de trabajo.
     </div>
 

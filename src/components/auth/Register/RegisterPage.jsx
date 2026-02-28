@@ -23,7 +23,7 @@ const handleRegister = async (e) => {
     ? parseInt(codigo.substring(1, 5), 10)
     : parseInt(codigo.substring(0, 4), 10);
 
-  if (isNaN(anio) || anio < 2019) {
+  if (isNaN(anio) || anio < 2020) {
     await alertWarning('Código no permitido', 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.');
     return;
   }

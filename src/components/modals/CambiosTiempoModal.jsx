@@ -149,7 +149,7 @@ function CambiosTiempoModal({
         )}
 
         <div className="modal-tiempo-footer">
-          <button className="modal-tiempo-btn-cerrar" onClick={onClose}>
+          <button className="seguimiento-btn-cerrar" onClick={onClose}>
             Cerrar
           </button>
         </div>

@@ -16,4 +16,3 @@ root.render(
   </React.StrictMode>
 );
 
-// Performance measurement disabled — removed reportWebVitals usage.

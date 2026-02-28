@@ -267,6 +267,14 @@
   .texto-cursiva {
     font-style: italic;
   }
+  .texto-cursiva {
+    color: #319795;
+    font-style: italic;
+    font-weight: 400;
+    margin-left: 0px;
+    margin-top: 4px;
+    font-size: 14px;
+  }
   .input-disabled {
     width: 100%;
     padding: 8px 10px;
@@ -1722,12 +1730,6 @@
   border-radius: 6px;
   font-size: 13px;
   cursor: default;
-}
-
-.texto-solicitud-aprobada {
-  color: #2C7A7B;
-  font-style: italic;
-  font-size: 14px;
 }
 
 @media screen and (max-width: 768px) {

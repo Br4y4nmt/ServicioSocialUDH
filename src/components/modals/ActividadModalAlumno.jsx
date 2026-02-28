@@ -1,5 +1,4 @@
 import React from "react";
-import Swal from "sweetalert2";
 import { alertWarning, alertError } from "../../hooks/alerts/alertas";
 
 function ActividadModalAlumno({

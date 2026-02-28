@@ -6,10 +6,10 @@ import '../../ModalGlobal.css';
 import {
   alertWarning,
   toastWarning,
-  toastSuccess,
   alertError,
   mostrarRecomendacionEvidencia,
 } from "../../../hooks/alerts/alertas";
+import { showTopSuccessToast } from "../../../hooks/alerts/useWelcomeToast";
 import VerBoton, { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import { useUser } from '../../../UserContext';
@@ -191,7 +191,7 @@ useEffect(() => {
         )
       );
 
-      toastSuccess('Evidencia enviada', { text: 'Tu evidencia fue enviada correctamente' });
+      showTopSuccessToast('Evidencia enviada', 'Tu evidencia fue enviada correctamente');
     } catch (error) {
       console.error('Error al subir evidencia:', error);
       alertError('Error al subir evidencia', error.response?.data?.message || 'No se pudo subir la evidencia');
@@ -428,11 +428,11 @@ useEffect(() => {
                     <div style={{ marginTop: '0px', paddingLeft: '32px' }}>
                         <p><strong>Aprobación de Actividades: </strong></p>
                         {estadoSolicitudTermino === 'aprobada' ? (
-                        <p className="texto-solicitud-aprobada">
+                        <p className="texto-cursiva">
                           Se aprobó correctamente su solicitud. Puede ver y descargar su documento de término de actividades.
                         </p>
                       ) : (
-                        <p className="texto-solicitud-aprobada">
+                        <p className="texto-cursiva">
                           Tu solicitud fue enviada correctamente. El docente revisará tu cronograma antes de aprobar la carta.
                         </p>
                       )}

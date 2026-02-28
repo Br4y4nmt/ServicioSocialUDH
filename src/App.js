@@ -11,6 +11,7 @@ import DocumentosTrabajo from './components/DocumentosTrabajo';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import MiPerfilDocente from './components/docente/MiPerfilDocente';
 import SeguimientoServicioDocente from './components/docente/sections/SeguimientoServicioDocente';
+import SolicitudesInformesFinales from './components/docente/sections/SolicitudesInformesFinales';
 import DashboardGestor from './components/gestor/DashboardGestor';
 import RevisionPlanSocial from './components/docente/sections/RevisionPlanSocial';
 import PerfilDocente from './components/docente/PerfilDocente';
@@ -78,6 +79,11 @@ function App() {
         <Route path="/dashboard-docente" element={
           <ProtectedRoute allowedRoles={['docente supervisor']}>
           <DashboardDocente />
+          </ProtectedRoute>
+        } />
+        <Route path="/solicitudes-informes-finales" element={
+          <ProtectedRoute allowedRoles={['docente supervisor']}>
+            <SolicitudesInformesFinales />
           </ProtectedRoute>
         } />
         <Route path="*" element={<LoginPage />} />

@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
-/* =========================================================
-   TOAST BASE (reutilizable)
-========================================================= */
 const createToast = (
   position = "top-end",
   icon = "success",
@@ -25,9 +22,7 @@ const createToast = (
     },
   });
 
-/* =========================================================
-   TOAST DE BIENVENIDA (HOOK)
-========================================================= */
+
 export const useWelcomeToast = (
   flagKey = "showBienvenida",
   nameKey = "nombre_usuario"
@@ -46,9 +41,6 @@ export const useWelcomeToast = (
   }, [flagKey, nameKey]);
 };
 
-/* =========================================================
-   TOASTS GENERALES
-========================================================= */
 export const showTopSuccessToast = (title, text = "") => {
   createToast("top-end", "success").fire({ title, text });
 };
@@ -61,9 +53,6 @@ export const showTopErrorToast = (title, text = "") => {
   createToast("top-end", "error").fire({ title, text });
 };
 
-/* =========================================================
-   OPCIONAL: abajo-izquierda (como tu toastWarning anterior)
-========================================================= */
 export const showBottomStartWarningToast = (title, text = "") => {
   createToast("bottom-start", "warning", 3500).fire({ title, text });
 };

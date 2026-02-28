@@ -5,7 +5,9 @@ import {
   toastError,
   alertError,
   alertWarning,
+  alertconfirmacion,
 } from "../../../hooks/alerts/alertas";
+import { showTopSuccessToast } from "../../../hooks/alerts/useWelcomeToast";
 import { useUser } from "../../../UserContext";
 import "./InformeFinal.css";
 import "../DashboardAlumno.css";
@@ -29,6 +31,8 @@ export default function InformeFinal({
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const estaAprobado = estadoInforme === "aprobado";
+  const tieneCertificado = !!planSeleccionado?.certificado_final;
+  const estadoCertificado = planSeleccionado?.certificado_final ? 'tramitado' : 'pendiente';
   const estaRechazado = estadoInforme === "rechazado";
   const estaPendienteEnviado = estadoInforme === "pendiente" && yaEnviado;
   const bloqueado = yaEnviado && !estaRechazado;
@@ -63,22 +67,16 @@ export default function InformeFinal({
   const resolveTrabajoId = () => {
     if (trabajoId) return trabajoId;
 
-    // intentamos recuperar algo desde localStorage (por si tu app lo guarda ahí)
     const candidates = ["planSeleccionado", "planSeleccionadoId", "trabajoId"];
     for (const key of candidates) {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
-
-      // si es un número/id plano
       if (/^\d+$/.test(raw)) return raw;
-
-      // si es JSON
       try {
         const parsed = JSON.parse(raw);
         if (parsed?.id) return parsed.id;
         if (parsed?.planSeleccionado?.id) return parsed.planSeleccionado.id;
       } catch {
-        // ignore
       }
     }
 
@@ -89,7 +87,7 @@ export default function InformeFinal({
     if (!f) return { ok: false, msg: "Selecciona un archivo." };
     if (f.type !== "application/pdf")
       return { ok: false, msg: "Solo se permiten archivos PDF." };
-    const maxBytes = 10 * 1024 * 1024; // 10MB
+    const maxBytes = 10 * 1024 * 1024; 
     if (f.size > maxBytes)
       return {
         ok: false,
@@ -107,6 +105,17 @@ export default function InformeFinal({
         timerProgressBar: true,
       });
     }
+
+    const confirmacion = await alertconfirmacion({
+      title: '¿Enviar informe final?',
+      text: '¿Deseas enviar el informe final para revisión? Una vez enviado no podrás modificarlo hasta que sea revisado.',
+      confirmButtonText: 'Enviar',
+      cancelButtonText: 'Cancelar',
+      icon: 'question',
+      confirmButtonColor: '#2E9E7F',
+    });
+
+    if (!confirmacion || !confirmacion.isConfirmed) return;
 
     const trabajo_id = resolveTrabajoId();
     if (!trabajo_id) {
@@ -135,7 +144,6 @@ export default function InformeFinal({
       await axios.post("/api/trabajo-social/guardar-informe-final", form, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // NO pongas manualmente multipart boundary, axios lo setea solo
         },
       });
 
@@ -198,7 +206,6 @@ useEffect(() => {
       <div className="seguimiento-container">
         <div className="if-layout">
           <main className="if-left">
-            {/* PASO 1: SIEMPRE */}
             <section className="if-card">
               <header className="if-card-header">
                 <div className="if-title-row">
@@ -242,6 +249,7 @@ useEffect(() => {
                   className="if-btn-primary"
                   href="/plantillas/SERVICIO SOCIAL - UNIVERSIDAD DE HUANUCO.pdf"
                   download
+                  onClick={() => showTopSuccessToast('Descarga iniciada', 'Se descargó correctamente')}
                 >
                   <DownloadIcon className="if-btn-icon" aria-hidden="true" />
                   Descargar Plantilla PDF
@@ -259,8 +267,10 @@ useEffect(() => {
                     <div>
                       <h2 className="if-title">Certificados</h2>
                       <p className="if-subtitle">
-                        Tu informe fue aprobado. Aquí tienes tus documentos generados.
-                      </p>
+                      {tieneCertificado
+                        ? "Tu certificado ya está disponible."
+                        : "Tu informe fue aprobado. El certificado está en proceso de emisión."}
+                    </p>
                     </div>
                   </div>
                   <div className="if-divider" aria-hidden="true" />
@@ -289,7 +299,9 @@ useEffect(() => {
                         <span className="if-doc-empty">No disponible</span>
                       )}
 
-                      <span className="estado-tramitado">Tramitado</span>
+                      <span className={estadoCertificado === 'tramitado' ? 'estado-tramitado' : 'btn-estado-pendiente'}>
+                        {estadoCertificado === 'tramitado' ? 'Tramitado' : 'Pendiente'}
+                      </span>
                     </div>
                   </div>
 
@@ -338,7 +350,9 @@ useEffect(() => {
                                     )
                                   }
                                 />
-                                <span className="estado-tramitado">Tramitado</span>
+                                <span className={cert.nombre_archivo_pdf ? 'estado-tramitado' : 'btn-estado-pendiente'}>
+                                  {cert.nombre_archivo_pdf ? 'Tramitado' : 'Pendiente'}
+                                </span>
                               </div>
                             </div>
                           );
@@ -371,10 +385,9 @@ useEffect(() => {
     </header>
 
     <div className="if-card-body">
-      {/* Caja tipo dropzone pero en modo lectura */}
       <div className="if-dropzone is-disabled" style={{ cursor: "not-allowed" }}>
         <div className="if-dropzone-empty">
-          <InfoIcon className="if-upload-icon" aria-hidden="true" />
+          <CheckCircleBig className="if-upload-icon " aria-hidden="true" />
           <p className="if-dropzone-title">Documento enviado</p>
           <p className="if-dropzone-or">Tu asesor está revisando el informe</p>
           <p className="if-dropzone-sub">Cuando sea aprobado, podrás descargar tus certificados.</p>
@@ -408,7 +421,6 @@ useEffect(() => {
                 </header>
 
                 <div className="if-card-body">
-                  {/* DROPZONE */}
                   <div
                     className={`if-dropzone ${bloqueado ? "is-disabled" : ""}`}
                     onClick={() => !bloqueado && pickFile()}

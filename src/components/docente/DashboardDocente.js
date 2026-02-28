@@ -48,7 +48,6 @@ const RevisionContent = memo(function RevisionContent({
   );
 });
 
-
 const TablaTrabajos = memo(function TablaTrabajos({
   trabajosSociales,
   trabajoEnProcesoId,

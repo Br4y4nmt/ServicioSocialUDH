@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './SidebarDocente.css';
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
+import InformesFinalesIcon from "../../../hooks/componentes/Icons/InformesFinalesIcon";
 import StudentMonitoringIcon from "../../../hooks/componentes/Icons/StudentMonitoringIcon";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -20,6 +21,7 @@ function SidebarDocente({
   const isRevision = location.pathname === '/dashboard-docente';
   const isConformidad = location.pathname === '/revision-documento-docente';
   const isSeguimiento = location.pathname === '/seguimiento-docente';
+  const isSolicitudesInformes = location.pathname === '/solicitudes-informes-finales';
 
   useEffect(() => {
     const foto = localStorage.getItem('foto_perfil');
@@ -35,6 +37,8 @@ function SidebarDocente({
       setOpenMenu(0);
     } else if (['seguimiento'].includes(activeSection)) {
       setOpenMenu(1);
+    } else if (['informes'].includes(activeSection)) {
+      setOpenMenu(2);
     } else {
       setOpenMenu(null);
     }
@@ -142,6 +146,46 @@ function SidebarDocente({
                       onClick={() => navigate('/seguimiento-docente')}
                     >
                       Seguimiento Servicio social
+                    </li>
+                  </ul>
+                )}
+              </li>
+
+              <li className="menu-item-docente">
+                <button
+                  onClick={() => {
+                    setActiveSection('informes');
+                    toggleMenu(2);
+                  }}
+                  className={`menu-title-docente ${
+                    openMenu === 2 ? 'menu-title-docente--active' : ''
+                  }`}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <InformesFinalesIcon size={32} color="#2e9e7f" />
+                    <span>Informes Finales</span>
+                  </div>
+
+                  <i
+                    className={`fas ${
+                      openMenu === 2 ? 'fa-chevron-up' : 'fa-chevron-down'
+                    } menu-title-docente__chevron`}
+                  ></i>
+                </button>
+
+                {openMenu === 2 && (
+                  <ul className="submenu-docente">
+                    <li
+                      className={isSolicitudesInformes ? 'selected-docente' : ''}
+                      onClick={() => navigate('/solicitudes-informes-finales')}
+                    >
+                      Solicitudes Informes Finales
                     </li>
                   </ul>
                 )}

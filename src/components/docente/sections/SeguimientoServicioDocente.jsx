@@ -5,6 +5,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './RevisionPlanSocial.css';
 import VerBoton from "../../../hooks/componentes/VerBoton";
+import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
+import EvidenciaModal from '../../modals/EvidenciaModal';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from '../../../UserContext';
 import {
@@ -354,7 +356,7 @@ const handleEnviarObservacion = () => {
                   {plan.solicitud_termino === 'solicitada' ? (
                   <div className="contenedor-botones-termino">
                     <button
-                    className="btn-aceptar-termino"
+                    className="btn-accion aceptar"
                     disabled={isAprobando}
                     onClick={async () => {
                       const result = await alertconfirmacion({
@@ -372,7 +374,7 @@ const handleEnviarObservacion = () => {
                     {isAprobando ? 'Procesando...' : 'Aceptar'}
                   </button>
                    <button
-                    className="btn-rechazar-termino"
+                    className="btn-accion rechazar"
                     disabled={isAprobando}
                     onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
                   >
@@ -380,15 +382,11 @@ const handleEnviarObservacion = () => {
                   </button>
                   </div>
           ) : (
-            <span className="estado-termino">
-            {plan.solicitud_termino === 'aprobada' ? (
-              <span className="estado-label estado-aprobada">APROBADA</span>
-            ) : plan.solicitud_termino === 'rechazada' ? (
-              <span className="estado-label estado-rechazada">RECHAZADA</span>
-            ) : (
-              <span className="estado-label estado-no-solicitada">No solicitada</span>
-            )}
-          </span>
+            <span>
+              <span className={`badge-estado ${plan.solicitud_termino === 'aprobada' ? 'aprobado' : plan.solicitud_termino === 'rechazada' ? 'rechazado' : 'no-solicitada'}`}>
+                {(plan.solicitud_termino === 'aprobada' && 'APROBADO') || (plan.solicitud_termino === 'rechazada' && 'RECHAZADO') || 'NO SOLICITADA'}
+              </span>
+            </span>
           )}
         </td>
                       </tr>
@@ -404,44 +402,12 @@ const handleEnviarObservacion = () => {
       </main>
 
 
-{modalGrupoVisible && (
-  <div className="modal-grupo-overlay">
-    <div className="modal-grupo-content">
-      <h3 className="modal-grupo-title">Integrantes del Grupo</h3>
-      <ul className="modal-grupo-lista">
-        {integrantesGrupo.length > 0 ? (
-          integrantesGrupo.map((integrante, index) => (
-           <li key={index}>
-    <span className="modal-grupo-correo" style={{ display: 'inline' }}>
-      {integrante.correo_institucional}
-    </span>
-    <span style={{ display: 'inline' }}> - </span>
-    <span className="modal-grupo-nombre">
-      {
-        (() => {
-          const encontrado = nombresMiembros.find(n => 
-            n.correo?.toLowerCase().trim() === integrante.correo_institucional.toLowerCase().trim()
-          );
-          return encontrado && encontrado.nombre && encontrado.nombre !== 'NO ENCONTRADO'
-            ? encontrado.nombre
-            : 'NOMBRE NO DISPONIBLE';
-        })()
-      }
-    </span>
-  </li>
-          ))
-        ) : (
-          <li className="modal-grupo-vacio">No hay integrantes registrados.</li>
-        )}
-      </ul>
-      <div className="modal-grupo-actions">
-        <button className="modal-grupo-btn cerrar" onClick={cerrarModalGrupo}>
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+<ModalGrupoIntegrantes
+  visible={modalGrupoVisible}
+  integrantes={integrantesGrupo}
+  nombresMiembros={nombresMiembros}
+  onCerrar={cerrarModalGrupo}
+/> 
 
 
 {modalVisible && (
@@ -518,19 +484,11 @@ const handleEnviarObservacion = () => {
 )}
 
 
-{modalEvidenciaVisible && (
-  <div className="modal-evidencia-overlay">
-    <div className="modal-evidencia-content">
-      <h3 className="modal-evidencia-title">Evidencia</h3>
-      <img src={imagenEvidencia} alt="Evidencia" className="modal-evidencia-img" />
-      <div className="modal-evidencia-actions">
-        <button className="modal-evidencia-btn-cerrar" onClick={handleCerrarModalEvidencia}>
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+<EvidenciaModal
+  visible={modalEvidenciaVisible}
+  imagen={imagenEvidencia}
+  onClose={handleCerrarModalEvidencia}
+/>
 
 
 {modalObservacionVisible && (

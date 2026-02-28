@@ -50,7 +50,7 @@ export const alertconfirmacion = ({
   confirmButtonText = 'Sí, eliminar',
   cancelButtonText = 'Cancelar',
   confirmButtonColor = '#d33',
-  cancelButtonColor = '#3085d6',
+  cancelButtonColor = '#083A59',
 } = {}) => {
   return Swal.fire({
     title,

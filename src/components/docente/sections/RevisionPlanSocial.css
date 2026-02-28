@@ -17,26 +17,6 @@
   width: 100%;              
 }
 
-.btn-aceptar-termino {
-  padding: 4px 10px;
-  background-color: #38a169;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.btn-rechazar-termino {
-  padding: 4px 10px;
-  background-color: #e53e3e;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
 .conformidad-title {
   font-size: 22px;
   margin-bottom: 20px;
@@ -107,71 +87,6 @@
   text-align: right;
 }
 
-.conformidad-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.4);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.conformidad-modal-content {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 450px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.conformidad-modal-content h3 {
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.conformidad-modal-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  outline: none;
-}
-
-.conformidad-modal-select:focus {
-  border-color: #1a237e;
-}
-
-.conformidad-modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.conformidad-btn.guardar {
-  background-color: #1a237e;
-  padding: 8px 14px;
-}
-
-.conformidad-btn.guardar:hover {
-  background-color: #0f164a;
-}
-
-.conformidad-btn.cancelar {
-  background-color: #9e9e9e;
-  padding: 8px 14px;
-}
-
-.conformidad-btn.cancelar:hover {
-  background-color: #7e7e7e;
-}
 .btn-ojo-ver-plan-docente {
   display: inline-flex;
   align-items: center;
@@ -206,23 +121,6 @@
 .conformidad-table th {
   text-align: center;
   vertical-align: middle;
-}
-.btn-editar-plan-social {
-  padding: 8px 10px;
-  font-size: 14px;
-  background-color: #003366;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.btn-editar-plan-social:hover {
-  background-color: #0d47a1;
 }
 .modal-cronograma-overlay {
   position: fixed;
@@ -411,11 +309,10 @@
   text-align: center;
   transition: all 0.3s ease-in-out;
 }
-/* ===== Overlay profesional (bloquea interacción) ===== */
 .overlay-loading {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55); /* slate oscuro */
+  background: rgba(15, 23, 42, 0.55); 
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -425,7 +322,6 @@
   padding: 24px;
 }
 
-/* ===== Card ===== */
 .loading-box {
   width: 420px;
   max-width: 100%;
@@ -445,14 +341,13 @@
   to   { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* ===== Spinner (suave, moderno) ===== */
 .spinner {
   width: 52px;
   height: 52px;
   border-radius: 999px;
   margin: 2px auto 14px;
   border: 4px solid rgba(15, 23, 42, 0.12);
-  border-top-color: #2563eb; /* azul */
+  border-top-color: #2563eb; 
   animation: spin 0.85s linear infinite;
 }
 
@@ -460,28 +355,21 @@
   to { transform: rotate(360deg); }
 }
 
-/* ===== Texto ===== */
 .loading-title {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a; /* slate-900 */
+  color: #0f172a;
   letter-spacing: 0.2px;
 }
 
 .loading-subtitle {
   margin: 8px 0 0;
   font-size: 13px;
-  color: #475569; /* slate-600 */
+  color: #475569;
   line-height: 1.4;
 }
 
-/* ===== Progreso (opcional) =====
-   Úsalo si quieres una barra visual además del texto:
-   <div className="loading-progress">
-     <div className="loading-progress__bar" style={{ width: `${pct}%` }} />
-   </div>
-*/
 .loading-progress {
   margin: 14px auto 8px;
   height: 10px;
@@ -500,14 +388,12 @@
   transition: width 220ms ease;
 }
 
-/* ===== Hint ===== */
 .loading-hint {
   margin: 10px 0 0;
   font-size: 12px;
-  color: #64748b; /* slate-500 */
+  color: #64748b; 
 }
 
-/* ===== Accesibilidad: reduce motion ===== */
 @media (prefers-reduced-motion: reduce) {
   .spinner { animation: none; }
   .loading-box { animation: none; }
@@ -787,7 +673,6 @@
   margin-top: 12px;
 }
 
-
 .enviar-btn{
   background-color: #38a169;
   color: white;
@@ -815,23 +700,6 @@
 .estado-texto-normal {
   text-transform: none !important;
 }
-.estado-label {
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.estado-aprobada {
-  background-color: #38a169;
-  color: #fff;
-}
-
-.estado-rechazada {
-  background-color: #e53e3e;
-  color: #fff;
-}
-
 .estado-no-solicitada {
   color: #aaa;
 }

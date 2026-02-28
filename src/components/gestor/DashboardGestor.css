@@ -33,7 +33,6 @@
     border-radius: 5px;
   }
   
-
   .layout-gestor {
     display: flex;
     min-height: 100vh; 
@@ -335,38 +334,6 @@
   justify-content: flex-end;
   gap: 10px;
 }
-
-.badge-estado {
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:9999px;
-  font-weight:600;
-  font-size:.85rem;
-  line-height:1;
-  letter-spacing:.2px;
-  text-transform:none; 
-  border:1px solid transparent;
-}
-
-.badge-estado.pendiente{
-  background:#f3f4f6;   
-  color:#6b7280;       
-  border-color:#e5e7eb;
-}
-
-.badge-estado.aceptado{
-  background-color: #D3F8EA;
-  color: #2c885d;
-  border-color: #A7EFCF;
-}
-
-.badge-estado.rechazado{
-  background-color: #F8D7DA;
-  color: #a13039;
-  border-color: #F1AEB5;
-}
-
-
 .docentes-container {
   padding: 24px;
   font-family: "Segoe UI", sans-serif;
@@ -475,19 +442,13 @@
   color: white;
 }
 .docentes-acciones-cell {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   gap: 6px;
   align-items: center;
   justify-content: center;
 }
 
-.docentes-btn.guardar {
-  background-color: #1a237e;
-}
-
-.docentes-btn.cancelar {
-  background-color: #9e9e9e;
-}
 .docentes-modal {
   position: fixed;
   top: 0;
@@ -941,22 +902,6 @@
   margin-top: 15px;
 }
 
-.seguimiento-btn-cerrar {
-  background: #d32f2f;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.25s;
-}
-
-.seguimiento-btn-cerrar:hover {
-  background: #b71c1c;
-}
-
 .seguimiento-timeline-horizontal {
   display: flex;
   justify-content: space-between;
@@ -1218,7 +1163,7 @@
   margin-top: 20px;
 }
 
-.modal-tiempo-btn-cerrar {
+.seguimiento-btn-cerrar {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
   border: none;
@@ -1229,7 +1174,7 @@
   transition: all 0.2s ease;
 }
 
-.modal-tiempo-btn-cerrar:hover {
+.seguimiento-btn-cerrar:hover {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
   transform: translateY(-1px);
 }
@@ -1470,8 +1415,6 @@ td select{
   color: #a13039;
   border-color: #F1AEB5;
 }
-
-
 
 @keyframes shimmer {
   0% { left: -40%; }

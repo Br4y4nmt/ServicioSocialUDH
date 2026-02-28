@@ -127,7 +127,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <FinalReportIcon size={18} color="#2e9e7f" />
-                        Informes Finales
+                        Certificados Finales
                       </span>
                     </li>
                     <li

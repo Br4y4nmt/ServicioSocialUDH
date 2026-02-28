@@ -160,18 +160,17 @@ function DashboardGestor() {
           )}
 
           {activeSection === 'informes-finales' && (
-            <InformesFinalesSection
-              informesFinales={informesHook.informesFinales}
-              busquedaDocente={docentesHook.busquedaDocente}
-              setBusquedaDocente={docentesHook.setBusquedaDocente}
-              programaSeleccionado={programasHook.programaSeleccionado}
-              setProgramaSeleccionado={programasHook.setProgramaSeleccionado}
-              programas={programasHook.programas}
-              aprobandoId={informesHook.aprobandoId}
-              aceptarInforme={informesHook.aceptarInforme}
-              rechazarInforme={informesHook.rechazarInforme}
-            />
-          )}
+          <InformesFinalesSection
+            informesFinales={informesHook.informesFinales}
+            busquedaDocente={docentesHook.busquedaDocente}
+            setBusquedaDocente={docentesHook.setBusquedaDocente}
+            programaSeleccionado={programasHook.programaSeleccionado}
+            setProgramaSeleccionado={programasHook.setProgramaSeleccionado}
+            programas={programasHook.programas}
+            aprobandoId={informesHook.aprobandoId}
+            generarInforme={informesHook.generarInforme}   
+          />
+        )}
 
           {activeSection === 'estudiantes' && (
             <EstudiantesSection

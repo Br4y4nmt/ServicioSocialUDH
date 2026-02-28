@@ -458,7 +458,7 @@
   overflow-y: auto;     
   padding-right: 4px;
 }
-/* ====== Card Config (Registro) ====== */
+
 .config-card {
    width: 100%;
   box-sizing: border-box;
@@ -472,7 +472,6 @@
   overflow: hidden;
 }
 
-/* Glow suave igual que quick-summary */
 .config-card::before {
   content: '';
   position: absolute;

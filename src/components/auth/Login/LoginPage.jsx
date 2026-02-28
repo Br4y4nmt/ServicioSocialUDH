@@ -96,14 +96,11 @@ function LoginPage() {
         google.accounts.id.disableAutoSelect();
       }
 
-      // Si no hay respuesta, es un error de red / servidor caído
       if (!error.response) {
         await alertError('Servidor no disponible', 'No se pudo conectar al servidor. Intenta nuevamente más tarde.');
       } else if (error.response.status === 404) {
-        // Usuario no registrado según backend
         await alertError('Usuario no registrado', error.response.data?.message || 'Tu cuenta no está registrada.');
       } else {
-        // Otros errores recibidos desde el backend
         await alertError('Error de inicio de sesión', error.response.data?.message || 'Ocurrió un error al iniciar sesión.');
       }
     } finally {
