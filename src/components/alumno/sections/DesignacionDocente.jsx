@@ -6,6 +6,7 @@ import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import InfoTooltipIcon from "../../../hooks/componentes/Icons/InfoTooltipIcon";
 import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import MotivoRechazoModal from "../../modals/MotivoRechazoModal";
+import Spinner from '../../ui/Spinner';
 import { useCartasAceptacion } from "../../../hooks/alumno/useCartasAceptacion";
 import { useGrupoNombres } from "../../../hooks/alumno/useGrupoNombres";
 import {
@@ -305,7 +306,7 @@ const eliminarEleccion = useCallback(async () => {
           disabled={loadingSolicitud} 
         >
           {loadingSolicitud ? (
-            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <Spinner size={14} />
           ) : (
             'Solicitar Asesoría'
           )}
