@@ -2,6 +2,7 @@ import React from 'react';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
+import VerBoton from "../../../hooks/componentes/VerBoton";
 
 function SupervisorSection({
   supervisores,
@@ -100,11 +101,12 @@ function SupervisorSection({
                             sup.estado_plan_labor_social ||
                             'pendiente'
                           ).toLowerCase();
-                          const estado = ['aceptado', 'rechazado', 'pendiente'].includes(raw)
-                            ? raw
+                          let estado = raw === 'aceptado' ? 'aprobado' : raw;
+                          estado = ['aprobado', 'rechazado', 'pendiente'].includes(estado)
+                            ? estado
                             : 'pendiente';
                           const label = {
-                            aceptado: 'Aceptado',
+                            aprobado: 'Aceptado',
                             rechazado: 'Rechazado',
                             pendiente: 'Pendiente',
                           }[estado];
@@ -114,24 +116,16 @@ function SupervisorSection({
                       </td>
                       <td>
                         {cartaPdf ? (
-                          <a
-                            href={`${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaPdf}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-ver-pdf"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="18"
-                              height="18"
-                              fill="#2e2e2e"
-                              viewBox="0 0 24 24"
-                              className="icono-ojo"
-                            >
-                              <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5S15.03 17.5 12 17.5zm0-9c-1.93 0-3.5 1.57-3.5 3.5S10.07 15.5 12 15.5s3.5-1.57 3.5-3.5S13.93 8.5 12 8.5z" />
-                            </svg>
-                            <span>Ver</span>
-                          </a>
+                          <VerBoton
+                            label="Ver"
+                            onClick={() =>
+                              window.open(
+                                `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaPdf}`,
+                                "_blank",
+                                "noopener,noreferrer"
+                              )
+                            }
+                          />
                         ) : (
                           <span className="no-generado">NO GENERADO</span>
                         )}

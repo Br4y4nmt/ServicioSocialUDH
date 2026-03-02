@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Header from '../layout/Header/Header';
 import SidebarAlumno from '../layout/Sidebar/SidebarAlumno';
 import axios from 'axios';
-import './DashboardAlumno.css';
+import './perfil.css';
+import PerfilIcon from './PerfilIcon';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext';
 import {
-  toastWarning,
   alertError,
   alertSuccess,
 } from '../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 function MiPerfil() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -71,14 +72,14 @@ function MiPerfil() {
 
   const handleGuardar = async () => {
     if (perfil.celular === celularOriginal) {
-      toastWarning('No se realizaron modificaciones.');
+      showTopWarningToast('No se realizaron modificaciones.', '');
       return;
     }
 
 
     const celularRegex = /^\d{9}$/;
     if (!celularRegex.test(perfil.celular)) {
-      toastWarning('Celular inválido', { text: 'Debe contener exactamente 9 dígitos numéricos.' });
+      showTopWarningToast('Celular inválido', 'Debe contener exactamente 9 dígitos numéricos.');
       return;
     }
 
@@ -122,76 +123,85 @@ function MiPerfil() {
       )}
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}${!collapsed && isMobile ? ' sidebar-active' : ''}`}>
-        <h1 className="dashboard-title">Mi Perfil</h1>
-        <div className="card-section">
-          <div className="form-group">
-            <label className="bold-text">Nombre Completo</label>
-            <input className="input-disabled" value={perfil.nombre_completo} disabled />
-          </div>
-          <div className="form-group">
-            <label className="bold-text">DNI</label>
-            <input className="input-disabled" value={perfil.dni} disabled />
-          </div>
-          <div className="form-group">
-            <label className="bold-text">Código</label>
-            <input className="input-disabled" value={perfil.codigo} disabled />
-          </div>
-          <div className="form-group">
-            <label className="bold-text">Correo Institucional</label>
-            <input className="input-disabled" value={perfil.correo} disabled />
-          </div>
-          <div className="form-group">
-            <label className="bold-text">Número Celular</label>
-            <input
-              className="input-editable"
-              value={perfil.celular}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (/^\d{0,9}$/.test(val)) {
-                  setPerfil((prev) => ({ ...prev, celular: val }));
-                }
-              }}
-              maxLength={9}
-              pattern="\d{9}"
-              inputMode="numeric"
-            />
-            <small className="text-muted">Puedes modificar este campo</small>
-          </div>
-          <div className="form-group">
-          <label className="bold-text">Sede</label>
-          <input
-            className="input-disabled"
-            value={perfil.sede}
-            disabled
-          />
-        </div>
-        <div className="form-group">
-          <label className="bold-text">Modalidad</label>
-          <input
-        className="input-disabled"
-        value={perfil.modalidad || ''}
-        disabled
-      />
-        </div>
-          <div className="form-group">
-            <label className="bold-text">Facultad</label>
-            <input className="input-disabled" value={perfil.facultad} disabled />
-          </div>
-          <div className="form-group">
-            <label className="bold-text">Programa Académico</label>
-            <input className="input-disabled" value={perfil.programa} disabled />
-          </div>
+        <h1 className="dashboard-title-animada">Mi Perfil</h1>
+        <div className="card-section perfil-card">
+          <aside className="perfil-left">
+            <button className="perfil-nav active">
+              <PerfilIcon className="perfil-icon" />
+              <span>Perfil</span>
+            </button>
+          </aside>
 
-          <div className="alerta-boton-wrapper">
-            <div className="alerta-importante bounce">
-              <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
+          <div className="perfil-right">
+            <div className="form-group">
+              <label className="bold-text">Nombre Completo</label>
+              <input className="input-disabled" value={perfil.nombre_completo} disabled />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">DNI</label>
+              <input className="input-disabled" value={perfil.dni} disabled />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Código</label>
+              <input className="input-disabled" value={perfil.codigo} disabled />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Correo Institucional</label>
+              <input className="input-disabled" value={perfil.correo} disabled />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Número Celular</label>
+              <input
+                className="input-editable"
+                value={perfil.celular}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^\d{0,9}$/.test(val)) {
+                    setPerfil((prev) => ({ ...prev, celular: val }));
+                  }
+                }}
+                maxLength={9}
+                pattern="\d{9}"
+                inputMode="numeric"
+              />
+              <small className="text-muted">Puedes modificar este campo</small>
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Sede</label>
+              <input
+                className="input-disabled"
+                value={perfil.sede}
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Modalidad</label>
+              <input
+                className="input-disabled"
+                value={perfil.modalidad || ''}
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Facultad</label>
+              <input className="input-disabled" value={perfil.facultad} disabled />
+            </div>
+            <div className="form-group">
+              <label className="bold-text">Programa Académico</label>
+              <input className="input-disabled" value={perfil.programa} disabled />
             </div>
 
-            <div className="boton-centrado">
-            <button className="btn-solicitar-aprobacion" onClick={handleGuardar}>
-              Guardar Cambios
-            </button>
-          </div>
+            <div className="alerta-boton-wrapper">
+              <div className="alerta-importante bounce">
+                <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
+              </div>
+
+              <div className="boton-centrado">
+                <button className="btn-guardar-cambios" onClick={handleGuardar}>
+                  Guardar Cambios
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>

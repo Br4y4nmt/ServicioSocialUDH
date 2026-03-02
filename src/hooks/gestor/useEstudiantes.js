@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { alertSuccess, toastError } from '../alerts/alertas';
+import { showTopWarningToast } from '../alerts/useWelcomeToast';
 
 export default function useEstudiantes(token) {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -22,12 +23,12 @@ export default function useEstudiantes(token) {
 
   const registrarEstudiante = useCallback(async (whatsapp) => {
     if (!codigoUniversitario.trim() || !whatsapp.trim()) {
-      toastError('Campos incompletos', { text: 'Complete los campos antes de guardar' });
+      showTopWarningToast('Campos incompletos', 'Complete los campos antes de guardar');
       return false;
     }
 
     if (codigoUniversitario.length !== 10) {
-      toastError('Código inválido', { text: 'El código universitario debe tener exactamente 10 dígitos.' });
+      showTopWarningToast('Código inválido', 'El código universitario debe tener exactamente 10 dígitos.');
       return false;
     }
 

@@ -18,6 +18,7 @@ import {
   alertError,
   alertSuccess,
 } from "../../../hooks/alerts/alertas";
+import FullScreenSpinner from 'components/ui/FullScreenSpinner';
 
 
 
@@ -512,33 +513,7 @@ const handleEnviarObservacion = () => {
 )}
 
 {isAprobando && (
-  <div className="overlay-loading">
-    <div className="loading-box">
-      <div className="spinner" />
-
-      <p className="loading-title">Generando documentos...</p>
-      <p className="loading-subtitle">{progresoAprobacion.mensaje}</p>
-
-      {progresoAprobacion.total > 0 && (
-        <>
-          <div className="loading-progress">
-            <div
-              className="loading-progress__bar"
-              style={{
-                width: `${Math.round((progresoAprobacion.actual / progresoAprobacion.total) * 100)}%`,
-              }}
-            />
-          </div>
-
-          <p className="loading-subtitle">
-            Progreso: {progresoAprobacion.actual}/{progresoAprobacion.total}
-          </p>
-        </>
-      )}
-
-      <p className="loading-hint">No cierres esta ventana hasta que termine.</p>
-    </div>
-  </div>
+  <FullScreenSpinner text={progresoAprobacion.mensaje || 'Generando documentos...'} />
 )}
 
     </>

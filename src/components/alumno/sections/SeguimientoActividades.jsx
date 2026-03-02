@@ -17,7 +17,7 @@ import ModalDetalleActividad from '../../modals/ModalDetalleActividad';
 import EvidenciaCameraIcon from "../../../hooks/componentes/Icons/EvidenciaCameraIcon";
 import CheckSuccessIcon from "../../../hooks/componentes/Icons/CheckSuccessIcon";
 import InfoTooltipIcon from "../../../hooks/componentes/Icons/InfoTooltipIcon";
-import SpinnerIcon from "../../../hooks/componentes/Icons/SpinnerIcon";
+import Spinner from 'components/ui/Spinner';
 
 
 const SeguimientoActividades = ({
@@ -324,9 +324,9 @@ useEffect(() => {
       title="Enviar evidencia"
       disabled={cargandoEvidencia[item.id]}
     >
-      {cargandoEvidencia[item.id] ? (
+          {cargandoEvidencia[item.id] ? (
         <>
-          <SpinnerIcon />
+          <Spinner size={18} />
           <span style={{ marginLeft: '8px' }}>Enviando...</span>
         </>
       ) : (

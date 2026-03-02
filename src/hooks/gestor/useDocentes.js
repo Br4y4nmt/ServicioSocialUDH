@@ -5,8 +5,8 @@ import {
   alertSuccess,
   alertconfirmacion,
   alertError,
-  toastSuccess,
 } from '../alerts/alertas';
+import { showTopSuccessToast } from '../alerts/useWelcomeToast';
 
 export default function useDocentes(token) {
   const [docentes, setDocentes] = useState([]);
@@ -120,7 +120,7 @@ export default function useDocentes(token) {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      toastSuccess('Docente actualizado correctamente');
+      showTopSuccessToast('Docente actualizado correctamente');
       setEditandoDocenteId(null);
       await fetchDocentes();
       return true;
@@ -144,14 +144,13 @@ export default function useDocentes(token) {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchDocentes();
-      toastSuccess('Docente eliminado correctamente');
+      showTopSuccessToast('Docente eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar docente:', error);
       alertError('Error al eliminar docente', error.response?.data?.message || 'No se pudo eliminar el docente');
     }
   }, [token, fetchDocentes]);
 
-  // Fetch programas filtrados por facultad seleccionada para nuevo docente
   useEffect(() => {
     const fetchProgramasPorFacultad = async () => {
       if (!nuevaFacultadDocente) {

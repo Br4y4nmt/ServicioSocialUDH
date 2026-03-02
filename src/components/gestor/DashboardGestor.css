@@ -109,14 +109,6 @@
   background-color: #f9f9f9;
 }
 
-.facultades-input-edit {
-  width: 100%;
-  padding: 6px 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
 .facultades-badge-activo {
   display: inline-block;
   background-color: #d1fae5;
@@ -277,14 +269,6 @@
   padding: 12px;
 }
 
-.programas-input-edit {
-  width: 100%;
-  padding: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
 .programas-table-thead {
   background-color: transparent !important;
 }
@@ -373,13 +357,6 @@
 
 .docentes-btn-agregar:hover {
   background-color: #0f164a;
-}
-
-.docentes-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
 }
 
 .docentes-input {
@@ -614,7 +591,11 @@
   color: #2c885d;
   border-color: #A7EFCF;
 }
-
+.badge-estado.aceptado {
+  background-color: #D3F8EA;
+  color: #2c885d;
+  border-color: #A7EFCF;
+}
 .badge-estado.rechazado {
   background-color: #F8D7DA;
   color: #a13039;
@@ -856,29 +837,6 @@
   color: #111;
 }
 
-.seguimiento-steps {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-}
-
-.seguimiento-step {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.seguimiento-aceptado {
-  background: #e6f9ed;
-  color: #1b5e20;
-  border-left: 5px solid #2e7d32;
-}
-
 .seguimiento-pendiente {
   background: #fff9e6;
   color: #8d6e00;
@@ -1044,19 +1002,6 @@
 @keyframes slideUp {
   from { transform: translateY(40px); opacity: 0; }
   to   { transform: translateY(0); opacity: 1; }
-}
-.btn-accion-tabla {
-  background-color: #1a237e;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-accion-tabla:hover {
-  background-color: #303f9f;
 }
 
 .modal-tiempo-overlay {
@@ -1419,20 +1364,6 @@ td select{
 @keyframes shimmer {
   0% { left: -40%; }
   100% { left: 120%; }
-}
-.btn-spinner-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top-color: rgba(255,255,255,1);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {

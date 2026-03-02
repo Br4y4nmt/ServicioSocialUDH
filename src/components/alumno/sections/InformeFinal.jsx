@@ -17,6 +17,7 @@ import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import CheckCircleBig from "../../../hooks/componentes/Icons/CheckCircleBig";
 import InfoIcon from "../../../hooks/componentes/Icons/InfoIcon";
 import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
+import Spinner from 'components/ui/Spinner';
 
 export default function InformeFinal({
   trabajoId,
@@ -389,7 +390,7 @@ useEffect(() => {
         <div className="if-dropzone-empty">
           <CheckCircleBig className="if-upload-icon " aria-hidden="true" />
           <p className="if-dropzone-title">Documento enviado</p>
-          <p className="if-dropzone-or">Tu asesor está revisando el informe</p>
+          <p className="if-dropzone-or">Tu supervisor está revisando el informe</p>
           <p className="if-dropzone-sub">Cuando sea aprobado, podrás descargar tus certificados.</p>
         </div>
       </div>
@@ -486,7 +487,10 @@ useEffect(() => {
                     disabled={!file || uploading || bloqueado}
                   >
                     {uploading ? (
-                      "Enviando..."
+                      <>
+                        <Spinner size={18} />
+                        <span style={{ marginLeft: 8 }}>Enviando...</span>
+                      </>
                     ) : (
                       <>
                         <UploadIcon className="if-btn-icon" aria-hidden="true" strokeWidth={2} />

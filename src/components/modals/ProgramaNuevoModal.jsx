@@ -1,4 +1,5 @@
 import React from "react";
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 function ProgramaNuevoModal({
   isOpen,
@@ -67,7 +68,14 @@ function ProgramaNuevoModal({
           </button>
           <button
             className="docentes-btn guardar"
-            onClick={onGuardar}
+            onClick={() => {
+              if (!nombrePrograma || !nombrePrograma.trim() || !facultadPrograma || !emailPrograma || !emailPrograma.trim() || !whatsappPrograma || !whatsappPrograma.trim()) {
+                showTopWarningToast('Faltan campos', 'Completa todos los campos requeridos.');
+                return;
+              }
+
+              onGuardar();
+            }}
           >
             Guardar
           </button>

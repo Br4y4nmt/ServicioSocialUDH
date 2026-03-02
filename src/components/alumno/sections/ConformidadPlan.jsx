@@ -1,6 +1,7 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import '../DashboardAlumno.css';
+import Spinner from 'components/ui/Spinner';
 import Lottie from "lottie-react";
 import studyAnim from "../../../assets/study.json";
 
@@ -578,17 +579,9 @@ function ConformidadPlan({
   }}
   disabled={archivoYaEnviado || cargandoPDF}
 >
-  {cargandoPDF ? (
+      {cargandoPDF ? (
     <>
-      <span
-        className="spinner-border-conformidad"
-        role="status"
-        aria-hidden="true"
-        style={{
-          marginRight: '6px',
-          verticalAlign: 'middle'
-        }}
-      ></span>
+      <Spinner size={18} />
       Generando...
     </>
   ) : (
@@ -706,15 +699,7 @@ function ConformidadPlan({
     'Ya enviado'
   ) : enviandoRevision ? (
     <>
-      <span
-        className="spinner-border-conformidad"
-        role="status"
-        aria-hidden="true"
-        style={{
-          marginRight: '6px',
-          verticalAlign: 'middle'
-        }}
-      ></span>
+      <Spinner size={18} />
       Enviando...
     </>
   ) : (

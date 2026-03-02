@@ -9,6 +9,7 @@ import { showTopSuccessToast, showTopErrorToast } from '../../../hooks/alerts/us
 import { useUser } from '../../../UserContext';
 import Header from '../../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
+import Spinner from 'components/ui/Spinner';
 
 export default function SolicitudesInformesFinales() {
   const { user } = useUser();
@@ -320,9 +321,14 @@ export default function SolicitudesInformesFinales() {
                                   procesandoId === inf.id
                                 }
                               >
-                                {procesandoId === inf.id
-                                  ? 'Procesando...'
-                                  : 'Aprobar'}
+                                {procesandoId === inf.id ? (
+                                  <>
+                                    <Spinner size={16} />
+                                    <span style={{ marginLeft: 8 }}>Procesando...</span>
+                                  </>
+                                ) : (
+                                  'Aprobar'
+                                )}
                               </button>
 
                               <button

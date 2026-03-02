@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { toastWarning } from '../../../hooks/alerts/alertas';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
@@ -32,6 +32,9 @@ function ProgramasSection({
   guardarEdicionPrograma,
   crearPrograma
 }) {
+  const [originalNombreProgram, setOriginalNombreProgram] = useState('');
+  const [originalFacultadProgram, setOriginalFacultadProgram] = useState('');
+  const [originalEmailProgram, setOriginalEmailProgram] = useState('');
   return (
     <>
       <div className="programas-container">
@@ -73,6 +76,9 @@ function ProgramasSection({
                             setProgramaEditado(prog.nombre_programa);
                             setFacultadEditada(prog.Facultade?.id_facultad || '');
                             setEmailEditado(prog.email);
+                            setOriginalNombreProgram(prog.nombre_programa || '');
+                            setOriginalFacultadProgram(prog.Facultade?.id_facultad || '');
+                            setOriginalEmailProgram(prog.email || '');
                             setModalEditarProgramaVisible(true);
                           }}
                           className="facultades-btn editar"
@@ -111,6 +117,9 @@ function ProgramasSection({
           setFacultadEditada("");
           setEmailEditado("");
         }}
+        originalNombre={originalNombreProgram}
+        originalFacultad={originalFacultadProgram}
+        originalEmail={originalEmailProgram}
         onGuardar={guardarEdicionPrograma}
       />
 
@@ -136,13 +145,20 @@ function ProgramasSection({
           setEmailPrograma("");
           setWhatsappPrograma("");
         }}
-        onGuardar={() => {
+        onGuardar={async () => {
           if (whatsappPrograma.length !== 9) {
             toastWarning('Número inválido', { text: 'El número de WhatsApp debe tener exactamente 9 dígitos.' });
             return;
           }
-          crearPrograma();
-          setModalProgramaVisible(false);
+
+          const ok = await crearPrograma();
+          if (ok) {
+            setModalProgramaVisible(false);
+            setNuevoPrograma('');
+            setFacultadPrograma('');
+            setEmailPrograma('');
+            setWhatsappPrograma('');
+          }
         }}
       />
     </>

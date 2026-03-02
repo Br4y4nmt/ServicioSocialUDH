@@ -1,4 +1,5 @@
 import React from "react";
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 const FacultadNuevoModal = ({
   isOpen,
@@ -32,7 +33,14 @@ const FacultadNuevoModal = ({
 
           <button
             className="docentes-btn guardar"
-            onClick={onGuardar}
+            onClick={() => {
+              if (!nombreFacultad || nombreFacultad.trim() === '') {
+                showTopWarningToast('Campo vacío', 'Ingrese el nombre de la facultad.');
+                return;
+              }
+
+              onGuardar();
+            }}
           >
             Guardar
           </button>

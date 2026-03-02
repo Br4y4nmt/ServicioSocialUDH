@@ -1,8 +1,10 @@
 import React from "react";
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 function FacultadEditarModal({
   isOpen,
   nombre,
+  originalNombre,
   onChangeNombre,
   onCancelar,
   onGuardar,
@@ -29,7 +31,14 @@ function FacultadEditarModal({
           </button>
           <button
             className="docentes-btn guardar"
-            onClick={onGuardar}
+            onClick={() => {
+              if ((originalNombre || '').trim() === (nombre || '').trim()) {
+                showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
+                return;
+              }
+
+              onGuardar();
+            }}
           >
             Guardar
           </button>

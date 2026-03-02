@@ -7,6 +7,7 @@ import {
   alertError,
   alertWarning,
 } from "../../../hooks/alerts/alertas"; 
+import Spinner from 'components/ui/Spinner';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const handleRegister = async (e) => {
     <picture>
         <source srcSet="/SERVICIOSOCIAL1.webp" type="image/webp" />
         <img
-          src="/SERVICIOSOCIAL1.png"
+          src="/SERVICIOSOCIAL1.webp"
           alt="Fondo UDH Labor Social"
           width="1200"
           height="800"
@@ -177,7 +178,14 @@ const handleRegister = async (e) => {
   className="register-button"
   disabled={isSubmitting}
 >
-  {isSubmitting ? 'Registrando...' : 'REGISTRAR'}
+  {isSubmitting ? (
+    <>
+      <Spinner size={16} />
+      <span style={{ marginLeft: 8 }}>Registrando...</span>
+    </>
+  ) : (
+    'REGISTRAR'
+  )}
 </button>
 </form>
 

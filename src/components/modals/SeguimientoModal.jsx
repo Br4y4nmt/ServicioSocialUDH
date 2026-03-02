@@ -1,5 +1,5 @@
-// src/.../modals/SeguimientoModal.jsx
 import React from "react";
+import InfoTooltipIcon from '../../hooks/componentes/Icons/InfoTooltipIcon';
 
 function SeguimientoModal({ isOpen, seguimiento, onClose }) {
   if (!isOpen || !seguimiento) return null;
@@ -28,20 +28,7 @@ function SeguimientoModal({ isOpen, seguimiento, onClose }) {
                 <span className="timeline-h-title">
                   {p.paso}
                   <div className="tooltip-container">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="icono-info"
-                      viewBox="0 0 24 24"
-                      width="16"
-                      height="16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="12" y1="16" x2="12" y2="12" />
-                      <line x1="12" y1="8" x2="12.01" y2="8" />
-                    </svg>
+                    <InfoTooltipIcon className="icono-info" width={16} height={16} />
                     <div className="tooltip-box">{p.tooltip}</div>
                   </div>
                 </span>

@@ -2,6 +2,7 @@ import React, { Suspense, memo } from 'react';
 import Header from '../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import VerBoton from "../../hooks/componentes/VerBoton";
+import FullScreenSpinner from 'components/ui/FullScreenSpinner';
 import { useDashboardDocente } from '../../hooks/docente/useDashboardDocente';
 import DocenteModals from './DocenteModals';
 import PageSkeleton from '../loaders/PageSkeleton';
@@ -139,8 +140,7 @@ const FilaTrabajo = memo(function FilaTrabajo({
             >
               {trabajoEnProcesoId === trabajo.id ? (
                 <>
-                  <span className="spinner" />
-                  Generando...
+                  <FullScreenSpinner/>
                 </>
               ) : (
                 'Aceptar'
@@ -154,8 +154,7 @@ const FilaTrabajo = memo(function FilaTrabajo({
             >
               {trabajoEnProcesoId === trabajo.id ? (
                 <>
-                  <span className="spinner" />
-                  Procesando...
+                  <FullScreenSpinner/>
                 </>
               ) : (
                 'Rechazar'

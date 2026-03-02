@@ -4,9 +4,9 @@ import {
   alertconfirmacion,
   alertSuccess,
   alertError,
-  toastSuccess,
   toastError,
 } from '../alerts/alertas';
+import { showTopSuccessToast } from '../alerts/useWelcomeToast';
 
 export default function useLineas(token) {
   const [lineas, setLineas] = useState([]);
@@ -65,7 +65,7 @@ export default function useLineas(token) {
       setNombreLineaEditado('');
       setModalEditarLineaVisible(false);
       fetchLineas();
-      toastSuccess('Línea de acción actualizada exitosamente');
+      showTopSuccessToast('Línea de acción actualizada exitosamente');
     } catch (error) {
       console.error('Error al actualizar línea de acción:', error);
       toastError(error.response?.data?.message || 'Error al actualizar la línea de acción');
@@ -80,7 +80,7 @@ export default function useLineas(token) {
       await axios.delete(`/api/lineas/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toastSuccess('Línea de acción eliminada correctamente');
+      showTopSuccessToast('Línea de acción eliminada correctamente');
       fetchLineas();
     } catch (error) {
       console.error('Error al eliminar línea de acción:', error);

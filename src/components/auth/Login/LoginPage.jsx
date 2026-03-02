@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../../../UserContext';
 import React, { useEffect, useCallback, useRef } from 'react';
+import Spinner from 'components/ui/Spinner';
 import { Link } from 'react-router-dom';
 import {
   alertError,
@@ -174,7 +175,7 @@ useEffect(() => {
       <picture>
         <source srcSet="/SERVICIOSOCIAL1.webp" type="image/webp" />
         <img
-          src="/SERVICIOSOCIAL1.png"
+          src="/SERVICIOSOCIAL1.webp"
           alt="Fondo UDH Labor Social"
           width="1200"
           height="800"
@@ -210,7 +211,7 @@ useEffect(() => {
                 transform: 'translate(-50%, -50%)'
               }}
             >
-              <div className="spinner-login"></div>
+              <Spinner size={28} />
             </div>
           )}
         </div>

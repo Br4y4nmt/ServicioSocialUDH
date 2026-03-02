@@ -60,7 +60,7 @@ function SidebarDocente({
               referrerPolicy="no-referrer"
             />
             <h4 className="nombre-docente">{nombre}</h4>
-            <span className="rol-docente">Docente</span>
+            <span className="rol-docente">Supervisor</span>
           </div>
 
           <nav className="sidebar-nav-docente">

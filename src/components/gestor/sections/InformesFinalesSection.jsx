@@ -4,6 +4,7 @@ import { buscarSinTildes } from '../../../utils/textUtils';
 import VerBoton from "../../../hooks/componentes/VerBoton";
 import { alertconfirmacion } from '../../../hooks/alerts/alertas';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
+import FullScreenSpinner from '../../ui/FullScreenSpinner';
 
 function InformesFinalesSection({
   informesFinales,
@@ -16,8 +17,10 @@ function InformesFinalesSection({
   generarInforme
 }) {
   return (
-    <div className="docentes-container">
-      <div className="docentes-card">
+    <>
+      {aprobandoId && <FullScreenSpinner text="Generando certificado..." />}
+      <div className="docentes-container">
+        <div className="docentes-card">
 
         <div className="docentes-header">
           <div className="docentes-header-left">
@@ -203,6 +206,7 @@ function InformesFinalesSection({
         </div>
       </div>
     </div>
+    </>
   );
 }
 

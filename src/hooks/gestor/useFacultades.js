@@ -4,9 +4,9 @@ import {
   alertconfirmacion,
   alertSuccess,
   alertError,
-  toastSuccess,
   toastError,
 } from '../alerts/alertas';
+import { showTopSuccessToast } from '../alerts/useWelcomeToast';
 
 export default function useFacultades(token) {
   const [facultades, setFacultades] = useState([]);
@@ -64,7 +64,7 @@ export default function useFacultades(token) {
       setNombreEditado('');
       setModalEditarVisible(false);
       await fetchFacultades();
-      toastSuccess('Facultad actualizada exitosamente');
+      showTopSuccessToast('Facultad actualizada exitosamente');
     } catch (error) {
       console.error('Error al actualizar facultad:', error);
       toastError(error.response?.data?.message || 'Error al actualizar la facultad');
@@ -80,7 +80,7 @@ export default function useFacultades(token) {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchFacultades();
-      toastSuccess('La facultad fue eliminada correctamente');
+      showTopSuccessToast('La facultad fue eliminada correctamente');
     } catch (error) {
       console.error('Error al eliminar facultad:', error);
       alertError('Error al eliminar facultad', error.response?.data?.message || 'No se pudo eliminar la facultad');

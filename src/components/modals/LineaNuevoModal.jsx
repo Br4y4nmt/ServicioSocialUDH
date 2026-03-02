@@ -1,4 +1,5 @@
 import React from "react";
+import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
 function LineaNuevoModal({
   isOpen,
@@ -33,7 +34,14 @@ function LineaNuevoModal({
           <button
             className="docentes-btn guardar"
             type="button"
-            onClick={onGuardar}
+            onClick={async () => {
+              if (!nombreLinea || !nombreLinea.trim()) {
+                showTopWarningToast('Campo requerido', 'Ingresa el nombre de la línea.');
+                return;
+              }
+
+              await onGuardar();
+            }}
           >
             Guardar
           </button>

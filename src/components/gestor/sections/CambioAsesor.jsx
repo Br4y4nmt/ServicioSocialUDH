@@ -3,7 +3,8 @@ import axios from "axios";
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import "../DashboardGestor.css";
-import { alertError, alertWarning, toastSuccess } from "../../../hooks/alerts/alertas";
+import { alertError, alertWarning } from "../../../hooks/alerts/alertas";
+import { showTopWarningToast, showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from "../../../UserContext";
 import CambioAsesorModal from "../../modals/CambioAsesorModal";
 import PageSkeleton from "../../loaders/PageSkeleton"; 
@@ -78,7 +79,7 @@ function CambioAsesor() {
 
   const guardarCambioAsesor = async () => {
     if (!asesorSeleccionado) {
-      alertWarning("Seleccione un asesor", "Debe elegir un asesor antes de guardar.");
+      showTopWarningToast("Seleccione un asesor", "Debe elegir un asesor antes de guardar.");
       return;
     }
 
@@ -92,7 +93,7 @@ function CambioAsesor() {
       );
 
       if (res.status === 200) {
-        toastSuccess("Asesor actualizado correctamente");
+        showTopSuccessToast("Asesor actualizado correctamente");
         cerrarModal();
         fetchTrabajos();
       }

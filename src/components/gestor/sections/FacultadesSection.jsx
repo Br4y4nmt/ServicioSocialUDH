@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import FacultadEditarModal from "../../modals/FacultadEditarModal";
@@ -21,6 +21,8 @@ function FacultadesSection({
   guardarEdicionFacultad,
   crearFacultad
 }) {
+  const [nombreOriginal, setNombreOriginal] = useState('');
+
   return (
     <div className="facultades-container">
       <div className="facultades-card">
@@ -35,6 +37,7 @@ function FacultadesSection({
             </button>
           </div>
         </div>
+
         <div className="facultades-table-wrapper">
           <table className="facultades-table">
             <thead>
@@ -46,47 +49,46 @@ function FacultadesSection({
               </tr>
             </thead>
             <tbody>
-              {facultades
-                .map((f, index) => (
-                  <tr key={f.id_facultad}>
-                    <td>{index + 1}</td>
-                    <td>
-                      {(f.nombre_facultad || '').toUpperCase()}
-                    </td>
-                    <td>
-                      <span className="facultades-badge-activo">Activo</span>
-                    </td>
-                    <td>
-                      <>
-                        <button
-                          onClick={() => {
-                            setEditandoId(f.id_facultad);
-                            setNombreEditado(f.nombre_facultad);
-                            setModalEditarVisible(true);
-                          }}
-                          className="facultades-btn editar"
-                        >
-                          <EditIcon />
-                        </button>
+              {facultades.map((f, index) => (
+                <tr key={f.id_facultad}>
+                  <td>{index + 1}</td>
+                  <td>{(f.nombre_facultad || '').toUpperCase()}</td>
+                  <td>
+                    <span className="facultades-badge-activo">Activo</span>
+                  </td>
+                  <td>
+                    <>
+                      <button
+                        onClick={() => {
+                          setEditandoId(f.id_facultad);
+                          setNombreEditado(f.nombre_facultad);
+                          setNombreOriginal(f.nombre_facultad);
+                          setModalEditarVisible(true);
+                        }}
+                        className="facultades-btn editar"
+                      >
+                        <EditIcon />
+                      </button>
 
-                        <button
-                          onClick={() => eliminarFacultad(f.id_facultad)}
-                          className="facultades-btn eliminar"
-                        >
-                          <DeleteIcon />
-                        </button>
-                      </>
-                    </td>
-                  </tr>
-                ))}
+                      <button
+                        onClick={() => eliminarFacultad(f.id_facultad)}
+                        className="facultades-btn eliminar"
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
-      
+
       <FacultadEditarModal
         isOpen={modalEditarVisible}
         nombre={nombreEditado}
+        originalNombre={nombreOriginal}
         onChangeNombre={setNombreEditado}
         onCancelar={() => {
           cancelarEdicion();
@@ -104,12 +106,12 @@ function FacultadesSection({
         onChangeNombre={setNuevaFacultad}
         onClose={() => {
           setModalNuevaFacultadVisible(false);
-          setNuevaFacultad("");
+          setNuevaFacultad('');
         }}
         onGuardar={async () => {
           await crearFacultad();
           setModalNuevaFacultadVisible(false);
-          setNuevaFacultad("");
+          setNuevaFacultad('');
         }}
       />
     </div>

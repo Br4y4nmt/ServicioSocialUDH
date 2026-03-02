@@ -3,9 +3,9 @@ import axios from 'axios';
 import {
   alertconfirmacion,
   alertSuccess,
-  toastSuccess,
   toastError,
 } from '../alerts/alertas';
+import { showTopWarningToast, showTopSuccessToast } from '../alerts/useWelcomeToast';
 
 export default function useLabores(token) {
   const [labores, setLabores] = useState([]);
@@ -32,11 +32,11 @@ export default function useLabores(token) {
 
   const crearLabor = useCallback(async () => {
     if (!nuevaLabor.trim()) {
-      toastError('Campo vacío', { text: 'El nombre del servicio social no puede estar vacío' });
+      showTopWarningToast('Campo vacío', 'El nombre del servicio social no puede estar vacío');
       return false;
     }
     if (!lineaLabor) {
-      toastError('Línea de acción requerida', { text: 'Debes seleccionar una línea de acción' });
+      showTopWarningToast('Línea de acción requerida', 'Debes seleccionar una línea de acción');
       return false;
     }
     try {
@@ -77,7 +77,7 @@ export default function useLabores(token) {
       setEditandoLaborId(null);
       setNombreLaborEditado('');
       fetchLabores();
-      toastSuccess('Servicio social actualizado correctamente');
+      showTopSuccessToast('Servicio social actualizado correctamente');
       return true;
     } catch (error) {
       console.error('Error al actualizar labor social:', error);
@@ -95,7 +95,7 @@ export default function useLabores(token) {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchLabores();
-      toastSuccess('Servicio social eliminado correctamente');
+      showTopSuccessToast('Servicio social eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar labor social:', error);
       toastError(error.response?.data?.message || 'Error al eliminar el servicio social');

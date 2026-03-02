@@ -132,19 +132,8 @@ body, html, #root {
   display: block;
 }
 
-
 .register-button-login:hover {
   background-color: #057A55 ;
-}
-
-
-.spinner-login {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #4285F4;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {

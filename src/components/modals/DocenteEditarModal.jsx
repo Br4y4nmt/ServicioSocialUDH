@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
 function DocenteEditarModal({
   isOpen,
@@ -15,6 +16,24 @@ function DocenteEditarModal({
   onClose,
   onGuardar,
 }) {
+  const [initialSnapshot, setInitialSnapshot] = useState({
+    nombre: '',
+    email: '',
+    facultad: '',
+    programa: ''
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      setInitialSnapshot({
+        nombre: (nombre || '').trim(),
+        email: (email || '').trim(),
+        facultad: facultad || '',
+        programa: programa || ''
+      });
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -76,7 +95,26 @@ function DocenteEditarModal({
           <button
             className="docentes-btn guardar"
             type="button"
-            onClick={onGuardar}
+            onClick={async () => {
+              const nombreActual = (nombre || '').trim();
+              const emailActual = (email || '').trim();
+              const facultadActual = facultad || '';
+              const programaActual = programa || '';
+
+              const sinCambios = (
+                nombreActual === (initialSnapshot.nombre || '') &&
+                emailActual === (initialSnapshot.email || '') &&
+                String(facultadActual) === String(initialSnapshot.facultad || '') &&
+                String(programaActual) === String(initialSnapshot.programa || '')
+              );
+
+              if (sinCambios) {
+                showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
+                return;
+              }
+
+              await onGuardar();
+            }}
           >
             Guardar
           </button>

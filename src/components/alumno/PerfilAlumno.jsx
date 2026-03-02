@@ -3,9 +3,11 @@ import Header from '../layout/Header/Header';
 import SidebarAlumno from '../layout/Sidebar/SidebarAlumno';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import './DashboardAlumno.css';
+import './perfil.css';
+import PerfilIcon from './PerfilIcon';
 import { useUser } from '../../UserContext';
 import { toastWarning } from '../../hooks/alerts/alertas';
+import Spinner from 'components/ui/Spinner';
 
 function PerfilAlumno() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -161,128 +163,142 @@ const handleCelularChange = (e) => {
       />
       <main className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         
-          <h1 className="dashboard-title">Mi Perfil</h1>
-          <div className="card-section">
-            <div className="form-group">
-              <label className="bold-text">Nombre Completo</label>
-              <input
-                name="nombre_completo"
-                className="input-disabled"
-                value={perfil.nombre_completo}
-                disabled
-              />
+          <h1 className="dashboard-title-animada">Mi Perfil</h1>
+          <div className="card-section perfil-card">
+            <aside className="perfil-left">
+              <button className="perfil-nav active">
+                <PerfilIcon className="perfil-icon" />
+                <span>Perfil</span>
+              </button>
+            </aside>
 
-            </div>
-            <div className="form-group">
-              <label className="bold-text">DNI</label>
-              <input
-              name="dni"
-              className="input-disabled"
-              value={perfil.dni}
-              disabled
-            />
-            </div>
-            <div className="form-group">
-              <label className="bold-text">Código</label>
+            <div className="perfil-right">
+              <div className="form-group">
+                <label className="bold-text">Nombre Completo</label>
                 <input
-                name="codigo"
-                className="input-disabled"
-                value={perfil.codigo}
-                disabled
-              />
+                  name="nombre_completo"
+                  className="input-disabled"
+                  value={perfil.nombre_completo}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+                <label className="bold-text">DNI</label>
+                <input
+                  name="dni"
+                  className="input-disabled"
+                  value={perfil.dni}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+                <label className="bold-text">Código</label>
+                <input
+                  name="codigo"
+                  className="input-disabled"
+                  value={perfil.codigo}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+                <label className="bold-text">Correo Institucional</label>
+                <input
+                  name="correo"
+                  className="input-disabled"
+                  value={perfil.correo}
+                  disabled
+                />
+              </div>
 
-            </div>
-            <div className="form-group">
-              <label className="bold-text">Correo Institucional</label>
-            <input
-                name="correo"
-                className="input-disabled"
-                value={perfil.correo}
-                disabled
-              />
-            </div>
+              <div className="form-group">
+                <label className="bold-text">
+                  Número Celular <span style={{ color: 'red' }}>*</span>
+                </label>
+                <input
+                  name="celular"
+                  className="input-editable"
+                  value={perfil.celular}
+                  onChange={handleCelularChange}
+                  maxLength={9}
+                  pattern="\d*"
+                  inputMode="numeric"
+                />
+                <small className="text-muted">Campo obligatorio</small>
+              </div>
 
-            <div className="form-group">
-            <label className="bold-text">
-              Número Celular <span style={{ color: 'red' }}>*</span> 
-            </label>
-            <input
-              name="celular"
-              className="input-editable"
-              value={perfil.celular}
-              onChange={handleCelularChange}
-              maxLength={9}
-              pattern="\d*"
-              inputMode="numeric"
-            />
-            <small className="text-muted">Campo obligatorio</small>
-          </div>
-            <div className="form-group">
-        <label className="bold-text">
-          Sede <span style={{ color: 'red' }}>*</span>
-        </label>
-        <select
-          className="input-editable"
-          value={sedeSeleccionada}
-          onChange={(e) => setSedeSeleccionada(e.target.value)}
-        >
-          <option value="">Seleccione una sede</option>
-          <option value="HUÁNUCO">HUÁNUCO</option>
-          <option value="LEONCIO PRADO">LEONCIO PRADO</option>
-        </select>
-      </div>
+              <div className="form-group">
+                <label className="bold-text">
+                  Sede <span style={{ color: 'red' }}>*</span>
+                </label>
+                <select
+                  className="input-editable"
+                  value={sedeSeleccionada}
+                  onChange={(e) => setSedeSeleccionada(e.target.value)}
+                >
+                  <option value="">Seleccione una sede</option>
+                  <option value="HUÁNUCO">HUÁNUCO</option>
+                  <option value="LEONCIO PRADO">LEONCIO PRADO</option>
+                </select>
+              </div>
 
-      <div className="form-group">
-      <label className="bold-text">
-        Modalidad <span style={{ color: 'red' }}>*</span>
-      </label>
-      <select
-        className="input-editable"
-        value={modalidadSeleccionada}
-        onChange={(e) => setModalidadSeleccionada(e.target.value)}
-      >
-        <option value="">Seleccione una modalidad</option>
-        <option value="PRESENCIAL">PRESENCIAL</option>
-        <option value="SEMI-PRESENCIAL">SEMI-PRESENCIAL</option>
-      </select>
-    </div>
+              <div className="form-group">
+                <label className="bold-text">
+                  Modalidad <span style={{ color: 'red' }}>*</span>
+                </label>
+                <select
+                  className="input-editable"
+                  value={modalidadSeleccionada}
+                  onChange={(e) => setModalidadSeleccionada(e.target.value)}
+                >
+                  <option value="">Seleccione una modalidad</option>
+                  <option value="PRESENCIAL">PRESENCIAL</option>
+                  <option value="SEMI-PRESENCIAL">SEMI-PRESENCIAL</option>
+                </select>
+              </div>
 
-          <div className="form-group">
-          <label className="bold-text">Facultad</label>
-          <input
-            name="facultad"
-            className="input-disabled"
-            value={perfil.facultad}
-            disabled
-          />
-        </div>
+              <div className="form-group">
+                <label className="bold-text">Facultad</label>
+                <input
+                  name="facultad"
+                  className="input-disabled"
+                  value={perfil.facultad}
+                  disabled
+                />
+              </div>
 
-          <div className="form-group">
-        <label className="bold-text">Programa Académico</label>
-        <input
-          name="programa"
-          className="input-disabled"
-          value={perfil.programa}
-          disabled
-        />
-      </div>
+              <div className="form-group">
+                <label className="bold-text">Programa Académico</label>
+                <input
+                  name="programa"
+                  className="input-disabled"
+                  value={perfil.programa}
+                  disabled
+                />
+              </div>
 
-            <div className="button-container">
-              <button
-              className="btn-completar-perfil"
-              onClick={handleGuardar}
-              disabled={loading}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              {loading ? (
-                <>
-                  <div className="spinner-alumno" style={{ width: '16px', height: '16px' }}></div>
-                  Actualizando...
-                </>
-              ) : (
-                'Guardar Cambios'
-              )}
-            </button>
+              <div className="alerta-boton-wrapper">
+                <div className="alerta-importante bounce">
+                  <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.
+                </div>
+
+                <div className="boton-centrado">
+                  <button
+                    className="btn-guardar-cambios"
+                    onClick={handleGuardar}
+                    disabled={loading}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner size={16} />
+                        <span style={{ marginLeft: 8 }}>Actualizando...</span>
+                      </>
+                    ) : (
+                      'Guardar Cambios'
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         

@@ -1,12 +1,16 @@
 import React from "react";
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 function ProgramaEditarModal({
   isOpen,
   nombre,
-  onChangeNombre,
+  originalNombre,
   facultad,
+  originalFacultad,
+  onChangeNombre,
   onChangeFacultad,
   email,
+  originalEmail,
   onChangeEmail,
   facultades,
   onClose,
@@ -53,7 +57,18 @@ function ProgramaEditarModal({
           <button className="docentes-btn cancelar" onClick={onClose}>
             Cancelar
           </button>
-          <button className="docentes-btn guardar" onClick={onGuardar}>
+          <button className="docentes-btn guardar" onClick={() => {
+            const nameSame = (originalNombre || '').trim() === (nombre || '').trim();
+            const facultadSame = String(originalFacultad || '') === String(facultad || '');
+            const emailSame = (originalEmail || '').trim() === (email || '').trim();
+
+            if (nameSame && facultadSame && emailSame) {
+              showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
+              return;
+            }
+
+            onGuardar();
+          }}>
             Guardar
           </button>
         </div>

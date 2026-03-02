@@ -11,6 +11,7 @@ import ModalObservacionConformidad from '../../modals/ModalObservacionConformida
 import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
 import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import { alertSuccess, alertconfirmacion, alertError } from '../../../hooks/alerts/alertas';
+import FullScreenSpinner from 'components/ui/FullScreenSpinner';
 
 function RevisionPlanSocial() {
   const [collapsed, setCollapsed] = useState(false);
@@ -24,6 +25,7 @@ function RevisionPlanSocial() {
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [nombresMiembros, setNombresMiembros] = useState([]);
+  const [cargandoCambioId, setCargandoCambioId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -111,6 +113,7 @@ const handleVerGrupo = async (trabajoId) => {
   });
 
   if (confirmacion.isConfirmed) {
+    setCargandoCambioId(idTrabajo);
     try {
       await axios.put(`/api/trabajo-social/${idTrabajo}`, {
         conformidad_plan_social: nuevoEstado
@@ -131,6 +134,8 @@ const handleVerGrupo = async (trabajoId) => {
     } catch (error) {
       console.error('Error al cambiar estado de conformidad:', error);
       await alertError('Error', 'No se pudo cambiar el estado del trabajo.');
+    } finally {
+      setCargandoCambioId(null);
     }
   }
 };
@@ -150,6 +155,7 @@ const capitalizarPrimeraLetra = (texto) =>
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
+      {cargandoCambioId && <FullScreenSpinner text="Procesando..." />}
        {window.innerWidth <= 768 && !collapsed && (
   <div
     className="sidebar-overlay"
@@ -171,7 +177,7 @@ const capitalizarPrimeraLetra = (texto) =>
                       <th>Servicio Social</th>
                       <th>Estado</th>
                       <th>Documento</th>
-                      <th>Tipo Servicio Social</th>
+                      <th>Tipo Servicio So cial</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -220,12 +226,14 @@ const capitalizarPrimeraLetra = (texto) =>
                             <button
                               className="btn-accion aceptar"
                               onClick={() => cambiarConformidad(plan.id, 'aceptado')}
+                              disabled={!!cargandoCambioId}
                             >
                               Aceptar
                             </button>
                             <button
                               className="btn-accion rechazar"
                               onClick={() => cambiarConformidad(plan.id, 'rechazado')}
+                              disabled={!!cargandoCambioId}
                             >
                               Rechazar
                             </button>
@@ -237,6 +245,7 @@ const capitalizarPrimeraLetra = (texto) =>
                           setTrabajoADeclinar(plan);
                           setModalObservacionVisible(true);
                         }}
+                        disabled={!!cargandoCambioId}
                       >
                         Declinar
                       </button>

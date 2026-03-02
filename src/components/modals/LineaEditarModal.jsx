@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
 function LineaEditarModal({
   isOpen,
@@ -7,6 +8,12 @@ function LineaEditarModal({
   onClose,
   onGuardar,
 }) {
+  const [initialNombre, setInitialNombre] = useState('');
+
+  useEffect(() => {
+    if (isOpen) setInitialNombre((nombreLinea || '').trim());
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -33,7 +40,15 @@ function LineaEditarModal({
           <button
             className="docentes-btn guardar"
             type="button"
-            onClick={onGuardar}
+            onClick={async () => {
+              const actual = (nombreLinea || '').trim();
+              if (actual === (initialNombre || '')) {
+                showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
+                return;
+              }
+
+              await onGuardar();
+            }}
           >
             Guardar
           </button>
