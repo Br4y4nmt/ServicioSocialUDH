@@ -12,7 +12,7 @@ function LineaEditarModal({
 
   useEffect(() => {
     if (isOpen) setInitialNombre((nombreLinea || '').trim());
-  }, [isOpen]);
+  }, [isOpen, nombreLinea]);
 
   if (!isOpen) return null;
 

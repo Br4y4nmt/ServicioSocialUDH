@@ -3,7 +3,7 @@ import axios from "axios";
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import "../DashboardGestor.css";
-import { alertError, alertWarning } from "../../../hooks/alerts/alertas";
+import { alertError} from "../../../hooks/alerts/alertas";
 import { showTopWarningToast, showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from "../../../UserContext";
 import CambioAsesorModal from "../../modals/CambioAsesorModal";

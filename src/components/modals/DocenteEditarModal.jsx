@@ -32,7 +32,7 @@ function DocenteEditarModal({
         programa: programa || ''
       });
     }
-  }, [isOpen]);
+  }, [isOpen, nombre, email, facultad, programa]);
 
   if (!isOpen) return null;
 

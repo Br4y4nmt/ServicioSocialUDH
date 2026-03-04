@@ -20,7 +20,7 @@ function LaborEditarModal({
         linea: lineaLabor || ''
       });
     }
-  }, [isOpen]);
+  }, [isOpen, nombreLabor, lineaLabor]);
 
   if (!isOpen) return null;
 
