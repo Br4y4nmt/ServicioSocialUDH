@@ -25,7 +25,7 @@ function ImpersonateLogin() {
       );
 
       sessionStorage.setItem('originalToken', gestorToken);
-      sessionStorage.setItem('originalNombre', localStorage.getItem('nombre'));
+      sessionStorage.setItem('originalNombre', localStorage.getItem('nombre_usuario') || localStorage.getItem('nombre'));
       sessionStorage.setItem('originalFoto', localStorage.getItem('foto_perfil'));
 
       const userData = {
@@ -42,6 +42,7 @@ function ImpersonateLogin() {
       localStorage.setItem('id_usuario', res.data.usuario.id);
       localStorage.setItem('id_rol', res.data.usuario.rol);
       localStorage.setItem('nombre', res.data.usuario.nombre || 'Usuario impersonado');
+      localStorage.setItem('nombre_usuario', res.data.usuario.nombre || 'Usuario impersonado');
       localStorage.setItem('foto_perfil', res.data.usuario.foto_perfil || '');
       localStorage.setItem('correo_institucional', res.data.usuario.email);
 
