@@ -7,6 +7,9 @@ function NavegacionAlumno({ activeSection, setActiveSection, handleGoToNextSecti
     else if (activeSection === 'informe-final') setActiveSection('seguimiento');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  // Ocultar navegación en vistas informativas sin pasos: reglamento y plan-trabajo
+  const hideNavFor = ['reglamento', 'plan-trabajo'];
+  if (hideNavFor.includes(activeSection)) return null;
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>

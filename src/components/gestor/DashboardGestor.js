@@ -4,6 +4,7 @@ import Header from '../layout/Header/Header.jsx';
 import EstudianteNuevoModal from '../modals/EstudianteNuevoModal';
 import SeguimientoModal from '../modals/SeguimientoModal';
 import { useUser } from '../../UserContext';
+import { useWelcomeToast } from '../../hooks/alerts/useWelcomeToast';
 import useFacultades from '../../hooks/gestor/useFacultades';
 import useProgramas from '../../hooks/gestor/useProgramas';
 import useDocentes from '../../hooks/gestor/useDocentes';
@@ -37,6 +38,10 @@ function DashboardGestor() {
   const [activeSection, setActiveSection] = useState('dasborasd');
   const { user } = useUser();
   const token = user?.token;
+  
+  // Mostrar alerta de bienvenida al iniciar sesión
+  useWelcomeToast();
+  
   const facultadesHook = useFacultades(token);
   const programasHook = useProgramas(token);
   const docentesHook = useDocentes(token);

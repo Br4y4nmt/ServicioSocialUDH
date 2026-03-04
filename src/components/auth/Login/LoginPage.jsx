@@ -83,7 +83,7 @@ function LoginPage() {
       if (!route) {
         await alertError('Rol no válido', 'Tu rol no tiene una ruta válida en la aplicación.');
       } else {
-        if (rol === 'alumno' || rol === 'docente supervisor') {
+        if (rol === 'alumno' || rol === 'docente supervisor' || rol === 'gestor-udh') {
           localStorage.setItem('showBienvenida', 'true');
         }
         navigate(route, { replace: true });
