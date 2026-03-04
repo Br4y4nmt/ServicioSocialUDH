@@ -3,9 +3,8 @@ import axios from 'axios';
 import {
   alertconfirmacion,
   alertSuccess,
-  toastError,
 } from '../alerts/alertas';
-import { showTopWarningToast, showTopSuccessToast } from '../alerts/useWelcomeToast';
+import { showTopWarningToast, showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToast';
 
 export default function useLabores(token) {
   const [labores, setLabores] = useState([]);
@@ -53,18 +52,18 @@ export default function useLabores(token) {
       return true;
     } catch (error) {
       console.error('Error al crear labor social:', error);
-      toastError(error.response?.data?.message || 'No se pudo crear el servicio social');
+      showTopErrorToast(error.response?.data?.message || 'No se pudo crear el servicio social');
       return false;
     }
   }, [nuevaLabor, lineaLabor, token, fetchLabores]);
 
   const guardarEdicionLabor = useCallback(async (id) => {
     if (!nombreLaborEditado.trim()) {
-      toastError('El nombre del servicio social no puede estar vacío');
+      showTopErrorToast('El nombre del servicio social no puede estar vacío');
       return false;
     }
     if (!lineaLabor) {
-      toastError('Debes seleccionar una línea de acción');
+      showTopErrorToast('Debes seleccionar una línea de acción');
       return false;
     }
     try {
@@ -81,7 +80,7 @@ export default function useLabores(token) {
       return true;
     } catch (error) {
       console.error('Error al actualizar labor social:', error);
-      toastError(error.response?.data?.message || 'Error al actualizar el servicio social');
+      showTopErrorToast(error.response?.data?.message || 'Error al actualizar el servicio social');
       return false;
     }
   }, [nombreLaborEditado, lineaLabor, token, fetchLabores]);
@@ -98,7 +97,7 @@ export default function useLabores(token) {
       showTopSuccessToast('Servicio social eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar labor social:', error);
-      toastError(error.response?.data?.message || 'Error al eliminar el servicio social');
+      showTopErrorToast(error.response?.data?.message || 'Error al eliminar el servicio social');
     }
   }, [token, fetchLabores]);
 

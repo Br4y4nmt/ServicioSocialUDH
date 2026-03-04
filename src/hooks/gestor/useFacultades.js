@@ -4,9 +4,8 @@ import {
   alertconfirmacion,
   alertSuccess,
   alertError,
-  toastError,
 } from '../alerts/alertas';
-import { showTopSuccessToast } from '../alerts/useWelcomeToast';
+import { showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToast';
 
 export default function useFacultades(token) {
   const [facultades, setFacultades] = useState([]);
@@ -51,7 +50,7 @@ export default function useFacultades(token) {
 
   const guardarEdicionFacultad = useCallback(async (id) => {
     if (!nombreEditado.trim()) {
-      toastError('El nombre de la facultad no puede estar vacío');
+      showTopErrorToast('El nombre de la facultad no puede estar vacío');
       return;
     }
     try {
@@ -67,7 +66,7 @@ export default function useFacultades(token) {
       showTopSuccessToast('Facultad actualizada exitosamente');
     } catch (error) {
       console.error('Error al actualizar facultad:', error);
-      toastError(error.response?.data?.message || 'Error al actualizar la facultad');
+      showTopErrorToast(error.response?.data?.message || 'Error al actualizar la facultad');
     }
   }, [nombreEditado, token, fetchFacultades]);
 

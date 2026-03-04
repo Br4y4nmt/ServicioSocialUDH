@@ -2,12 +2,11 @@ import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import {
   alertSuccess,
-  toastError,
   alertError,
   alertWarning,
   alertconfirmacion,
 } from "../../../hooks/alerts/alertas";
-import { showTopSuccessToast } from "../../../hooks/alerts/useWelcomeToast";
+import { showTopSuccessToast, showTopErrorToast } from "../../../hooks/alerts/useWelcomeToast";
 import { useUser } from "../../../UserContext";
 import "./InformeFinal.css";
 import "../DashboardAlumno.css";
@@ -157,7 +156,7 @@ export default function InformeFinal({
       clearFile();
     } catch (err) {
       console.error(err);
-      toastError("No se pudo enviar el documento. Intenta nuevamente.");
+      showTopErrorToast("No se pudo enviar el documento.", "Intenta nuevamente.");
     } finally {
       setUploading(false);
     }

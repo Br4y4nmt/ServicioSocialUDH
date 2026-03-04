@@ -4,11 +4,9 @@ import {
   alertError,
   alertSuccess,
   alertWarning,
-  toastWarning,
   alertconfirmacion,
-  toastError,
 } from '../alerts/alertas';
-import { showTopWarningToast, showTopSuccessToast } from '../alerts/useWelcomeToast';
+import { showTopWarningToast, showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToast';
 
 export default function useProgramas(token) {
   const [programas, setProgramas] = useState([]);
@@ -49,7 +47,7 @@ export default function useProgramas(token) {
     }
 
     if (whatsappPrograma.length !== 9) {
-      toastWarning('Número inválido', { text: 'El número de WhatsApp debe tener exactamente 9 dígitos.' });
+      showTopWarningToast('Número inválido', 'El número de WhatsApp debe tener exactamente 9 dígitos.');
       return false;
     }
 
@@ -87,7 +85,7 @@ export default function useProgramas(token) {
 
   const guardarEdicionPrograma = useCallback(async () => {
     if (!programaEditado.trim() || !facultadEditada || !emailEditado.trim()) {
-      toastWarning('Campos incompletos', { text: 'Completa todos los campos requeridos.' });
+      showTopWarningToast('Campos incompletos', 'Completa todos los campos requeridos.');
       return;
     }
 
@@ -95,7 +93,7 @@ export default function useProgramas(token) {
       emailEditado.endsWith('@gmail.com') || emailEditado.endsWith('@udh.edu.pe');
 
     if (!correoValido) {
-      toastWarning('Correo inválido', { text: 'El correo debe ser @gmail.com o @udh.edu.pe.' });
+      showTopWarningToast('Correo inválido', 'El correo debe ser @gmail.com o @udh.edu.pe.');
       return;
     }
 
@@ -117,7 +115,7 @@ export default function useProgramas(token) {
       fetchProgramas();
     } catch (error) {
       console.error('Error al actualizar el programa académico:', error);
-      toastError(error.response?.data?.message || 'No se pudo actualizar el programa.');
+      showTopErrorToast(error.response?.data?.message || 'No se pudo actualizar el programa.');
     }
   }, [programaEditado, facultadEditada, emailEditado, idEditandoPrograma, token, fetchProgramas]);
 
@@ -133,7 +131,7 @@ export default function useProgramas(token) {
       showTopSuccessToast('Programa eliminado correctamente');
     } catch (error) {
       console.error('Error al eliminar programa:', error);
-      toastError('Ocurrió un error al eliminar el programa.');
+      showTopErrorToast('Ocurrió un error al eliminar el programa.');
     }
   }, [token, fetchProgramas]);
 

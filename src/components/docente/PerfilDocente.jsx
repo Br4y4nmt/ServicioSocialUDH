@@ -10,9 +10,7 @@ import { useUser } from '../../UserContext';
 import { cleanSignature } from '../../utils/signatureCleanup';
 import useIsMobile from '../../hooks/useIsMobile';
 import {
-  alertWarning,
   alertInfo,
-  toastWarning,
   alertSuccess,
   alertError,
 } from '../../hooks/alerts/alertas';
@@ -160,23 +158,13 @@ function PerfilDocente() {
     }
 
     if (!/^\d{8}$/.test(form.dni)) {
-
-      toastWarning('DNI inválido', {
-        text: 'Debe tener 8 dígitos.'
-      });
-
+      showTopWarningToast('DNI inválido', 'Debe tener 8 dígitos.');
       return;
-
     }
 
     if (!/^\d{9}$/.test(form.celular)) {
-
-      toastWarning('Celular inválido', {
-        text: 'Debe tener 9 dígitos.'
-      });
-
+      showTopWarningToast('Celular inválido', 'Debe tener 9 dígitos.');
       return;
-
     }
 
     const id_usuario = localStorage.getItem('id_usuario');

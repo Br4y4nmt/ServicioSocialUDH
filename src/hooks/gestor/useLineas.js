@@ -4,9 +4,8 @@ import {
   alertconfirmacion,
   alertSuccess,
   alertError,
-  toastError,
 } from '../alerts/alertas';
-import { showTopSuccessToast } from '../alerts/useWelcomeToast';
+import { showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToast';
 
 export default function useLineas(token) {
   const [lineas, setLineas] = useState([]);
@@ -52,7 +51,7 @@ export default function useLineas(token) {
 
   const guardarEdicionLinea = useCallback(async (id) => {
     if (!nombreLineaEditado.trim()) {
-      toastError('El nombre de la línea de acción no puede estar vacío');
+      showTopErrorToast('El nombre de la línea de acción no puede estar vacío');
       return;
     }
     try {
@@ -68,7 +67,7 @@ export default function useLineas(token) {
       showTopSuccessToast('Línea de acción actualizada exitosamente');
     } catch (error) {
       console.error('Error al actualizar línea de acción:', error);
-      toastError(error.response?.data?.message || 'Error al actualizar la línea de acción');
+      showTopErrorToast(error.response?.data?.message || 'Error al actualizar la línea de acción');
     }
   }, [nombreLineaEditado, token, fetchLineas]);
 

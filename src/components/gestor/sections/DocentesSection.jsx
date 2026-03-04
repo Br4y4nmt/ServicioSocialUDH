@@ -1,5 +1,5 @@
 import React from 'react';
-import { toastWarning } from '../../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
@@ -208,14 +208,14 @@ function DocentesSection({
         }}
         onGuardar={async () => {
           if (nuevoDocenteEmail && !nuevoDocenteEmail.endsWith('@udh.edu.pe')) {
-            toastWarning('Correo inválido', { text: 'El correo del docente debe ser @udh.edu.pe' });
-            return;
-          }
+              showTopWarningToast('Correo inválido', 'El correo del docente debe ser @udh.edu.pe');
+              return;
+            }
 
-          if (nuevoDocenteWhatsapp.length !== 9) {
-            toastWarning('Número inválido', { text: 'El número de WhatsApp debe tener exactamente 9 dígitos.' });
-            return;
-          }
+            if (nuevoDocenteWhatsapp.length !== 9) {
+              showTopWarningToast('Número inválido', 'El número de WhatsApp debe tener exactamente 9 dígitos.');
+              return;
+            }
 
           const success = await crearDocente();
           if (success) {

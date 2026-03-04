@@ -28,9 +28,8 @@ import axios from "axios";
 import { useUser } from "../../../UserContext";  
 import {
   alertconfirmacion,
-  toastError,
 } from "../../../hooks/alerts/alertas";
-import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
+import { showTopSuccessToast, showTopErrorToast } from '../../../hooks/alerts/useWelcomeToast';
 
 function Dasborasd() {
   const { user } = useUser();           
@@ -346,7 +345,7 @@ const toggleRegistro = async () => {
   } catch (error) {
     console.error("Error actualizando estado de registro:", error);
 
-    toastError("No se pudo actualizar el estado del registro");
+    showTopErrorToast("No se pudo actualizar el estado del registro");
   } finally {
     setLoadingRegistro(false);
   }

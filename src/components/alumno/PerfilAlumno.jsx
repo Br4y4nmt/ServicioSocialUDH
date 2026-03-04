@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import './perfil.css';
 import PerfilIcon from './PerfilIcon';
 import { useUser } from '../../UserContext';
-import { toastWarning } from '../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 import Spinner from 'components/ui/Spinner';
 
 function PerfilAlumno() {
@@ -62,21 +62,21 @@ function PerfilAlumno() {
 
 
     if (!celular) {
-      toastWarning('Celular requerido', { text: 'Ingresa tu número celular antes de continuar.' });
+      showTopWarningToast('Celular requerido', 'Ingresa tu número celular antes de continuar.');
       return;
     }
   if (!modalidadSeleccionada) {
-    toastWarning('Modalidad requerida', { text: 'Selecciona una modalidad antes de continuar.' });
+    showTopWarningToast('Modalidad requerida', 'Selecciona una modalidad antes de continuar.');
     return;
   }
   const celularRegex = /^\d{9}$/;
   if (!celularRegex.test(celular)) {
-    toastWarning('Celular inválido', { text: 'El número debe contener exactamente 9 dígitos numéricos.' });
+    showTopWarningToast('Celular inválido', 'El número debe contener exactamente 9 dígitos numéricos.');
     return;
   }
 
   if (!sedeSeleccionada) {
-    toastWarning('Sede requerida', { text: 'Selecciona una sede antes de continuar.' });
+    showTopWarningToast('Sede requerida', 'Selecciona una sede antes de continuar.');
     return;
   }
 

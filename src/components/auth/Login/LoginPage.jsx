@@ -179,7 +179,9 @@ useEffect(() => {
           alt="Fondo UDH Labor Social"
           width="1200"
           height="800"
-          loading="lazy"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
         />
       </picture>
     </div>

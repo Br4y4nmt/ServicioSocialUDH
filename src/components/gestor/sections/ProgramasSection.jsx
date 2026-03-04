@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { toastWarning } from '../../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import ProgramaEditarModal from "../../modals/ProgramaEditarModal";
@@ -147,9 +147,9 @@ function ProgramasSection({
         }}
         onGuardar={async () => {
           if (whatsappPrograma.length !== 9) {
-            toastWarning('Número inválido', { text: 'El número de WhatsApp debe tener exactamente 9 dígitos.' });
-            return;
-          }
+              showTopWarningToast('Número inválido', 'El número de WhatsApp debe tener exactamente 9 dígitos.');
+              return;
+            }
 
           const ok = await crearPrograma();
           if (ok) {

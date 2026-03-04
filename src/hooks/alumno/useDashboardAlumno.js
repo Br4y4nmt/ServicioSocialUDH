@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useUser } from '../../UserContext';
-import { useWelcomeToast } from '../alerts/useWelcomeToast';
+import { useWelcomeToast, showTopWarningToast } from '../alerts/useWelcomeToast';
 import { useFormularioPlan } from '../alumno/useFormularioPlan';
 import { useGrupoAlumno } from '../alumno/useGrupoAlumno';
 import { useActividadesCronograma } from '../alumno/useActividadesCronograma';
@@ -73,20 +73,7 @@ export function useDashboardAlumno() {
   const [modalObservacionEstudianteVisible, setModalObservacionEstudianteVisible] = useState(false);
   const [observacionSeleccionada, setObservacionSeleccionada] = useState('');
 
-  const toastWarning = useCallback((mensaje) => {
-    Swal.fire({
-      toast: true,
-      position: "bottom-start",
-      icon: "warning",
-      title: mensaje,
-      showConfirmButton: false,
-      timer: 3500,
-      timerProgressBar: true,
-      background: "#ffffff",
-      color: "#1f2937",
-      iconColor: "#f59e0b",
-    });
-  }, []);
+  
 
   useWelcomeToast();
 
@@ -518,10 +505,9 @@ export function useDashboardAlumno() {
       const data = error.response?.data;
 
       if (status === 409 && Array.isArray(data?.duplicados)) {
-        toastWarning(
-          `Correos duplicados: ${data.duplicados
-            .map((c) => c.split("@")[0])
-            .join(", ")}`
+        showTopWarningToast(
+          'Correos duplicados',
+          data.duplicados.map((c) => c.split("@")[0]).join(", ")
         );
         grupoAlumno.setCorreosGrupo((prev) =>
           prev.filter(
@@ -537,7 +523,7 @@ export function useDashboardAlumno() {
   }, [
     solicitudEnviada, user?.id, user?.token, tipoServicio,
     grupoAlumno, facultadSeleccionada, programaSeleccionado,
-    docenteSeleccionado, laborSeleccionada, lineaSeleccionada, toastWarning
+    docenteSeleccionado, laborSeleccionada, lineaSeleccionada
   ]);
 
   const handleGenerarPDF = useCallback(async () => {

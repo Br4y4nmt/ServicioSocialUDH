@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
-import { alertSuccess, toastError } from '../alerts/alertas';
-import { showTopWarningToast } from '../alerts/useWelcomeToast';
+import { alertSuccess } from '../alerts/alertas';
+import { showTopWarningToast, showTopErrorToast } from '../alerts/useWelcomeToast';
 
 export default function useEstudiantes(token) {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -33,7 +33,7 @@ export default function useEstudiantes(token) {
     }
 
     if (whatsapp.length !== 9) {
-      toastError('Número inválido', { text: 'El WhatsApp debe tener exactamente 9 dígitos.' });
+      showTopErrorToast('Número inválido', 'El WhatsApp debe tener exactamente 9 dígitos.');
       return false;
     }
 
@@ -55,7 +55,7 @@ export default function useEstudiantes(token) {
       return true;
     } catch (error) {
       console.error('Error registrando estudiante:', error);
-      toastError(error.response?.data?.message || 'No se pudo registrar el estudiante');
+      showTopErrorToast(error.response?.data?.message || 'No se pudo registrar el estudiante');
       return false;
     }
   }, [codigoUniversitario, token, fetchEstudiantes]);

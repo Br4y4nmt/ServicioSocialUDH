@@ -1,5 +1,6 @@
 import React from "react";
 import Swal from "sweetalert2";
+import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
 function GrupoModalAlumno({
   visible,
@@ -15,24 +16,7 @@ function GrupoModalAlumno({
 
   const MAX_INTEGRANTES = 10; 
 
-  const toastWarning = (title) => {
-    Swal.fire({
-      toast: true,
-      position: "bottom-start",
-      icon: "warning",
-      title,
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      background: "#ffffff",
-      color: "#1f2937",
-      iconColor: "#f59e0b",
-      didOpen: (toast) => {
-        toast.addEventListener("mouseenter", Swal.stopTimer);
-        toast.addEventListener("mouseleave", Swal.resumeTimer);
-      },
-    });
-  };
+
 
   const handleAgregarOtro = () => {
     if (correosGrupo.length >= MAX_INTEGRANTES) {
@@ -104,7 +88,7 @@ function GrupoModalAlumno({
                         );
 
                         if (existe) {
-                          toastWarning("Este integrante ya fue agregado al grupo");
+                          showTopWarningToast("Este integrante ya fue agregado al grupo");
                           nuevos[index] = "";
                           setCorreosGrupo(nuevos);
                           return;

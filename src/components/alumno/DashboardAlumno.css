@@ -24,50 +24,6 @@
   display: inline-block;
   font-weight: 500;
 }
-.item-resumen {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-}
-
-.item-certificado-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.estado-tramitado-final {
-  background-color: #38A169;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-.certificado-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.certificado-titulo {
-  font-weight: 600;
-  font-size: 14px;
-  color: #2D3748; 
-}
-
-.tarjeta-info-final {
-  margin-top: 24px;
-  border: 1px solid #CBD5E0;
-  border-radius: 10px;
-  padding: 16px 20px;
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
 
 .fecha-fin-real {
   background-color: #FFFFFF;
@@ -150,27 +106,7 @@
     margin-bottom: 20px;
   }
   
-.step-icon {
-  width: 30px;
-  height: 30px;
-  background-color: #2EBAA1;
-  border-radius: 50%;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1; 
-}
-.step-icon::before {
-  content: '✓'; 
-  font-size: 16px;
-  display: block;
-  line-height: 1; 
-}
 .step-header h3 {
-
   margin: 0;
   padding: 0;
   line-height: 1;
@@ -251,9 +187,6 @@
     font-weight: 500;
     display: block;
     margin-bottom: 5px;
-  }
-  .texto-cursiva {
-    font-style: italic;
   }
   .texto-cursiva {
     color: #319795;
@@ -363,29 +296,6 @@
   width: 100%;              
   margin-top: 20px;        
 }
-
-.btn-completar-perfil {
-  background-color: #2EBAA1; 
-  color: white; 
-  padding: 10px 20px; 
-  border: none; 
-  border-radius: 5px; 
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  
-  font-size: 16px; 
-  cursor: pointer; 
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-completar-perfil:hover {
-  background-color: #26a78d; 
-  transform: translateY(-2px); 
-}
-
-.btn-completar-perfil:active {
-  background-color: #209c80; 
-  transform: translateY(1px); 
-}
-
   .respuesta-acciones {
     display: flex;
     align-items: center;
@@ -486,7 +396,6 @@
   background-color: #A0AEC0;
 }
 
-/* Estado: aprobada (verde) */
 .estado-aprobada {
   background-color: #38A169;
 }
@@ -526,13 +435,6 @@
     color: #3d7f6f;
     margin: 0;
   }
-  .input-fecha-fin {
-  padding: 3px 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 13px;
-  width: 100px;
-}
 .oculto {
   display: none !important;
 }
@@ -550,7 +452,6 @@
   line-height: 1.5;
   animation: bounceAviso 2.0s ease-in-out infinite;
 }
-/* Efecto rebote */
 @keyframes bounceAviso {
   0%, 100% {
     transform: translateY(0);
@@ -578,13 +479,6 @@
   gap: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  }
-  .respuesta-aprobacion-contenido {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
   }
   .btn-ver-documento:hover {
     background-color: #e2e8f0;
@@ -636,7 +530,6 @@
     line-height: 1.4;
   }
   
-  
   .respuesta-asesor-btn.aceptado {
     background-color: #38A169;
     color: white;
@@ -666,8 +559,6 @@
   padding-left: 80px;  
   box-sizing: border-box;
 }
-
-
   .plan-icon {
     width: 350px;  
     height: 350px;
@@ -710,16 +601,6 @@
     font-weight: 500;
     color: #333;
     margin-bottom: 5px;
-  }
-  .conformidad-plan-modern {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f6f6f6;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   .info-card h4 {
     font-size: 18px;
@@ -814,23 +695,6 @@
   line-height: 1.4; 
   text-transform: uppercase;
 }
-
-  .abrir-proyecto-btn {
-    padding: 10px 20px;
-    background-color: #006f8e;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-  }
-  
-  .abrir-proyecto-btn:hover {
-    background-color: #00576d;
-  }
   .solicitar-revision-card {
     margin: 20px auto 30px auto;
     padding: 25px 40px;
@@ -864,7 +728,6 @@
     cursor: pointer;
     font-weight: 500;
   }
-
 
   .btn-revision {
     background-color: #39B49E;
@@ -1060,26 +923,7 @@
   }
   .btn-agregar i {
     font-size: 14px;
-  }
-  .btn-ver-evidencia {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 6px;
-    border: 1px solid #adafb1;
-    border-radius: 5px;
-    background: white;
-    color: #2D3748;
-    font-weight: 450;
-    font-size: 12.5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-ver-evidencia:hover {
-    background-color: #dadbdd;
-  }
-  
+  }  
  
   @keyframes bounce {
     0%, 100% {
@@ -1094,25 +938,6 @@
     75% {
         transform: translateY(-4px); 
     }
-}
-
-.contenedor-boton-centro {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  margin-left: -380px;
-}
-
-.texto-observacion {
-  color: #e67e22;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.texto-sin-observacion {
-  color: #bbb;
-  font-size: 12px;
 }
 
 .modal-observacion-overlay {
@@ -1308,29 +1133,6 @@
   }
 }
 
-.boton-ver-carta {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 6px;
-    border: 1px solid #adafb1;
-    border-radius: 5px;
-    background: white;
-    color: #2D3748;
-    font-weight: 450;
-    font-size: 12.5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-.boton-ver-carta:hover {
-    background-color: #dadbdd;
- }
-.contenedor-boton-ver {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
 .contenedores-boton-ver {
   display: flex;
   align-items: center;
@@ -1353,10 +1155,7 @@
   gap: 8px;
   margin-bottom: 4px;
 }
-.respuesta-textos {
-  display: flex;
-  flex-direction: column;
-}
+
 .titulo-aceptacion {
   margin: 0;
   font-size: 0.95rem;
@@ -1398,12 +1197,12 @@
   color: #1a202c;
   margin-bottom: 20px;
 }
-.seccion-header h3 {
- 
-    font-weight: 630;  
-    font-size: 20px;
-    color: #2d2d2d;
-    margin: 0;
+
+.seccion-header h3 { 
+  font-weight: 630;  
+  font-size: 20px;
+  color: #2d2d2d;
+  margin: 0;
 }
 
 .seccion-check {
@@ -1412,12 +1211,6 @@
   font-size: 14px;
   padding: 5px 9px;
   border-radius: 50%;
-}
-
-.info-icono {
-  font-size: 16px;
-  color: #64748b;
-  margin-left: auto;
 }
 
 .documento-card {
@@ -1479,24 +1272,6 @@
   }
 }
 
-.persona-img {
-  animation: fadeInSlideLeft 1s ease-out;
-}
-
-.btn-ver-ojo {
-  background: #fff;
-  border: 1px solid #cbd5e0;
-  color: #1a202c;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
 .plan-icon-img {
   display: flex;
   justify-content: flex-start;
@@ -1508,9 +1283,6 @@
   flex-shrink: 0;
 }
 
-.btn-ver-ojo:hover {
-  background: #edf2f7;
-}
 .main-content,
 .main-content.collapsed,
 .main-content.sidebar-open {
@@ -1531,92 +1303,12 @@
   gap: 8px;
 }
 
-.boton-descarga-informefinal {
-  padding: 8px 18px;
-  background-color: #011B4B;
-  color: white;
-  border-radius: 6px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 15px;
-}
-
-.boton-descarga-informefinal:hover {
-  background-color: #1e429f;
-  transform: translateY(-4px);
-}
-
-.boton-descarga-informefinal:active {
-  transform: translateY(0);
-}
-.boton-deshabilitado-final {
-  padding: 8px 20px;
-  background-color: #CBD5E0;
-  color: #4A5568;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-.boton-scroll-arriba {
-  padding: 8px 20px;
-  background-color: #39B49E;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.boton-scroll-arriba:hover {
-  background-color: #147760;
-  transform: translateY(-2px);
-}
-
-.boton-scroll-arriba:active {
-  transform: translateY(0);
-}
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
-.boton-enviar-final {
-  padding: 8px 20px;
-  background-color: #39B49E;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
 
-.boton-enviar-final:hover {
-  background-color: #147760;
-  transform: translateY(-2px);
-}
-
-.boton-enviar-final:active {
-  transform: translateY(0);
-}
-
-.boton-enviar-final.enviando {
-  opacity: 0.8;
-  cursor: not-allowed;
-}
 .btn-estado-aprobado {
   background-color: #38a169;
   color: #fff;
@@ -1689,18 +1381,6 @@
   .titulo-aceptacion {
     font-size: 0.85rem; 
   }
-  .step-icon {
-    min-width: 24px;    
-    min-height: 24px;
-    width: 26px;         
-    height: 26px;
-    font-size: 14px;
-  }
-
-  .step-icon::before {
-    font-size: 14px;
-  }
-
   .step-header {
     font-size: 16px;     
     gap: 8px;
@@ -1896,13 +1576,6 @@
     font-size: 14px;
   }
 }
-@media (max-width: 768px) {
-  .contenedor-boton-centro {
-    justify-content: center;
-    padding: 0 15px;
-    margin-left: 0; 
-  }
-}
 
 @media (max-width: 668px) {
   .alerta-boton-wrapper {
@@ -1916,12 +1589,6 @@
     margin: 20px auto 0 auto;
     display: block;
     box-sizing: border-box;
-  }
-}
-
-@media (min-width: 1440px) {
-  .contenedor-boton-centro {
-    transform: translateX(20px); 
   }
 }
 

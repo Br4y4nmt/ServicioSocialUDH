@@ -5,11 +5,10 @@ import '../DashboardAlumno.css';
 import '../../ModalGlobal.css';
 import {
   alertWarning,
-  toastWarning,
   alertError,
   mostrarRecomendacionEvidencia,
 } from "../../../hooks/alerts/alertas";
-import { showTopSuccessToast } from "../../../hooks/alerts/useWelcomeToast";
+import { showTopSuccessToast, showTopWarningToast } from "../../../hooks/alerts/useWelcomeToast";
 import VerBoton, { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import { useUser } from '../../../UserContext';
@@ -161,7 +160,7 @@ useEffect(() => {
       }
 
       if (!actividad.archivoTemporalEvidencia) {
-        toastWarning('Falta evidencia', { text: 'Selecciona o sube una evidencia antes de enviar.' });
+        showTopWarningToast('Falta evidencia', 'Selecciona o sube una evidencia antes de enviar.');
         return;
       }
 

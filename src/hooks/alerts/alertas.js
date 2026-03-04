@@ -9,40 +9,6 @@ export const mostrarRecomendacionEvidencia = () => {
   });
 };
 
-const Toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 2200,
-  timerProgressBar: true,
-  background: "#ffffff",
-  color: "#4b5563",
-});
-
-export const toastSuccess = (title, opts = {}) =>
-  Toast.fire({
-    icon: "success",
-    title: title || "Operación exitosa",
-    iconColor: "#22c55e",
-    ...opts,
-  });
-
-export const toastError = (title, opts = {}) =>
-  Toast.fire({
-    icon: "error",
-    title: title || "Ocurrió un error",
-    iconColor: "#dc2626",
-    ...opts,
-  });
-
-export const toastWarning = (title, opts = {}) =>
-  Toast.fire({
-    icon: "info",
-    title: title || "Atención",
-    iconColor: "#f59e0b",
-    ...opts,
-  });
-
 export const alertconfirmacion = ({
   title = '¿Estás seguro?',
   text = 'Esta acción eliminará el programa académico de forma permanente.',

@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
-  toastWarning,
   alertSuccess,
   alertconfirmacion,
   alertError,
 } from '../alerts/alertas';
-import { showTopSuccessToast } from '../alerts/useWelcomeToast';
+import { showTopSuccessToast, showTopWarningToast } from '../alerts/useWelcomeToast';
 
 export default function useDocentes(token) {
   const [docentes, setDocentes] = useState([]);
@@ -45,18 +44,18 @@ export default function useDocentes(token) {
       !nuevaFacultadDocente ||
       !nuevoProgramaDocente
     ) {
-      toastWarning('Campos incompletos', { text: 'Completa todos los campos requeridos.' });
+      showTopWarningToast('Campos incompletos', 'Completa todos los campos requeridos.');
       return false;
     }
 
     if (nuevoDocenteWhatsapp.length !== 9) {
-      toastWarning('WhatsApp inválido', { text: 'El número de WhatsApp debe tener exactamente 9 dígitos.' });
+      showTopWarningToast('WhatsApp inválido', 'El número de WhatsApp debe tener exactamente 9 dígitos.');
       return false;
     }
 
     const correoValido = nuevoDocenteEmail.endsWith('@udh.edu.pe');
     if (!correoValido) {
-      toastWarning('Correo inválido', { text: 'El correo del docente debe ser @udh.edu.pe' });
+      showTopWarningToast('Correo inválido', 'El correo del docente debe ser @udh.edu.pe');
       return false;
     }
 
@@ -96,17 +95,17 @@ export default function useDocentes(token) {
 
   const guardarEdicionDocente = useCallback(async (id) => {
     if (!emailDocenteEditado) {
-      toastWarning('Correo requerido', { text: 'El correo del docente es obligatorio.' });
+      showTopWarningToast('Correo requerido', 'El correo del docente es obligatorio.');
       return false;
     }
 
     if (!emailDocenteEditado.endsWith('@udh.edu.pe')) {
-      toastWarning('Correo inválido', { text: 'El correo del docente debe ser @udh.edu.pe' });
+      showTopWarningToast('Correo inválido', 'El correo del docente debe ser @udh.edu.pe');
       return false;
     }
 
     if (!facultadDocenteEditada || !programaDocenteEditado) {
-      toastWarning('Campos incompletos', { text: 'Completa la facultad y el programa.' });
+      showTopWarningToast('Campos incompletos', 'Completa la facultad y el programa.');
       return false;
     }
 

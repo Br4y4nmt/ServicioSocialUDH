@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Header from '../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import axios from 'axios';
-import {
-  toastWarning,
-  alertError,
-} from '../../hooks/alerts/alertas';
-import { alertSuccess } from '../../hooks/alerts/alertas';
+import { alertError, alertSuccess } from '../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 import '../alumno/perfil.css';
 import PerfilIcon from '../alumno/PerfilIcon';
 import Spinner from '../ui/Spinner';
@@ -105,11 +102,11 @@ function MiPerfilDocente() {
 
   const handleGuardar = async () => {
     if (!/^\d{9}$/.test(perfil.celular)) {
-      toastWarning('Celular inválido', { text: 'Debe contener exactamente 9 dígitos numéricos.' });
+      showTopWarningToast('Celular inválido', 'Debe contener exactamente 9 dígitos numéricos.');
       return;
     }
     if (perfil.celular === celularOriginal) {
-      toastWarning('Sin cambios', { text: 'No se realizaron cambios.' });
+      showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
       return;
     }
 
