@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './ImpersonateLogin.css';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { showTopSuccessToast, showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 
 function ImpersonateLogin() {
   const [email, setEmail] = useState('');
@@ -46,10 +45,7 @@ function ImpersonateLogin() {
       localStorage.setItem('foto_perfil', res.data.usuario.foto_perfil || '');
       localStorage.setItem('correo_institucional', res.data.usuario.email);
 
-      toast.success(`Ahora impersonando a: ${res.data.usuario.email}`, {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      showTopSuccessToast(`Ahora impersonando a: ${res.data.usuario.email}`);
 
       if (res.data.usuario.rol === 'alumno') {
         window.open('/dashboard-alumno', '_blank');
@@ -60,7 +56,7 @@ function ImpersonateLogin() {
       } else if (res.data.usuario.rol === 'programa-academico') {
         window.open('/dashboard-programa-academico', '_blank');
       } else {
-        toast.warning('Rol no válido en impersonación');
+        showTopWarningToast('Rol no válido en impersonación');
       }
     } catch (err) {
       const status = err?.response?.status;
@@ -101,7 +97,7 @@ function ImpersonateLogin() {
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
-      <ToastContainer />
+
     </div>
   );
 }

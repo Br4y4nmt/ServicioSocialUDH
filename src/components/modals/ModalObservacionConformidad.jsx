@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import '../../components/docente/DashboardDocente.css';
+import { alertconfirmacion } from '../../hooks/alerts/alertas';
 
 const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
   visible,
@@ -25,7 +26,24 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
           <button onClick={onCancelar} className="cancelar-btn">
             Cancelar
           </button>
-          <button onClick={onEnviar} className="enviar-btn">
+          <button
+            onClick={async () => {
+              const confirm = await alertconfirmacion({
+                title: '¿Está seguro de enviar esta observación?',
+                text: 'Esta acción registrará la observación y continuará con el flujo.',
+                icon: 'warning',
+                confirmButtonColor: '#003366',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, enviar',
+                cancelButtonText: 'Cancelar'
+              });
+
+              if (confirm?.isConfirmed) {
+                if (typeof onEnviar === 'function') onEnviar();
+              }
+            }}
+            className="enviar-btn"
+          >
             Enviar
           </button>
         </div>

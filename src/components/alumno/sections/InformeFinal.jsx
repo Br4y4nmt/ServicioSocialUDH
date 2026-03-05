@@ -17,6 +17,7 @@ import CheckCircleBig from "../../../hooks/componentes/Icons/CheckCircleBig";
 import InfoIcon from "../../../hooks/componentes/Icons/InfoIcon";
 import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import Spinner from 'components/ui/Spinner';
+import ModalMotivoRechazoInforme from '../../modals/ModalMotivoRechazoInforme';
 
 export default function InformeFinal({
   trabajoId,
@@ -39,6 +40,9 @@ export default function InformeFinal({
   const [certificadosGrupo, setCertificadosGrupo] = useState([]);
   const [nombresMiembros, setNombresMiembros] = useState([]);
   const esGrupal = planSeleccionado?.tipo_servicio_social === "grupal";
+  const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
+  const [motivoRechazo, setMotivoRechazo] = useState('');
+  const [cargandoMotivo, setCargandoMotivo] = useState(false);
   const pickFile = () => fileRef.current?.click();
   const onChange = (e) => {
     const f = e.target.files?.[0];
@@ -200,6 +204,25 @@ useEffect(() => {
 
   fetchNombres();
 }, [estaAprobado, esGrupal, certificadosGrupo]);
+
+  const handleVerMotivoRechazo = async () => {
+    if (!planSeleccionado?.id || !token) return;
+
+    setCargandoMotivo(true);
+    try {
+      const { data } = await axios.get(
+        `/api/trabajo-social/motivo-rechazo-informe/${planSeleccionado.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMotivoRechazo(data.motivo || 'No se encontró el motivo.');
+      setModalMotivoVisible(true);
+    } catch (error) {
+      console.error('Error al obtener motivo de rechazo:', error);
+      showTopErrorToast('Error', 'No se pudo obtener el motivo del rechazo.');
+    } finally {
+      setCargandoMotivo(false);
+    }
+  };
 
   return (
     <>
@@ -421,6 +444,41 @@ useEffect(() => {
                 </header>
 
                 <div className="if-card-body">
+                  {estaRechazado && (
+                    <div className="if-doc-item" style={{ marginBottom: '16px' }}>
+                      <div className="documento-info-nu">
+                        <PdfIcon />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span className="if-doc-name">INFORME FINAL</span>
+                          <span style={{ 
+                            fontStyle: 'italic', 
+                            color: '#6B7280', 
+                            fontSize: '12px' 
+                          }}>
+                            (Revise las observaciones de su asesor y vuelva a enviar su documento corregido)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="if-doc-right">
+                        <VerBotonInline
+                          onClick={handleVerMotivoRechazo}
+                          disabled={cargandoMotivo}
+                        />
+                        <span className="btn-estado-rechazado" style={{
+                          padding: '4px 12px',
+                          backgroundColor: '#DC2626',
+                          color: '#fff',
+                          borderRadius: '9999px',
+                          fontSize: '13px',
+                          fontWeight: '600'
+                        }}>
+                          Rechazado
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   <div
                     className={`if-dropzone ${bloqueado ? "is-disabled" : ""}`}
                     onClick={() => !bloqueado && pickFile()}
@@ -563,6 +621,12 @@ useEffect(() => {
           </aside>
         </div>
       </div>
+
+      <ModalMotivoRechazoInforme
+        visible={modalMotivoVisible}
+        motivo={motivoRechazo}
+        onClose={() => setModalMotivoVisible(false)}
+      />
     </>
   );
 }

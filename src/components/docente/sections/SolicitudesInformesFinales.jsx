@@ -4,8 +4,9 @@ import SearchInput from '../../gestor/SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import VerBoton from '../../../hooks/componentes/VerBoton';
 import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
+import ModalObservacionConformidad from '../../modals/ModalObservacionConformidad';
 import { alertconfirmacion } from '../../../hooks/alerts/alertas';
-import { showTopSuccessToast, showTopErrorToast } from '../../../hooks/alerts/useWelcomeToast';
+import { showTopSuccessToast, showTopErrorToast, showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from '../../../UserContext';
 import Header from '../../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
@@ -24,6 +25,9 @@ export default function SolicitudesInformesFinales() {
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [nombresMiembros, setNombresMiembros] = useState([]);
+  const [modalRechazoVisible, setModalRechazoVisible] = useState(false);
+  const [motivoRechazo, setMotivoRechazo] = useState('');
+  const [informeARechazar, setInformeARechazar] = useState(null);
 
   const toggleSidebar = useCallback(() => {
     setCollapsed((c) => !c);
@@ -64,15 +68,20 @@ export default function SolicitudesInformesFinales() {
   }, [fetchData]);
 
   const cambiarEstado = useCallback(
-    async (id, nuevoEstado) => {
+    async (id, nuevoEstado, observacion = null) => {
       if (!token) return false;
 
       try {
         setProcesandoId(id);
 
+        const body = { nuevo_estado: nuevoEstado };
+        if (observacion) {
+          body.observacion = observacion;
+        }
+
         await axios.patch(
           `/api/trabajo-social/estado/${id}`,
-          { nuevo_estado: nuevoEstado },
+          body,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setInformesFinales((prev) =>
@@ -116,7 +125,31 @@ export default function SolicitudesInformesFinales() {
     }
   };
 
-  const handleRechazar = (id) => cambiarEstado(id, 'rechazado');
+  const handleRechazar = (informe) => {
+    setInformeARechazar(informe);
+    setMotivoRechazo('');
+    setModalRechazoVisible(true);
+  };
+
+  const handleEnviarRechazo = async () => {
+    if (!motivoRechazo.trim()) {
+      showTopWarningToast('Motivo requerido', 'Por favor, escriba el motivo del rechazo.');
+      return;
+    }
+
+    if (!informeARechazar) return;
+
+    const ok = await cambiarEstado(informeARechazar.id, 'rechazado', motivoRechazo.trim());
+    if (ok) {
+      showTopSuccessToast('Informe rechazado', 'El informe final fue rechazado correctamente.');
+    } else {
+      showTopErrorToast('Error', 'No se pudo rechazar el informe.');
+    }
+
+    setModalRechazoVisible(false);
+    setMotivoRechazo('');
+    setInformeARechazar(null);
+  };
 
   const handleVerGrupo = async (trabajoId) => {
     if (!token) return;
@@ -334,7 +367,7 @@ export default function SolicitudesInformesFinales() {
                               <button
                                 className="btn-accion rechazar"
                                 onClick={() =>
-                                  handleRechazar(inf.id)
+                                  handleRechazar(inf)
                                 }
                                 disabled={
                                   procesandoId === inf.id
@@ -371,6 +404,17 @@ export default function SolicitudesInformesFinales() {
         integrantes={integrantesGrupo}
         nombresMiembros={nombresMiembros}
         onCerrar={() => setModalGrupoVisible(false)}
+      />
+      <ModalObservacionConformidad
+        visible={modalRechazoVisible}
+        observacion={motivoRechazo}
+        onObservacionChange={setMotivoRechazo}
+        onCancelar={() => {
+          setModalRechazoVisible(false);
+          setMotivoRechazo('');
+          setInformeARechazar(null);
+        }}
+        onEnviar={handleEnviarRechazo}
       />
     </>
   );
