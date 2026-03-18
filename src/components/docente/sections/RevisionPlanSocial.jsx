@@ -8,7 +8,7 @@ import axios from 'axios';
 import VerBoton from "../../../hooks/componentes/VerBoton";
 import Swal from 'sweetalert2';
 import ModalObservacionConformidad from '../../modals/ModalObservacionConformidad';
-import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
+import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import { alertSuccess, alertconfirmacion, alertError } from '../../../hooks/alerts/alertas';
 import FullScreenSpinner from 'components/ui/FullScreenSpinner';
@@ -24,7 +24,6 @@ function RevisionPlanSocial() {
   const [trabajoADeclinar, setTrabajoADeclinar] = useState(null);
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
-  const [nombresMiembros, setNombresMiembros] = useState([]);
   const [cargandoCambioId, setCargandoCambioId] = useState(null);
 
   const navigate = useNavigate();
@@ -85,14 +84,15 @@ const handleVerGrupo = async (trabajoId) => {
       headers: { Authorization: `Bearer ${token}` }  
     });
 
-    const integrantes = response.data;
+    const integrantes = Array.isArray(response.data)
+      ? response.data.map((item) => ({
+          correo: item.correo || item.correo_institucional || 'CORREO NO DISPONIBLE',
+          nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
+        }))
+      : [];
+
     setIntegrantesGrupo(integrantes);
     setModalGrupoVisible(true);
-
-    const correos = integrantes.map(i => i.correo_institucional);
-    const { data: nombres } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, { correos });
-
-    setNombresMiembros(nombres);
     
   } catch (error) {
     console.error('Error al obtener integrantes del grupo:', error);
@@ -287,11 +287,10 @@ const capitalizarPrimeraLetra = (texto) =>
           setTrabajoADeclinar(null);
         }}
       />
-      <ModalGrupoIntegrantes
+      <GrupoDocenteModal
         visible={modalGrupoVisible}
-        integrantes={integrantesGrupo}
-        nombresMiembros={nombresMiembros}
-        onCerrar={() => setModalGrupoVisible(false)}
+        integrantesGrupo={integrantesGrupo}
+        onClose={() => setModalGrupoVisible(false)}
       />
     </>
   );

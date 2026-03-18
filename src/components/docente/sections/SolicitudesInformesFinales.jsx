@@ -3,7 +3,7 @@ import axios from 'axios';
 import SearchInput from '../../gestor/SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import VerBoton from '../../../hooks/componentes/VerBoton';
-import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
+import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import ModalObservacionConformidad from '../../modals/ModalObservacionConformidad';
 import { alertconfirmacion } from '../../../hooks/alerts/alertas';
 import { showTopSuccessToast, showTopErrorToast, showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
@@ -19,12 +19,9 @@ export default function SolicitudesInformesFinales() {
   const [activeSection, setActiveSection] = useState('informes');
   const [informesFinales, setInformesFinales] = useState([]);
   const [busqueda, setBusqueda] = useState('');
-  const [programaSeleccionado, setProgramaSeleccionado] = useState('');
-  const [programas, setProgramas] = useState([]);
   const [procesandoId, setProcesandoId] = useState(null);
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
-  const [nombresMiembros, setNombresMiembros] = useState([]);
   const [modalRechazoVisible, setModalRechazoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
   const [informeARechazar, setInformeARechazar] = useState(null);
@@ -42,22 +39,6 @@ export default function SolicitudesInformesFinales() {
 
       const lista = Array.isArray(data) ? data : [];
       setInformesFinales(lista);
-
-      const uniquePrograms = Array.from(
-        new Map(
-          lista.map((i) => [
-            i.ProgramasAcademico?.nombre_programa,
-            i.ProgramasAcademico,
-          ])
-        ).values()
-      ).filter(Boolean);
-
-      setProgramas(
-        uniquePrograms.map((p, idx) => ({
-          id_programa: idx,
-          nombre_programa: p.nombre_programa,
-        }))
-      );
     } catch (error) {
       console.error('Error cargando informes finales:', error);
     }
@@ -158,19 +139,15 @@ export default function SolicitudesInformesFinales() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setIntegrantesGrupo(integrantes || []);
-      setModalGrupoVisible(true);
+      const integrantesNormalizados = Array.isArray(integrantes)
+        ? integrantes.map((item) => ({
+            correo: item.correo || item.correo_institucional || 'CORREO NO DISPONIBLE',
+            nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
+          }))
+        : [];
 
-      const correos = (integrantes || []).map((i) => i.correo_institucional).filter(Boolean);
-      if (correos.length > 0) {
-        const { data: nombres } = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`,
-          { correos }
-        );
-        setNombresMiembros(nombres || []);
-      } else {
-        setNombresMiembros([]);
-      }
+      setIntegrantesGrupo(integrantesNormalizados);
+      setModalGrupoVisible(true);
     } catch (error) {
       console.error('Error al obtener integrantes del grupo:', error);
       alert('No se pudieron cargar los integrantes del grupo');
@@ -205,29 +182,6 @@ export default function SolicitudesInformesFinales() {
                   className="docentes-search-label"
                 />
               </div>
-
-              <div className="docentes-header-right">
-                <label className="docentes-search-label">
-                  Buscar por Programa Académico:
-                  <select
-                    className="select-profesional"
-                    value={programaSeleccionado}
-                    onChange={(e) =>
-                      setProgramaSeleccionado(e.target.value)
-                    }
-                  >
-                    <option value="">Todos</option>
-                    {programas.map((prog) => (
-                      <option
-                        key={prog.id_programa}
-                        value={prog.nombre_programa}
-                      >
-                        {prog.nombre_programa}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
             </div>
 
             <div className="docentes-table-wrapper">
@@ -247,13 +201,6 @@ export default function SolicitudesInformesFinales() {
 
                 <tbody>
                   {informesFinales
-                    .filter((inf) =>
-                      programaSeleccionado
-                        ? inf.ProgramasAcademico?.nombre_programa
-                            ?.toLowerCase()
-                            .includes(programaSeleccionado.toLowerCase())
-                        : true
-                    )
                     .filter((inf) =>
                       buscarSinTildes(
                         inf.Estudiante?.nombre_estudiante || '',
@@ -399,11 +346,10 @@ export default function SolicitudesInformesFinales() {
           </div>
         </div>
       </main>
-      <ModalGrupoIntegrantes
+      <GrupoDocenteModal
         visible={modalGrupoVisible}
-        integrantes={integrantesGrupo}
-        nombresMiembros={nombresMiembros}
-        onCerrar={() => setModalGrupoVisible(false)}
+        integrantesGrupo={integrantesGrupo}
+        onClose={() => setModalGrupoVisible(false)}
       />
       <ModalObservacionConformidad
         visible={modalRechazoVisible}

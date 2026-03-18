@@ -54,10 +54,9 @@ export default function useInformesFinales(token) {
 
           try {
             const response = await axios.get(
-              `/api/integrantes/${trabajoId}/enriquecido`,
+              `/api/integrantes/${trabajoId}`,
               {
                 headers: { Authorization: `Bearer ${token}` },
-                timeout: 7000,
               }
             );
 
@@ -73,23 +72,34 @@ export default function useInformesFinales(token) {
           } catch (error) {
             console.error('Error al obtener integrantes:', error);
             await alertError(
-              'Error de conexión',
-              'No se pudo conectar con el servidor de integrantes.'
+              'Error al obtener integrantes',
+              'No se pudieron obtener los datos del grupo.'
             );
             return;
           }
 
           for (const estudiante of estudiantes) {
             try {
-              const nombreEstudiante = estudiante.nombre_completo;
-              const codigo = estudiante.codigo_universitario;
+              const nombreEstudiante = estudiante.nombre_completo || estudiante.nombre;
+              const codigo =
+                estudiante.codigo ||
+                estudiante.codigo_universitario ||
+                estudiante.correo_institucional?.split('@')[0] ||
+                estudiante.correo?.split('@')[0];
+              const correoEstudiante =
+                estudiante.correo_institucional ||
+                estudiante.correo ||
+                '';
               const correoPrincipal =
                 informe.trabajo_social?.correo_institucional ||
-                informe.correo_institucional;
+                informe.correo_institucional ||
+                '';
 
-              if (
-                estudiante.correo_institucional === correoPrincipal
-              ) {
+              if (correoEstudiante === correoPrincipal) {
+                continue;
+              }
+
+              if (!nombreEstudiante || !codigo) {
                 continue;
               }
 
@@ -98,8 +108,16 @@ export default function useInformesFinales(token) {
                 Estudiante: { nombre_estudiante: nombreEstudiante },
                 ProgramasAcademico: {
                   ...informe.ProgramasAcademico,
+                  nombre_programa:
+                    estudiante.programa_academico ||
+                    estudiante.programa ||
+                    informe.ProgramasAcademico?.nombre_programa ||
+                    'Programa',
                   Facultade: {
-                    nombre_facultad: estudiante.facultad,
+                    nombre_facultad:
+                      estudiante.facultad ||
+                      informe.ProgramasAcademico?.Facultade?.nombre_facultad ||
+                      'Facultad',
                   },
                 },
               };
@@ -137,6 +155,8 @@ export default function useInformesFinales(token) {
             } catch (err) {
               console.error(
                 'Error generando certificado de integrante:',
+                err.response?.status,
+                err.response?.data,
                 err
               );
             }

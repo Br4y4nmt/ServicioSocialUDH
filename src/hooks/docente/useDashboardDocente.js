@@ -7,6 +7,7 @@ import {
   alertSuccess,
   mostrarAlertaCompletarPerfilPrimeraVez,
   alertquestion,
+  alertconfirmacion,
   alertWarning,
   alertError,
   
@@ -123,13 +124,13 @@ export function useDashboardDocente() {
       const { data: integrantes } = await axios.get(`/api/integrantes/${trabajoId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const correos = integrantes.map(item => item.correo_institucional);
-      const { data: nombresYCorreos } = await axios.post(
-        '/api/estudiantes/grupo-nombres',
-        { correos },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setIntegrantesGrupo(nombresYCorreos);
+
+      const integrantesNormalizados = (Array.isArray(integrantes) ? integrantes : []).map((item) => ({
+        correo: item.correo || item.correo_institucional || '',
+        nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
+      }));
+
+      setIntegrantesGrupo(integrantesNormalizados);
       setModalGrupoVisible(true);
 
     } catch (error) {
@@ -189,6 +190,21 @@ export function useDashboardDocente() {
 
     if (nuevoEstadoParam === 'aceptado') {
       const result = await alertquestion();
+      if (!result.isConfirmed) {
+        setTrabajoEnProcesoId(null);
+        return;
+      }
+    }
+
+    if (nuevoEstadoParam === 'rechazado') {
+      const result = await alertconfirmacion({
+        title: 'Confirmar rechazo',
+        text: 'Esta acción marcará el trabajo social como rechazado.',
+        icon: 'warning',
+        confirmButtonText: 'Sí, rechazar',
+        cancelButtonText: 'Cancelar',
+      });
+
       if (!result.isConfirmed) {
         setTrabajoEnProcesoId(null);
         return;

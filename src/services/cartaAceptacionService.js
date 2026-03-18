@@ -201,16 +201,20 @@ export const generarCartasGrupales = async ({ trabajo, integrantes, firmaDocente
   }
 };
 
-/**
- * Procesa la aceptación de un trabajo (individual o grupal)
- */
+
 export const procesarAceptacionTrabajo = async ({ trabajo, firmaDocente, token }) => {
   if (trabajo.tipo_servicio_social === 'grupal') {
-    // Obtener integrantes del grupo
-    const { data: integrantes } = await axios.get(
-      `/api/integrantes/${trabajo.id}/enriquecido`,
+    const { data: integrantesRaw } = await axios.get(
+      `/api/integrantes/${trabajo.id}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
+
+    const integrantes = (Array.isArray(integrantesRaw) ? integrantesRaw : []).map((i) => ({
+      nombre_completo: i.nombre_completo || i.nombre || 'NOMBRE NO DISPONIBLE',
+      facultad: i.facultad || trabajo.Facultad?.nombre_facultad || 'Facultad no disponible',
+      programa: i.programa_academico || i.programa || trabajo.ProgramasAcademico?.nombre_programa || 'Programa no disponible',
+      codigo_universitario: i.codigo || i.codigo_universitario
+    })).filter((i) => Boolean(i.codigo_universitario));
 
     if (!Array.isArray(integrantes) || integrantes.length === 0) {
       throw new Error('SIN_DATOS_GRUPO');

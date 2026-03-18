@@ -44,7 +44,6 @@ const token = user?.token;
 const [cargandoEvidencia, setCargandoEvidencia] = useState({});
 const [actividadDetalle, setActividadDetalle] = useState(null);
 const [enviandoSolicitudTermino, setEnviandoSolicitudTermino] = useState(false);
-const [nombresMiembros, setNombresMiembros] = useState([]);
 
 const verCartasMiembros = useCallback(
   async (trabajoId) => {
@@ -72,55 +71,11 @@ const verCartasMiembros = useCallback(
   [token, estadoPlan] 
 );
 
-  const obtenerNombresMiembros = useCallback(async (correos) => {
-    if (!correos?.length || !token) return;
-    
-    try {
-      const { data } = await axios.post(
-        '/api/estudiantes/grupo-nombres',
-        { correos },
-        { 
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          } 
-        }
-      );
-      setNombresMiembros(data);
-    } catch (error) {
-      console.error('Error al obtener nombres de los miembros:', error);
-    }
-  }, [token]);
-
 useEffect(() => {
   if (solicitudEnviada && trabajoId) {
     verCartasMiembros(trabajoId);
   }
 }, [solicitudEnviada, trabajoId, verCartasMiembros]);
-
-
-
-  useEffect(() => {
-    if (cartasMiembros.length > 0) {
-      const correos = cartasMiembros.map(c => `${c.codigo_universitario}@udh.edu.pe`);
-      obtenerNombresMiembros(correos);
-    }
-  }, [cartasMiembros, obtenerNombresMiembros]);
-
-  const nombresPorCorreos = useMemo(() => {
-    const map = {};
-    for (const n of nombresMiembros) {
-      const key = (n.correo || '').trim().toLowerCase();
-      map[key] = n.nombre;
-    }
-    return map;
-  }, [nombresMiembros]);
-
-  const getNombreMiembro = useCallback((codigoUniversitario) => {
-    const correo = `${codigoUniversitario}@udh.edu.pe`.trim().toLowerCase();
-    const nombre = nombresPorCorreos[correo];
-    return nombre && nombre !== "NO ENCONTRADO" ? nombre : "NOMBRE NO DISPONIBLE";
-  }, [nombresPorCorreos]);
 
   const actividadPorId = useMemo(() => {
     const map = new Map();
@@ -483,7 +438,7 @@ useEffect(() => {
       <PdfIcon />
       <span className="titulo-pdf">
         DOCUMENTO DE APROBACION DE ACTIVIDADES (
-        {getNombreMiembro(carta.codigo_universitario)}
+        {carta.nombre_completo || carta.codigo_universitario || "NOMBRE NO DISPONIBLE"}
         )
       </span>
     </div>

@@ -38,7 +38,6 @@ export default function InformeFinal({
   const estaPendienteEnviado = estadoInforme === "pendiente" && yaEnviado;
   const bloqueado = yaEnviado && !estaRechazado;
   const [certificadosGrupo, setCertificadosGrupo] = useState([]);
-  const [nombresMiembros, setNombresMiembros] = useState([]);
   const esGrupal = planSeleccionado?.tipo_servicio_social === "grupal";
   const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
@@ -183,27 +182,6 @@ useEffect(() => {
 
   fetchCertificadosGrupo();
 }, [estaAprobado, esGrupal, planSeleccionado?.id, token]);
-useEffect(() => {
-  const fetchNombres = async () => {
-    if (!estaAprobado || !esGrupal || certificadosGrupo.length === 0) return;
-
-    const correos = certificadosGrupo.map(
-      (c) => `${String(c.codigo_universitario).trim()}@udh.edu.pe`
-    );
-
-    try {
-      const { data } = await axios.post("/api/estudiantes/grupo-nombres", {
-        correos,
-      });
-      setNombresMiembros(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error al obtener nombres del grupo:", error);
-      setNombresMiembros([]);
-    }
-  };
-
-  fetchNombres();
-}, [estaAprobado, esGrupal, certificadosGrupo]);
 
   const handleVerMotivoRechazo = async () => {
     if (!planSeleccionado?.id || !token) return;
@@ -347,15 +325,10 @@ useEffect(() => {
 
                       <div className="if-card-body">
                         {certificadosGrupo.map((cert, index) => {
-                          const correo = `${String(cert.codigo_universitario).trim().toLowerCase()}@udh.edu.pe`;
-                          const miembro = nombresMiembros.find(
-                            (n) => String(n.correo || "").trim().toLowerCase() === correo
-                          );
-
                           const nombreMostrado =
-                            miembro?.nombre && miembro.nombre !== "NO ENCONTRADO"
-                              ? miembro.nombre
-                              : "NOMBRE NO DISPONIBLE";
+                            cert.nombre_completo ||
+                            cert.codigo_universitario ||
+                            "NOMBRE NO DISPONIBLE";
 
                           return (
                             <div key={index} className="if-doc-item">

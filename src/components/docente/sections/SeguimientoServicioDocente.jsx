@@ -5,7 +5,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './RevisionPlanSocial.css';
 import VerBoton from "../../../hooks/componentes/VerBoton";
-import ModalGrupoIntegrantes from '../../modals/ModalGrupoIntegrantes';
+import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import EvidenciaModal from '../../modals/EvidenciaModal';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from '../../../UserContext';
@@ -42,7 +42,6 @@ function SeguimientoServicioDocente() {
   const [firmaDocente, setFirmaDocente] = useState('');
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
-  const [nombresMiembros, setNombresMiembros] = useState([]);
   const [isAprobando, setIsAprobando] = useState(false);
   const [progresoAprobacion, setProgresoAprobacion] = useState({ actual: 0, total: 0, mensaje: '' });
 
@@ -53,15 +52,15 @@ function SeguimientoServicioDocente() {
       headers: { Authorization: `Bearer ${token}` }  
     });
 
-    const integrantes = response.data;
+    const integrantes = Array.isArray(response.data)
+      ? response.data.map((item) => ({
+          correo: item.correo || item.correo_institucional || 'CORREO NO DISPONIBLE',
+          nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
+        }))
+      : [];
+
     setIntegrantesGrupo(integrantes);
     setModalGrupoVisible(true);
-    const correos = integrantes.map(i => i.correo_institucional);
-    const { data: nombres } = await axios.post(`${process.env.REACT_APP_API_URL}/api/estudiantes/grupo-nombres`, {
-      correos
-    });
-
-    setNombresMiembros(nombres);
     
   } catch (error) {
     console.error('Error al obtener integrantes del grupo:', error);
@@ -119,19 +118,11 @@ const actualizarSolicitud = useCallback(async (trabajoId, nuevoEstado, plan) => 
           onProgreso: setProgresoAprobacion
         });
       } catch (err) {
-        if (err.message === 'SERVIDOR_UDH_NO_DISPONIBLE') {
-          await Swal.fire({
-            icon: "error",
-            title: "Servidor UDH inalcanzable",
-            text: "La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.",
-          });
-          return;
-        }
         if (err.message === 'SIN_DATOS_INTEGRANTES') {
           await Swal.fire({
             icon: "warning",
-            title: "Servidor UDH no respondió",
-            text: "No se pudieron obtener los datos de los integrantes. Intenta más tarde.",
+            title: "Sin integrantes del grupo",
+            text: "No se encontraron integrantes para generar cartas de término.",
           });
           return;
         }
@@ -403,11 +394,10 @@ const handleEnviarObservacion = () => {
       </main>
 
 
-<ModalGrupoIntegrantes
+<GrupoDocenteModal
   visible={modalGrupoVisible}
-  integrantes={integrantesGrupo}
-  nombresMiembros={nombresMiembros}
-  onCerrar={cerrarModalGrupo}
+  integrantesGrupo={integrantesGrupo}
+  onClose={cerrarModalGrupo}
 /> 
 
 

@@ -98,9 +98,7 @@ function DashboardGestor() {
         setActiveSection={setActiveSection}
       />
       <div className={`dashboard-container-gestor ${collapsed ? "expanded" : ""}`}>
-        <h2>Dashboard Gestor UDH</h2>
-
-        <Suspense fallback={<div className="loading-section">Cargando...</div>}>
+<h2 className="dashboard-gestor-heading-profesional">Dashboard Gestor UDH</h2>        <Suspense fallback={<div className="loading-section">Cargando...</div>}>
 
           {activeSection === 'facultades' && (
             <FacultadesSection

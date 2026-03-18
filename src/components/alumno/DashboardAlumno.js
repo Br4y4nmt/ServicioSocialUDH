@@ -193,34 +193,32 @@ function DashboardAlumno() {
 
               {hook.activeSection === 'designacion' && (
                 <DesignacionDocente
-                    tipoServicio={hook.tipoServicio}
-                    obtenerIntegrantesDelGrupo={ga.obtenerIntegrantesDelGrupo}
-                    setTipoServicio={hook.setTipoServicio}
-                    solicitudEnviada={hook.solicitudEnviada}
-                  setSolicitudEnviada={hook.setSolicitudEnviada}
-                  setModalGrupoVisible={ga.setModalGrupoVisible}
-                    facultadSeleccionada={hook.facultadSeleccionada}
-                    programaSeleccionado={hook.programaSeleccionado}
-                    nombreFacultad={hook.nombreFacultad}
-                    nombrePrograma={hook.nombrePrograma}
-                    docentes={hook.docentes}
-                    correosGrupo={ga.correosGrupo}
-                    setCorreosGrupo={ga.setCorreosGrupo}
-                    trabajoId={hook.planSeleccionado?.id}
-                    docenteSeleccionado={hook.docenteSeleccionado}
-                    setDocenteSeleccionado={hook.setDocenteSeleccionado}
-                    setNombreDocente={hook.setNombreDocente}
-                    labores={hook.labores}
-                    laborSeleccionada={hook.laborSeleccionada}
-                    setLaborSeleccionada={hook.setLaborSeleccionada}
-                    setNombreLaborSocial={hook.setNombreLaborSocial}
-                    handleSolicitarAprobacion={hook.handleSolicitarAprobacion}
-                    estadoPlan={hook.estadoPlan}
-                    setLineaSeleccionada={hook.setLineaSeleccionada}
-                    lineas={hook.lineas}
-                    cartaAceptacionPdf={hook.cartaAceptacionPdf}
-                    lineaSeleccionada={hook.lineaSeleccionada}
-                  />
+                      tipoServicio={hook.tipoServicio}
+                      obtenerIntegrantesDelGrupo={ga.obtenerIntegrantesDelGrupo}
+                      setTipoServicio={hook.setTipoServicio}
+                      solicitudEnviada={hook.solicitudEnviada}
+                      setModalGrupoVisible={ga.setModalGrupoVisible}
+                      facultadSeleccionada={hook.facultadSeleccionada}
+                      programaSeleccionado={hook.programaSeleccionado}
+                      nombreFacultad={hook.nombreFacultad}
+                      nombrePrograma={hook.nombrePrograma}
+                      docentes={hook.docentes}
+                      codigosGrupo={ga.codigosGrupo}
+                      trabajoId={hook.planSeleccionado?.id}
+                      docenteSeleccionado={hook.docenteSeleccionado}
+                      setDocenteSeleccionado={hook.setDocenteSeleccionado}
+                      setNombreDocente={hook.setNombreDocente}
+                      labores={hook.labores}
+                      laborSeleccionada={hook.laborSeleccionada}
+                      setLaborSeleccionada={hook.setLaborSeleccionada}
+                      setNombreLaborSocial={hook.setNombreLaborSocial}
+                      handleSolicitarAprobacion={hook.handleSolicitarAprobacion}
+                      estadoPlan={hook.estadoPlan}
+                      setLineaSeleccionada={hook.setLineaSeleccionada}
+                      lineas={hook.lineas}
+                      cartaAceptacionPdf={hook.cartaAceptacionPdf}
+                      lineaSeleccionada={hook.lineaSeleccionada}
+                    />
               )}
             </div>
           )}

@@ -9,7 +9,6 @@ const ActividadModalAlumno = lazy(() => import('../modals/ActividadModalAlumno')
 function AlumnoModals({ hook, ac, ga }) {
   return (
     <Suspense fallback={null}>
-      {/* Modal de actividad (conformidad) */}
       <ActividadModalAlumno
         visible={ac.modalActividadVisible}
         nuevaActividad={ac.nuevaActividad}
@@ -29,20 +28,15 @@ function AlumnoModals({ hook, ac, ga }) {
         onClose={() => ac.setModalActividadVisible(false)}
       />
 
-      {/* Modal de proyecto (conformidad) */}
       <ProyectoModal
         visible={hook.modalProyectoVisible}
         proyectoFile={hook.proyectoFile}
         pdfGenerado={hook.pdfGenerado}
         onFileChange={hook.handleProyectoFileChange}
-        onClose={() => hook.setModalProyectoVisible(false)}
-        onCancel={() => {
-          hook.setProyectoFile(null);
-          hook.cerrarModalProyecto();
-        }}
+        onClose={hook.cerrarModalProyecto}
+        onCancel={hook.cerrarModalProyecto}
       />
 
-      {/* Modal de observación (seguimiento) */}
       <ObservacionEstudianteModal
         visible={hook.modalObservacionEstudianteVisible}
         observacionSeleccionada={hook.observacionSeleccionada}
@@ -51,19 +45,17 @@ function AlumnoModals({ hook, ac, ga }) {
         onClose={() => hook.setModalObservacionEstudianteVisible(false)}
       />
 
-      {/* Modal de grupo (designación) */}
       <GrupoModalAlumno
         visible={ga.modalGrupoVisible}
         solicitudEnviada={hook.solicitudEnviada}
         integrantesGrupoAlumno={ga.integrantesGrupoAlumno}
-        correosGrupo={ga.correosGrupo}
-        setCorreosGrupo={ga.setCorreosGrupo}
+        codigosGrupo={ga.codigosGrupo}
+        setCodigosGrupo={ga.setCodigosGrupo}
         loadingGrupo={ga.loadingGrupo}
         mensajeGrupo={ga.mensajeGrupo}
         onClose={() => ga.setModalGrupoVisible(false)}
       />
 
-      {/* Modal de evidencia (global) */}
       <EvidenciaModal
         visible={hook.modalVisible}
         imagen={hook.imagenModal}

@@ -8,7 +8,6 @@ import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import MotivoRechazoModal from "../../modals/MotivoRechazoModal";
 import Spinner from '../../ui/Spinner';
 import { useCartasAceptacion } from "../../../hooks/alumno/useCartasAceptacion";
-import { useGrupoNombres } from "../../../hooks/alumno/useGrupoNombres";
 import {
   alertSuccess,
   mostrarErrorEliminarEleccion,
@@ -38,7 +37,7 @@ function DesignacionDocente({
   cartaAceptacionPdf,
   lineaSeleccionada,
   setLineaSeleccionada,
-  correosGrupo,
+  codigosGrupo,
   lineas,
   nombreFacultad,
   nombrePrograma
@@ -61,10 +60,9 @@ function DesignacionDocente({
     return map;
   }, [labores]);
 
-  const { cartasMiembros, nombresMiembros, resetCartas } = useCartasAceptacion(
+  const { cartasMiembros, resetCartas } = useCartasAceptacion(
     trabajoId, solicitudEnviada, estadoPlan, tipoServicio, token
   );
-  const { getNombreMiembro } = useGrupoNombres(nombresMiembros);
 
 const abrirModalMotivoRechazo = useCallback(async () => {
   if (!trabajoId || !token) return; 
@@ -90,20 +88,19 @@ const abrirModalMotivoRechazo = useCallback(async () => {
 }, [trabajoId, token]);
 
 const validarGrupoAntesDeEnviar = useCallback(async () => {
-  if (tipoServicio !== "grupal") return true;
+  if (tipoServicio !== 'grupal') return true;
 
-  const correosValidos = (correosGrupo || [])
-    .map((c) => String(c || "").trim().toLowerCase())
-    .filter((c) => /^\d{10}@udh\.edu\.pe$/.test(c));
+  const codigosValidos = (codigosGrupo || [])
+    .map((c) => String(c || '').trim())
+    .filter((c) => /^\d{10}$/.test(c));
 
-  if (correosValidos.length < 1) {
+  if (codigosValidos.length < 1) {
     await alertWarning('Faltan integrantes', 'Agrega al menos un integrante para servicios grupales.');
     return false;
   }
 
   return true;
-}, [tipoServicio, correosGrupo]);
-
+}, [tipoServicio, codigosGrupo]);
 
 
 const eliminarEleccion = useCallback(async () => {
@@ -442,7 +439,7 @@ const eliminarEleccion = useCallback(async () => {
 
       <span className="titulo-pdf">
         CARTA DE ACEPTACION (
-        {getNombreMiembro(carta.codigo_universitario)}
+        {carta.nombre_completo || carta.codigo_universitario}
         )
       </span>
     </div>

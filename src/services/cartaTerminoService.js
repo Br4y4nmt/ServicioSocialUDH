@@ -252,21 +252,7 @@ export const procesarAprobacionCartasTermino = async ({
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    reportarProgreso({ actual: 0, total: 0, mensaje: 'Conectando con servidor UDH...' });
-    
-    let datosEnriquecidos;
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/integrantes/${plan.id}/enriquecido`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      datosEnriquecidos = response.data;
-    } catch (error) {
-      console.error('Error al conectar con API UDH:', error);
-      throw new Error('SERVIDOR_UDH_NO_DISPONIBLE');
-    }
-
-    if (!Array.isArray(datosEnriquecidos) || datosEnriquecidos.length === 0) {
+    if (!Array.isArray(integrantes) || integrantes.length === 0) {
       throw new Error('SIN_DATOS_INTEGRANTES');
     }
 
@@ -279,8 +265,10 @@ export const procesarAprobacionCartasTermino = async ({
 
     for (const integrante of integrantesFiltrados) {
       contador++;
-      const codigo = integrante.correo_institucional.split('@')[0];
-      const info = datosEnriquecidos.find(est => est.codigo_universitario === codigo);
+      const codigo = integrante.codigo || integrante.codigo_universitario || integrante.correo_institucional?.split('@')[0];
+      const nombreCompleto = integrante.nombre_completo || integrante.nombre;
+      const programa = integrante.programa_academico || integrante.programa || plan.ProgramasAcademico?.nombre_programa;
+      const facultad = integrante.facultad || plan.Facultad?.nombre_facultad;
 
       reportarProgreso({
         actual: contador,
@@ -288,15 +276,15 @@ export const procesarAprobacionCartasTermino = async ({
         mensaje: `Generando carta de integrante ${contador}/${total}...`
       });
 
-      if (!info) continue;
+      if (!codigo || !nombreCompleto) continue;
 
       await generarYSubirCartaTerminoIntegrante({
         plan,
         integrante: {
           codigo_universitario: codigo,
-          nombre_completo: info.nombre_completo,
-          programa: info.programa,
-          facultad: info.facultad
+          nombre_completo: nombreCompleto,
+          programa,
+          facultad
         },
         firmaBase64,
         token

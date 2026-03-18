@@ -2,14 +2,10 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../../UserContext';
 
-/**
- * Hook que encapsula la lógica del grupo de servicio social grupal:
- * integrantes, correos, estado de carga y el fetch de integrantes.
- */
 export function useGrupoAlumno() {
   const { user } = useUser();
 
-  const [correosGrupo, setCorreosGrupo] = useState(['']);
+  const [codigosGrupo, setCodigosGrupo] = useState(['']);
   const [loadingGrupo, setLoadingGrupo] = useState(false);
   const [mensajeGrupo, setMensajeGrupo] = useState('');
   const [integrantesGrupoAlumno, setIntegrantesGrupoAlumno] = useState([]);
@@ -59,7 +55,7 @@ export function useGrupoAlumno() {
   };
 
   return {
-    correosGrupo, setCorreosGrupo,
+    codigosGrupo, setCodigosGrupo,
     loadingGrupo,
     mensajeGrupo,
     integrantesGrupoAlumno,

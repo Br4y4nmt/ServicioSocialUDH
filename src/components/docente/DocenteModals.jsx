@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, memo } from 'react';
 
-
 const EditarEstadoModal = lazy(() => import('../modals/EditarEstadoModal'));
 const ModalObservacionConformidad = lazy(() => import('../modals/ModalObservacionConformidad'));
 const GrupoDocenteModal = lazy(() => import('../modals/GrupoDocenteModal'));

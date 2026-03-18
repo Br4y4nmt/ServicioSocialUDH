@@ -6,20 +6,18 @@ function GrupoModalAlumno({
   visible,
   solicitudEnviada,
   integrantesGrupoAlumno = [],
-  correosGrupo = [],
-  setCorreosGrupo,
+  codigosGrupo = [],
+  setCodigosGrupo,
   onClose,
   loadingGrupo = false,
   mensajeGrupo = "",
 }) {
   if (!visible) return null;
 
-  const MAX_INTEGRANTES = 10; 
-
-
+  const MAX_INTEGRANTES = 10;
 
   const handleAgregarOtro = () => {
-    if (correosGrupo.length >= MAX_INTEGRANTES) {
+    if (codigosGrupo.length >= MAX_INTEGRANTES) {
       Swal.fire({
         icon: "warning",
         title: "Límite alcanzado",
@@ -29,16 +27,14 @@ function GrupoModalAlumno({
       });
       return;
     }
-    setCorreosGrupo([...correosGrupo, ""]);
+
+    setCodigosGrupo([...codigosGrupo, ""]);
   };
 
   const handleCerrar = () => {
     if (!solicitudEnviada) {
-      const filtrados = correosGrupo.filter((correo) => {
-        const codigo = String(correo).replace("@udh.edu.pe", "");
-        return codigo.length === 10;
-      });
-      setCorreosGrupo(filtrados);
+      const filtrados = codigosGrupo.filter((codigo) => String(codigo).trim().length === 10);
+      setCodigosGrupo(filtrados);
     }
     onClose?.();
   };
@@ -54,7 +50,10 @@ function GrupoModalAlumno({
               <li>Cargando integrantes...</li>
             ) : integrantesGrupoAlumno.length > 0 ? (
               integrantesGrupoAlumno.map((integrante, index) => (
-                <li key={index}>{integrante.correo_institucional}</li>
+                <li key={index}>
+                  {integrante.nombre_completo || "Sin nombre"} -{" "}
+                  {integrante.codigo || "Sin código"}
+                </li>
               ))
             ) : (
               <li>{mensajeGrupo || "No hay integrantes registrados."}</li>
@@ -62,63 +61,47 @@ function GrupoModalAlumno({
           </ul>
         ) : (
           <>
-            {correosGrupo.slice(0, MAX_INTEGRANTES).map((correo, index) => (
+            {codigosGrupo.slice(0, MAX_INTEGRANTES).map((codigo, index) => (
               <div className="modal-grupo-elegante-field" key={index}>
                 <label className="modal-grupo-elegante-label">
-                  Correo institucional N°{index + 1}
+                  Código universitario N°{index + 1}
                 </label>
 
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    type="text"
-                    className="modal-grupo-elegante-input"
-                    placeholder="Ingrese el Código Universitario"
-                    value={String(correo).replace("@udh.edu.pe", "")}
-                    onChange={(e) => {
-                      const input = e.target.value.replace(/\D/g, "");
-                      if (input.length > 10) return;
+                <input
+                  type="text"
+                  className="modal-grupo-elegante-input"
+                  placeholder="Ingrese el código universitario"
+                  value={codigo}
+                  onChange={(e) => {
+                    const input = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    const nuevos = [...codigosGrupo];
 
-                      const nuevos = [...correosGrupo];
+                    const existe = codigosGrupo.some(
+                      (c, i) => String(c).trim() === input && i !== index && input !== ""
+                    );
 
-                      if (input.length === 10) {
-                        const correoCompleto = `${input}@udh.edu.pe`;
+                    if (existe) {
+                      showTopWarningToast("Este integrante ya fue agregado al grupo");
+                      nuevos[index] = "";
+                      setCodigosGrupo(nuevos);
+                      return;
+                    }
 
-                        const existe = correosGrupo.some(
-                          (c, i) => String(c).trim() === correoCompleto && i !== index
-                        );
-
-                        if (existe) {
-                          showTopWarningToast("Este integrante ya fue agregado al grupo");
-                          nuevos[index] = "";
-                          setCorreosGrupo(nuevos);
-                          return;
-                        }
-
-                        nuevos[index] = correoCompleto;
-                      } else {
-                        nuevos[index] = input;
-                      }
-
-                      setCorreosGrupo(nuevos);
-                    }}
-                    onBlur={() => {
-                      const codigo = String(correo).replace("@udh.edu.pe", "");
-                      if (codigo.length > 0 && codigo.length < 10) {
-                        Swal.fire({
-                          icon: "warning",
-                          title: "Código incompleto",
-                          text: "El código debe tener exactamente 10 dígitos.",
-                          confirmButtonColor: "#3085d6",
-                          confirmButtonText: "Entendido",
-                        });
-                      }
-                    }}
-                  />
-
-                  <span style={{ marginLeft: "6px", fontSize: "14px", color: "#555" }}>
-                    @udh.edu.pe
-                  </span>
-                </div>
+                    nuevos[index] = input;
+                    setCodigosGrupo(nuevos);
+                  }}
+                  onBlur={() => {
+                    if (codigo.length > 0 && codigo.length < 10) {
+                      Swal.fire({
+                        icon: "warning",
+                        title: "Código incompleto",
+                        text: "El código debe tener exactamente 10 dígitos.",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Entendido",
+                      });
+                    }
+                  }}
+                />
               </div>
             ))}
           </>
@@ -128,14 +111,14 @@ function GrupoModalAlumno({
           className="modal-grupo-elegante-actions"
           style={{
             justifyContent:
-              solicitudEnviada || correosGrupo.length >= MAX_INTEGRANTES
+              solicitudEnviada || codigosGrupo.length >= MAX_INTEGRANTES
                 ? "center"
                 : "space-between",
             display: "flex",
             gap: "10px",
           }}
         >
-          {!solicitudEnviada && correosGrupo.length < MAX_INTEGRANTES && (
+          {!solicitudEnviada && codigosGrupo.length < MAX_INTEGRANTES && (
             <button onClick={handleAgregarOtro} className="modal-grupo-elegante-btn agregar">
               + Agregar otro
             </button>

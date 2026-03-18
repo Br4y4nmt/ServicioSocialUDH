@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useUser } from '../../UserContext';
-import { useWelcomeToast, showTopWarningToast } from '../alerts/useWelcomeToast';
+import { useWelcomeToast } from '../alerts/useWelcomeToast';
 import { useFormularioPlan } from '../alumno/useFormularioPlan';
 import { useGrupoAlumno } from '../alumno/useGrupoAlumno';
 import { useActividadesCronograma } from '../alumno/useActividadesCronograma';
@@ -452,79 +452,138 @@ export function useDashboardAlumno() {
     }
   }, [activeSection, estadoPlan, estadoConformidad, estadoSolicitudTermino, actividadesCronograma.todasAprobadas]);
 
-  const handleSolicitarAprobacion = useCallback(async () => {
-    if (solicitudEnviada) {
-      await alertInfo('Solicitud ya enviada', 'Ya has enviado una solicitud anteriormente.');
+const handleSolicitarAprobacion = useCallback(async () => {
+  if (solicitudEnviada) {
+    await alertInfo('Solicitud ya enviada', 'Ya has enviado una solicitud anteriormente.');
+    return;
+  }
+
+  const usuario_id = user?.id;
+  const token = user?.token;
+
+  if (!usuario_id || !token) {
+    await alertError('Sesión inválida', 'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.');
+    return;
+  }
+
+  if (!facultadSeleccionada || !programaSeleccionado || !docenteSeleccionado || !laborSeleccionada || !lineaSeleccionada || !tipoServicio) {
+    await alertWarning(
+      'Faltan datos',
+      'Completa todos los campos requeridos antes de enviar la solicitud.'
+    );
+    return;
+  }
+
+  try {
+    const codigosValidos =
+      tipoServicio === 'grupal'
+        ? (grupoAlumno.codigosGrupo || [])
+            .map((c) => String(c || '').trim())
+            .filter((c) => /^\d{10}$/.test(c))
+        : [];
+
+    if (tipoServicio === 'grupal' && codigosValidos.length < 1) {
+      await alertWarning('Faltan integrantes', 'Agrega al menos un integrante para servicios grupales.');
       return;
     }
 
-    const usuario_id = user?.id;
-    const token = user?.token;
+    const codigosUnicos = [...new Set(codigosValidos)];
 
-    if (!usuario_id || !token) {
-      await alertError('Sesión inválida', 'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.');
-      return;
-    }
+    const datos = {
+      usuario_id: Number(usuario_id),
+      facultad_id: Number(facultadSeleccionada),
+      programa_academico_id: Number(programaSeleccionado),
+      docente_id: Number(docenteSeleccionado),
+      labor_social_id: Number(laborSeleccionada),
+      tipo_servicio_social: tipoServicio,
+      linea_accion_id: Number(lineaSeleccionada),
+      integrantes: codigosUnicos.map((codigo) => ({ codigo })),
+    };
 
-    try {
-      const correosValidos =
-        tipoServicio === "grupal"
-          ? (grupoAlumno.correosGrupo || [])
-              .map((c) => String(c || "").trim().toLowerCase())
-              .filter((c) => /^\d{10}@udh\.edu\.pe$/.test(c))
-          : [];
+    await axios.post('/api/trabajo-social', datos, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      if (tipoServicio === "grupal" && correosValidos.length < 1) {
-        await alertWarning('Faltan integrantes', 'Agrega al menos un integrante para servicios grupales.');
-        return;
-      }
-      const correosUnicos = [...new Set(correosValidos)];
+    await fetchTrabajoSocial();
+    setSolicitudEnviada(true);
+    setEstadoPlan('pendiente');
+    grupoAlumno.setCodigosGrupo(['']);
 
-      const datos = {
-        usuario_id: Number(usuario_id),
-        facultad_id: Number(facultadSeleccionada),
-        programa_academico_id: Number(programaSeleccionado),
-        docente_id: Number(docenteSeleccionado),
-        labor_social_id: Number(laborSeleccionada),
-        tipo_servicio_social: tipoServicio,
-        linea_accion_id: Number(lineaSeleccionada),
-        correos: correosUnicos,
-      };
+    await alertSuccess('Solicitud enviada', 'Tu solicitud ha sido enviada correctamente.');
+  } catch (error) {
+    console.error('Error al enviar solicitud:', error);
 
-      await axios.post("/api/trabajo-social", datos, {
-        headers: { Authorization: `Bearer ${token}` },
+    const status = error.response?.status;
+    const data = error.response?.data;
+
+    const showBackendAlert = async (title, text, icon = 'warning') => {
+      await Swal.fire({
+        icon,
+        title,
+        text,
+        confirmButtonText: 'OK',
+        confirmButtonColor: icon === 'error' ? '#dc2626' : '#f59e0b',
+        allowOutsideClick: false,
+        allowEscapeKey: true,
       });
+    };
 
-      setSolicitudEnviada(true);
-      setEstadoPlan("pendiente");
-      alertSuccess('Solicitud enviada', 'Tu solicitud ha sido enviada correctamente.');
-    } catch (error) {
-      console.error("Error al enviar solicitud:", error);
+    if (status === 409 && Array.isArray(data?.duplicados)) {
+      await showBackendAlert('Códigos duplicados', data.duplicados.join(', '));
 
-      const status = error.response?.status;
-      const data = error.response?.data;
-
-      if (status === 409 && Array.isArray(data?.duplicados)) {
-        showTopWarningToast(
-          'Correos duplicados',
-          data.duplicados.map((c) => c.split("@")[0]).join(", ")
-        );
-        grupoAlumno.setCorreosGrupo((prev) =>
-          prev.filter(
-            (c) => !data.duplicados.includes(String(c).trim().toLowerCase())
-          )
-        );
-        return;
-      }
-
-      const backendMessage = data?.message;
-      await alertError('Error al enviar solicitud', backendMessage || 'Error al enviar solicitud');
+      grupoAlumno.setCodigosGrupo((prev) =>
+        prev.filter((codigo) => !data.duplicados.includes(String(codigo).trim()))
+      );
+      return;
     }
-  }, [
-    solicitudEnviada, user?.id, user?.token, tipoServicio,
-    grupoAlumno, facultadSeleccionada, programaSeleccionado,
-    docenteSeleccionado, laborSeleccionada, lineaSeleccionada
-  ]);
+
+    if (status === 404 && Array.isArray(data?.codigos_no_encontrados)) {
+      await showBackendAlert('Códigos no encontrados', data.codigos_no_encontrados.join(', '));
+      return;
+    }
+
+    if (status === 400 && Array.isArray(data?.codigos_sin_correo)) {
+      await showBackendAlert('Sin correo institucional', data.codigos_sin_correo.join(', '));
+      return;
+    }
+
+    if (status === 409 && Array.isArray(data?.correos_duplicados)) {
+      await showBackendAlert('Correos institucionales repetidos', data.correos_duplicados.join(', '));
+      return;
+    }
+
+    if (status === 400 && Array.isArray(data?.correos_invalidos)) {
+      await showBackendAlert(
+        'Correos inválidos',
+        data.correos_invalidos.map((item) => `${item.codigo}: ${item.correo}`).join(' | ')
+      );
+      return;
+    }
+
+    if (status === 400 && Array.isArray(data?.integrantes_incompletos)) {
+      await showBackendAlert(
+        'Datos incompletos',
+        data.integrantes_incompletos.map((item) => item.codigo).join(', ')
+      );
+      return;
+    }
+
+    const backendMessage = data?.message;
+    await showBackendAlert('Error al enviar solicitud', backendMessage || 'Error al enviar solicitud', 'error');
+  }
+}, [
+  solicitudEnviada,
+  user?.id,
+  user?.token,
+  tipoServicio,
+  grupoAlumno,
+  facultadSeleccionada,
+  programaSeleccionado,
+  docenteSeleccionado,
+  laborSeleccionada,
+  lineaSeleccionada,
+  fetchTrabajoSocial
+]);
 
   const handleGenerarPDF = useCallback(async () => {
     const result = await generarPlanServicioSocialPDF({
@@ -612,7 +671,7 @@ export function useDashboardAlumno() {
     docentes,
     labores,
     docenteSeleccionado, setDocenteSeleccionado,
-    solicitudEnviada,
+    solicitudEnviada, setSolicitudEnviada,
     laborSeleccionada, setLaborSeleccionada,
     estadoPlan,
     cartaAceptacionPdf, setCartaAceptacionPdf,
