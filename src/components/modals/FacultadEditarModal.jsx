@@ -12,17 +12,17 @@ function FacultadEditarModal({
   if (!isOpen) return null;
 
   return (
-    <div className="facultades-modal show">
-      <div className="facultades-modal-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>Editar Facultad</h3>
         <input
           type="text"
-          className="facultades-modal-input"
+          className="programas-modal-input"
           placeholder="Nuevo nombre de la facultad"
           value={nombre}
           onChange={(e) => onChangeNombre(e.target.value)}
         />
-        <div className="facultades-modal-actions">
+        <div className="programas-modal-actions">
           <button
             className="docentes-btn cancelar"
             onClick={onCancelar}

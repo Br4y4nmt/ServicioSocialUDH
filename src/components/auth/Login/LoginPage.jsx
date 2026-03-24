@@ -116,26 +116,28 @@ useEffect(() => {
   const SDK_SRC = 'https://accounts.google.com/gsi/client';
 
   const initGoogleButton = () => {
-    if (window.google && window.google.accounts && window.google.accounts.id && !window._googleSignInInitialized) {
+    if (!(window.google && window.google.accounts && window.google.accounts.id)) return;
+
+    if (!window._googleSignInInitialized) {
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
         auto_select: false,
         cancel_on_tap_outside: true
       });
-
-      const container = document.getElementById('google-signin-button');
-      if (container) {
-        container.innerHTML = '';
-        google.accounts.id.renderButton(container, {
-          theme: 'outline',
-          size: 'large',
-          shape: 'pill',
-          text: 'continue_with',
-          width: 300,
-        });
-      }
       window._googleSignInInitialized = true;
+    }
+
+    const container = document.getElementById('google-signin-button');
+    if (container) {
+      container.innerHTML = '';
+      google.accounts.id.renderButton(container, {
+        theme: 'outline',
+        size: 'large',
+        shape: 'pill',
+        text: 'continue_with',
+        width: 300,
+      });
     }
   };
 

@@ -15,8 +15,8 @@ function CambiosTiempoModal({
   if (!visible) return null;
 
   return (
-    <div className="modal-tiempo-overlay">
-      <div className="modal-tiempo-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>Fechas de {nombreEstudiante}</h3>
 
         {cronogramas.length > 0 ? (
@@ -148,8 +148,8 @@ function CambiosTiempoModal({
           <p className="modal-tiempo-empty">No hay fechas registradas.</p>
         )}
 
-        <div className="modal-tiempo-footer">
-          <button className="seguimiento-btn-cerrar" onClick={onClose}>
+        <div className="programas-modal-actions">
+          <button className="docentes-btn cancelar" onClick={onClose}>
             Cerrar
           </button>
         </div>

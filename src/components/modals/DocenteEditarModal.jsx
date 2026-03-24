@@ -37,13 +37,13 @@ function DocenteEditarModal({
   if (!isOpen) return null;
 
   return (
-    <div className="docentes-modal show">
-      <div className="docentes-modal-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>Editar Docente</h3>
 
         <input
           type="text"
-          className="docentes-modal-input"
+          className="programas-modal-input"
           placeholder="Nombre del docente"
           value={nombre}
           onChange={(e) => onChangeNombre(e.target.value)}
@@ -52,14 +52,14 @@ function DocenteEditarModal({
 
         <input
           type="email"
-          className="docentes-modal-input"
+          className="programas-modal-input"
           placeholder="Correo del docente"
           value={email}
           onChange={(e) => onChangeEmail(e.target.value)}
         />
 
         <select
-          className="docentes-modal-select"
+          className="programas-modal-select"
           value={facultad}
           onChange={(e) => onChangeFacultad(e.target.value)}
         >
@@ -72,7 +72,7 @@ function DocenteEditarModal({
         </select>
 
         <select
-          className="docentes-modal-select"
+          className="programas-modal-select"
           value={programa}
           onChange={(e) => onChangePrograma(e.target.value)}
         >
@@ -84,7 +84,7 @@ function DocenteEditarModal({
           ))}
         </select>
 
-        <div className="docentes-modal-actions">
+        <div className="programas-modal-actions">
           <button
             className="docentes-btn cancelar"
             type="button"

@@ -18,13 +18,13 @@ function DocenteNuevoModal({
   if (!isOpen) return null;
 
   return (
-    <div className="docentes-modal show">
-      <div className="docentes-modal-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>Registrar Docente</h3>
 
         <input
           type="email"
-          className="docentes-modal-input"
+          className="programas-modal-input"
           placeholder="Email del docente"
           value={email}
           onChange={(e) => onChangeEmail(e.target.value)}
@@ -32,14 +32,14 @@ function DocenteNuevoModal({
 
         <input
           type="text"
-          className="docentes-modal-input"
+          className="programas-modal-input"
           placeholder="WhatsApp del docente"
           value={whatsapp}
           onChange={(e) => onChangeWhatsapp(e.target.value)}
         />
 
         <select
-          className="docentes-modal-select"
+          className="programas-modal-select"
           value={facultad}
           onChange={(e) => onChangeFacultad(e.target.value)}
         >
@@ -52,7 +52,7 @@ function DocenteNuevoModal({
         </select>
 
         <select
-          className="docentes-modal-select"
+          className="programas-modal-select"
           value={programa}
           onChange={(e) => onChangePrograma(e.target.value)}
         >
@@ -64,7 +64,7 @@ function DocenteNuevoModal({
           ))}
         </select>
 
-        <div className="docentes-modal-actions">
+        <div className="programas-modal-actions">
           <button className="docentes-btn cancelar" onClick={onClose}>
             Cancelar
           </button>

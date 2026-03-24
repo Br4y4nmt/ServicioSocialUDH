@@ -17,19 +17,19 @@ function LineaEditarModal({
   if (!isOpen) return null;
 
   return (
-    <div className="labores-modal show">
-      <div className="labores-modal-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>Editar Línea de Acción</h3>
 
         <input
           type="text"
-          className="labores-modal-input"
+          className="programas-modal-input"
           placeholder="Nombre de la línea"
           value={nombreLinea}
           onChange={(e) => onChangeNombreLinea(e.target.value)}
         />
 
-        <div className="labores-modal-actions">
+        <div className="programas-modal-actions">
           <button
             className="docentes-btn cancelar"
             type="button"

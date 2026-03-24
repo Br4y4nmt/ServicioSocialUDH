@@ -13,8 +13,8 @@ function CambioAsesorModal({
   if (!visible) return null;
 
   return (
-    <div className="modal-tiempo-overlay">
-      <div className="modal-tiempo-content">
+    <div className="programas-modal show">
+      <div className="programas-modal-content">
         <h3>
           Cambiar asesor de{" "}
           <span style={{ color: "#2e9e7f" }}>
@@ -22,10 +22,11 @@ function CambioAsesorModal({
           </span>
         </h3>
 
-        <label className="docentes-search-label" style={{ marginTop: "1rem" }}>
-          Asesores disponibles:
+        <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
+          Asesores disponibles
+        </label>
           <select
-            className="select-profesional"
+            className="programas-modal-select"
             value={asesorSeleccionado}
             onChange={(e) => setAsesorSeleccionado(e.target.value)}
             disabled={guardando}
@@ -37,11 +38,10 @@ function CambioAsesorModal({
               </option>
             ))}
           </select>
-        </label>
 
-        <div className="modal-tiempo-footer">
+        <div className="programas-modal-actions">
           <button
-            className="btn-cancelar-cambio-asesor"
+            className="docentes-btn cancelar"
             onClick={onClose}
             disabled={guardando}
           >
@@ -49,7 +49,7 @@ function CambioAsesorModal({
           </button>
 
           <button
-            className="btn-guardar-cambio-asesor"
+            className="docentes-btn guardar"
             onClick={onSave}
             disabled={guardando}
           >
