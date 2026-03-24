@@ -975,12 +975,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
-  .conformidad-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-  }
+
   .plan-icon i {
     font-size: 40px; 
     color: #011B4B; 

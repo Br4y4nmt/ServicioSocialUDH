@@ -477,13 +477,6 @@
   font-size: 14px;
 }
 
-.labores-input-edit,
-.labores-select-edit {
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  width: 100%;
-}
 .labores-modal {
   position: fixed;
   top: 0;
@@ -532,10 +525,6 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
-
-.labores-table td {
-  font-size: 14px; 
 }
 
 .docentes-table td:nth-child(5) {
