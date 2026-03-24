@@ -11,6 +11,7 @@ import { useUser } from '../../../UserContext';
 import Header from '../../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import Spinner from 'components/ui/Spinner';
+import '../DashboardDocente.css';
 
 export default function SolicitudesInformesFinales() {
   const { user } = useUser();
@@ -166,11 +167,11 @@ export default function SolicitudesInformesFinales() {
       />
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
-        <div className="docentes-container">
-          <div className="docentes-card">
+        <div className="revision-container-d">
+          <div className="revision-card">
             <div className="docentes-header">
               <div className="docentes-header-left">
-                <h2>Informes Finales</h2>
+                <h2 className="revision-title">Informes Finales</h2>
               </div>
 
               <div className="docentes-header-right">
@@ -184,9 +185,9 @@ export default function SolicitudesInformesFinales() {
               </div>
             </div>
 
-            <div className="docentes-table-wrapper">
-              <table className="docentes-table">
-                <thead className="docentes-table-thead">
+            <div className="revision-table-wrapper">
+              <table className="revision-table">
+                <thead className="revision-table-thead">
                   <tr>
                     <th>Nº</th>
                     <th>Estudiante</th>

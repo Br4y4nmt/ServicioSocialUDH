@@ -26,26 +26,26 @@ function LineasSection({
 }) {
   return (
     <>
-      <div className="labores-container">
-        <div className="labores-card">
-          <div className="labores-header">
-            <div className="labores-header-title">
+      <div className="docentes-container">
+        <div className="docentes-card">
+          <div className="docentes-header">
+            <div className="docentes-header-left">
               <h2>Líneas de Acción</h2>
               <button className="docentes-btn-agregar" onClick={() => setModalLineaVisible(true)}>Agregar</button>
             </div>
-            <div className="labores-header-right">
+            <div className="docentes-header-right">
               <SearchInput
                 value={busquedaLinea}
                 onChange={setBusquedaLinea}
                 placeholder="Nombre de la línea"
                 label="Buscar:"
-                className="labores-search-label"
+                className="docentes-search-label"
               />
             </div>
           </div>
-          <div className="labores-table-wrapper">
-            <table className="labores-table">
-              <thead className="labores-table-thead">
+          <div className="docentes-table-wrapper">
+            <table className="docentes-table">
+              <thead className="docentes-table-thead">
                 <tr>
                   <th>Nº</th>
                   <th>Nombre</th>
@@ -59,7 +59,7 @@ function LineasSection({
                     <tr key={l.id_linea}>
                       <td>{index + 1}</td>
                       <td>{(l.nombre_linea || 'SIN NOMBRE').toUpperCase()}</td>
-                      <td className="labores-acciones-cell">
+                      <td>
                         <button
                           className="facultades-btn editar"
                           onClick={() => {

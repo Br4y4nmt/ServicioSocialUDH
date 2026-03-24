@@ -51,64 +51,6 @@
   margin-left: 0;       
 }
 
-.facultades-container {
-  padding: 24px;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #f4f5fa;
-}
-
-.facultades-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-  padding: 20px 24px;
-  overflow-x: auto;
-}
-
-.facultades-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.facultades-header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-
-.facultades-header h2 {
-  font-size: 20px;
-  color: #333;
-  margin: 0;
-  font-weight: 600;
-}
-
-.facultades-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  font-size: 14px;
-  color: #333;
-}
-
-.facultades-table thead {
-  background-color: transparent;
-}
-
-.facultades-table th {
-  color: #333;               
-  font-weight: 600;          
-  background-color: transparent !important; 
-}
-
-.facultades-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
 .facultades-badge-activo {
   display: inline-block;
   background-color: #d1fae5;
@@ -208,77 +150,6 @@
   }
 }
 
-.programas-container {
-  padding: 24px;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #f4f5fa;
-}
-
-.programas-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-  padding: 20px 24px;
-}
-
-.programas-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.programas-header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.programas-header-left h2 {
-  font-size: 22px; 
-  font-weight: 700; 
-  margin: 0; 
-}
-.facultades-header-left h2 {
-  font-size: 22px; 
-  font-weight: 700; 
-  margin: 0; 
-}
-.docentes-header-left h2 {
-   font-size: 22px; 
-  font-weight: 700; 
-  margin: 0; 
-}
-
-.programas-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  color: #333;
-  background-color: white;
-}
-
-.programas-table th {
-  text-align: center;
-  padding: 12px;
-  color: #333;
-}
-
-.programas-table td {
-  padding: 12px;
-}
-
-.programas-table-thead {
-  background-color: transparent !important;
-}
-
-.programas-table-thead th {
-  color: #333;
-  font-weight: 600;
-  background-color: transparent !important;
-  border-bottom: 1px solid #ddd;
-}
 .programas-modal {
   position: fixed;
   top: 0;
@@ -604,98 +475,6 @@
   font-style: italic;
   font-weight: 500;
   font-size: 14px;
-}
-
-.labores-container {
-  padding: 20px;
-}
-
-.labores-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
-}
-
-.labores-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.labores-header-title h2 {
-  font-size: 22px;
-  margin: 0;
-}
-.labores-header-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.labores-header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.labores-search-label {
-  font-size: 14px;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.labores-search-input {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  width: 180px;
-}
-.labores-title {
-  font-size: 22px;
-  margin: 0;
-}
-.labores-header-left h2 {
-  font-size: 22px;
-  margin: 0;
-}
-
-.labores-table-wrapper {
-  overflow-x: auto;
-}
-
-.labores-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.labores-table th,
-.labores-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e0e0e0;
-  text-align: left;
-}
-
-.labores-table-thead {
-  background-color: transparent !important;
-  color: #333;
-  font-weight: 500;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-
-.labores-table thead {
-  background-color: transparent !important;
-}
-.labores-table thead tr {
-  background-color: transparent !important;
-}
-.labores-table thead th {
-  color: #333;
-  font-weight: 600;
-  background-color: transparent !important;
-  border-bottom: 1px solid #ddd;
 }
 
 .labores-input-edit,
@@ -1304,7 +1083,7 @@ td select{
 .dashboard-gestor-heading-profesional {
   font-size: 2rem;
   font-weight: 700;
-  color: #475569;
+  color: #0F172A;
   margin: 0 0 1.5rem 0;
   letter-spacing: -0.02em;
   line-height: 1.2;

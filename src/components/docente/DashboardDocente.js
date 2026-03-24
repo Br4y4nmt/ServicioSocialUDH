@@ -65,7 +65,7 @@ const TablaTrabajos = memo(function TablaTrabajos({
       <table className="revision-table">
         <thead className="revision-table-thead">
           <tr>
-            <th>Alumno</th>
+            <th>Estudiante</th>
             <th>Programa Académico</th>
             <th>Servicio Social</th>
             <th>Tipo</th>

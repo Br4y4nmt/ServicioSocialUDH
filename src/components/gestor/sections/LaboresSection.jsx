@@ -31,28 +31,28 @@ function LaboresSection({
 }) {
   return (
     <>
-      <div className="labores-container">
-        <div className="labores-card">
-          <div className="labores-header">
-            <div className="labores-header-title">
+      <div className="docentes-container">
+        <div className="docentes-card">
+          <div className="docentes-header">
+            <div className="docentes-header-left">
               <h2>Servicios Sociales</h2>
               <button className="docentes-btn-agregar" onClick={() => setModalLaborVisible(true)}>
                 Agregar
               </button>
             </div>
-            <div className="labores-header-right">
+            <div className="docentes-header-right">
               <SearchInput
                 value={busquedaLabor}
                 onChange={setBusquedaLabor}
                 placeholder="Nombre de la labor"
                 label="Buscar:"
-                className="labores-search-label"
+                className="docentes-search-label"
               />
             </div>
           </div>
-          <div className="labores-table-wrapper">
-            <table className="labores-table">
-              <thead className="labores-table-thead">
+          <div className="docentes-table-wrapper">
+            <table className="docentes-table">
+              <thead className="docentes-table-thead">
                 <tr>
                   <th>Nº</th>
                   <th>Nombre</th>
@@ -72,7 +72,7 @@ function LaboresSection({
                         {editandoLaborId === labor.id_labores ? (
                           <input
                             type="text"
-                            className="labores-input-edit"
+                            className="docentes-input-edit"
                             value={nombreLaborEditado}
                             onChange={(e) => setNombreLaborEditado(e.target.value)}
                           />
@@ -83,7 +83,7 @@ function LaboresSection({
                       <td>
                         {editandoLaborId === labor.id_labores ? (
                           <select
-                            className="labores-select-edit"
+                            className="docentes-select-edit"
                             value={lineaLabor}
                             onChange={(e) => setLineaLabor(e.target.value)}
                           >

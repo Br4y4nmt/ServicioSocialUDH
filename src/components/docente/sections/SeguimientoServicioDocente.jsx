@@ -4,6 +4,7 @@ import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './RevisionPlanSocial.css';
+import '../DashboardDocente.css';
 import VerBoton from "../../../hooks/componentes/VerBoton";
 import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import EvidenciaModal from '../../modals/EvidenciaModal';
@@ -307,16 +308,16 @@ const handleEnviarObservacion = () => {
   ></div>
 )}
      <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
-        <div className="conformidad-container">
-          <div className="conformidad-card">
-            <h1 className="conformidad-title">Seguimiento del Servicio Social</h1>
+        <div className="revision-container-d">
+          <div className="revision-card">
+            <h1 className="revision-title">Seguimiento del Servicio Social</h1>
 
-            <div className="conformidad-table-wrapper">
+            <div className="revision-table-wrapper">
               {trabajosSociales.length > 0 ? (
-                <table className="conformidad-table">
-                  <thead className="conformidad-table-thead">
+                <table className="revision-table">
+                  <thead className="revision-table-thead">
                     <tr>
-                      <th>Alumnos</th>
+                      <th>Estudiante</th>
                       <th>Programa Académico</th>
                       <th>Servicio Social</th>
                       <th>Tipo Servicio Social</th>
@@ -386,7 +387,7 @@ const handleEnviarObservacion = () => {
                   </tbody>
                 </table>
               ) : (
-                <p className="conformidad-no-data">No hay trabajos sociales disponibles aún.</p>
+                <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
               )}
             </div>
           </div>

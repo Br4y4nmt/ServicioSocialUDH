@@ -37,10 +37,10 @@ function ProgramasSection({
   const [originalEmailProgram, setOriginalEmailProgram] = useState('');
   return (
     <>
-      <div className="programas-container">
-        <div className="programas-card">
-          <div className="programas-header">
-            <div className="programas-header-left">
+      <div className="docentes-container">
+        <div className="docentes-card">
+          <div className="docentes-header">
+            <div className="docentes-header-left">
               <h2>Programas Académicos</h2>
               <button
                 className="docentes-btn-agregar"
@@ -50,9 +50,9 @@ function ProgramasSection({
               </button>
             </div>
           </div>
-          <div className="programas-table-wrapper">
-            <table className="programas-table">
-              <thead className="programas-table-thead">
+          <div className="docentes-table-wrapper">
+            <table className="docentes-table">
+              <thead className="docentes-table-thead">
                 <tr>
                   <th>Nº</th>
                   <th>Nombre</th>

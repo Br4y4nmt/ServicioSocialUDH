@@ -1,14 +1,3 @@
-.conformidad-container {
-  padding: 20px;
-}
-
-.conformidad-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
-}
-
 .contenedor-botones-termino {
   display: flex;
   justify-content: center;   
@@ -23,39 +12,7 @@
   font-weight: 600;
   color: #003366;
 }
-.conformidad-table td {
-  text-transform: uppercase;
-}
 
-.conformidad-table-wrapper {
-  overflow-x: auto;
-}
-
-.conformidad-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.conformidad-table thead {
-  background-color: transparent !important;
-}
-
-.conformidad-table thead th {
-  background-color: transparent !important;
-  color: #333;
-  font-weight: 500;
-  border-bottom: 1px solid #ddd;
-}
-
-.conformidad-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e0e0e0;
-  text-align: left;
-}
-.conformidad-table td,
-.conformidad-table th {
-  font-size: 14px; 
-}
 .conformidad-btn {
   padding: 6px 12px;
   border: none;
@@ -112,16 +69,6 @@
   font-size: 13px;
 }
 
-.conformidad-table td .btn-ojo-ver-plan-docente,
-.conformidad-table td .texto-ver-docente {
-  text-transform: none !important;
-}
-
-.conformidad-table td,
-.conformidad-table th {
-  text-align: center;
-  vertical-align: middle;
-}
 .modal-cronograma-overlay {
   position: fixed;
   top: 0;

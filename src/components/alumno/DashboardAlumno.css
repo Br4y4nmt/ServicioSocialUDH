@@ -529,7 +529,355 @@
     overflow: hidden;
     line-height: 1.4;
   }
-  
+ .grupo-alumno-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.grupo-alumno-modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.28);
+  animation: grupoAlumnoFadeIn 0.22s ease;
+}
+
+@keyframes grupoAlumnoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.grupo-alumno-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 18px;
+}
+
+.grupo-alumno-modal-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.grupo-alumno-modal-header {
+  position: relative;
+  padding: 22px 24px 18px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #011b4b 0%, #013a7a 100%);
+}
+
+.grupo-alumno-header-blur {
+  position: absolute;
+  border-radius: 999px;
+  background: #39b49e;
+  opacity: 0.1;
+  filter: blur(45px);
+}
+
+.grupo-alumno-header-blur-right {
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  transform: translate(35%, -35%);
+}
+
+.grupo-alumno-header-blur-left {
+  bottom: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  transform: translate(-35%, 35%);
+}
+
+.grupo-alumno-modal-header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.grupo-alumno-modal-title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.grupo-alumno-modal-title-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #39b49e;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  flex-shrink: 0;
+}
+
+.grupo-alumno-modal-subtitle {
+  margin: 10px 0 0;
+  color: #cbd5e1;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.grupo-alumno-modal-body {
+  padding: 20px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.grupo-alumno-field {
+  margin-bottom: 16px;
+}
+
+.grupo-alumno-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #011b4b;
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.grupo-alumno-label-icon {
+  color: #39b49e;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.grupo-alumno-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grupo-alumno-btn-remove {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.grupo-alumno-btn-remove svg {
+  font-size: 16px;
+}
+
+.grupo-alumno-btn-remove:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.grupo-alumno-btn-remove:focus-visible {
+  outline: 2px solid rgba(220, 38, 38, 0.35);
+  outline-offset: 2px;
+}
+
+.grupo-alumno-input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.grupo-alumno-input::placeholder {
+  color: #94a3b8;
+}
+
+.grupo-alumno-input:focus {
+  border-color: #39b49e;
+  box-shadow: 0 0 0 4px rgba(57, 180, 158, 0.12);
+}
+
+.grupo-alumno-btn-add {
+  width: 100%;
+  height: 42px;
+  border: 2px dashed #39b49e;
+  background: #ffffff;
+  color: #011b4b;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.grupo-alumno-btn-add svg {
+  color: #39b49e;
+  font-size: 16px;
+}
+
+.grupo-alumno-btn-add:hover {
+  background: rgba(57, 180, 158, 0.06);
+  border-color: #2da48f;
+}
+
+.grupo-alumno-modal-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.grupo-alumno-btn {
+  min-width: 105px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.grupo-alumno-btn-cancel {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #dbe3ee;
+}
+
+.grupo-alumno-btn-cancel:hover {
+  background: #f1f5f9;
+}
+
+.grupo-alumno-btn-save {
+  background: #011b4b;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 8px 18px rgba(1, 27, 75, 0.22);
+}
+
+.grupo-alumno-btn-save:hover {
+  background: #02245f;
+  box-shadow: 0 10px 22px rgba(1, 27, 75, 0.28);
+}
+
+.grupo-alumno-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grupo-alumno-lista-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: #1e293b;
+  font-size: 0.92rem;
+}
+
+.grupo-alumno-lista-nombre {
+  font-weight: 600;
+}
+
+.grupo-alumno-lista-codigo {
+  color: #64748b;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .grupo-alumno-modal-overlay {
+    padding: 14px;
+  }
+
+  .grupo-alumno-modal-container {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  .grupo-alumno-modal-header,
+  .grupo-alumno-modal-body,
+  .grupo-alumno-modal-footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .grupo-alumno-modal-title {
+    font-size: 1.2rem;
+  }
+
+  .grupo-alumno-modal-title-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+
+  .grupo-alumno-modal-footer {
+    flex-direction: column;
+  }
+
+  .grupo-alumno-btn {
+    width: 100%;
+  }
+
+  .grupo-alumno-lista-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+} 
   .respuesta-asesor-btn.aceptado {
     background-color: #38A169;
     color: white;

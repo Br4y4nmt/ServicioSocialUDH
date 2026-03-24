@@ -24,10 +24,10 @@ function FacultadesSection({
   const [nombreOriginal, setNombreOriginal] = useState('');
 
   return (
-    <div className="facultades-container">
-      <div className="facultades-card">
-        <div className="facultades-header">
-          <div className="facultades-header-left">
+    <div className="docentes-container">
+      <div className="docentes-card">
+        <div className="docentes-header">
+          <div className="docentes-header-left">
             <h2>Facultades</h2>
             <button
               className="docentes-btn-agregar"
@@ -38,9 +38,9 @@ function FacultadesSection({
           </div>
         </div>
 
-        <div className="facultades-table-wrapper">
-          <table className="facultades-table">
-            <thead>
+        <div className="docentes-table-wrapper">
+          <table className="docentes-table">
+            <thead className="docentes-table-thead">
               <tr>
                 <th>Nº</th>
                 <th>Nombre</th>

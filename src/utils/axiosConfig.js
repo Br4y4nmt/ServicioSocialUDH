@@ -12,8 +12,8 @@ axios.interceptors.response.use(
     if (error.response && error.response.status === 401 && !isGoogleAuth) {
       Swal.fire({
         icon: 'warning',
-        title: 'Sesión expirada',
-        text: 'Tu sesión ha caducado. Por favor, vuelve a iniciar sesión.',
+        title: 'Sesi贸n expirada',
+        text: 'Tu sesi贸n ha caducado. Por favor, vuelve a iniciar sesi贸n.',
         confirmButtonText: 'OK'
       }).then(() => {
         localStorage.removeItem('token');

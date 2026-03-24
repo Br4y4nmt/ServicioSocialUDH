@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import Header from '../../layout/Header/Header';
 import './RevisionPlanSocial.css';
+import '../DashboardDocente.css';
 import { useNavigate } from 'react-router-dom';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import { useUser } from '../../../UserContext'; 
@@ -163,16 +164,16 @@ const capitalizarPrimeraLetra = (texto) =>
   ></div>
 )}
      <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
-        <div className="conformidad-container">
-          <div className="conformidad-card">
-            <h1 className="conformidad-title">Conformidad Servicio Social</h1>
+        <div className="revision-container-d">
+          <div className="revision-card">
+            <h1 className="revision-title">Conformidad Servicio Social</h1>
   
-            <div className="conformidad-table-wrapper">
+            <div className="revision-table-wrapper">
               {trabajosSociales.length > 0 ? (
-                <table className="conformidad-table">
-                  <thead className="conformidad-table-thead">
+                <table className="revision-table">
+                  <thead className="revision-table-thead">
                     <tr>
-                      <th>Alumnos</th>
+                      <th>Estudiante</th>
                       <th>Programa Académico</th>
                       <th>Servicio Social</th>
                       <th>Estado</th>
@@ -256,12 +257,12 @@ const capitalizarPrimeraLetra = (texto) =>
                   </tbody>
                 </table>
               ) : (
-                <p className="conformidad-no-data">No hay trabajos sociales disponibles aún.</p>
+                <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
               )}
             </div>
           </div>
-          <div className="conformidad-footer">
-              <button className="conformidad-btn siguiente" onClick={() => navigate('/revision-documento-docente')}>
+          <div className="revision-footer">
+              <button className="revision-btn siguiente" onClick={() => navigate('/revision-documento-docente')}>
                 Siguiente
               </button>
             </div>

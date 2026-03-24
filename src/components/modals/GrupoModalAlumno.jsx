@@ -1,6 +1,8 @@
 import React from "react";
 import Swal from "sweetalert2";
+import { FiUsers, FiUser, FiPlus, FiX } from "react-icons/fi";
 import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
+
 
 function GrupoModalAlumno({
   visible,
@@ -9,6 +11,7 @@ function GrupoModalAlumno({
   codigosGrupo = [],
   setCodigosGrupo,
   onClose,
+  onGuardar,
   loadingGrupo = false,
   mensajeGrupo = "",
 }) {
@@ -22,7 +25,7 @@ function GrupoModalAlumno({
         icon: "warning",
         title: "Límite alcanzado",
         text: `Solo se permiten hasta ${MAX_INTEGRANTES} integrantes en el grupo.`,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#011b4b",
         confirmButtonText: "Entendido",
       });
       return;
@@ -31,102 +34,175 @@ function GrupoModalAlumno({
     setCodigosGrupo([...codigosGrupo, ""]);
   };
 
+  const handleEliminarIntegrante = (indexAEliminar) => {
+    if (codigosGrupo.length <= 1) return;
+    setCodigosGrupo(codigosGrupo.filter((_, index) => index !== indexAEliminar));
+  };
+
   const handleCerrar = () => {
     if (!solicitudEnviada) {
-      const filtrados = codigosGrupo.filter((codigo) => String(codigo).trim().length === 10);
+      const filtrados = codigosGrupo.filter(
+        (codigo) => String(codigo).trim().length === 10
+      );
       setCodigosGrupo(filtrados);
     }
     onClose?.();
   };
 
+  const handleGuardar = async () => {
+    if (typeof onGuardar === "function") {
+      const resultado = await onGuardar();
+      if (resultado === false) return;
+    }
+
+    handleCerrar();
+  };
+
   return (
-    <div className="modal-grupo-elegante-overlay">
-      <div className="modal-grupo-elegante-content">
-        <h3 className="modal-grupo-elegante-title">Integrantes del grupo</h3>
-
-        {solicitudEnviada ? (
-          <ul className="lista-integrantes">
-            {loadingGrupo ? (
-              <li>Cargando integrantes...</li>
-            ) : integrantesGrupoAlumno.length > 0 ? (
-              integrantesGrupoAlumno.map((integrante, index) => (
-                <li key={index}>
-                  {integrante.nombre_completo || "Sin nombre"} -{" "}
-                  {integrante.codigo || "Sin código"}
-                </li>
-              ))
-            ) : (
-              <li>{mensajeGrupo || "No hay integrantes registrados."}</li>
-            )}
-          </ul>
-        ) : (
-          <>
-            {codigosGrupo.slice(0, MAX_INTEGRANTES).map((codigo, index) => (
-              <div className="modal-grupo-elegante-field" key={index}>
-                <label className="modal-grupo-elegante-label">
-                  Código universitario N°{index + 1}
-                </label>
-
-                <input
-                  type="text"
-                  className="modal-grupo-elegante-input"
-                  placeholder="Ingrese el código universitario"
-                  value={codigo}
-                  onChange={(e) => {
-                    const input = e.target.value.replace(/\D/g, "").slice(0, 10);
-                    const nuevos = [...codigosGrupo];
-
-                    const existe = codigosGrupo.some(
-                      (c, i) => String(c).trim() === input && i !== index && input !== ""
-                    );
-
-                    if (existe) {
-                      showTopWarningToast("Este integrante ya fue agregado al grupo");
-                      nuevos[index] = "";
-                      setCodigosGrupo(nuevos);
-                      return;
-                    }
-
-                    nuevos[index] = input;
-                    setCodigosGrupo(nuevos);
-                  }}
-                  onBlur={() => {
-                    if (codigo.length > 0 && codigo.length < 10) {
-                      Swal.fire({
-                        icon: "warning",
-                        title: "Código incompleto",
-                        text: "El código debe tener exactamente 10 dígitos.",
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Entendido",
-                      });
-                    }
-                  }}
-                />
-              </div>
-            ))}
-          </>
-        )}
-
-        <div
-          className="modal-grupo-elegante-actions"
-          style={{
-            justifyContent:
-              solicitudEnviada || codigosGrupo.length >= MAX_INTEGRANTES
-                ? "center"
-                : "space-between",
-            display: "flex",
-            gap: "10px",
-          }}
+    <div className="grupo-alumno-modal-overlay">
+      <div className="grupo-alumno-modal-container">
+        <button
+          type="button"
+          className="grupo-alumno-modal-close"
+          onClick={handleCerrar}
+          aria-label="Cerrar modal"
         >
-          {!solicitudEnviada && codigosGrupo.length < MAX_INTEGRANTES && (
-            <button onClick={handleAgregarOtro} className="modal-grupo-elegante-btn agregar">
-              + Agregar otro
+          <FiX />
+        </button>
+
+        <div className="grupo-alumno-modal-header">
+          <div className="grupo-alumno-header-blur grupo-alumno-header-blur-right"></div>
+          <div className="grupo-alumno-header-blur grupo-alumno-header-blur-left"></div>
+
+          <div className="grupo-alumno-modal-header-content">
+            <h3 className="grupo-alumno-modal-title">
+              <span className="grupo-alumno-modal-title-icon">
+                <FiUsers />
+              </span>
+              Integrantes del grupo
+            </h3>
+
+            <p className="grupo-alumno-modal-subtitle">
+              Ingresa los códigos universitarios de los miembros del equipo
+            </p>
+          </div>
+        </div>
+
+        <div className="grupo-alumno-modal-body">
+          {solicitudEnviada ? (
+            <ul className="grupo-alumno-lista">
+              {loadingGrupo ? (
+                <li className="grupo-alumno-lista-item">Cargando integrantes...</li>
+              ) : integrantesGrupoAlumno.length > 0 ? (
+                integrantesGrupoAlumno.map((integrante, index) => (
+                  <li className="grupo-alumno-lista-item" key={index}>
+                    <span className="grupo-alumno-lista-nombre">
+                      {integrante.nombre_completo || "Sin nombre"}
+                    </span>
+                    <span className="grupo-alumno-lista-codigo">
+                      {integrante.codigo || "Sin código"}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li className="grupo-alumno-lista-item">
+                  {mensajeGrupo || "No hay integrantes registrados."}
+                </li>
+              )}
+            </ul>
+          ) : (
+            <>
+              {codigosGrupo.slice(0, MAX_INTEGRANTES).map((codigo, index) => (
+                <div className="grupo-alumno-field" key={index}>
+                  <label className="grupo-alumno-label">
+                    <FiUser className="grupo-alumno-label-icon" />
+                    <span>Código universitario N°{index + 1}</span>
+                  </label>
+
+                  <div className="grupo-alumno-input-wrapper">
+                    <input
+                      type="text"
+                      className="grupo-alumno-input"
+                      placeholder="Ingresa el código universitario"
+                      value={codigo}
+                      onChange={(e) => {
+                        const input = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        const nuevos = [...codigosGrupo];
+
+                        const existe = codigosGrupo.some(
+                          (c, i) =>
+                            String(c).trim() === input && i !== index && input !== ""
+                        );
+
+                        if (existe) {
+                          showTopWarningToast("Este integrante ya fue agregado al grupo");
+                          nuevos[index] = "";
+                          setCodigosGrupo(nuevos);
+                          return;
+                        }
+
+                        nuevos[index] = input;
+                        setCodigosGrupo(nuevos);
+                      }}
+                      onBlur={() => {
+                        if (codigo.length > 0 && codigo.length < 10) {
+                          Swal.fire({
+                            icon: "warning",
+                            title: "Código incompleto",
+                            text: "El código debe tener exactamente 10 dígitos.",
+                            confirmButtonColor: "#011b4b",
+                            confirmButtonText: "Entendido",
+                          });
+                        }
+                      }}
+                    />
+
+                    {codigosGrupo.length > 1 && (
+                      <button
+                        type="button"
+                        className="grupo-alumno-btn-remove"
+                        onClick={() => handleEliminarIntegrante(index)}
+                        aria-label={`Eliminar integrante ${index + 1}`}
+                      >
+                        <FiX />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {codigosGrupo.length < MAX_INTEGRANTES && (
+                <button
+                  type="button"
+                  onClick={handleAgregarOtro}
+                  className="grupo-alumno-btn-add"
+                >
+                  <FiPlus />
+                  Agregar otro integrante
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="grupo-alumno-modal-footer">
+          <button
+            type="button"
+            onClick={handleCerrar}
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
+          >
+            Cancelar
+          </button>
+
+          {!solicitudEnviada && (
+            <button
+              type="button"
+              onClick={handleGuardar}
+              className="grupo-alumno-btn grupo-alumno-btn-save"
+            >
+              Guardar
             </button>
           )}
-
-          <button onClick={handleCerrar} className="modal-grupo-elegante-btn aceptar">
-            Cerrar
-          </button>
         </div>
       </div>
     </div>
