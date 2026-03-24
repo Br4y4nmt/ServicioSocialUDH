@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import ProgramaEditarModal from "../../modals/ProgramaEditarModal";
 import ProgramaNuevoModal from "../../modals/ProgramaNuevoModal";
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function ProgramasSection({
   programas,
+  cargandoProgramas,
   modalProgramaVisible,
   setModalProgramaVisible,
   modalEditarProgramaVisible,
@@ -35,6 +38,20 @@ function ProgramasSection({
   const [originalNombreProgram, setOriginalNombreProgram] = useState('');
   const [originalFacultadProgram, setOriginalFacultadProgram] = useState('');
   const [originalEmailProgram, setOriginalEmailProgram] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
+
+  const totalPages = Math.max(1, Math.ceil(programas.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const programasPagina = programas.slice(inicio, inicio + ITEMS_PER_PAGE);
+
   return (
     <>
       <div className="docentes-container">
@@ -51,6 +68,10 @@ function ProgramasSection({
             </div>
           </div>
           <div className="docentes-table-wrapper">
+            {cargandoProgramas ? (
+              <PageSkeleton topBlocks={["sm"]} xlRows={3} showChip lastXL />
+            ) : (
+            <>
             <table className="docentes-table">
               <thead className="docentes-table-thead">
                 <tr>
@@ -62,10 +83,10 @@ function ProgramasSection({
                 </tr>
               </thead>
               <tbody>
-                {programas
-                  .map((prog, index) => (
+                {programasPagina.length > 0 ? (
+                  programasPagina.map((prog, index) => (
                     <tr key={prog.id_programa}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
                       <td>{(prog.nombre_programa || '').toUpperCase()}</td>
                       <td>{(prog.Facultade?.nombre_facultad || 'SIN FACULTAD').toUpperCase()}</td>
                       <td>{prog.email || 'SIN CORREO'}</td>
@@ -94,9 +115,29 @@ function ProgramasSection({
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>
+                      No hay programas registrados.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+
+            <TablePagination
+              totalItems={programas.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                }
+              }}
+            />
+            </>
+            )}
           </div>
         </div>
       </div>

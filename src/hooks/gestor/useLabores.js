@@ -8,6 +8,7 @@ import { showTopWarningToast, showTopSuccessToast, showTopErrorToast } from '../
 
 export default function useLabores(token) {
   const [labores, setLabores] = useState([]);
+  const [cargandoLabores, setCargandoLabores] = useState(false);
   const [busquedaLabor, setBusquedaLabor] = useState('');
   const [modalLaborVisible, setModalLaborVisible] = useState(false);
   const [modalEditarLaborVisible, setModalEditarLaborVisible] = useState(false);
@@ -20,12 +21,15 @@ export default function useLabores(token) {
   const fetchLabores = useCallback(async () => {
     if (!token) return;
     try {
+      setCargandoLabores(true);
       const res = await axios.get('/api/labores', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLabores(res.data);
     } catch (error) {
       console.error('Error al cargar labores sociales:', error);
+    } finally {
+      setCargandoLabores(false);
     }
   }, [token]);
 
@@ -107,6 +111,7 @@ export default function useLabores(token) {
 
   return {
     labores,
+    cargandoLabores,
     busquedaLabor,
     setBusquedaLabor,
     modalLaborVisible,

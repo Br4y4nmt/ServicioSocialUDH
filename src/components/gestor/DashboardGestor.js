@@ -103,6 +103,7 @@ function DashboardGestor() {
           {activeSection === 'facultades' && (
             <FacultadesSection
               facultades={facultadesHook.facultades}
+              cargandoFacultades={facultadesHook.cargandoFacultades}
               modalNuevaFacultadVisible={facultadesHook.modalNuevaFacultadVisible}
               setModalNuevaFacultadVisible={facultadesHook.setModalNuevaFacultadVisible}
               modalEditarVisible={facultadesHook.modalEditarVisible}
@@ -123,6 +124,7 @@ function DashboardGestor() {
           {activeSection === 'programas' && (
             <ProgramasSection
               programas={programasHook.programas}
+              cargandoProgramas={programasHook.cargandoProgramas}
               modalProgramaVisible={programasHook.modalProgramaVisible}
               setModalProgramaVisible={programasHook.setModalProgramaVisible}
               modalEditarProgramaVisible={programasHook.modalEditarProgramaVisible}
@@ -153,6 +155,7 @@ function DashboardGestor() {
           {activeSection === 'supervisores' && (
             <SupervisorSection
               supervisores={supervisoresHook.supervisores}
+              cargandoSupervisores={supervisoresHook.cargandoSupervisores}
               busquedaSupervisor={supervisoresHook.busquedaSupervisor}
               setBusquedaSupervisor={supervisoresHook.setBusquedaSupervisor}
               programaSupervisor={supervisoresHook.programaSupervisor}
@@ -171,6 +174,7 @@ function DashboardGestor() {
             setProgramaSeleccionado={programasHook.setProgramaSeleccionado}
             programas={programasHook.programas}
             aprobandoId={informesHook.aprobandoId}
+            cargandoInformes={informesHook.cargandoInformes}
             generarInforme={informesHook.generarInforme}   
           />
         )}
@@ -178,6 +182,7 @@ function DashboardGestor() {
           {activeSection === 'estudiantes' && (
             <EstudiantesSection
               estudiantes={estudiantesHook.estudiantes}
+              cargandoEstudiantes={estudiantesHook.cargandoEstudiantes}
               filtroEstudiantes={estudiantesHook.filtroEstudiantes}
               setFiltroEstudiantes={estudiantesHook.setFiltroEstudiantes}
               programaSeleccionado={programasHook.programaSeleccionado}
@@ -229,6 +234,7 @@ function DashboardGestor() {
           {activeSection === 'docentes' && (
             <DocentesSection
               docentes={docentesHook.docentes}
+              cargandoDocentes={docentesHook.cargandoDocentes}
               busquedaDocente={docentesHook.busquedaDocente}
               setBusquedaDocente={docentesHook.setBusquedaDocente}
               modalDocenteVisible={docentesHook.modalDocenteVisible}
@@ -281,6 +287,7 @@ function DashboardGestor() {
           {activeSection === 'labores' && (
             <LaboresSection
               labores={laboresHook.labores}
+              cargandoLabores={laboresHook.cargandoLabores}
               busquedaLabor={laboresHook.busquedaLabor}
               setBusquedaLabor={laboresHook.setBusquedaLabor}
               modalLaborVisible={laboresHook.modalLaborVisible}
@@ -307,6 +314,7 @@ function DashboardGestor() {
           {activeSection === 'seguimiento.trami' && (
             <SeguimientoTramiteSection
               estudiantes={estudiantesHook.estudiantes}
+              cargandoEstudiantes={estudiantesHook.cargandoEstudiantes}
               filtroEstudiantes={estudiantesHook.filtroEstudiantes}
               setFiltroEstudiantes={estudiantesHook.setFiltroEstudiantes}
               verSeguimiento={seguimientoHook.verSeguimiento}
@@ -316,6 +324,7 @@ function DashboardGestor() {
           {activeSection === 'lineas' && (
             <LineasSection
               lineas={lineasHook.lineas}
+              cargandoLineas={lineasHook.cargandoLineas}
               busquedaLinea={lineasHook.busquedaLinea}
               setBusquedaLinea={lineasHook.setBusquedaLinea}
               modalLineaVisible={lineasHook.modalLineaVisible}

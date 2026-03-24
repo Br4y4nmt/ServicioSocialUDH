@@ -5,19 +5,29 @@ import { showTopWarningToast, showTopErrorToast } from '../alerts/useWelcomeToas
 
 export default function useEstudiantes(token) {
   const [estudiantes, setEstudiantes] = useState([]);
+  const [cargandoEstudiantes, setCargandoEstudiantes] = useState(false);
   const [filtroEstudiantes, setFiltroEstudiantes] = useState('');
   const [modalEstudianteVisible, setModalEstudianteVisible] = useState(false);
   const [codigoUniversitario, setCodigoUniversitario] = useState('');
 
   const fetchEstudiantes = useCallback(async () => {
-    if (!token) return;
+    if (!token) {
+      setEstudiantes([]);
+      setCargandoEstudiantes(false);
+      return;
+    }
+
     try {
+      setCargandoEstudiantes(true);
       const res = await axios.get('/api/estudiantes', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setEstudiantes(res.data);
+      setEstudiantes(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error('Error al obtener estudiantes:', error);
+      setEstudiantes([]);
+    } finally {
+      setCargandoEstudiantes(false);
     }
   }, [token]);
 
@@ -66,6 +76,7 @@ export default function useEstudiantes(token) {
 
   return {
     estudiantes,
+    cargandoEstudiantes,
     filtroEstudiantes,
     setFiltroEstudiantes,
     modalEstudianteVisible,

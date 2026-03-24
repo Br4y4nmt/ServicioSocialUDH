@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import FacultadEditarModal from "../../modals/FacultadEditarModal";
 import FacultadNuevoModal from "../../modals/FacultadNuevoModal";
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function FacultadesSection({
   facultades,
+  cargandoFacultades,
   modalNuevaFacultadVisible,
   setModalNuevaFacultadVisible,
   modalEditarVisible,
@@ -22,6 +25,19 @@ function FacultadesSection({
   crearFacultad
 }) {
   const [nombreOriginal, setNombreOriginal] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
+
+  const totalPages = Math.max(1, Math.ceil(facultades.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const facultadesPagina = facultades.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   return (
     <div className="docentes-container">
@@ -39,6 +55,10 @@ function FacultadesSection({
         </div>
 
         <div className="docentes-table-wrapper">
+          {cargandoFacultades ? (
+            <PageSkeleton topBlocks={["sm"]} xlRows={3} showChip lastXL />
+          ) : (
+          <>
           <table className="docentes-table">
             <thead className="docentes-table-thead">
               <tr>
@@ -49,39 +69,60 @@ function FacultadesSection({
               </tr>
             </thead>
             <tbody>
-              {facultades.map((f, index) => (
-                <tr key={f.id_facultad}>
-                  <td>{index + 1}</td>
-                  <td>{(f.nombre_facultad || '').toUpperCase()}</td>
-                  <td>
-                    <span className="facultades-badge-activo">Activo</span>
-                  </td>
-                  <td>
-                    <>
-                      <button
-                        onClick={() => {
-                          setEditandoId(f.id_facultad);
-                          setNombreEditado(f.nombre_facultad);
-                          setNombreOriginal(f.nombre_facultad);
-                          setModalEditarVisible(true);
-                        }}
-                        className="facultades-btn editar"
-                      >
-                        <EditIcon />
-                      </button>
+              {facultadesPagina.length > 0 ? (
+                facultadesPagina.map((f, index) => (
+                  <tr key={f.id_facultad}>
+                    <td>{inicio + index + 1}</td>
+                    <td>{(f.nombre_facultad || '').toUpperCase()}</td>
+                    <td>
+                      <span className="facultades-badge-activo">Activo</span>
+                    </td>
+                    <td>
+                      <>
+                        <button
+                          onClick={() => {
+                            setEditandoId(f.id_facultad);
+                            setNombreEditado(f.nombre_facultad);
+                            setNombreOriginal(f.nombre_facultad);
+                            setModalEditarVisible(true);
+                          }}
+                          className="facultades-btn editar"
+                        >
+                          <EditIcon />
+                        </button>
 
-                      <button
-                        onClick={() => eliminarFacultad(f.id_facultad)}
-                        className="facultades-btn eliminar"
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </>
+                        <button
+                          onClick={() => eliminarFacultad(f.id_facultad)}
+                          className="facultades-btn eliminar"
+                        >
+                          <DeleteIcon />
+                        </button>
+                      </>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>
+                    No hay facultades registradas.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
+
+          <TablePagination
+            totalItems={facultades.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              if (page >= 1 && page <= totalPages) {
+                setCurrentPage(page);
+              }
+            }}
+          />
+          </>
+          )}
         </div>
       </div>
 

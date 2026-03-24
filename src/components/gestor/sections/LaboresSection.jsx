@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import LaborEditarModal from "../../modals/LaborEditarModal";
 import LaborNuevoModal from "../../modals/LaborNuevoModal";
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function LaboresSection({
   labores,
+  cargandoLabores,
   busquedaLabor,
   setBusquedaLabor,
   modalLaborVisible,
@@ -29,6 +32,32 @@ function LaboresSection({
   guardarEdicionLabor,
   crearLabor
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
+
+  const laboresFiltradas = useMemo(
+    () =>
+      labores.filter((labor) =>
+        buscarSinTildes(labor.nombre_labores || '', busquedaLabor)
+      ),
+    [labores, busquedaLabor]
+  );
+
+  const totalPages = Math.max(1, Math.ceil(laboresFiltradas.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [busquedaLabor]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const laboresPagina = laboresFiltradas.slice(inicio, inicio + ITEMS_PER_PAGE);
+
   return (
     <>
       <div className="docentes-container">
@@ -51,6 +80,10 @@ function LaboresSection({
             </div>
           </div>
           <div className="docentes-table-wrapper">
+            {cargandoLabores ? (
+              <PageSkeleton topBlocks={["sm"]} xlRows={3} showChip lastXL />
+            ) : (
+            <>
             <table className="docentes-table">
               <thead className="docentes-table-thead">
                 <tr>
@@ -61,13 +94,10 @@ function LaboresSection({
                 </tr>
               </thead>
               <tbody>
-                {labores
-                  .filter((labor) =>
-                    buscarSinTildes(labor.nombre_labores || '', busquedaLabor)
-                  )
-                  .map((labor, index) => (
+                {laboresPagina.length > 0 ? (
+                  laboresPagina.map((labor, index) => (
                     <tr key={labor.id_labores}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
                       <td>
                         {editandoLaborId === labor.id_labores ? (
                           <input
@@ -119,9 +149,29 @@ function LaboresSection({
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>
+                      No se encontraron servicios sociales.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+
+            <TablePagination
+              totalItems={laboresFiltradas.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                }
+              }}
+            />
+            </>
+            )}
           </div>
         </div>
       </div>

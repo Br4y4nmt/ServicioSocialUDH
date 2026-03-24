@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
@@ -8,6 +8,7 @@ import { showTopWarningToast, showTopSuccessToast } from '../../../hooks/alerts/
 import { useUser } from "../../../UserContext";
 import CambioAsesorModal from "../../modals/CambioAsesorModal";
 import PageSkeleton from "../../loaders/PageSkeleton"; 
+import TablePagination from "../../ui/TablePagination";
 
 function CambioAsesor() {
   const { user } = useUser();
@@ -21,6 +22,8 @@ function CambioAsesor() {
   const [asesorSeleccionado, setAsesorSeleccionado] = useState("");
   const [trabajoSeleccionado, setTrabajoSeleccionado] = useState(null);
   const [guardando, setGuardando] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
 
   const fetchTrabajos = useCallback(async () => {
     try {
@@ -109,9 +112,28 @@ function CambioAsesor() {
     if (user && token) fetchTrabajos();
   }, [user, token, fetchTrabajos]);
 
-  const trabajosFiltrados = trabajos.filter((t) =>
-    buscarSinTildes(t.nombre_estudiante || '', filtro)
+  const trabajosFiltrados = useMemo(
+    () =>
+      trabajos.filter((t) =>
+        buscarSinTildes(t.nombre_estudiante || '', filtro)
+      ),
+    [trabajos, filtro]
   );
+
+  const totalPages = Math.max(1, Math.ceil(trabajosFiltrados.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filtro]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const trabajosPagina = trabajosFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   return (
     <div className="docentes-container">
@@ -140,6 +162,7 @@ function CambioAsesor() {
               {errorMensaje}
             </div>
           ) : (
+            <>
             <table className="docentes-table">
               <thead className="docentes-table-thead">
                 <tr>
@@ -152,10 +175,10 @@ function CambioAsesor() {
               </thead>
 
               <tbody>
-                {trabajosFiltrados.length > 0 ? (
-                  trabajosFiltrados.map((t, index) => (
+                {trabajosPagina.length > 0 ? (
+                  trabajosPagina.map((t, index) => (
                     <tr key={t.id}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
                       <td>{t.nombre_estudiante || "—"}</td>
                       <td>{t.asesor || "Sin asignar"}</td>
                       <td>
@@ -191,6 +214,18 @@ function CambioAsesor() {
                 )}
               </tbody>
             </table>
+
+            <TablePagination
+              totalItems={trabajosFiltrados.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                }
+              }}
+            />
+            </>
           )}
         </div>
       </div>

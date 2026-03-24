@@ -11,11 +11,13 @@ import {
 export default function useInformesFinales(token) {
   const [informesFinales, setInformesFinales] = useState([]);
   const [aprobandoId, setAprobandoId] = useState(null);
+  const [cargandoInformes, setCargandoInformes] = useState(false);
 
   const fetchInformesFinales = useCallback(async () => {
     if (!token) return;
 
     try {
+      setCargandoInformes(true);
       const res = await axios.get(
         '/api/trabajo-social/informes-finales-nuevo',
         {
@@ -26,6 +28,8 @@ export default function useInformesFinales(token) {
       setInformesFinales(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error('Error al cargar informes finales:', error);
+    } finally {
+      setCargandoInformes(false);
     }
   }, [token]);
 
@@ -236,6 +240,7 @@ export default function useInformesFinales(token) {
   return {
     informesFinales,
     aprobandoId,
+    cargandoInformes,
     fetchInformesFinales,
     generarInforme,
   };

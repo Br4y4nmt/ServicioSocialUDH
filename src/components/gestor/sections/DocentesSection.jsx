@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
@@ -6,9 +6,12 @@ import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import DocenteEditarModal from "../../modals/DocenteEditarModal";
 import DocenteNuevoModal from "../../modals/DocenteNuevoModal";
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function DocentesSection({
   docentes,
+  cargandoDocentes,
   busquedaDocente,
   setBusquedaDocente,
   modalDocenteVisible,
@@ -40,6 +43,32 @@ function DocentesSection({
   guardarEdicionDocente,
   crearDocente
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
+
+  const docentesFiltrados = useMemo(
+    () =>
+      docentes.filter((doc) =>
+        buscarSinTildes(doc.nombre_docente || '', busquedaDocente)
+      ),
+    [docentes, busquedaDocente]
+  );
+
+  const totalPages = Math.max(1, Math.ceil(docentesFiltrados.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [busquedaDocente]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const docentesPagina = docentesFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
+
   return (
     <>
       <div className="docentes-container">
@@ -63,6 +92,10 @@ function DocentesSection({
           </div>
           
           <div className="docentes-table-wrapper">
+            {cargandoDocentes ? (
+              <PageSkeleton topBlocks={["sm"]} xlRows={3} showChip lastXL />
+            ) : (
+            <>
             <table className="docentes-table">
               <thead className="docentes-table-thead">
                 <tr>
@@ -75,13 +108,10 @@ function DocentesSection({
                 </tr>
               </thead>
               <tbody>
-                {docentes
-                  .filter((doc) =>
-                    buscarSinTildes(doc.nombre_docente || '', busquedaDocente)
-                  )
-                  .map((doc, index) => (
+                {docentesPagina.length > 0 ? (
+                  docentesPagina.map((doc, index) => (
                     <tr key={doc.id_docente}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
                       <td>
                         {editandoDocenteId === doc.id_docente ? (
                           <input
@@ -137,9 +167,29 @@ function DocentesSection({
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>
+                      No se encontraron docentes.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+
+            <TablePagination
+              totalItems={docentesFiltrados.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                }
+              }}
+            />
+            </>
+            )}
           </div>
         </div>
       </div>

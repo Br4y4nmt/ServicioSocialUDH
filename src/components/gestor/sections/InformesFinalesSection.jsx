@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import VerBoton from "../../../hooks/componentes/VerBoton";
 import { alertconfirmacion } from '../../../hooks/alerts/alertas';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import FullScreenSpinner from '../../ui/FullScreenSpinner';
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function InformesFinalesSection({
   informesFinales,
@@ -14,8 +16,49 @@ function InformesFinalesSection({
   setProgramaSeleccionado,
   programas,
   aprobandoId,
+  cargandoInformes,
   generarInforme
 }) {
+  const ITEMS_PER_PAGE = 30;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const informesFiltrados = useMemo(
+    () =>
+      informesFinales
+        .filter((inf) =>
+          programaSeleccionado
+            ? inf.ProgramasAcademico?.nombre_programa
+                ?.toLowerCase()
+                .includes(programaSeleccionado.toLowerCase())
+            : true
+        )
+        .filter((inf) =>
+          buscarSinTildes(
+            inf.Estudiante?.nombre_estudiante || '',
+            busquedaDocente
+          )
+        ),
+    [informesFinales, programaSeleccionado, busquedaDocente]
+  );
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(informesFiltrados.length / ITEMS_PER_PAGE)
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [busquedaDocente, programaSeleccionado]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const informesPagina = informesFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
+
   return (
     <>
       {aprobandoId && <FullScreenSpinner text="Generando certificado..." />}
@@ -57,6 +100,10 @@ function InformesFinalesSection({
         </div>
 
         <div className="docentes-table-wrapper">
+          {cargandoInformes ? (
+            <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+          ) : (
+          <>
           <table className="docentes-table">
             <thead className="docentes-table-thead">
               <tr>
@@ -71,21 +118,8 @@ function InformesFinalesSection({
             </thead>
 
             <tbody>
-              {informesFinales
-                .filter((inf) =>
-                  programaSeleccionado
-                    ? inf.ProgramasAcademico?.nombre_programa
-                        ?.toLowerCase()
-                        .includes(programaSeleccionado.toLowerCase())
-                    : true
-                )
-                .filter((inf) =>
-                  buscarSinTildes(
-                    inf.Estudiante?.nombre_estudiante || '',
-                    busquedaDocente
-                  )
-                )
-                .map((inf, index) => {
+              {informesPagina.length > 0 ? (
+                informesPagina.map((inf, index) => {
 
                   const estado = String(inf.estado_informe_final || '').toLowerCase();
                   const puedeGenerar = estado === 'aprobado';
@@ -93,7 +127,7 @@ function InformesFinalesSection({
 
                   return (
                     <tr key={inf.id}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
 
                       <td>
                         {(inf.Estudiante?.nombre_estudiante || 'SIN NOMBRE')
@@ -200,9 +234,29 @@ function InformesFinalesSection({
 
                     </tr>
                   );
-                })}
+                })
+              ) : (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '1rem' }}>
+                    No se encontraron registros.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
+
+          <TablePagination
+            totalItems={informesFiltrados.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              if (page >= 1 && page <= totalPages) {
+                setCurrentPage(page);
+              }
+            }}
+          />
+          </>
+          )}
         </div>
       </div>
     </div>

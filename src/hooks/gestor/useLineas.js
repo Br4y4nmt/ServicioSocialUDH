@@ -9,6 +9,7 @@ import { showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToas
 
 export default function useLineas(token) {
   const [lineas, setLineas] = useState([]);
+  const [cargandoLineas, setCargandoLineas] = useState(false);
   const [busquedaLinea, setBusquedaLinea] = useState('');
   const [modalLineaVisible, setModalLineaVisible] = useState(false);
   const [modalEditarLineaVisible, setModalEditarLineaVisible] = useState(false);
@@ -19,12 +20,15 @@ export default function useLineas(token) {
   const fetchLineas = useCallback(async () => {
     if (!token) return;
     try {
+      setCargandoLineas(true);
       const res = await axios.get('/api/lineas', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLineas(res.data);
     } catch (error) {
       console.error('Error al cargar líneas de acción:', error);
+    } finally {
+      setCargandoLineas(false);
     }
   }, [token]);
 
@@ -93,6 +97,7 @@ export default function useLineas(token) {
 
   return {
     lineas,
+    cargandoLineas,
     busquedaLinea,
     setBusquedaLinea,
     modalLineaVisible,

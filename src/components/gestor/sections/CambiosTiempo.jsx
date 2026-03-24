@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { showTopErrorToast, showTopSuccessToast } from "../../../hooks/alerts/useWelcomeToast";
@@ -9,6 +9,7 @@ import VerBoton from "../../../hooks/componentes/VerBoton";
 import { useUser } from "../../../UserContext";
 import CambiosTiempoModal from "../../modals/CambiosTiempoModal";
 import PageSkeleton from "../../loaders/PageSkeleton"; 
+import TablePagination from "../../ui/TablePagination";
 
 function CambiosTiempo() {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -23,8 +24,10 @@ function CambiosTiempo() {
   const [nuevaFecha, setNuevaFecha] = useState("");
   const [guardando, setGuardando] = useState(false);
   const [cargando, setCargando] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const { user } = useUser();
   const token = user?.token;
+  const ITEMS_PER_PAGE = 30;
 
   const fetchEstudiantes = useCallback(async () => {
     try {
@@ -64,13 +67,32 @@ function CambiosTiempo() {
     fetchProgramas();
   }, [token, fetchEstudiantes, fetchProgramas]);
 
-  const estudiantesFiltrados = estudiantes.filter((est) => {
-    const coincideTexto = buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes);
-    const coincidePrograma =
-      programaSeleccionado === "" ||
-      est.programa?.nombre_programa === programaSeleccionado;
-    return coincideTexto && coincidePrograma;
-  });
+  const estudiantesFiltrados = useMemo(
+    () =>
+      estudiantes.filter((est) => {
+        const coincideTexto = buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes);
+        const coincidePrograma =
+          programaSeleccionado === "" ||
+          est.programa?.nombre_programa === programaSeleccionado;
+        return coincideTexto && coincidePrograma;
+      }),
+    [estudiantes, filtroEstudiantes, programaSeleccionado]
+  );
+
+  const totalPages = Math.max(1, Math.ceil(estudiantesFiltrados.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filtroEstudiantes, programaSeleccionado]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const estudiantesPagina = estudiantesFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   const verDetalle = async (id_estudiante, nombre) => {
     try {
@@ -199,6 +221,7 @@ function CambiosTiempo() {
               {errorMensaje}
             </div>
           ) : (
+            <>
             <table className="docentes-table">
               <thead className="docentes-table-thead">
                 <tr>
@@ -212,10 +235,10 @@ function CambiosTiempo() {
               </thead>
 
               <tbody>
-                {estudiantesFiltrados.length > 0 ? (
-                  estudiantesFiltrados.map((est, index) => (
+                {estudiantesPagina.length > 0 ? (
+                  estudiantesPagina.map((est, index) => (
                     <tr key={est.id_estudiante}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
                       <td>{est.nombre_estudiante || "SIN NOMBRE"}</td>
                       <td>{est.email || "SIN CORREO"}</td>
                       <td>{est.celular || "—"}</td>
@@ -242,6 +265,18 @@ function CambiosTiempo() {
                 )}
               </tbody>
             </table>
+
+            <TablePagination
+              totalItems={estudiantesFiltrados.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                }
+              }}
+            />
+            </>
           )}
         </div>
       </div>

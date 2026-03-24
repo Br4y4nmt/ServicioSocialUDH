@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useUser } from '../../../UserContext';
 import Swal from 'sweetalert2';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function EstudiantesConcluidos({
   estudiantes,
@@ -20,6 +22,8 @@ function EstudiantesConcluidos({
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [udhDown, setUdhDown] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
   const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -111,6 +115,46 @@ function EstudiantesConcluidos({
     fetchFinalizados();
   }, [token]);
 
+  const estudiantesFiltrados = useMemo(() => {
+    return estudiantesLocal.filter((est) => {
+      const coincideTexto =
+        buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
+        (est.dni || '').toString().includes(filtroEstudiantes);
+
+      const estado = (est.estado || '').toString().trim().toLowerCase();
+
+      let coincideEstado = true;
+      if (estadoFiltro === 'atendidos') {
+        coincideEstado = estado === 'atendido';
+      } else if (estadoFiltro === 'no atendidos') {
+        coincideEstado = estado === 'no_atendido' || estado === 'no atendido';
+      }
+
+      return coincideTexto && coincideEstado;
+    });
+  }, [estudiantesLocal, filtroEstudiantes, estadoFiltro]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(estudiantesFiltrados.length / ITEMS_PER_PAGE)
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filtroEstudiantes, estadoFiltro]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const estudiantesPagina = estudiantesFiltrados.slice(
+    inicio,
+    inicio + ITEMS_PER_PAGE
+  );
+
 
   const actualizarEstado = async ({ id_estudiante, id_integrante }, nuevoEstado) => {
     if (!token) return;
@@ -196,7 +240,11 @@ function EstudiantesConcluidos({
           </label>
         </div>
 
-        {loading && <div className="no-generado">Cargando estudiantes...</div>}
+        {loading && (
+          <div className="docentes-table-wrapper">
+            <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+          </div>
+        )}
 
         {error && (
           <div className="no-generado" style={{ color: '#a13039' }}>
@@ -230,30 +278,14 @@ function EstudiantesConcluidos({
             </thead>
 
             <tbody>
-              {estudiantesLocal
-                .filter((est) => {
-                  const coincideTexto =
-                    buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
-                    (est.dni || '').toString().includes(filtroEstudiantes);
-
-                  const estado = (est.estado || '').toString().trim().toLowerCase();
-
-                  let coincideEstado = true;
-                  if (estadoFiltro === 'atendidos') {
-                    coincideEstado = estado === 'atendido';
-                  } else if (estadoFiltro === 'no atendidos') {
-                    coincideEstado = estado === 'no_atendido' || estado === 'no atendido';
-                  }
-
-                  return coincideTexto && coincideEstado;
-                })
-                .map((est, index) => {
+              {estudiantesPagina.length > 0 ? (
+                estudiantesPagina.map((est, index) => {
                   const rowKey = `${est.rowType}-${est.id_estudiante || est.id_integrante || index}`;
                   const rowId = est.id_estudiante || est.id_integrante;
 
                   return (
                     <tr key={rowKey}>
-                      <td>{index + 1}</td>
+                      <td>{inicio + index + 1}</td>
 
                       <td>
                         {est.nombre_estudiante || 'SIN NOMBRE'}
@@ -280,7 +312,6 @@ function EstudiantesConcluidos({
                           const estadoLower = (est.estado || '').toString().trim().toLowerCase();
                           const disabled = updatingId === rowId;
 
-                          // SOLO si está NO ATENDIDO aparece el select
                           if (estadoLower === 'no_atendido' || estadoLower === 'no atendido') {
                             return (
                               <select
@@ -312,9 +343,27 @@ function EstudiantesConcluidos({
                       </td>
                     </tr>
                   );
-                })}
+                })
+              ) : (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '1rem' }}>
+                    No se encontraron estudiantes con los filtros aplicados.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
+
+          <TablePagination
+            totalItems={estudiantesFiltrados.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              if (page >= 1 && page <= totalPages) {
+                setCurrentPage(page);
+              }
+            }}
+          />
         </div>
         )}
       </div>

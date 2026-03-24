@@ -9,6 +9,7 @@ import { showTopSuccessToast, showTopWarningToast } from '../alerts/useWelcomeTo
 
 export default function useDocentes(token) {
   const [docentes, setDocentes] = useState([]);
+  const [cargandoDocentes, setCargandoDocentes] = useState(false);
   const [busquedaDocente, setBusquedaDocente] = useState('');
   const [modalDocenteVisible, setModalDocenteVisible] = useState(false);
   const [modalEditarDocenteVisible, setModalEditarDocenteVisible] = useState(false);
@@ -28,12 +29,15 @@ export default function useDocentes(token) {
   const fetchDocentes = useCallback(async () => {
     if (!token) return;
     try {
+      setCargandoDocentes(true);
       const res = await axios.get('/api/docentes', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDocentes(res.data);
     } catch (error) {
       console.error('Error al cargar docentes:', error);
+    } finally {
+      setCargandoDocentes(false);
     }
   }, [token]);
 
@@ -174,6 +178,7 @@ export default function useDocentes(token) {
 
   return {
     docentes,
+    cargandoDocentes,
     busquedaDocente,
     setBusquedaDocente,
     modalDocenteVisible,

@@ -9,6 +9,7 @@ import { showTopSuccessToast, showTopErrorToast } from '../alerts/useWelcomeToas
 
 export default function useFacultades(token) {
   const [facultades, setFacultades] = useState([]);
+  const [cargandoFacultades, setCargandoFacultades] = useState(false);
   const [nuevaFacultad, setNuevaFacultad] = useState('');
   const [modalNuevaFacultadVisible, setModalNuevaFacultadVisible] = useState(false);
   const [modalEditarVisible, setModalEditarVisible] = useState(false);
@@ -18,12 +19,15 @@ export default function useFacultades(token) {
   const fetchFacultades = useCallback(async () => {
     if (!token) return;
     try {
+      setCargandoFacultades(true);
       const res = await axios.get('/api/facultades', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFacultades(res.data);
     } catch (error) {
       console.error('Error al cargar facultades:', error);
+    } finally {
+      setCargandoFacultades(false);
     }
   }, [token]);
 
@@ -97,6 +101,7 @@ export default function useFacultades(token) {
 
   return {
     facultades,
+    cargandoFacultades,
     nuevaFacultad,
     setNuevaFacultad,
     modalNuevaFacultadVisible,

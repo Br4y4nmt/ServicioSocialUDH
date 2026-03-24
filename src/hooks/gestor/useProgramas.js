@@ -10,6 +10,7 @@ import { showTopWarningToast, showTopSuccessToast, showTopErrorToast } from '../
 
 export default function useProgramas(token) {
   const [programas, setProgramas] = useState([]);
+  const [cargandoProgramas, setCargandoProgramas] = useState(false);
   const [nuevoPrograma, setNuevoPrograma] = useState('');
   const [modalProgramaVisible, setModalProgramaVisible] = useState(false);
   const [modalEditarProgramaVisible, setModalEditarProgramaVisible] = useState(false);
@@ -25,12 +26,15 @@ export default function useProgramas(token) {
   const fetchProgramas = useCallback(async () => {
     if (!token) return;
     try {
+      setCargandoProgramas(true);
       const res = await axios.get('/api/programas', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProgramas(res.data);
     } catch (error) {
       console.error('Error al cargar programas:', error);
+    } finally {
+      setCargandoProgramas(false);
     }
   }, [token]);
 
@@ -141,6 +145,7 @@ export default function useProgramas(token) {
 
   return {
     programas,
+    cargandoProgramas,
     setProgramas,
     nuevoPrograma,
     setNuevoPrograma,

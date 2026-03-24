@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
+import TablePagination from '../../ui/TablePagination';
+import PageSkeleton from '../../loaders/PageSkeleton';
 
 function EstudiantesSection({
   estudiantes,
+  cargandoEstudiantes,
   filtroEstudiantes,
   setFiltroEstudiantes,
   programaSeleccionado,
@@ -11,6 +14,40 @@ function EstudiantesSection({
   programas,
   setModalEstudianteVisible
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 30;
+
+  const estudiantesFiltrados = useMemo(
+    () =>
+      estudiantes.filter((est) => {
+        const coincideTexto =
+          buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
+          est.dni?.includes(filtroEstudiantes);
+
+        const coincidePrograma =
+          programaSeleccionado === '' ||
+          est.programa?.nombre_programa === programaSeleccionado;
+
+        return coincideTexto && coincidePrograma;
+      }),
+    [estudiantes, filtroEstudiantes, programaSeleccionado]
+  );
+
+  const totalPages = Math.max(1, Math.ceil(estudiantesFiltrados.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filtroEstudiantes, programaSeleccionado]);
+
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const estudiantesPagina = estudiantesFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
+
   return (
     <div className="docentes-container">
       <div className="docentes-card">
@@ -52,6 +89,10 @@ function EstudiantesSection({
         </div>
 
         <div className="docentes-table-wrapper">
+          {cargandoEstudiantes ? (
+            <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+          ) : (
+          <>
           <table className="docentes-table">
             <thead className="docentes-table-thead">
               <tr>
@@ -64,30 +105,39 @@ function EstudiantesSection({
               </tr>
             </thead>
             <tbody>
-              {estudiantes
-                .filter((est) => {
-                  const coincideTexto =
-                    buscarSinTildes(est.nombre_estudiante || '', filtroEstudiantes) ||
-                    est.dni?.includes(filtroEstudiantes);
-
-                  const coincidePrograma =
-                    programaSeleccionado === '' ||
-                    est.programa?.nombre_programa === programaSeleccionado;
-
-                  return coincideTexto && coincidePrograma;
-                })
-                .map((est, index) => (
+              {estudiantesPagina.length > 0 ? (
+                estudiantesPagina.map((est, index) => (
                   <tr key={est.id_estudiante}>
-                    <td>{index + 1}</td>
+                    <td>{inicio + index + 1}</td>
                     <td>{est.nombre_estudiante || 'SIN NOMBRE'}</td>
                     <td>{est.dni || '—'}</td>
                     <td>{est.email || 'SIN CORREO'}</td>
                     <td>{est.celular || '—'}</td>
                     <td>{est.programa?.nombre_programa?.toUpperCase() || 'SIN PROGRAMA'}</td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>
+                    No se encontraron estudiantes.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
+
+          <TablePagination
+            totalItems={estudiantesFiltrados.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              if (page >= 1 && page <= totalPages) {
+                setCurrentPage(page);
+              }
+            }}
+          />
+          </>
+          )}
         </div>
       </div>
     </div>
