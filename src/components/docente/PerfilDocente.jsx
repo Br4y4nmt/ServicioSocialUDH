@@ -264,7 +264,7 @@ function PerfilDocente() {
               <div className="form-group">
                 <label className="bold-text">DNI</label>
                 <input
-                  className="input-disabled"
+                  className="input-editable"
                   value={form.dni}
                   onChange={(e) => {
                     const v = e.target.value;

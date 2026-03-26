@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import './RevisionPlanSocial.css';
 import '../DashboardDocente.css';
 import VerBoton from "../../../hooks/componentes/VerBoton";
+import PageSkeleton from '../../loaders/PageSkeleton';
 import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import EvidenciaModal from '../../modals/EvidenciaModal';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
@@ -34,6 +35,7 @@ function SeguimientoServicioDocente() {
   const [imagenEvidencia, setImagenEvidencia] = useState('');
   const [observacion, setObservacion] = useState('');
   const observacionRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [actividadSeleccionadaId, setActividadSeleccionadaId] = useState(null);
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
   //const [planPDF] = useState(null);
@@ -161,30 +163,39 @@ const actualizarSolicitud = useCallback(async (trabajoId, nuevoEstado, plan) => 
 
 
 
-  useEffect(() => {
-    const cargarDatos = async () => {
-      const usuarioId = localStorage.getItem('id_usuario');
-      if (!usuarioId || !token) return;
+useEffect(() => {
+  const cargarDatos = async () => {
+    const usuarioId = localStorage.getItem('id_usuario');
 
-      try {
-        const { data: docente } = await axios.get(`/api/docentes/usuario/${usuarioId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+    if (!usuarioId || !token) {
+      setLoading(false);
+      return;
+    }
 
-        const firmaBase64 = await obtenerFirmaDocenteBase64(docente.firma, token);
-        setFirmaDocente(firmaBase64);
+    setLoading(true);
 
-        const { data: trabajos } = await axios.get(`/api/trabajo-social/docente/${docente.id_docente}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setTrabajosSociales(trabajos);
-      } catch (err) {
-        console.error('Error cargando datos:', err);
-      }
-    };
+    try {
+      const { data: docente } = await axios.get(`/api/docentes/usuario/${usuarioId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-    cargarDatos();
-  }, [token]);
+      const firmaBase64 = await obtenerFirmaDocenteBase64(docente.firma, token);
+      setFirmaDocente(firmaBase64);
+
+      const { data: trabajos } = await axios.get(`/api/trabajo-social/docente/${docente.id_docente}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setTrabajosSociales(trabajos);
+    } catch (err) {
+      console.error('Error cargando datos:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  cargarDatos();
+}, [token]);
 
 
 const handleVerSeguimiento = (trabajoId) => {
@@ -313,83 +324,88 @@ const handleEnviarObservacion = () => {
             <h1 className="revision-title">Seguimiento del Servicio Social</h1>
 
             <div className="revision-table-wrapper">
-              {trabajosSociales.length > 0 ? (
-                <table className="revision-table">
-                  <thead className="revision-table-thead">
-                    <tr>
-                      <th>Estudiante</th>
-                      <th>Programa Académico</th>
-                      <th>Servicio Social</th>
-                      <th>Tipo Servicio Social</th>
-                      <th>Seguimiento</th>
-                      <th>Solicitud de Término</th> 
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {trabajosSociales.map((plan) => (
-                      <tr key={plan.id}>
-                        <td>{plan.Estudiante?.nombre_estudiante || 'No disponible'}</td>
-                        <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
-                        <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
-                        <td>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                            <span>{plan.tipo_servicio_social}</span>
-                            {plan.tipo_servicio_social === 'grupal' && (
+                {loading ? (
+                  <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+                ) : trabajosSociales.length > 0 ? (
+                  <table className="revision-table">
+                    <thead className="revision-table-thead">
+                      <tr>
+                        <th>Estudiante</th>
+                        <th>Programa Académico</th>
+                        <th>Servicio Social</th>
+                        <th>Tipo Servicio Social</th>
+                        <th>Seguimiento</th>
+                        <th>Solicitud de Término</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {trabajosSociales.map((plan) => (
+                        <tr key={plan.id}>
+                          <td>{plan.Estudiante?.nombre_estudiante || 'No disponible'}</td>
+                          <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
+                          <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
+                          <td>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                              <span>{plan.tipo_servicio_social}</span>
+                              {plan.tipo_servicio_social === 'grupal' && (
                                 <VerBoton
                                   onClick={() => handleVerGrupo(plan.id)}
                                   label="Ver"
                                 />
                               )}
-                          </div>
-                        </td>
-                        <td>
-                        <VerBoton onClick={() => handleVerSeguimiento(plan.id)} />
-                      </td>
-                        <td>
-                  {plan.solicitud_termino === 'solicitada' ? (
-                  <div className="contenedor-botones-termino">
-                    <button
-                    className="btn-accion aceptar"
-                    disabled={isAprobando}
-                    onClick={async () => {
-                      const result = await alertconfirmacion({
-                        title: 'Aceptar solicitud',
-                        text: '¿Deseas aceptar esta solicitud de término?',
-                        icon: 'question',
-                        confirmButtonText: 'Sí, aceptar',
-                        cancelButtonText: 'Cancelar'
-                      });
-                      if (result.isConfirmed) {
-                        actualizarSolicitud(plan.id, "aprobada", plan);
-                      }
-                    }}
-                  >
-                    {isAprobando ? 'Procesando...' : 'Aceptar'}
-                  </button>
-                   <button
-                    className="btn-accion rechazar"
-                    disabled={isAprobando}
-                    onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
-                  >
-                    Rechazar
-                  </button>
-                  </div>
-          ) : (
-            <span>
-              <span className={`badge-estado ${plan.solicitud_termino === 'aprobada' ? 'aprobado' : plan.solicitud_termino === 'rechazada' ? 'rechazado' : 'no-solicitada'}`}>
-                {(plan.solicitud_termino === 'aprobada' && 'APROBADO') || (plan.solicitud_termino === 'rechazada' && 'RECHAZADO') || 'NO SOLICITADA'}
-              </span>
-            </span>
-          )}
-        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
-              )}
-            </div>
+                            </div>
+                          </td>
+                          <td>
+                            <VerBoton onClick={() => handleVerSeguimiento(plan.id)} />
+                          </td>
+                          <td>
+                            {plan.solicitud_termino === 'solicitada' ? (
+                              <div className="contenedor-botones-termino">
+                                <button
+                                  className="btn-accion aceptar"
+                                  disabled={isAprobando}
+                                  onClick={async () => {
+                                    const result = await alertconfirmacion({
+                                      title: 'Aceptar solicitud',
+                                      text: '¿Deseas aceptar esta solicitud de término?',
+                                      icon: 'question',
+                                      confirmButtonText: 'Sí, aceptar',
+                                      cancelButtonText: 'Cancelar'
+                                    });
+                                    if (result.isConfirmed) {
+                                      actualizarSolicitud(plan.id, "aprobada", plan);
+                                    }
+                                  }}
+                                >
+                                  {isAprobando ? 'Procesando...' : 'Aceptar'}
+                                </button>
+
+                                <button
+                                  className="btn-accion rechazar"
+                                  disabled={isAprobando}
+                                  onClick={() => actualizarSolicitud(plan.id, 'rechazada')}
+                                >
+                                  Rechazar
+                                </button>
+                              </div>
+                            ) : (
+                              <span>
+                                <span className={`badge-estado ${plan.solicitud_termino === 'aprobada' ? 'aprobado' : plan.solicitud_termino === 'rechazada' ? 'rechazado' : 'no-solicitada'}`}>
+                                  {(plan.solicitud_termino === 'aprobada' && 'APROBADO') ||
+                                    (plan.solicitud_termino === 'rechazada' && 'RECHAZADO') ||
+                                    'NO SOLICITADA'}
+                                </span>
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
+                )}
+              </div>
           </div>
         </div>
       </main>

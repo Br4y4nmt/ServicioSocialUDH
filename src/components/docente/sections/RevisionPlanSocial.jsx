@@ -8,6 +8,7 @@ import { useUser } from '../../../UserContext';
 import axios from 'axios';
 import VerBoton from "../../../hooks/componentes/VerBoton";
 import Swal from 'sweetalert2';
+import PageSkeleton from '../../loaders/PageSkeleton';
 import ModalObservacionConformidad from '../../modals/ModalObservacionConformidad';
 import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
@@ -22,6 +23,7 @@ function RevisionPlanSocial() {
   const token = user?.token;   
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
   const [observacionTexto, setObservacionTexto] = useState('');
+  const [loading, setLoading] = useState(true);
   const [trabajoADeclinar, setTrabajoADeclinar] = useState(null);
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
@@ -33,49 +35,56 @@ function RevisionPlanSocial() {
     setCollapsed(prev => !prev);
   };
 
- useEffect(() => {
-    if (!token) {
-      console.error('Falta el token');
-      return; 
-    }
+useEffect(() => {
+  if (!token) {
+    console.error('Falta el token');
+    setLoading(false);
+    return;
+  }
 
-    const usuarioId = localStorage.getItem('id_usuario');
-    if (!usuarioId) {
-      console.error('Falta el ID del usuario');
-      return; 
-    }
+  const usuarioId = localStorage.getItem('id_usuario');
+  if (!usuarioId) {
+    console.error('Falta el ID del usuario');
+    setLoading(false);
+    return;
+  }
 
-    axios.get(`/api/docentes/usuario/${usuarioId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
-        const docenteId = response.data.id_docente;
+  setLoading(true);
 
-        axios.get(`/api/trabajo-social/docente/${docenteId}/nuevo`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-          .then(res => {
-            setTrabajosSociales(res.data);  
-          })
-          .catch(error => {
-            console.error('Error al obtener los trabajos sociales:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error al obtener trabajos sociales',
-              text: 'No se pudieron cargar los trabajos sociales del docente.',
-            });
-          });
+  axios.get(`/api/docentes/usuario/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(response => {
+      const docenteId = response.data.id_docente;
+
+      axios.get(`/api/trabajo-social/docente/${docenteId}/nuevo`, {
+        headers: { Authorization: `Bearer ${token}` }
       })
-      .catch(error => {
-        console.error('Error al obtener los datos del docente:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al obtener datos del docente',
-          text: 'No se pudo obtener la información del docente.',
+        .then(res => {
+          setTrabajosSociales(res.data);
+        })
+        .catch(error => {
+          console.error('Error al obtener los trabajos sociales:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener trabajos sociales',
+            text: 'No se pudieron cargar los trabajos sociales del docente.',
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
+    })
+    .catch(error => {
+      console.error('Error al obtener los datos del docente:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al obtener datos del docente',
+        text: 'No se pudo obtener la información del docente.',
       });
-  }, [token]); 
-
+      setLoading(false);
+    });
+}, [token]);
 
 
 
@@ -168,33 +177,35 @@ const capitalizarPrimeraLetra = (texto) =>
           <div className="revision-card">
             <h1 className="revision-title">Conformidad Servicio Social</h1>
   
-            <div className="revision-table-wrapper">
-              {trabajosSociales.length > 0 ? (
-                <table className="revision-table">
-                  <thead className="revision-table-thead">
-                    <tr>
-                      <th>Estudiante</th>
-                      <th>Programa Académico</th>
-                      <th>Servicio Social</th>
-                      <th>Estado</th>
-                      <th>Documento</th>
-                      <th>Tipo Servicio So cial</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {trabajosSociales.map((plan) => (
-                      <tr key={plan.id}>
-                        <td>{plan.Estudiante ? plan.Estudiante.nombre_estudiante : 'No disponible'}</td>
-                        <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
-                        <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
-                        <td>
-                          <span className={`estado-badge ${plan.conformidad_plan_social} estado-texto-normal`}>
-                            {capitalizarPrimeraLetra(plan.conformidad_plan_social) || 'No definido'}
-                          </span>
-                        </td>
+        <div className="revision-table-wrapper">
+          {loading ? (
+            <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+          ) : trabajosSociales.length > 0 ? (
+            <table className="revision-table">
+              <thead className="revision-table-thead">
+                <tr>
+                  <th>Estudiante</th>
+                  <th>Programa Académico</th>
+                  <th>Servicio Social</th>
+                  <th>Estado</th>
+                  <th>Documento</th>
+                  <th>Tipo Servicio So cial</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trabajosSociales.map((plan) => (
+                  <tr key={plan.id}>
+                    <td>{plan.Estudiante ? plan.Estudiante.nombre_estudiante : 'No disponible'}</td>
+                    <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
+                    <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
+                    <td>
+                      <span className={`estado-badge ${plan.conformidad_plan_social} estado-texto-normal`}>
+                        {capitalizarPrimeraLetra(plan.conformidad_plan_social) || 'No definido'}
+                      </span>
+                    </td>
 
-                        <td>
+                    <td>
                       {plan.archivo_plan_social ? (
                         <VerBoton
                           label="Ver"
@@ -209,57 +220,59 @@ const capitalizarPrimeraLetra = (texto) =>
                         <span className="texto-no-subido">No subido</span>
                       )}
                     </td>
-                      <td>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                      <span>{plan.tipo_servicio_social}</span>
-                      {plan.tipo_servicio_social === 'grupal' && (
-                        <VerBoton
-                          label="Ver"
-                          title="Ver integrantes del grupo"
-                          onClick={() => handleVerGrupo(plan.id)}
-                        />
-                      )}
-                    </div>
-                  </td>
-                        <td>
-                        {plan.conformidad_plan_social === 'pendiente' ? (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                            <button
-                              className="btn-accion aceptar"
-                              onClick={() => cambiarConformidad(plan.id, 'aceptado')}
-                              disabled={!!cargandoCambioId}
-                            >
-                              Aceptar
-                            </button>
-                            <button
-                              className="btn-accion rechazar"
-                              onClick={() => cambiarConformidad(plan.id, 'rechazado')}
-                              disabled={!!cargandoCambioId}
-                            >
-                              Rechazar
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                        className="btn-accion declinar"
-                        onClick={() => {
-                          setTrabajoADeclinar(plan);
-                          setModalObservacionVisible(true);
-                        }}
-                        disabled={!!cargandoCambioId}
-                      >
-                        Declinar
-                      </button>
+
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                        <span>{plan.tipo_servicio_social}</span>
+                        {plan.tipo_servicio_social === 'grupal' && (
+                          <VerBoton
+                            label="Ver"
+                            title="Ver integrantes del grupo"
+                            onClick={() => handleVerGrupo(plan.id)}
+                          />
                         )}
-                      </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
-              )}
-            </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      {plan.conformidad_plan_social === 'pendiente' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          <button
+                            className="btn-accion aceptar"
+                            onClick={() => cambiarConformidad(plan.id, 'aceptado')}
+                            disabled={!!cargandoCambioId}
+                          >
+                            Aceptar
+                          </button>
+                          <button
+                            className="btn-accion rechazar"
+                            onClick={() => cambiarConformidad(plan.id, 'rechazado')}
+                            disabled={!!cargandoCambioId}
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          className="btn-accion declinar"
+                          onClick={() => {
+                            setTrabajoADeclinar(plan);
+                            setModalObservacionVisible(true);
+                          }}
+                          disabled={!!cargandoCambioId}
+                        >
+                          Declinar
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
+          )}
+        </div>
           </div>
           <div className="revision-footer">
               <button className="revision-btn siguiente" onClick={() => navigate('/revision-documento-docente')}>

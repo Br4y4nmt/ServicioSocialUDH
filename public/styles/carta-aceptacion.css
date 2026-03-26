@@ -1,32 +1,34 @@
-.carta-aceptacion {
+.carta-aceptacion{
+  position: relative;
   padding: 40px;
+  padding-bottom: 250px;
   font-family: "Times New Roman", Times, serif;
   font-size: 14px;
   line-height: 1.6;
   color: #000;
 }
 .carta-firma-docente {
-  margin-top: -20px; /* Puedes ajustar este valor (ej. 70px, 100px) según lo que necesites */
+  margin-top: -20px; 
 }
 .carta-cuerpo {
-  margin-top: 70px; /* Puedes aumentar a 60px o 80px si deseas más espacio */
+  margin-top: 70px; 
 }
 
 .carta-encabezado {
   display: flex;
-  justify-content: space-between; /* Se asegura que los elementos se distribuyan de forma equitativa */
+  justify-content: space-between; 
   align-items: center;
-  margin-bottom: 15px; /* Espaciado ajustado */
+  margin-bottom: 15px;
 }
 
 .carta-logo {
-  width: 160px; /* Reduce the size of the logo */
-  height: auto; /* Maintain the aspect ratio */
+  width: 160px; 
+  height: auto; 
 }
 
 
 .carta-institucion {
-  text-align: center; /* Centrado del texto */
+  text-align: center; 
   font-size: 12pt;
   font-weight: bold;
 }
@@ -37,9 +39,9 @@
   font-size: 15px;
 }
 .separador-vertical {
-  border-left: 2px solid #585757; /* Color de la línea de separación */
-  height: 60px; /* Ajuste de altura */
-  margin: 0 20px; /* Espaciado ajustado */
+  border-left: 2px solid #585757; 
+  height: 60px;
+  margin: 0 20px; 
 }
 .carta-titulo {
   font-weight: bold;
@@ -86,21 +88,18 @@
   height: 50px;
   margin: 0 15px;
 }
-.carta-aceptacion{
-  position: relative;
-  padding-bottom: 150px;  /* súbelo (140–170px según tu firma) */
-}
-/* QR ANCLADO AL PIE DEL CONTENEDOR */
+
 .qr-anchor{
   position: absolute;
   left: 30px;
-  bottom: 0px;            /* 0–4px lo deja pegadito al borde inferior */
+  bottom: 5px;
   display: flex;
   gap: 10px;
   align-items: flex-start;
   z-index: 10;
   page-break-inside: avoid;
 }
+
 .qr-anchor img{
   width: 70px;
   height: 70px;
@@ -110,7 +109,7 @@
   font-size: 10px;
   line-height: 1.2;
   max-width: 300px;
-  margin-top: 12px;
+  margin-top: 0;
 }
 .facultad-container, .programa-container {
   flex: 1;
@@ -120,15 +119,15 @@
 .texto-facultad,
 .texto-programa {
   font-weight: bold;
-  font-size: 14px; /* Aumento en el tamaño del texto */
+  font-size: 14px;
   text-transform: uppercase;
-  color: #333; /* Color oscuro para que se vea claro */
-  text-align: center; /* Centrado del texto */
+  color: #333; 
+  text-align: center;
   margin: 0;
 }
 
 .linea-separadora {
-  width: 100%; /* Se asegura que la línea de separación ocupe todo el ancho */
+  width: 100%;
   height: 1px;
   background-color: #585757;
   margin: 10px 0;

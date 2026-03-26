@@ -44,9 +44,6 @@ const formatearFechaExtendida = (fecha) => {
   return `${fecha.getDate()} de ${meses[fecha.getMonth()]} de ${fecha.getFullYear()}`;
 };
 
-// ==============================
-// GENERADOR DE HTML PARA CARTA
-// ==============================
 
 const generarHTMLCarta = ({ css, trabajo, firmaBase64, qrBase64, nombreDocente, urlVerificacion }) => `
   <html>
@@ -93,7 +90,7 @@ const generarHTMLCarta = ({ css, trabajo, firmaBase64, qrBase64, nombreDocente, 
         </div>
       </div>
       <div class="qr-anchor">
-        <img src="${qrBase64}" alt="QR" />
+        <img src="${qrBase64}" alt="QR"/>
         <div class="qr-text">
           <strong>Documento:</strong> CARTA DE ACEPTACIÓN<br/>
           <strong>URL de Verificación:</strong><br/>
@@ -104,13 +101,6 @@ const generarHTMLCarta = ({ css, trabajo, firmaBase64, qrBase64, nombreDocente, 
   </html>
 `;
 
-// ==============================
-// FUNCIONES PÚBLICAS DEL SERVICIO
-// ==============================
-
-/**
- * Genera un blob PDF de la carta de aceptación
- */
 export const generarCartaPDFBlob = async ({ trabajo, firmaDocente, token }) => {
   const css = await obtenerCSSCarta();
   const firmaBase64 = await convertirImagenABase64(
@@ -142,9 +132,6 @@ export const generarCartaPDFBlob = async ({ trabajo, firmaDocente, token }) => {
   return blob;
 };
 
-/**
- * Genera y sube el PDF de carta de aceptación al servidor
- */
 export const generarYSubirCartaPDF = async ({ trabajo, firmaDocente, token }) => {
   const blob = await generarCartaPDFBlob({ trabajo, firmaDocente, token });
 
@@ -160,14 +147,10 @@ export const generarYSubirCartaPDF = async ({ trabajo, firmaDocente, token }) =>
   });
 };
 
-/**
- * Genera y sube cartas para todos los integrantes de un grupo
- */
+
 export const generarCartasGrupales = async ({ trabajo, integrantes, firmaDocente, token }) => {
-  // Primero generar la carta principal del grupo
   await generarYSubirCartaPDF({ trabajo, firmaDocente, token });
 
-  // Luego generar carta individual para cada integrante
   for (const integrante of integrantes) {
     const trabajoIntegrante = {
       ...trabajo,

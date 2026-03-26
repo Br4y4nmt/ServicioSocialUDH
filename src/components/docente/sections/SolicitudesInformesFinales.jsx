@@ -10,6 +10,7 @@ import { showTopSuccessToast, showTopErrorToast, showTopWarningToast } from '../
 import { useUser } from '../../../UserContext';
 import Header from '../../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
+import PageSkeleton from '../../loaders/PageSkeleton';
 import Spinner from 'components/ui/Spinner';
 import '../DashboardDocente.css';
 
@@ -21,6 +22,7 @@ export default function SolicitudesInformesFinales() {
   const [informesFinales, setInformesFinales] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [procesandoId, setProcesandoId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [modalRechazoVisible, setModalRechazoVisible] = useState(false);
@@ -31,19 +33,27 @@ export default function SolicitudesInformesFinales() {
     setCollapsed((c) => !c);
   }, []);
 
-  const fetchData = useCallback(async () => {
-    if (!token) return;
-    try {
-      const { data } = await axios.get('/api/trabajo-social/informes-finales', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const fetchData = useCallback(async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-      const lista = Array.isArray(data) ? data : [];
-      setInformesFinales(lista);
-    } catch (error) {
-      console.error('Error cargando informes finales:', error);
-    }
-  }, [token]);
+      try {
+        setLoading(true);
+
+        const { data } = await axios.get('/api/trabajo-social/informes-finales', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const lista = Array.isArray(data) ? data : [];
+        setInformesFinales(lista);
+      } catch (error) {
+        console.error('Error cargando informes finales:', error);
+      } finally {
+        setLoading(false);
+      }
+    }, [token]);
 
   useEffect(() => {
     fetchData();
@@ -185,165 +195,166 @@ export default function SolicitudesInformesFinales() {
               </div>
             </div>
 
-            <div className="revision-table-wrapper">
-              <table className="revision-table">
-                <thead className="revision-table-thead">
-                  <tr>
-                    <th>Nº</th>
-                    <th>Estudiante</th>
-                    <th>Programa</th>
-                    <th>Plan</th>
-                    <th>Fecha de Envío</th>
-                    <th>Informe final</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
+<div className="revision-table-wrapper">
+  {loading ? (
+    <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+  ) : informesFinales.filter((inf) =>
+      buscarSinTildes(
+        inf.Estudiante?.nombre_estudiante || '',
+        busqueda
+      )
+    ).length > 0 ? (
+    <table className="revision-table">
+      <thead className="revision-table-thead">
+        <tr>
+          <th>Nº</th>
+          <th>Estudiante</th>
+          <th>Programa</th>
+          <th>Plan</th>
+          <th>Fecha de Envío</th>
+          <th>Informe final</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
 
-                <tbody>
-                  {informesFinales
-                    .filter((inf) =>
-                      buscarSinTildes(
-                        inf.Estudiante?.nombre_estudiante || '',
-                        busqueda
+      <tbody>
+        {informesFinales
+          .filter((inf) =>
+            buscarSinTildes(
+              inf.Estudiante?.nombre_estudiante || '',
+              busqueda
+            )
+          )
+          .map((inf, index) => (
+            <tr key={inf.id}>
+              <td>{index + 1}</td>
+
+              <td>
+                {(inf.Estudiante?.nombre_estudiante || 'SIN NOMBRE').toUpperCase()}
+              </td>
+
+              <td>
+                {(inf.ProgramasAcademico?.nombre_programa || 'SIN PROGRAMA').toUpperCase()}
+              </td>
+
+              <td>
+                {inf.archivo_plan_social ? (
+                  <VerBoton
+                    label="Ver"
+                    onClick={() =>
+                      window.open(
+                        `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${inf.archivo_plan_social}`,
+                        '_blank',
+                        'noopener,noreferrer'
                       )
-                    )
-                    .map((inf, index) => (
-                      <tr key={inf.id}>
-                        <td>{index + 1}</td>
-                        <td>
-                          {(inf.Estudiante?.nombre_estudiante ||
-                            'SIN NOMBRE'
-                          ).toUpperCase()}
-                        </td>
-                        <td>
-                          {(inf.ProgramasAcademico?.nombre_programa ||
-                            'SIN PROGRAMA'
-                          ).toUpperCase()}
-                        </td>
+                    }
+                  />
+                ) : (
+                  <span className="no-generado">NO SUBIDO</span>
+                )}
+              </td>
 
-                        <td>
-                          {inf.archivo_plan_social ? (
-                            <VerBoton
-                              label="Ver"
-                              onClick={() =>
-                                window.open(
-                                  `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${inf.archivo_plan_social}`,
-                                  '_blank',
-                                  'noopener,noreferrer'
-                                )
-                              }
-                            />
-                          ) : (
-                            <span className="no-generado">
-                              NO SUBIDO
-                            </span>
-                          )}
-                        </td>
+              <td>
+                {new Date(inf.createdAt).toLocaleDateString()}
+              </td>
 
-                        <td>
-                          {new Date(inf.createdAt).toLocaleDateString()}
-                        </td>
+              <td>
+                {inf.informe_final_pdf ? (
+                  <VerBoton
+                    label="Ver"
+                    onClick={() =>
+                      window.open(
+                        `${process.env.REACT_APP_API_URL}/uploads/informes_finales/${inf.informe_final_pdf}`,
+                        '_blank',
+                        'noopener,noreferrer'
+                      )
+                    }
+                  />
+                ) : (
+                  <span className="no-generado">NO GENERADO</span>
+                )}
+              </td>
 
-                        <td>
-                          {inf.informe_final_pdf ? (
-                            <VerBoton
-                              label="Ver"
-                              onClick={() =>
-                                window.open(
-                                  `${process.env.REACT_APP_API_URL}/uploads/informes_finales/${inf.informe_final_pdf}`,
-                                  '_blank',
-                                  'noopener,noreferrer'
-                                )
-                              }
-                            />
-                          ) : (
-                            <span className="no-generado">
-                              NO GENERADO
-                            </span>
-                          )}
-                        </td>
+              <td>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>
+                    {(
+                      inf.trabajo_social?.tipo_servicio_social ||
+                      inf.tipo_servicio_social ||
+                      'N/D'
+                    ).toUpperCase()}
+                  </span>
 
-                        <td>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                            <span>
-                              {(
-                                inf.trabajo_social?.tipo_servicio_social ||
-                                inf.tipo_servicio_social ||
-                                'N/D'
-                              ).toUpperCase()}
-                            </span>
-                            {(inf.trabajo_social?.tipo_servicio_social || inf.tipo_servicio_social) === 'grupal' && (
-                              <VerBoton
-                                label="Ver"
-                                title="Ver integrantes del grupo"
-                                onClick={() => handleVerGrupo(inf.id)}
-                              />
-                            )}
-                          </div>
-                        </td>
+                  {(inf.trabajo_social?.tipo_servicio_social || inf.tipo_servicio_social) === 'grupal' && (
+                    <VerBoton
+                      label="Ver"
+                      title="Ver integrantes del grupo"
+                      onClick={() => handleVerGrupo(inf.id)}
+                    />
+                  )}
+                </div>
+              </td>
 
-                        <td style={{ textAlign: 'center' }}>
-                          {inf.estado_informe_final ===
-                          'pendiente' ? (
-                            <div
-                              style={{
-                                display: 'flex',
-                                gap: 8,
-                                justifyContent: 'center',
-                              }}
-                            >
-                              <button
-                                className="btn-accion aceptar"
-                                onClick={() =>
-                                  handleAprobar(inf.id)
-                                }
-                                disabled={
-                                  procesandoId === inf.id
-                                }
-                              >
-                                {procesandoId === inf.id ? (
-                                  <>
-                                    <Spinner size={16} />
-                                    <span style={{ marginLeft: 8 }}>Procesando...</span>
-                                  </>
-                                ) : (
-                                  'Aprobar'
-                                )}
-                              </button>
+              <td style={{ textAlign: 'center' }}>
+                {inf.estado_informe_final === 'pendiente' ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 8,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <button
+                      className="btn-accion aceptar"
+                      onClick={() => handleAprobar(inf.id)}
+                      disabled={procesandoId === inf.id}
+                    >
+                      {procesandoId === inf.id ? (
+                        <>
+                          <Spinner size={16} />
+                          <span style={{ marginLeft: 8 }}>Procesando...</span>
+                        </>
+                      ) : (
+                        'Aprobar'
+                      )}
+                    </button>
 
-                              <button
-                                className="btn-accion rechazar"
-                                onClick={() =>
-                                  handleRechazar(inf)
-                                }
-                                disabled={
-                                  procesandoId === inf.id
-                                }
-                              >
-                                Rechazar
-                              </button>
-                            </div>
-                          ) : (
-                            <span
-                              className={`badge-estado ${
-                                inf.estado_informe_final ===
-                                'aprobado'
-                                  ? 'aprobado'
-                                  : 'rechazado'
-                              }`}
-                            >
-                              {(
-                                inf.estado_informe_final || ''
-                              ).toUpperCase()}
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+                    <button
+                      className="btn-accion rechazar"
+                      onClick={() => handleRechazar(inf)}
+                      disabled={procesandoId === inf.id}
+                    >
+                      Rechazar
+                    </button>
+                  </div>
+                ) : (
+                  <span
+                    className={`badge-estado ${
+                      inf.estado_informe_final === 'aprobado'
+                        ? 'aprobado'
+                        : 'rechazado'
+                    }`}
+                  >
+                    {(inf.estado_informe_final || '').toUpperCase()}
+                  </span>
+                )}
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+  ) : (
+    <p className="revision-no-data">No se encontraron informes finales.</p>
+  )}
+</div>
           </div>
         </div>
       </main>

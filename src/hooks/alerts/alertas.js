@@ -83,6 +83,19 @@ export const mostrarAlertaCompletarPerfilPrimeraVez = () => {
     confirmButtonColor: '#011B4B',
     allowOutsideClick: false,
     allowEscapeKey: false,
+    didOpen: () => {
+      const btn = Swal.getConfirmButton();
+
+      if (btn) {
+        btn.addEventListener('mouseenter', () => {
+          btn.style.backgroundColor = '#03307a';
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          btn.style.backgroundColor = '#011B4B';
+        });
+      }
+    },
   });
 };
 

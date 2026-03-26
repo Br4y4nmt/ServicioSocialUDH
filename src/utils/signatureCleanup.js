@@ -1,21 +1,63 @@
 
-export async function postProcessSignature(pngBlob, alphaThreshold = 180) {
+export async function postProcessSignature(
+  pngBlob,
+  alphaThreshold = 180,
+  targetWidth = 832,
+  targetHeight = 474
+) {
   const img = await blobToImage(pngBlob);
+
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
   canvas.width = img.width;
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const d = imageData.data;
-  for (let i = 0; i < d.length; i += 4) d[i + 3] = d[i + 3] < alphaThreshold ? 0 : 255;
+
+  for (let i = 0; i < d.length; i += 4) {
+    d[i + 3] = d[i + 3] < alphaThreshold ? 0 : 255;
+  }
+
   ctx.putImageData(imageData, 0, 0);
 
+  // Recorta espacios transparentes
   const trimmed = trimTransparent(canvas, 5);
+
+  // Canvas final con tamaño fijo
+  const finalCanvas = document.createElement('canvas');
+  const finalCtx = finalCanvas.getContext('2d', { willReadFrequently: true });
+
+  finalCanvas.width = targetWidth;
+  finalCanvas.height = targetHeight;
+
+  // Fondo transparente
+  finalCtx.clearRect(0, 0, targetWidth, targetHeight);
+
+  // Escalado proporcional SIN deformar
+  const scale = Math.min(
+    targetWidth / trimmed.width,
+    targetHeight / trimmed.height
+  );
+
+  const drawWidth = trimmed.width * scale;
+  const drawHeight = trimmed.height * scale;
+
+  // Centrado
+  const x = (targetWidth - drawWidth) / 2;
+  const y = (targetHeight - drawHeight) / 2;
+
+  finalCtx.drawImage(trimmed, x, y, drawWidth, drawHeight);
+
   const blob = await new Promise((resolve) => {
-    trimmed.toBlob((b) => resolve(b || dataURLToBlob(trimmed.toDataURL('image/png'))), 'image/png');
+    finalCanvas.toBlob(
+      (b) => resolve(b || dataURLToBlob(finalCanvas.toDataURL('image/png'))),
+      'image/png'
+    );
   });
+
   return blob;
 }
 
