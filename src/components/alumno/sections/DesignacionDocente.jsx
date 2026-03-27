@@ -322,16 +322,6 @@ const eliminarEleccion = useCallback(async () => {
         <h4 className="titulo-aceptacion">Carta de aceptación</h4>
       </div>
         <div className="respuesta-acciones">
-          {estadoPlan === "aceptado" && (
-            <VerBotonInline
-              onClick={() =>
-                window.open(
-                `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaAceptacionPdf}`,
-                "_blank"
-              )
-              }
-            />
-              )}
               {estadoPlan === "rechazado" && (
                   <button
                     className="btn-motivo-rechazo"

@@ -23,14 +23,40 @@ function ActividadModalAlumno({
 
   const hoyISO = new Date().toISOString().split("T")[0];
 
+  const contarPalabras = (texto) => {
+    return texto.trim() === "" ? 0 : texto.trim().split(/\s+/).length;
+  };
+
   const handleGuardar = async () => {
     if (nuevaActividad.trim() === "" || nuevaFecha.trim() === "") {
-      await alertWarning('Campos incompletos', 'Completa todos los campos obligatorios antes de guardar.');
+      await alertWarning(
+        "Campos incompletos",
+        "Completa todos los campos obligatorios antes de guardar."
+      );
       return;
     }
 
-    if ((nuevaFechaFin || '').trim() === '') {
-      await alertWarning('Fecha fin requerida', 'Ingresa la fecha fin de la actividad.');
+    if (contarPalabras(nuevaActividad) > 40) {
+      await alertWarning(
+        "Actividad demasiado larga",
+        "El campo Actividad permite como máximo 40 palabras."
+      );
+      return;
+    }
+
+    if (contarPalabras(nuevaJustificacion) > 40) {
+      await alertWarning(
+        "Justificación demasiado larga",
+        "El campo Justificación permite como máximo 40 palabras."
+      );
+      return;
+    }
+
+    if ((nuevaFechaFin || "").trim() === "") {
+      await alertWarning(
+        "Fecha fin requerida",
+        "Ingresa la fecha fin de la actividad."
+      );
       return;
     }
 
@@ -42,12 +68,18 @@ function ActividadModalAlumno({
       const diasDiferencia = diferenciaMs / (1000 * 60 * 60 * 24);
 
       if (diasDiferencia > 30) {
-        await alertError('Duración excedida', 'Cada actividad puede durar como máximo 30 días.');
+        await alertError(
+          "Duración excedida",
+          "Cada actividad puede durar como máximo 30 días."
+        );
         return;
       }
 
       if (diasDiferencia < 0) {
-        await alertError('Fechas inválidas', 'La fecha fin no puede ser anterior a la fecha de inicio.');
+        await alertError(
+          "Fechas inválidas",
+          "La fecha fin no puede ser anterior a la fecha de inicio."
+        );
         return;
       }
     }
@@ -92,6 +124,13 @@ function ActividadModalAlumno({
             onChange={(e) => setNuevaActividad(e.target.value)}
             placeholder="Ingrese nombre de la actividad"
           />
+          <small
+            style={{
+              color: contarPalabras(nuevaActividad) > 40 ? "red" : "#666",
+            }}
+          >
+            {contarPalabras(nuevaActividad)} / 40 palabras
+          </small>
         </div>
 
         <div className="form-group">
@@ -102,6 +141,13 @@ function ActividadModalAlumno({
             onChange={(e) => setNuevaJustificacion(e.target.value)}
             placeholder="Describa aquí..."
           />
+          <small
+            style={{
+              color: contarPalabras(nuevaJustificacion) > 40 ? "red" : "#666",
+            }}
+          >
+            {contarPalabras(nuevaJustificacion)} / 40 palabras
+          </small>
         </div>
 
         <div className="form-group">

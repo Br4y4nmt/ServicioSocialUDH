@@ -186,21 +186,21 @@ const FilaTrabajo = memo(function FilaTrabajo({
               {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Aceptar'}
             </button>
 
-            <button
-              className="btn-accion rechazar"
-              onClick={() => handleCambiarEstado(trabajo, 'rechazado')}
-              disabled={trabajoEnProcesoId === trabajo.id}
-            >
-              {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Rechazar'}
-            </button>
+        <button
+          className="btn-accion rechazar"
+          onClick={() => abrirModalDeclinar(trabajo, 'rechazar')}
+          disabled={trabajoEnProcesoId === trabajo.id}
+        >
+          {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Rechazar'}
+        </button>
           </div>
         ) : (
-          <button
-            className="boton-declinar"
-            onClick={() => abrirModalDeclinar(trabajo)}
-          >
-            Declinar
-          </button>
+      <button
+        className="boton-declinar"
+        onClick={() => abrirModalDeclinar(trabajo, 'declinar')}
+      >
+        Declinar
+      </button>
         )}
       </td>
 
@@ -249,6 +249,8 @@ function DashboardDocente() {
     handleDeclinar,
     abrirModalDeclinar,
     cerrarModalDeclinar,
+    accionModalDeclinar,
+    handleRechazarConObservacion,
     navigate
   } = useDashboardDocente();
 
@@ -293,7 +295,9 @@ function DashboardDocente() {
           observacionDeclinar={observacionDeclinar}
           setObservacionDeclinar={setObservacionDeclinar}
           cerrarModalDeclinar={cerrarModalDeclinar}
+          accionModalDeclinar={accionModalDeclinar}
           handleDeclinar={handleDeclinar}
+          handleRechazarConObservacion={handleRechazarConObservacion}
           modalGrupoVisible={modalGrupoVisible}
           integrantesGrupo={integrantesGrupo}
           cerrarModalGrupo={cerrarModalGrupo}

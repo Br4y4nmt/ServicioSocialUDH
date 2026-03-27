@@ -157,20 +157,7 @@ export function useDashboardAlumno() {
     fetchProgramas();
   }, [activeSection, facultadSeleccionada, user?.token]);
 
-  useEffect(() => {
-    if (activeSection !== 'designacion' || !user?.token) return;
-    const fetchFacultades = async () => {
-      try {
-        const res = await axios.get('/api/facultades', {
-          headers: { Authorization: `Bearer ${user.token}` }
-        });
-        setFacultades(res.data);
-      } catch (error) {
-        console.error('Error al obtener facultades:', error);
-      }
-    };
-    fetchFacultades();
-  }, [user?.token, activeSection]);
+
 
   useEffect(() => {
     if (facultades.length > 0 && facultadSeleccionada) {

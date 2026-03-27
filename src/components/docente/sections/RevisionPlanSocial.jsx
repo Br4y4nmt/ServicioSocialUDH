@@ -128,8 +128,6 @@ function RevisionPlanSocial() {
       title: `¿Estás seguro de ${accion} este trabajo?`,
       text: `Esta acción marcará el trabajo como ${nuevoEstado}.`,
       icon: 'warning',
-      confirmButtonColor: nuevoEstado === 'aceptado' ? '#28a745' : '#d33',
-      cancelButtonColor: '#6c757d',
       confirmButtonText: `Sí, ${accion}`,
       cancelButtonText: 'Cancelar'
     });

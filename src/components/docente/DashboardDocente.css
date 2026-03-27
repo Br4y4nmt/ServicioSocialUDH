@@ -516,8 +516,8 @@
 .modal-grupo-content {
   background: #fff;
   padding: 24px 28px;
-  border-radius: 14px;
-  width: 500px; 
+  border-radius: 6px;
+  width: 600px; 
   max-width: 95%; 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease-in-out;

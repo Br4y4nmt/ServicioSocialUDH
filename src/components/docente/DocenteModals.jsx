@@ -3,8 +3,8 @@ import React, { lazy, Suspense, memo } from 'react';
 const EditarEstadoModal = lazy(() => import('../modals/EditarEstadoModal'));
 const ModalObservacionConformidad = lazy(() => import('../modals/ModalObservacionConformidad'));
 const GrupoDocenteModal = lazy(() => import('../modals/GrupoDocenteModal'));
-const DocenteModals = memo(function DocenteModals({
 
+const DocenteModals = memo(function DocenteModals({
   modalVisible,
   nuevoEstado,
   setNuevoEstado,
@@ -15,6 +15,8 @@ const DocenteModals = memo(function DocenteModals({
   setObservacionDeclinar,
   cerrarModalDeclinar,
   handleDeclinar,
+  accionModalDeclinar,
+  handleRechazarConObservacion,
   modalGrupoVisible,
   integrantesGrupo,
   cerrarModalGrupo
@@ -32,7 +34,11 @@ const DocenteModals = memo(function DocenteModals({
         observacion={observacionDeclinar}
         onObservacionChange={setObservacionDeclinar}
         onCancelar={cerrarModalDeclinar}
-        onEnviar={handleDeclinar}
+        onEnviar={
+          accionModalDeclinar === 'rechazar'
+            ? handleRechazarConObservacion
+            : handleDeclinar
+        }
       />
 
       <EditarEstadoModal

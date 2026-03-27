@@ -1,4 +1,3 @@
-// src/components/modals/GrupoDocenteModal.jsx
 import React from "react";
 
 function GrupoDocenteModal({

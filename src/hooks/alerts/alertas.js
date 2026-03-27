@@ -13,10 +13,10 @@ export const alertconfirmacion = ({
   title = '¿Estás seguro?',
   text = 'Esta acción eliminará el programa académico de forma permanente.',
   icon = 'warning',
-  confirmButtonText = 'Sí, eliminar',
+  confirmButtonText = 'Sí, confirmar',
   cancelButtonText = 'Cancelar',
-  confirmButtonColor = '#d33',
-  cancelButtonColor = '#083A59',
+  confirmButtonColor = '#2EBAA1',
+  cancelButtonColor = '#011B4B',
 } = {}) => {
   return Swal.fire({
     title,
@@ -99,18 +99,6 @@ export const mostrarAlertaCompletarPerfilPrimeraVez = () => {
   });
 };
 
-export const alertquestion = () => {
-  return Swal.fire({
-    title: '¿Estás seguro de aceptar al estudiante?',
-    text: 'Esta acción generará la carta de aceptación y no podrá ser revertida.',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, aceptar',
-    cancelButtonText: 'Cancelar'
-  });
-};
 export const mostrarErrorEliminarEleccion = () =>
   Swal.fire("Error", "No se pudo eliminar la elección.", "error");
 

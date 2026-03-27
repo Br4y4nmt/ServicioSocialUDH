@@ -151,7 +151,7 @@ function SupervisorSection({
                                 label="Ver"
                                 onClick={() =>
                                   window.open(
-                                    `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaPdf}`,
+                                    `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaPdf}`,
                                     "_blank",
                                     "noopener,noreferrer"
                                   )

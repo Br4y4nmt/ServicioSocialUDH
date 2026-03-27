@@ -13,7 +13,7 @@ axios.interceptors.response.use(
       Swal.fire({
         icon: 'warning',
         title: 'Sesi贸n expirada',
-        text: 'Tu sesi贸n ha caducado. Por favor, vuelve a iniciar sesi贸n.',
+        text: 'Tu sesion ha caducado. Por favor, vuelve a iniciar sesion.',
         confirmButtonText: 'OK'
       }).then(() => {
         localStorage.removeItem('token');
