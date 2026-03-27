@@ -288,6 +288,10 @@
   display: block; 
   transition: background-color 0.3s, transform 0.2s;
 }
+.btn-solicitar-aprobaciones:hover {
+  background-color: #011B4B;
+  transform: translateY(-2px);
+}
 
 .button-container {
   display: flex;

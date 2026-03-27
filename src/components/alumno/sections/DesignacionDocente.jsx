@@ -326,9 +326,9 @@ const eliminarEleccion = useCallback(async () => {
             <VerBotonInline
               onClick={() =>
                 window.open(
-                  `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
-                  "_blank"
-                )
+                `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaAceptacionPdf}`,
+                "_blank"
+              )
               }
             />
               )}
@@ -421,9 +421,9 @@ const eliminarEleccion = useCallback(async () => {
     <VerBotonInline
       onClick={() =>
         window.open(
-          `${process.env.REACT_APP_API_URL}/uploads/planes_labor_social/${cartaAceptacionPdf}`,
-          "_blank"
-        )
+        `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaAceptacionPdf}`,
+        "_blank"
+      )
       }
     />
     <span className="estado-tramitado">Tramitado</span>

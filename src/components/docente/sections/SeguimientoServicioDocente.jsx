@@ -21,13 +21,11 @@ import {
   alertSuccess,
 } from "../../../hooks/alerts/alertas";
 import FullScreenSpinner from 'components/ui/FullScreenSpinner';
-
-
+import TablePagination from '../../ui/TablePagination';
 
 function SeguimientoServicioDocente() {
   const [collapsed, setCollapsed] = useState(false);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  //const [cronogramas, setCronogramas] = useState([]);
   const [activeSection, setActiveSection] = useState('seguimiento');
   const [modalVisible, setModalVisible] = useState(false);
   const [cronogramaSeleccionado, setCronogramaSeleccionado] = useState([]);
@@ -38,269 +36,270 @@ function SeguimientoServicioDocente() {
   const [loading, setLoading] = useState(true);
   const [actividadSeleccionadaId, setActividadSeleccionadaId] = useState(null);
   const [modalObservacionVisible, setModalObservacionVisible] = useState(false);
-  //const [planPDF] = useState(null);
-  //const [fechaPDF] = useState('');
-  const { user } = useUser();  
-  const token = user?.token; 
+  const { user } = useUser();
+  const token = user?.token;
   const [firmaDocente, setFirmaDocente] = useState('');
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [isAprobando, setIsAprobando] = useState(false);
   const [progresoAprobacion, setProgresoAprobacion] = useState({ actual: 0, total: 0, mensaje: '' });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  const totalPages = Math.max(1, Math.ceil(trabajosSociales.length / ITEMS_PER_PAGE));
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const trabajosSocialesPagina = trabajosSociales.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   const handleVerGrupo = async (trabajoId) => {
-  try {
-    const response = await axios.get(`/api/integrantes/${trabajoId}`, {
-      headers: { Authorization: `Bearer ${token}` }  
-    });
-
-    const integrantes = Array.isArray(response.data)
-      ? response.data.map((item) => ({
-          correo: item.correo || item.correo_institucional || 'CORREO NO DISPONIBLE',
-          nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
-        }))
-      : [];
-
-    setIntegrantesGrupo(integrantes);
-    setModalGrupoVisible(true);
-    
-  } catch (error) {
-    console.error('Error al obtener integrantes del grupo:', error);
-    alert('No se pudieron cargar los integrantes del grupo');
-  }
-};
-
-const cerrarModalGrupo = useCallback(() => {
-  setModalGrupoVisible(false);
-  setIntegrantesGrupo([]);
-}, []);
-
-const toggleSidebar = useCallback(() => {
-  setCollapsed(prev => !prev);
-}, []);
-
-
-const actualizarSolicitud = useCallback(async (trabajoId, nuevoEstado, plan) => {
-  if (isAprobando) return;
-
-  try {
-    if (nuevoEstado === "rechazada") {
-      const result = await alertconfirmacion({
-        title: 'Rechazar solicitud',
-        text: '¿Deseas rechazar esta solicitud de término? Esta acción no se puede deshacer.',
-        icon: 'warning',
-        confirmButtonText: 'Sí, rechazar',
-        cancelButtonText: 'Cancelar'
-      });
-      if (!result.isConfirmed) return;
-    }
-
-    if (nuevoEstado === "aprobada") {
-      setIsAprobando(true);
-      setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Iniciando aprobación..." });
-      await new Promise((r) => setTimeout(r, 50));
-    }
-
-    await axios.patch(
-      `/api/trabajo-social/${trabajoId}/respuesta-carta-termino`,
-      { solicitud_termino: nuevoEstado },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    setTrabajosSociales((prev) =>
-      prev.map((t) => (t.id === trabajoId ? { ...t, solicitud_termino: nuevoEstado } : t))
-    );
-
-    if (nuevoEstado === "aprobada") {
-      try {
-        await procesarAprobacionCartasTermino({
-          plan,
-          firmaBase64: firmaDocente,
-          token,
-          onProgreso: setProgresoAprobacion
-        });
-      } catch (err) {
-        if (err.message === 'SIN_DATOS_INTEGRANTES') {
-          await Swal.fire({
-            icon: "warning",
-            title: "Sin integrantes del grupo",
-            text: "No se encontraron integrantes para generar cartas de término.",
-          });
-          return;
-        }
-        throw err;
-      }
-
-      setIsAprobando(false);
-      setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
-      await new Promise((r) => setTimeout(r, 50));
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: "Solicitud actualizada",
-      text: `La solicitud fue ${nuevoEstado === "aprobada" ? "aprobada" : "rechazada"} correctamente.`,
-      timer: 2500,
-      timerProgressBar: true,
-      showConfirmButton: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    });
-
-  } catch (error) {
-    console.error("Error al actualizar solicitud:", error);
-    setIsAprobando(false);
-    setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "No se pudo actualizar la solicitud de término.",
-    });
-  }
-}, [isAprobando, token, firmaDocente]);
-
-
-
-useEffect(() => {
-  const cargarDatos = async () => {
-    const usuarioId = localStorage.getItem('id_usuario');
-
-    if (!usuarioId || !token) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
     try {
-      const { data: docente } = await axios.get(`/api/docentes/usuario/${usuarioId}`, {
+      const response = await axios.get(`/api/integrantes/${trabajoId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      const firmaBase64 = await obtenerFirmaDocenteBase64(docente.firma, token);
-      setFirmaDocente(firmaBase64);
+      const integrantes = Array.isArray(response.data)
+        ? response.data.map((item) => ({
+            correo: item.correo || item.correo_institucional || 'CORREO NO DISPONIBLE',
+            nombre: item.nombre || item.nombre_completo || 'NOMBRE NO DISPONIBLE'
+          }))
+        : [];
 
-      const { data: trabajos } = await axios.get(`/api/trabajo-social/docente/${docente.id_docente}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      setIntegrantesGrupo(integrantes);
+      setModalGrupoVisible(true);
 
-      setTrabajosSociales(trabajos);
-    } catch (err) {
-      console.error('Error cargando datos:', err);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Error al obtener integrantes del grupo:', error);
+      alert('No se pudieron cargar los integrantes del grupo');
     }
   };
 
-  cargarDatos();
-}, [token]);
+  const cerrarModalGrupo = useCallback(() => {
+    setModalGrupoVisible(false);
+    setIntegrantesGrupo([]);
+  }, []);
 
+  const toggleSidebar = useCallback(() => {
+    setCollapsed(prev => !prev);
+  }, []);
 
-const handleVerSeguimiento = (trabajoId) => {
-  axios.get(`/api/cronograma/trabajo/${trabajoId}`, {
-    headers: { Authorization: `Bearer ${token}` } 
-  })
-    .then(res => {
-      setCronogramaSeleccionado(res.data);
-      setModalVisible(true);
+  const actualizarSolicitud = useCallback(async (trabajoId, nuevoEstado, plan) => {
+    if (isAprobando) return;
+
+    try {
+      if (nuevoEstado === "rechazada") {
+        const result = await alertconfirmacion({
+          title: 'Rechazar solicitud',
+          text: '¿Deseas rechazar esta solicitud de término? Esta acción no se puede deshacer.',
+          icon: 'warning',
+          confirmButtonText: 'Sí, rechazar',
+          cancelButtonText: 'Cancelar'
+        });
+        if (!result.isConfirmed) return;
+      }
+
+      if (nuevoEstado === "aprobada") {
+        setIsAprobando(true);
+        setProgresoAprobacion({ actual: 0, total: 0, mensaje: "Iniciando aprobación..." });
+        await new Promise((r) => setTimeout(r, 50));
+      }
+
+      await axios.patch(
+        `/api/trabajo-social/${trabajoId}/respuesta-carta-termino`,
+        { solicitud_termino: nuevoEstado },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setTrabajosSociales((prev) =>
+        prev.map((t) => (t.id === trabajoId ? { ...t, solicitud_termino: nuevoEstado } : t))
+      );
+
+      if (nuevoEstado === "aprobada") {
+        try {
+          await procesarAprobacionCartasTermino({
+            plan,
+            firmaBase64: firmaDocente,
+            token,
+            onProgreso: setProgresoAprobacion
+          });
+        } catch (err) {
+          if (err.message === 'SIN_DATOS_INTEGRANTES') {
+            await Swal.fire({
+              icon: "warning",
+              title: "Sin integrantes del grupo",
+              text: "No se encontraron integrantes para generar cartas de término.",
+            });
+            return;
+          }
+          throw err;
+        }
+
+        setIsAprobando(false);
+        setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
+        await new Promise((r) => setTimeout(r, 50));
+      }
+
+      await Swal.fire({
+        icon: "success",
+        title: "Solicitud actualizada",
+        text: `La solicitud fue ${nuevoEstado === "aprobada" ? "aprobada" : "rechazada"} correctamente.`,
+        timer: 2500,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+
+    } catch (error) {
+      console.error("Error al actualizar solicitud:", error);
+      setIsAprobando(false);
+      setProgresoAprobacion({ actual: 0, total: 0, mensaje: "" });
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar la solicitud de término.",
+      });
+    }
+  }, [isAprobando, token, firmaDocente]);
+
+  useEffect(() => {
+    const cargarDatos = async () => {
+      const usuarioId = localStorage.getItem('id_usuario');
+
+      if (!usuarioId || !token) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const { data: docente } = await axios.get(`/api/docentes/usuario/${usuarioId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const firmaBase64 = await obtenerFirmaDocenteBase64(docente.firma, token);
+        setFirmaDocente(firmaBase64);
+
+        const { data: trabajos } = await axios.get(`/api/trabajo-social/docente/${docente.id_docente}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setTrabajosSociales(trabajos);
+      } catch (err) {
+        console.error('Error cargando datos:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
+  }, [token]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handleVerSeguimiento = (trabajoId) => {
+    axios.get(`/api/cronograma/trabajo/${trabajoId}`, {
+      headers: { Authorization: `Bearer ${token}` }
     })
-    .catch(err => console.error('Error al obtener cronograma:', err));
-};
+      .then(res => {
+        setCronogramaSeleccionado(res.data);
+        setModalVisible(true);
+      })
+      .catch(err => console.error('Error al obtener cronograma:', err));
+  };
 
+  const handleVerEvidencia = (nombreArchivo) => {
+    setImagenEvidencia(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${nombreArchivo}`);
+    setModalEvidenciaVisible(true);
+  };
 
-const handleVerEvidencia = (nombreArchivo) => {
-  setImagenEvidencia(`${process.env.REACT_APP_API_URL}/uploads/evidencias/${nombreArchivo}`);
-  setModalEvidenciaVisible(true);
-};
-
-const handleCerrarModalEvidencia = () => {
-  setModalEvidenciaVisible(false);
-  setImagenEvidencia('');
-};
-
+  const handleCerrarModalEvidencia = () => {
+    setModalEvidenciaVisible(false);
+    setImagenEvidencia('');
+  };
 
   const handleCloseModal = () => {
     setModalVisible(false);
     setCronogramaSeleccionado([]);
   };
 
+  const handleAprobar = async (actividadId) => {
+    const result = await alertconfirmacion({
+      title: 'Aprobar actividad',
+      text: '¿Estás seguro de aprobar esta actividad? Se marcará como aprobada.',
+      icon: 'question',
+      confirmButtonText: 'Sí, aprobar',
+      cancelButtonText: 'Cancelar'
+    });
 
-const handleAprobar = async (actividadId) => {
-  const result = await alertconfirmacion({
-    title: 'Aprobar actividad',
-    text: '¿Estás seguro de aprobar esta actividad? Se marcará como aprobada.',
-    icon: 'question',
-    confirmButtonText: 'Sí, aprobar',
-    cancelButtonText: 'Cancelar'
-  });
+    if (!result.isConfirmed) return;
 
-  if (!result.isConfirmed) return;
+    try {
+      await axios.patch(
+        `/api/cronograma/${actividadId}/estado`,
+        { estado: "aprobado" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-  try {
-    await axios.patch(
-      `/api/cronograma/${actividadId}/estado`,
-      { estado: "aprobado" },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      setCronogramaSeleccionado((prev) =>
+        prev.map((act) =>
+          act.id === actividadId ? { ...act, estado: "aprobado" } : act
+        )
+      );
 
-    setCronogramaSeleccionado((prev) =>
-      prev.map((act) =>
-        act.id === actividadId ? { ...act, estado: "aprobado" } : act
-      )
-    );
-    showTopSuccessToast(
-      "¡Aprobado!",
-      "La actividad fue aprobada correctamente."
-    );
-  } catch (err) {
-    console.error("Error al aprobar:", err);
-    await alertError('Error al aprobar', 'No se pudo aprobar la actividad.');
-  }
-};
-
-
-
-const handleAbrirObservacion = (actividadId) => {
-  setActividadSeleccionadaId(actividadId);
-  setModalObservacionVisible(true);
-};
-
-const handleEnviarObservacion = () => {
-  if (!observacion.trim()) {
-    if (observacionRef && observacionRef.current) {
-      observacionRef.current.setCustomValidity('Debes ingresar una observación antes de enviar.');
-      observacionRef.current.reportValidity();
-      observacionRef.current.setCustomValidity('');
+      showTopSuccessToast(
+        "¡Aprobado!",
+        "La actividad fue aprobada correctamente."
+      );
+    } catch (err) {
+      console.error("Error al aprobar:", err);
+      await alertError('Error al aprobar', 'No se pudo aprobar la actividad.');
     }
-    return;
-  }
+  };
 
-  axios.patch(
-    `/api/cronograma/${actividadSeleccionadaId}/observacion`,
-    { observacion },
-    { headers: { Authorization: `Bearer ${token}` } }
-  )
-  .then(async () => {
-    setCronogramaSeleccionado(prev =>
-      prev.map(act =>
-        act.id === actividadSeleccionadaId
-          ? { ...act, estado: 'observado', observacion }
-          : act
-      )
-    );
+  const handleAbrirObservacion = (actividadId) => {
+    setActividadSeleccionadaId(actividadId);
+    setModalObservacionVisible(true);
+  };
 
-    await alertSuccess('Observación registrada', 'La observación se registró correctamente.');
-    setModalObservacionVisible(false);
-    setObservacion('');
-  })
-  .catch(err => {
-    console.error('Error al guardar observación:', err);
-    alertError('Error al guardar observación', 'No se pudo guardar la observación. Intenta nuevamente.');
-  });
-};
+  const handleEnviarObservacion = () => {
+    if (!observacion.trim()) {
+      if (observacionRef && observacionRef.current) {
+        observacionRef.current.setCustomValidity('Debes ingresar una observación antes de enviar.');
+        observacionRef.current.reportValidity();
+        observacionRef.current.setCustomValidity('');
+      }
+      return;
+    }
 
+    axios.patch(
+      `/api/cronograma/${actividadSeleccionadaId}/observacion`,
+      { observacion },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then(async () => {
+        setCronogramaSeleccionado(prev =>
+          prev.map(act =>
+            act.id === actividadSeleccionadaId
+              ? { ...act, estado: 'observado', observacion }
+              : act
+          )
+        );
+
+        await alertSuccess('Observación registrada', 'La observación se registró correctamente.');
+        setModalObservacionVisible(false);
+        setObservacion('');
+      })
+      .catch(err => {
+        console.error('Error al guardar observación:', err);
+        alertError('Error al guardar observación', 'No se pudo guardar la observación. Intenta nuevamente.');
+      });
+  };
 
   return (
     <>
@@ -312,24 +311,28 @@ const handleEnviarObservacion = () => {
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
- {window.innerWidth <= 768 && !collapsed && (
-  <div
-    className="sidebar-overlay"
-    onClick={() => toggleSidebar()} 
-  ></div>
-)}
-     <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
+
+      {window.innerWidth <= 768 && !collapsed && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => toggleSidebar()}
+        ></div>
+      )}
+
+      <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
         <div className="revision-container-d">
           <div className="revision-card">
             <h1 className="revision-title">Seguimiento del Servicio Social</h1>
 
             <div className="revision-table-wrapper">
-                {loading ? (
-                  <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
-                ) : trabajosSociales.length > 0 ? (
+              {loading ? (
+                <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
+              ) : trabajosSociales.length > 0 ? (
+                <>
                   <table className="revision-table">
                     <thead className="revision-table-thead">
                       <tr>
+                        <th>N°</th>
                         <th>Estudiante</th>
                         <th>Programa Académico</th>
                         <th>Servicio Social</th>
@@ -339,8 +342,9 @@ const handleEnviarObservacion = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {trabajosSociales.map((plan) => (
+                      {trabajosSocialesPagina.map((plan, index) => (
                         <tr key={plan.id}>
+                          <td>{inicio + index + 1}</td>
                           <td>{plan.Estudiante?.nombre_estudiante || 'No disponible'}</td>
                           <td>{plan.ProgramasAcademico?.nombre_programa || 'No definido'}</td>
                           <td>{plan.LaboresSociale?.nombre_labores || 'No definido'}</td>
@@ -402,127 +406,133 @@ const handleEnviarObservacion = () => {
                       ))}
                     </tbody>
                   </table>
-                ) : (
-                  <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
-                )}
-              </div>
+
+                  <TablePagination
+                    totalItems={trabajosSociales.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    currentPage={currentPage}
+                    onPageChange={(page) => {
+                      if (page >= 1 && page <= totalPages) {
+                        setCurrentPage(page);
+                      }
+                    }}
+                  />
+                </>
+              ) : (
+                <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
+              )}
+            </div>
           </div>
         </div>
       </main>
 
-
-<GrupoDocenteModal
-  visible={modalGrupoVisible}
-  integrantesGrupo={integrantesGrupo}
-  onClose={cerrarModalGrupo}
-/> 
-
-
-{modalVisible && (
-  <div className="modal-cronograma-overlay">
-    <div className="modal-cronograma-content">
-      <h3 className="modal-cronograma-title">Cronograma de Actividades</h3>
-      {cronogramaSeleccionado.length > 0 ? (
-        <div className="modal-cronograma-table-wrapper">
-          <table className="modal-cronograma-table">
-            <thead>
-              <tr>
-                <th>N°</th>
-                <th>Actividad</th>
-                <th>Justificación</th>
-                <th>Fecha</th>
-                <th>Fecha Fin</th>
-                <th>Resultados</th>
-                <th>Estado</th>
-                <th>Evidencia</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cronogramaSeleccionado.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-                  <td>{item.actividad}</td>
-                  <td>{item.justificacion}</td>
-                  <td>{item.fecha}</td>
-                  <td>{item.fecha_fin || 'No registrada'}</td>
-                  <td>{item.resultados}</td>
-                  <td>
-                  {item.estado === 'aprobado' ? (
-                    <button className="btn-estado-aprobado" disabled>Aprobado</button>
-                  ) : item.estado === 'observado' ? (
-                    <button className="btn-estado-observado" disabled>Observado</button>
-                  ) : item.evidencia ? (
-                    <div className="estado-acciones">
-                      <button className="btn-aprobar-estado" disabled={isAprobando} onClick={() => handleAprobar(item.id)}>
-                        Aprobar
-                      </button>
-                      <button
-                        className="btn-observar-estado"
-                        disabled={isAprobando}
-                        onClick={() => handleAbrirObservacion(item.id)}
-                      >
-                        Observar
-                      </button>
-
-                    </div>
-                  ) : (
-                    <span style={{ fontSize: '12px', color: '#aaa' }}>Sin evidencia</span>
-                  )}
-                </td>
-                  <td>
-                  {item.evidencia ? (
-                    <VerBoton onClick={() => handleVerEvidencia(item.evidencia)} />
-                  ) : (
-                    <span style={{ fontSize: '12px', color: '#aaa' }}>No enviada</span>
-                  )}
-                </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="modal-cronograma-empty">No hay cronograma disponible para este trabajo social.</p>
-      )}
-      <div className="modal-cronograma-actions">
-        <button className="modal-cronograma-btn-cerrar" onClick={handleCloseModal}>Cerrar</button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-<EvidenciaModal
-  visible={modalEvidenciaVisible}
-  imagen={imagenEvidencia}
-  onClose={handleCerrarModalEvidencia}
-/>
-
-
-{modalObservacionVisible && (
-  <div className="modal-observacion-overlay">
-    <div className="modal-observacion-content">
-      <h3>Observación</h3>
-      <textarea
-        ref={observacionRef}
-        required
-        className="modal-observacion-textarea"
-        value={observacion}
-        onChange={(e) => setObservacion(e.target.value)}
-        placeholder="Escribe tu observación aquí..."
+      <GrupoDocenteModal
+        visible={modalGrupoVisible}
+        integrantesGrupo={integrantesGrupo}
+        onClose={cerrarModalGrupo}
       />
-      <div className="modal-observacion-actions">
-        <button className="modal-observacion-btn" onClick={handleEnviarObservacion}>Enviar</button>
-        <button className="modal-observacion-btn-cancelar" onClick={() => setModalObservacionVisible(false)}>Cancelar</button>
-      </div>
-    </div>
-  </div>
-)}
 
-{isAprobando && (
-  <FullScreenSpinner text={progresoAprobacion.mensaje || 'Generando documentos...'} />
-)}
+      {modalVisible && (
+        <div className="modal-cronograma-overlay">
+          <div className="modal-cronograma-content">
+            <h3 className="modal-cronograma-title">Cronograma de Actividades</h3>
+            {cronogramaSeleccionado.length > 0 ? (
+              <div className="modal-cronograma-table-wrapper">
+                <table className="modal-cronograma-table">
+                  <thead>
+                    <tr>
+                      <th>N°</th>
+                      <th>Actividad</th>
+                      <th>Justificación</th>
+                      <th>Fecha</th>
+                      <th>Fecha Fin</th>
+                      <th>Resultados</th>
+                      <th>Estado</th>
+                      <th>Evidencia</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cronogramaSeleccionado.map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.actividad}</td>
+                        <td>{item.justificacion}</td>
+                        <td>{item.fecha}</td>
+                        <td>{item.fecha_fin || 'No registrada'}</td>
+                        <td>{item.resultados}</td>
+                        <td>
+                          {item.estado === 'aprobado' ? (
+                            <button className="btn-estado-aprobado" disabled>Aprobado</button>
+                          ) : item.estado === 'observado' ? (
+                            <button className="btn-estado-observado" disabled>Observado</button>
+                          ) : item.evidencia ? (
+                            <div className="estado-acciones">
+                              <button className="btn-aprobar-estado" disabled={isAprobando} onClick={() => handleAprobar(item.id)}>
+                                Aprobar
+                              </button>
+                              <button
+                                className="btn-observar-estado"
+                                disabled={isAprobando}
+                                onClick={() => handleAbrirObservacion(item.id)}
+                              >
+                                Observar
+                              </button>
+                            </div>
+                          ) : (
+                            <span style={{ fontSize: '12px', color: '#aaa' }}>Sin evidencia</span>
+                          )}
+                        </td>
+                        <td>
+                          {item.evidencia ? (
+                            <VerBoton onClick={() => handleVerEvidencia(item.evidencia)} />
+                          ) : (
+                            <span style={{ fontSize: '12px', color: '#aaa' }}>No enviada</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="modal-cronograma-empty">No hay cronograma disponible para este trabajo social.</p>
+            )}
+            <div className="modal-cronograma-actions">
+              <button className="modal-cronograma-btn-cerrar" onClick={handleCloseModal}>Cerrar</button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      <EvidenciaModal
+        visible={modalEvidenciaVisible}
+        imagen={imagenEvidencia}
+        onClose={handleCerrarModalEvidencia}
+      />
+
+      {modalObservacionVisible && (
+        <div className="modal-observacion-overlay">
+          <div className="modal-observacion-content">
+            <h3>Observación</h3>
+            <textarea
+              ref={observacionRef}
+              required
+              className="modal-observacion-textarea"
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe tu observación aquí..."
+            />
+            <div className="modal-observacion-actions">
+              <button className="modal-observacion-btn" onClick={handleEnviarObservacion}>Enviar</button>
+              <button className="modal-observacion-btn-cancelar" onClick={() => setModalObservacionVisible(false)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isAprobando && (
+        <FullScreenSpinner text={progresoAprobacion.mensaje || 'Generando documentos...'} />
+      )}
     </>
   );
 }

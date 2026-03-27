@@ -1,4 +1,4 @@
-import React, { Suspense, memo } from 'react';
+import React, { Suspense, memo, useEffect, useState } from 'react';
 import Header from '../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import VerBoton from "../../hooks/componentes/VerBoton";
@@ -6,8 +6,8 @@ import FullScreenSpinner from 'components/ui/FullScreenSpinner';
 import { useDashboardDocente } from '../../hooks/docente/useDashboardDocente';
 import DocenteModals from './DocenteModals';
 import PageSkeleton from '../loaders/PageSkeleton';
+import TablePagination from '../ui/TablePagination';
 import './DashboardDocente.css';
-
 
 const ESTILOS = {
   flexColumnCenter: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' },
@@ -16,6 +16,7 @@ const ESTILOS = {
 };
 
 const RevisionContent = memo(function RevisionContent({
+  loading,
   trabajosSociales,
   trabajoEnProcesoId,
   handleVerGrupo,
@@ -23,18 +24,46 @@ const RevisionContent = memo(function RevisionContent({
   abrirModalDeclinar,
   navigate
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  const totalPages = Math.max(1, Math.ceil(trabajosSociales.length / ITEMS_PER_PAGE));
+  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
+  const trabajosSocialesPagina = trabajosSociales.slice(inicio, inicio + ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   return (
     <div className="revision-container-d">
       <div className="revision-card">
         <h2 className="revision-title">Revisión del Docente</h2>
 
         <TablaTrabajos
-          trabajosSociales={trabajosSociales}
+          loading={loading}
+          trabajosSociales={trabajosSocialesPagina}
           trabajoEnProcesoId={trabajoEnProcesoId}
           handleVerGrupo={handleVerGrupo}
           handleCambiarEstado={handleCambiarEstado}
           abrirModalDeclinar={abrirModalDeclinar}
+          inicio={inicio}
         />
+
+        {!loading && trabajosSociales.length > 0 && (
+          <TablePagination
+            totalItems={trabajosSociales.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              if (page >= 1 && page <= totalPages) {
+                setCurrentPage(page);
+              }
+            }}
+          />
+        )}
       </div>
 
       <div className="revision-footer">
@@ -50,12 +79,22 @@ const RevisionContent = memo(function RevisionContent({
 });
 
 const TablaTrabajos = memo(function TablaTrabajos({
+  loading,
   trabajosSociales,
   trabajoEnProcesoId,
   handleVerGrupo,
   handleCambiarEstado,
-  abrirModalDeclinar
+  abrirModalDeclinar,
+  inicio
 }) {
+  if (loading) {
+    return (
+      <div className="revision-table-wrapper">
+        <PageSkeleton xlRows={4} />
+      </div>
+    );
+  }
+
   if (trabajosSociales.length === 0) {
     return <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>;
   }
@@ -65,6 +104,7 @@ const TablaTrabajos = memo(function TablaTrabajos({
       <table className="revision-table">
         <thead className="revision-table-thead">
           <tr>
+            <th>N°</th>
             <th>Estudiante</th>
             <th>Programa Académico</th>
             <th>Servicio Social</th>
@@ -75,10 +115,12 @@ const TablaTrabajos = memo(function TablaTrabajos({
           </tr>
         </thead>
         <tbody>
-          {trabajosSociales.map((trabajo) => (
+          {trabajosSociales.map((trabajo, index) => (
             <FilaTrabajo
               key={trabajo.id}
               trabajo={trabajo}
+              index={index}
+              inicio={inicio}
               trabajoEnProcesoId={trabajoEnProcesoId}
               handleVerGrupo={handleVerGrupo}
               handleCambiarEstado={handleCambiarEstado}
@@ -93,6 +135,8 @@ const TablaTrabajos = memo(function TablaTrabajos({
 
 const FilaTrabajo = memo(function FilaTrabajo({
   trabajo,
+  index,
+  inicio,
   trabajoEnProcesoId,
   handleVerGrupo,
   handleCambiarEstado,
@@ -100,10 +144,11 @@ const FilaTrabajo = memo(function FilaTrabajo({
 }) {
   return (
     <tr>
+      <td>{inicio + index + 1}</td>
       <td>{trabajo.Estudiante?.nombre_estudiante || 'No disponible'}</td>
       <td>{trabajo.ProgramasAcademico?.nombre_programa || 'No disponible'}</td>
       <td>{trabajo.LaboresSociale?.nombre_labores || 'No disponible'}</td>
-      
+
       <td>
         <div style={ESTILOS.flexColumnCenter}>
           <span>{trabajo.tipo_servicio_social}</span>
@@ -138,13 +183,7 @@ const FilaTrabajo = memo(function FilaTrabajo({
               onClick={() => handleCambiarEstado(trabajo, 'aceptado')}
               disabled={trabajoEnProcesoId === trabajo.id}
             >
-              {trabajoEnProcesoId === trabajo.id ? (
-                <>
-                  <FullScreenSpinner/>
-                </>
-              ) : (
-                'Aceptar'
-              )}
+              {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Aceptar'}
             </button>
 
             <button
@@ -152,13 +191,7 @@ const FilaTrabajo = memo(function FilaTrabajo({
               onClick={() => handleCambiarEstado(trabajo, 'rechazado')}
               disabled={trabajoEnProcesoId === trabajo.id}
             >
-              {trabajoEnProcesoId === trabajo.id ? (
-                <>
-                  <FullScreenSpinner/>
-                </>
-              ) : (
-                'Rechazar'
-              )}
+              {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Rechazar'}
             </button>
           </div>
         ) : (
@@ -190,7 +223,6 @@ const FilaTrabajo = memo(function FilaTrabajo({
   );
 });
 
-
 function DashboardDocente() {
   const {
     isMobile,
@@ -220,24 +252,6 @@ function DashboardDocente() {
     navigate
   } = useDashboardDocente();
 
-  if (loading) {
-    return (
-      <>
-        <Header onToggleSidebar={() => {}} />
-        <SidebarDocente
-          collapsed={collapsed}
-          nombre={localStorage.getItem('nombre_usuario')}
-          onToggleSidebar={() => {}}
-          activeSection={activeSection}
-          setActiveSection={() => {}}
-        />
-        <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
-          <PageSkeleton />
-        </main>
-      </>
-    );
-  }
-
   return (
     <>
       <Header onToggleSidebar={toggleSidebar} />
@@ -258,6 +272,7 @@ function DashboardDocente() {
 
       <main className={`main-content${isMobile && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
         <RevisionContent
+          loading={loading}
           trabajosSociales={trabajosSociales}
           trabajoEnProcesoId={trabajoEnProcesoId}
           handleVerGrupo={handleVerGrupo}
