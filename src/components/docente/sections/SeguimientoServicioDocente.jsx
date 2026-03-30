@@ -509,7 +509,6 @@ function SeguimientoServicioDocente() {
         imagen={imagenEvidencia}
         onClose={handleCerrarModalEvidencia}
       />
-
       {modalObservacionVisible && (
         <div className="modal-observacion-overlay">
           <div className="modal-observacion-content">
@@ -523,8 +522,15 @@ function SeguimientoServicioDocente() {
               placeholder="Escribe tu observación aquí..."
             />
             <div className="modal-observacion-actions">
-              <button className="modal-observacion-btn" onClick={handleEnviarObservacion}>Enviar</button>
-              <button className="modal-observacion-btn-cancelar" onClick={() => setModalObservacionVisible(false)}>Cancelar</button>
+              <button className="enviar-btn" onClick={handleEnviarObservacion}>
+                Enviar
+              </button>
+              <button
+                className="cancelar-btn"
+                onClick={() => setModalObservacionVisible(false)}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>

@@ -1,14 +1,5 @@
 import Swal from "sweetalert2";
 
-export const mostrarRecomendacionEvidencia = () => {
-  return Swal.fire({
-    icon: "info",
-    title: "Recomendación para la evidencia",
-    text: "La evidencia fotográfica debe mostrar claramente al estudiante realizando la actividad correspondiente. Asegúrate de que la imagen sea nítida y representativa de la tarea realizada.",
-    confirmButtonText: "Entendido",
-  });
-};
-
 export const alertconfirmacion = ({
   title = '¿Estás seguro?',
   text = 'Esta acción eliminará el programa académico de forma permanente.',

@@ -6,7 +6,7 @@ import '../../ModalGlobal.css';
 import {
   alertWarning,
   alertError,
-  mostrarRecomendacionEvidencia,
+  alertInfo,
 } from "../../../hooks/alerts/alertas";
 import { showTopSuccessToast, showTopWarningToast } from "../../../hooks/alerts/useWelcomeToast";
 import VerBoton, { VerBotonInline } from "../../../hooks/componentes/VerBoton";
@@ -159,7 +159,10 @@ useEffect(() => {
   }, []);
 
   const handleSeleccionarEvidencia = useCallback(async (actividadId, index) => {
-    await mostrarRecomendacionEvidencia();
+    await alertInfo(
+      'Recomendación para la evidencia',
+      'La evidencia fotográfica debe mostrar claramente al estudiante realizando la actividad correspondiente. Asegúrate de que la imagen sea nítida y representativa de la tarea realizada.'
+    );
     handleEvidencia(actividadId, index);
   }, [handleEvidencia]);
 
@@ -350,49 +353,53 @@ useEffect(() => {
             </div>
           )}
 
-            {(estadoSolicitudTermino === 'solicitada' || estadoSolicitudTermino === 'aprobada') && (
-                <div className="respuesta-asesor-cardss">
-                    <div className="respuesta-asesor-header">
-                        <div className="respuesta-icono-titulo">
-                        <i className="fas fa-info-circle icono-azul" /> 
-                        <span className="respuesta-asesor-title">Solicitud enviada al docente:</span>
-                        </div>
-                        <div className="contenedores-boton-ver">
-                            {planSeleccionado?.carta_termino_pdf && (
-                                <VerBotonInline
-                                label="Ver"
-                                onClick={() => {
-                                  window.open(
-                                    `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
-                                    '_blank'
-                                  );
-                                }}
-                              />
-                            )}
+    {(estadoSolicitudTermino === 'solicitada' || estadoSolicitudTermino === 'aprobada') && (
+  <div className="respuesta-asesor-card">
+    <div className="respuesta-asesor-header">
+      <div className="respuesta-contenedor">
+        <div className="respuesta-icono-titulo">
+          <i className="fas fa-info-circle icono-azul" />
+          <span className="respuesta-asesor-title">
+            Solicitud enviada al docente:
+          </span>
+        </div>
+      </div>
 
-                            <button
-                          className={`respuesta-asesor-btn estado-${estadoSolicitudTermino}`}
-                          disabled
-                        >
-                          {estadoSolicitudTermino.charAt(0).toUpperCase() + estadoSolicitudTermino.slice(1)}
-                        </button>
-                        </div>
-                    </div>
+      <div className="respuesta-acciones">
+        {planSeleccionado?.carta_termino_pdf && (
+          <VerBotonInline
+            label="Ver"
+            onClick={() => {
+              window.open(
+                `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
+                '_blank'
+              );
+            }}
+          />
+        )}
 
-                    <div style={{ marginTop: '0px', paddingLeft: '32px' }}>
-                        <p><strong>Aprobación de Actividades: </strong></p>
-                        {estadoSolicitudTermino === 'aprobada' ? (
-                        <p className="texto-cursiva">
-                          Se aprobó correctamente su solicitud. Puede ver y descargar su documento de término de actividades.
-                        </p>
-                      ) : (
-                        <p className="texto-cursiva">
-                          Tu solicitud fue enviada correctamente. El docente revisará tu cronograma antes de aprobar la carta.
-                        </p>
-                      )}
+        <button
+          className={`respuesta-asesor-btn ${estadoSolicitudTermino}`}
+          disabled
+        >
+          {estadoSolicitudTermino.charAt(0).toUpperCase() + estadoSolicitudTermino.slice(1)}
+        </button>
       </div>
     </div>
-  )}
+    <h4 className="titulo-aceptacion">Aprobación de Actividades:</h4>
+      {estadoSolicitudTermino === 'aprobada' ? (
+        <p className="texto-cursiva">
+          Se aprobó correctamente su solicitud. Puede ver y descargar su
+          documento de término de actividades.
+        </p>
+      ) : (
+        <p className="texto-cursiva">
+          Tu solicitud fue enviada correctamente. El docente revisará tu
+          cronograma antes de aprobar la carta.
+        </p>
+      )}
+    </div>
+)}
   {estadoSolicitudTermino === 'aprobada' && (
   <div className="seccion-documentos-designacion">
     <div className="seccion-header">

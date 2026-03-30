@@ -328,11 +328,6 @@
   opacity: 0.85;
 }
 
-.btn-ver-pdf:hover {
-  background-color: #f0f0f0;
-  border-color: #999;
-}
-
 .badge-estado {
   display: inline-flex;
   align-items: center;
@@ -765,33 +760,6 @@
   margin-top: 1.8rem;
 }
 
-.btn-cancelar-cambio-asesor {
-  background-color: #dc2626;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 22px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 6px rgba(220, 38, 38, 0.2);
-}
-
-.btn-cancelar-cambio-asesor:hover {
-  background-color: #b91c1c;
-  transform: translateY(-1px);
-}
-
-.btn-cancelar-cambio-asesor:active {
-  transform: translateY(1px);
-}
-
-.btn-cancelar-cambio-asesor:disabled {
-  background-color: #fca5a5;
-  cursor: not-allowed;
-}
-
 .btn-guardar-cambio-asesor {
   background-color: #1b3374;
   color: #fff;
@@ -817,12 +785,6 @@
 .btn-guardar-cambio-asesor:disabled {
   background-color: #86efac;
   cursor: not-allowed;
-}
-
-.btn-cancelar-cambio-asesor,
-.btn-guardar-cambio-asesor {
-  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-  letter-spacing: 0.3px;
 }
 
 .skeleton-wrapper {
@@ -891,7 +853,6 @@
   );
   animation: shimmer 1.2s infinite;
 }
-
 
 .badge-estado-estudiantes{
   display: inline-flex;

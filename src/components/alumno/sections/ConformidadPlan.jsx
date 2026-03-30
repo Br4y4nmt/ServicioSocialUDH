@@ -637,7 +637,7 @@ function ConformidadPlan({
 
    
     <div className="aviso-importante">
-      <strong>¡Importante!</strong> Si el tiempo establecido en el plan del servicio social es excedido, este se reiniciará automáticamente y tendra que iniciar nuevamente su servicio social
+      <strong>¡Importante!</strong> Si el tiempo establecido en el plan del servicio social es excedido, este se reiniciará automáticamente y tendra que iniciar nuevamente su servicio social.
     </div>
   </>
 )}

@@ -251,7 +251,7 @@
 }
 .modal-evidencia-content.mejorado {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 8px;
   padding: 1.8rem 2rem;
   width: 95%;
   max-width: 680px; 
@@ -268,12 +268,7 @@
   font-family: "Inter", "Segoe UI", sans-serif;
   text-align: center;
 }
-.modal-evidencia-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 1rem;
-}
+
 .modal-evidencia-actions {
   margin-top: 1rem;
 }
@@ -310,18 +305,7 @@
   align-items: center;
 }
 
-.modal-evidencia-img:hover {
-  transform: scale(1.02);
-}
-.modal-evidencia-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  background: #f9fafb;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-  transition: transform 0.25s ease;
-}
+
 .modal-evidencia-content {
   background: white;
   padding: 20px;
@@ -541,12 +525,5 @@
   .modal-evidencia-content {
     padding: 16px;
     max-height: 35vh;
-  }
-
-  .modal-evidencia-img {
-    width: 100%;        
-    height: auto;       
-    max-height: 65vh;   
-    object-fit: contain; 
   }
 }
