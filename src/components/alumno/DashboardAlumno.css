@@ -255,26 +255,7 @@
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
   }
-.btn-solicitar-aprobacion {
-  background-color: #2EBAA1;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
 
-  .btn-solicitar-aprobacion:hover {
-    background-color: #26a78d;
-    transform: translateY(-2px);
-  }
-
-  .btn-solicitar-aprobacion:active {
-    background-color: #209c80;
-    transform: translateY(1px);
-  }
 
  .btn-solicitar-aprobaciones {
   background-color: #2EBAA1;
@@ -1897,14 +1878,6 @@
   .alerta-boton-wrapper {
     flex-direction: column;
     align-items: stretch;
-  }
-
-    .btn-solicitar-aprobacion {
-    width: 100%;
-    max-width: 200px;
-    margin: 20px auto 0 auto;
-    display: block;
-    box-sizing: border-box;
   }
 }
 
