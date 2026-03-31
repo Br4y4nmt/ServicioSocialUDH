@@ -31,7 +31,7 @@
   top: 20px;
   right: -15px;
   background: #d8dee8;
-  border: 2px solid white;
+  border: 2px solid #d8dee8;
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -150,12 +150,6 @@
   transition: transform 0.3s ease;
 }
 
-.fas.fa-chevron-down,
-.fas.fa-chevron-up {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
 .fas.fa-clipboard-check { color: #2e9e7f; } 
 .fas.fa-cogs { color: #f39c12; } 
 .fas.fa-file-pdf { color: #e74c3c; } 
@@ -206,9 +200,7 @@
   margin-bottom: 6px;
   cursor: pointer;
 }
-.toggle-btn i {
-  font-size: 14px;
-}
+
 
 @media screen and (min-width: 769px) {
   .sidebar-alumno.collapsed .sidebar-header,

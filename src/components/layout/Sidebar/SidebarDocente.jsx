@@ -3,6 +3,7 @@ import './SidebarDocente.css';
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import InformesFinalesIcon from "../../../hooks/componentes/Icons/InformesFinalesIcon";
 import StudentMonitoringIcon from "../../../hooks/componentes/Icons/StudentMonitoringIcon";
+import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function SidebarDocente({
@@ -47,7 +48,7 @@ function SidebarDocente({
   return (
     <aside className={`sidebar-docente ${collapsed ? 'collapsed' : ''}`}>
       <button className="toggle-btn-docente" onClick={onToggleSidebar}>
-        <i className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
+        <ArrowLeftIcon/>
       </button>
 
       {!collapsed && (

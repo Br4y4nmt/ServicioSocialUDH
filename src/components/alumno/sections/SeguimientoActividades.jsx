@@ -408,7 +408,7 @@ useEffect(() => {
       </span>
 
        <h3>
-        {cartasMiembros.length > 1 ? 'Cartas de término del grupo' : 'DOCUMENTOS DE APROBACIÓN DE ACTIVIDADES'}
+        {cartasMiembros.length > 1 ? 'Cartas de término del grupo' : 'Documentos de aprobación de actividades'}
       </h3>
       <div className="info-tooltip">
         <InfoTooltipIcon />
@@ -422,7 +422,7 @@ useEffect(() => {
   <div className="documento-info">
     <PdfIcon />
     <span className="titulo-pdf">
-      DOCUMENTO DE APROBACION DE ACTIVIDADES (ESTUDIANTE PRINCIPAL)
+      APROBACION DE ACTIVIDADES (ESTUDIANTE PRINCIPAL)
     </span>
   </div>
   <div className="acciones-doc">

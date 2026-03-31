@@ -4,6 +4,7 @@ import DocumentIcon from "../../../hooks/componentes/Icons/DocumentIcon";
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import ExecutionIcon from "../../../hooks/componentes/Icons/ExecutionIcon";
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
+import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
 import {
   alertInfo,
 } from "../../../hooks/alerts/alertas";
@@ -66,10 +67,9 @@ function SidebarAlumno({
     aria-label={collapsed ? 'Abrir menú lateral' : 'Cerrar menú lateral'}
     aria-expanded={!collapsed}
   >
-    <i
-      className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}
-      aria-hidden="true"
-    ></i>
+    <span aria-hidden="true">
+      <ArrowLeftIcon/>
+    </span>
   </button>
 
     {!collapsed && (

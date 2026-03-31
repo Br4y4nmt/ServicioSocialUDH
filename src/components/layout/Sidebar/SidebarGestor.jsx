@@ -13,6 +13,7 @@ import TrackingCheckIcon  from "../../../hooks/componentes/Icons/TrackingCheckIc
 import SupervisorCheckIcon  from "../../../hooks/componentes/Icons/SupervisorCheckIcon";
 import FinalReportIcon  from "../../../hooks/componentes/Icons/FinalReportIcon";
 import ProgramAcademicIcon from "../../../hooks/componentes/Icons/ProgramAcademicIcon";
+import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
 import './SidebarGestor.css';
 
 function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSection }) {
@@ -85,7 +86,9 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
   return (
     <aside className={`sidebar-gestor-box ${collapsed ? 'collapsed' : ''}`}>
       <button className="sidebar-gestor-toggle-btn" onClick={onToggleSidebar}>
-        <i className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
+        <span aria-hidden="true">
+          <ArrowLeftIcon />
+        </span>
       </button>
 
       {!collapsed && (
@@ -119,7 +122,9 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     Gestión Académica
                   </span>
 
-                  <i className={`fas ${openMenu === 0 ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <span aria-hidden="true">
+                    <ArrowLeftIcon size={16} style={{ transform: openMenu === 0 ? 'rotate(-90deg)' : 'rotate(90deg)', transition: 'transform 0.15s ease' }} />
+                  </span>
                 </button>
 
                 {openMenu === 0 && (

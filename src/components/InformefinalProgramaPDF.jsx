@@ -199,7 +199,7 @@ const InformefinalProgramaPDF = ({ informe, qrImage, verificationUrl }) => {
         <Text style={styles.dateRight}>{fechaFormateada}</Text>
 
         <View style={styles.firmaContainer}>
-          <Image src="/images/firma.jpg" style={styles.firmaImage} />
+          <Image src="/images/firma.png" style={styles.firmaImage} />
         </View>
 
         {qrImage && verificationUrl && (

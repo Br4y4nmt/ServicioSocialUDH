@@ -2,7 +2,6 @@
   width: 270px;
   background-color: #ffffff;
   color: #333;
-  
   border-right: 1px solid #ddd;
   position: fixed;
   top: 0;
@@ -32,7 +31,7 @@
   top: 20px;
   right: -15px;
   background: #d8dee8;
-  border: 2px solid white;
+  border: 2px solid #d8dee8;
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -88,10 +87,12 @@
 
 .sidebar-gestor-nav {
   width: 100%;
-  flex: 1;                
-  overflow-y: auto;       
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #b8c2cc transparent;
 }
 
 .sidebar-gestor-nav ul {
