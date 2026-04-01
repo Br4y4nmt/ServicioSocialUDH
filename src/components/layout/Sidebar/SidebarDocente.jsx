@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './SidebarDocente.css';
+import './SidebarAlumno.css';
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import InformesFinalesIcon from "../../../hooks/componentes/Icons/InformesFinalesIcon";
 import StudentMonitoringIcon from "../../../hooks/componentes/Icons/StudentMonitoringIcon";
@@ -46,34 +46,38 @@ function SidebarDocente({
   }, [activeSection]);
 
   return (
-    <aside className={`sidebar-docente ${collapsed ? 'collapsed' : ''}`}>
-      <button className="toggle-btn-docente" onClick={onToggleSidebar}>
+    <aside
+      className={`sidebar-alumno ${collapsed ? 'collapsed' : ''} ${
+        !collapsed && window.innerWidth <= 768 ? 'show' : ''
+      }`}
+    >
+      <button className="toggle-btn" onClick={onToggleSidebar}>
         <ArrowLeftIcon/>
       </button>
 
       {!collapsed && (
         <>
-          <div className="sidebar-header-docente">
+          <div className="sidebar-header">
             <img
               src={fotoPerfil || 'https://via.placeholder.com/100'}
               alt="Foto de perfil"
-              className="profile-pic-docente"
+              className="profile-pic"
               referrerPolicy="no-referrer"
             />
-            <h4 className="nombre-docente">{nombre}</h4>
-            <span className="rol-docente">Supervisor</span>
+            <h4 className="nombre">{nombre}</h4>
+            <span className="rol">Supervisor</span>
           </div>
 
-          <nav className="sidebar-nav-docente">
+          <nav className="sidebar-nav">
             <ul>
-              <li className="menu-item-docente">
+              <li className="menu-item">
                 <button
                   onClick={() => {
                     setActiveSection('revision');
                     toggleMenu(0);
                   }}
-                  className={`menu-title-docente ${
-                    openMenu === 0 ? 'menu-title-docente--active' : ''
+                  className={`menu-title ${
+                    openMenu === 0 ? 'menu-title--active' : ''
                   }`}
                 >
                   <div
@@ -90,20 +94,20 @@ function SidebarDocente({
                   <i
                     className={`fas ${
                       openMenu === 0 ? 'fa-chevron-up' : 'fa-chevron-down'
-                    } menu-title-docente__chevron`}
+                    }`}
                   ></i>
                 </button>
 
                 {openMenu === 0 && (
-                  <ul className="submenu-docente">
+                  <ul className="submenu">
                     <li
-                      className={isRevision ? 'selected-docente' : ''}
+                      className={isRevision ? 'selected' : ''}
                       onClick={() => navigate('/dashboard-docente')}
                     >
                       Solicitudes de supervisión
                     </li>
                     <li
-                      className={isConformidad ? 'selected-docente' : ''}
+                      className={isConformidad ? 'selected' : ''}
                       onClick={() => navigate('/revision-documento-docente')}
                     >
                       Revisión del plan
@@ -112,14 +116,14 @@ function SidebarDocente({
                 )}
               </li>
 
-              <li className="menu-item-docente">
+              <li className="menu-item">
                 <button
                   onClick={() => {
                     setActiveSection('seguimiento');
                     toggleMenu(1);
                   }}
-                  className={`menu-title-docente ${
-                    openMenu === 1 ? 'menu-title-docente--active' : ''
+                  className={`menu-title ${
+                    openMenu === 1 ? 'menu-title--active' : ''
                   }`}
                 >
                   <div
@@ -136,14 +140,14 @@ function SidebarDocente({
                   <i
                     className={`fas ${
                       openMenu === 1 ? 'fa-chevron-up' : 'fa-chevron-down'
-                    } menu-title-docente__chevron`}
+                    }`}
                   ></i>
                 </button>
 
                 {openMenu === 1 && (
-                  <ul className="submenu-docente">
+                  <ul className="submenu">
                     <li
-                      className={isSeguimiento ? 'selected-docente' : ''}
+                      className={isSeguimiento ? 'selected' : ''}
                       onClick={() => navigate('/seguimiento-docente')}
                     >
                       Seguimiento Servicio social
@@ -152,14 +156,14 @@ function SidebarDocente({
                 )}
               </li>
 
-              <li className="menu-item-docente">
+              <li className="menu-item">
                 <button
                   onClick={() => {
                     setActiveSection('informes');
                     toggleMenu(2);
                   }}
-                  className={`menu-title-docente ${
-                    openMenu === 2 ? 'menu-title-docente--active' : ''
+                  className={`menu-title ${
+                    openMenu === 2 ? 'menu-title--active' : ''
                   }`}
                 >
                   <div
@@ -176,14 +180,14 @@ function SidebarDocente({
                   <i
                     className={`fas ${
                       openMenu === 2 ? 'fa-chevron-up' : 'fa-chevron-down'
-                    } menu-title-docente__chevron`}
+                    }`}
                   ></i>
                 </button>
 
                 {openMenu === 2 && (
-                  <ul className="submenu-docente">
+                  <ul className="submenu">
                     <li
-                      className={isSolicitudesInformes ? 'selected-docente' : ''}
+                      className={isSolicitudesInformes ? 'selected' : ''}
                       onClick={() => navigate('/solicitudes-informes-finales')}
                     >
                       Solicitudes Informes Finales

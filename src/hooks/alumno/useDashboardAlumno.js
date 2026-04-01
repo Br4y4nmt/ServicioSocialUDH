@@ -50,7 +50,6 @@ export function useDashboardAlumno() {
   const [laborSeleccionada, setLaborSeleccionada] = useState('');
   const [estadoPlan, setEstadoPlan] = useState('');
   const [cartaAceptacionPdf, setCartaAceptacionPdf] = useState('');
-  const [facultades, setFacultades] = useState([]);
   const [planSeleccionado, setPlanSeleccionado] = useState(null);
   const [nombreLaborSocial, setNombreLaborSocial] = useState('');
   const [lineas, setLineas] = useState([]);
@@ -156,16 +155,6 @@ export function useDashboardAlumno() {
     };
     fetchProgramas();
   }, [activeSection, facultadSeleccionada, user?.token]);
-
-
-
-  useEffect(() => {
-    if (facultades.length > 0 && facultadSeleccionada) {
-      const facultad = facultades.find(f => f.id_facultad === parseInt(facultadSeleccionada));
-      if (facultad) setNombreFacultad(facultad.nombre_facultad);
-    }
-  }, [facultades, facultadSeleccionada]);
-
   useEffect(() => {
     if (programas.length > 0 && programaSeleccionado) {
       const programa = programas.find(p => p.id_programa === parseInt(programaSeleccionado));
@@ -383,15 +372,10 @@ export function useDashboardAlumno() {
       await alertSuccess('Solicitud enviada', 'Tu solicitud ha sido enviada correctamente.');
       setArchivoYaEnviado(true);
       setPdfDescargado(true);
-      fetchTrabajoSocial();
+      await fetchTrabajoSocial();
 
       setProyectoFile(null);
       setSolicitudEnviada(true);
-
-      // pequeña recarga para asegurar que la vista refleje los cambios inmediatamente
-      setTimeout(() => {
-        try { window.location.reload(); } catch (e) { /* noop */ }
-      }, 800);
     } catch (err) {
       console.error('Error al enviar proyecto:', err);
       const mensaje = err.response?.data?.message;

@@ -529,13 +529,7 @@
   min-height: 100vh;
   transition: background 0.3s;
 }
-.sidebar-docente {
-  z-index: 9999 !important;
-  position: fixed !important;
-  left: 0;
-  top: 0;
-  height: 100vh;
-}
+
 .btn-accion.declinar {
   background-color: #0b1f46 ; 
   color: white;

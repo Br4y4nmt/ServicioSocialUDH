@@ -13,7 +13,6 @@ const ConformidadPlan = lazy(() => import('./sections/ConformidadPlan'));
 const SeguimientoActividades = lazy(() => import('./sections/SeguimientoActividades'));
 const InformeFinal = lazy(() => import('./sections/InformeFinal'));
 const Reglamento = lazy(() => import('./sections/Reglamento'));
-const PlanTrabajo = lazy(() => import('./sections/PlanTrabajo'));
 
 function DashboardAlumno() {
   const hook = useDashboardAlumno();
@@ -44,15 +43,7 @@ function DashboardAlumno() {
         <Suspense fallback={<div className="loading-section">Cargando...</div>}>
 
           {hook.activeSection === 'reglamento' && (
-            <div className="dashboard-container">
-              <Reglamento />
-            </div>
-          )}
-
-          {hook.activeSection === 'plan-trabajo' && (
-            <div className="dashboard-container">
-              <PlanTrabajo />
-            </div>
+            <Reglamento />
           )}
 
           {hook.activeSection === 'informe-final' && (

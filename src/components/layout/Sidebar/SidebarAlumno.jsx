@@ -42,7 +42,7 @@ function SidebarAlumno({
       setOpenMenu(2); 
     } else if (activeSection === 'informe-final') {
       setOpenMenu(2); 
-    } else if (activeSection === 'reglamento' || activeSection === 'plan-trabajo') {
+    } else if (activeSection === 'reglamento') {
       setOpenMenu(3);
     } else {
       setOpenMenu(null);
@@ -227,17 +227,7 @@ function SidebarAlumno({
                       if (window.innerWidth <= 768) onToggleSidebar();
                     }}
                   >
-                    Reglamento
-                  </li>
-
-                  <li
-                    className={activeSection === 'plan-trabajo' ? 'selected' : ''}
-                    onClick={() => {
-                      setActiveSection('plan-trabajo');
-                      if (window.innerWidth <= 768) onToggleSidebar();
-                    }}
-                  >
-                    Plan de Trabajo
+                    Documentos oficiales
                   </li>
                 </ul>
               )}

@@ -5,14 +5,6 @@
     min-height: 100vh;
     transition: margin-left 0.3s ease;
   }
-.texto-info-secundario-final {
-  color: #319795;
-  font-style: italic;
-  font-weight: 400;
-  margin-left: 26px;
-  margin-top: 4px;
-  font-size: 14px;
-}
 
 .fecha-fin-permitida {
   background-color: #F7FAFC;
@@ -898,15 +890,6 @@
     object-fit: cover;
     margin-top: 70px; 
 }
-.texto-instrucciones {
-    font-size: 14px;
-    color: #757575;
-    margin-top: 10px;
-    text-align: left; 
-    font-family: 'Arial', sans-serif;
-    margin-left: 0px; 
-    padding-left: 10px; 
-  }
 
   .plan-details {
     flex: 3;
@@ -926,30 +909,10 @@
     color: #333;
     margin-bottom: 5px;
   }
-  .info-card h4 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #004d40;
-    margin-bottom: 5px;
-  }
-  
-.info-card p {
-    font-size: 16px;
-    color: #004d40;
-  }
+
   .conformidad-img img {
     width: 200px;
     max-width: 100%;
-  }
-  .info-card .icon {
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-  .info-card {
-    background-color: #b2dfdb;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   .plan-icon i {

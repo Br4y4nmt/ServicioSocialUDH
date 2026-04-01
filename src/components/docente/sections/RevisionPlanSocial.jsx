@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../../layout/Header/Header';
 import './RevisionPlanSocial.css';
 import '../DashboardDocente.css';
@@ -15,6 +15,7 @@ import { showTopWarningToast } from '../../../hooks/alerts/useWelcomeToast';
 import { alertSuccess, alertconfirmacion, alertError } from '../../../hooks/alerts/alertas';
 import FullScreenSpinner from 'components/ui/FullScreenSpinner';
 import TablePagination from '../../ui/TablePagination';
+import SearchInput from '../../gestor/SearchInput';
 
 function RevisionPlanSocial() {
   const [collapsed, setCollapsed] = useState(false);
@@ -29,6 +30,7 @@ function RevisionPlanSocial() {
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [cargandoCambioId, setCargandoCambioId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
@@ -90,9 +92,24 @@ function RevisionPlanSocial() {
       });
   }, [token]);
 
-  const totalPages = Math.max(1, Math.ceil(trabajosSociales.length / ITEMS_PER_PAGE));
+  const trabajosFiltrados = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return trabajosSociales;
+
+    return trabajosSociales.filter((plan) => {
+      const estudiante = plan.Estudiante?.nombre_estudiante || '';
+      const programa = plan.ProgramasAcademico?.nombre_programa || '';
+      const servicio = plan.LaboresSociale?.nombre_labores || '';
+      const tipo = plan.tipo_servicio_social || '';
+
+      return [estudiante, programa, servicio, tipo]
+        .some((valor) => String(valor).toLowerCase().includes(term));
+    });
+  }, [trabajosSociales, searchTerm]);
+
+  const totalPages = Math.max(1, Math.ceil(trabajosFiltrados.length / ITEMS_PER_PAGE));
   const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
-  const trabajosSocialesPagina = trabajosSociales.slice(inicio, inicio + ITEMS_PER_PAGE);
+  const trabajosSocialesPagina = trabajosFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -188,12 +205,36 @@ function RevisionPlanSocial() {
       <main className={`main-content${window.innerWidth <= 768 && !collapsed ? ' sidebar-open' : collapsed ? ' collapsed' : ''}`}>
         <div className="revision-container-d">
           <div className="revision-card">
-            <h1 className="revision-title">Conformidad Servicio Social</h1>
+            <div
+              style={{
+                marginBottom: '12px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <h1 className="revision-title" style={{ margin: 0 }}>
+                Conformidad Servicio Social
+              </h1>
+
+              <SearchInput
+                value={searchTerm}
+                onChange={(value) => {
+                  setSearchTerm(value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Buscar por estudiante"
+                label="Buscar:"
+                className="docentes-search-label"
+              />
+            </div>
 
             <div className="revision-table-wrapper">
               {loading ? (
                 <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
-              ) : trabajosSociales.length > 0 ? (
+              ) : trabajosFiltrados.length > 0 ? (
                 <>
                   <table className="revision-table">
                     <thead className="revision-table-thead">
@@ -287,7 +328,7 @@ function RevisionPlanSocial() {
                   </table>
 
                   <TablePagination
-                    totalItems={trabajosSociales.length}
+                    totalItems={trabajosFiltrados.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     currentPage={currentPage}
                     onPageChange={(page) => {

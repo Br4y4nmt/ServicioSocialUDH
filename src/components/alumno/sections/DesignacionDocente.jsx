@@ -4,7 +4,7 @@ import { useUser } from '../../../UserContext';
 import '../../docente/DashboardDocente.css';
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import InfoTooltipIcon from "../../../hooks/componentes/Icons/InfoTooltipIcon";
-import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
+import VerBoton from "../../../hooks/componentes/VerBoton";
 import MotivoRechazoModal from "../../modals/MotivoRechazoModal";
 import Spinner from '../../ui/Spinner';
 import { useCartasAceptacion } from "../../../hooks/alumno/useCartasAceptacion";
@@ -151,7 +151,7 @@ const eliminarEleccion = useCallback(async () => {
       Tipo de Servicio Social
     </label>
     {tipoServicio === 'grupal' && (
-    <VerBotonInline
+    <VerBoton
       onClick={async () => {
         setModalGrupoVisible(true);
         await obtenerIntegrantesDelGrupo();
@@ -408,7 +408,7 @@ const eliminarEleccion = useCallback(async () => {
   </div>
 
   <div className="acciones-doc">
-    <VerBotonInline
+    <VerBoton
       onClick={() =>
         window.open(
         `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaAceptacionPdf}`,
@@ -435,7 +435,7 @@ const eliminarEleccion = useCallback(async () => {
     </div>
 
     <div className="acciones-doc">
-      <VerBotonInline
+      <VerBoton
         onClick={() =>
           window.open(
             `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${carta.nombre_archivo_pdf}`,

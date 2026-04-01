@@ -1,4 +1,4 @@
-import React, { Suspense, memo, useEffect, useState } from 'react';
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react';
 import Header from '../layout/Header/Header';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import VerBoton from "../../hooks/componentes/VerBoton";
@@ -7,6 +7,7 @@ import { useDashboardDocente } from '../../hooks/docente/useDashboardDocente';
 import DocenteModals from './DocenteModals';
 import PageSkeleton from '../loaders/PageSkeleton';
 import TablePagination from '../ui/TablePagination';
+import SearchInput from '../gestor/SearchInput';
 import './DashboardDocente.css';
 
 const ESTILOS = {
@@ -25,11 +26,27 @@ const RevisionContent = memo(function RevisionContent({
   navigate
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const ITEMS_PER_PAGE = 10;
 
-  const totalPages = Math.max(1, Math.ceil(trabajosSociales.length / ITEMS_PER_PAGE));
+  const trabajosFiltrados = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return trabajosSociales;
+
+    return trabajosSociales.filter((trabajo) => {
+      const estudiante = trabajo.Estudiante?.nombre_estudiante || '';
+      const programa = trabajo.ProgramasAcademico?.nombre_programa || '';
+      const servicio = trabajo.LaboresSociale?.nombre_labores || '';
+      const tipo = trabajo.tipo_servicio_social || '';
+
+      return [estudiante, programa, servicio, tipo]
+        .some((valor) => String(valor).toLowerCase().includes(term));
+    });
+  }, [trabajosSociales, searchTerm]);
+
+  const totalPages = Math.max(1, Math.ceil(trabajosFiltrados.length / ITEMS_PER_PAGE));
   const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
-  const trabajosSocialesPagina = trabajosSociales.slice(inicio, inicio + ITEMS_PER_PAGE);
+  const trabajosSocialesPagina = trabajosFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -40,7 +57,31 @@ const RevisionContent = memo(function RevisionContent({
   return (
     <div className="revision-container-d">
       <div className="revision-card">
-        <h2 className="revision-title">Revisión del Docente</h2>
+        <div
+          style={{
+            marginBottom: '12px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '12px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <h2 className="revision-title" style={{ margin: 0 }}>
+            Revisión del Docente
+          </h2>
+
+          <SearchInput
+            value={searchTerm}
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            placeholder="Buscar por estudiante"
+            label="Buscar:"
+            className="docentes-search-label"
+          />
+        </div>
 
         <TablaTrabajos
           loading={loading}
@@ -52,9 +93,9 @@ const RevisionContent = memo(function RevisionContent({
           inicio={inicio}
         />
 
-        {!loading && trabajosSociales.length > 0 && (
+        {!loading && trabajosFiltrados.length > 0 && (
           <TablePagination
-            totalItems={trabajosSociales.length}
+            totalItems={trabajosFiltrados.length}
             itemsPerPage={ITEMS_PER_PAGE}
             currentPage={currentPage}
             onPageChange={(page) => {
