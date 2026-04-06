@@ -79,7 +79,7 @@ export const mostrarAlertaCompletarPerfilPrimeraVez = () => {
 
       if (btn) {
         btn.addEventListener('mouseenter', () => {
-          btn.style.backgroundColor = '#03307a';
+          btn.style.backgroundColor = '#35a590';
         });
 
         btn.addEventListener('mouseleave', () => {

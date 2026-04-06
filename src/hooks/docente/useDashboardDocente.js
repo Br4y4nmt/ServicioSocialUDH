@@ -6,7 +6,6 @@ import { useWelcomeToast, showTopWarningToast } from '../alerts/useWelcomeToast'
 import {
   alertSuccess,
   mostrarAlertaCompletarPerfilPrimeraVez,
-  alertquestion,
   alertconfirmacion,
   alertWarning,
   alertError,

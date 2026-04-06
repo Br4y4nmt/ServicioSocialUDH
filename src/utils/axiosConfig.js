@@ -19,9 +19,26 @@ axios.interceptors.response.use(
       isHandlingSessionExpiry = true;
       Swal.fire({
         icon: 'warning',
+        iconColor: '#39B49E',
         title: 'Sesion expirada',
         text: 'Tu sesion ha caducado. Por favor, vuelve a iniciar sesion.',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#011B4B',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          const btn = Swal.getConfirmButton();
+
+          if (btn) {
+            btn.addEventListener('mouseenter', () => {
+              btn.style.backgroundColor = '#35a590';
+            });
+
+            btn.addEventListener('mouseleave', () => {
+              btn.style.backgroundColor = '#011B4B';
+            });
+          }
+        }
       }).then(() => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');

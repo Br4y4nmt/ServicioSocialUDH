@@ -60,13 +60,14 @@
 }
 .perfil-left .perfil-nav .perfil-icon,
 .perfil-left .perfil-nav svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   margin-right: 8px;
   vertical-align: middle;
   display: inline-block;
   color: currentColor;
-  fill: currentColor;
+  fill: none;
+  stroke: currentColor;
 }
 
 .perfil-left .perfil-nav {

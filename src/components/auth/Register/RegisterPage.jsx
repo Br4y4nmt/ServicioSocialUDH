@@ -68,9 +68,9 @@ const handleRegister = async (e) => {
     <div className="register-page">
   <div className="image-container">
     <picture>
-        <source srcSet="/SERVICIOSOCIAL1.webp" type="image/webp" />
+        <source srcSet="/SERVICIOSOCIAL2.webp" type="image/webp" />
        <img
-        src="/SERVICIOSOCIAL1.webp"
+        src="/SERVICIOSOCIAL2.webp"
         alt="Fondo UDH Labor Social"
         width="1200"
         height="800"
