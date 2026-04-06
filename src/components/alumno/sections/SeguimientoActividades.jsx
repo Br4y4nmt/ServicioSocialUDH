@@ -9,7 +9,7 @@ import {
   alertInfo,
 } from "../../../hooks/alerts/alertas";
 import { showTopSuccessToast, showTopWarningToast } from "../../../hooks/alerts/useWelcomeToast";
-import VerBoton, { VerBotonInline } from "../../../hooks/componentes/VerBoton";
+import VerBoton from "../../../hooks/componentes/VerBoton";
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import { useUser } from '../../../UserContext';
 import ModalDetalleActividad from '../../modals/ModalDetalleActividad';
@@ -366,18 +366,6 @@ useEffect(() => {
       </div>
 
       <div className="respuesta-acciones">
-        {planSeleccionado?.carta_termino_pdf && (
-          <VerBotonInline
-            label="Ver"
-            onClick={() => {
-              window.open(
-                `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
-                '_blank'
-              );
-            }}
-          />
-        )}
-
         <button
           className={`respuesta-asesor-btn ${estadoSolicitudTermino}`}
           disabled
@@ -426,7 +414,7 @@ useEffect(() => {
     </span>
   </div>
   <div className="acciones-doc">
-    <VerBotonInline
+    <VerBoton
       onClick={() =>
         window.open(
           `${process.env.REACT_APP_API_URL}/uploads/cartas_termino/${planSeleccionado.carta_termino_pdf}`,
@@ -451,7 +439,7 @@ useEffect(() => {
     </div>
 
     <div className="acciones-doc">
-      <VerBotonInline
+      <VerBoton
         onClick={() =>
           window.open(
             `${process.env.REACT_APP_API_URL}/uploads/cartas_termino_integrantes/${carta.nombre_archivo_pdf}`,

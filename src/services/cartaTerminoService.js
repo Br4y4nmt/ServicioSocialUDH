@@ -134,9 +134,9 @@ const generarHTMLCartaTermino = async ({
     </div>
 
     <!-- BLOQUE QR -->
-    <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: -10px; padding-left: 0px;">
+    <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top: -50px; padding-left: 0px;">
       <img src="${qrBase64}" style="width: 70px; height: 70px; margin-right: 10px;" />
-      <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 12px;">
+      <div style="font-size: 10px; line-height: 1.2; max-width: 300px; margin-top: 8px;">
         <strong>Documento:</strong> CARTA DE TÉRMINO<br/>
         <strong>URL de Verificación:</strong><br/>
         ${urlVerificacion}
