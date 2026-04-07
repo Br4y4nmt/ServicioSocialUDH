@@ -255,21 +255,21 @@ useEffect(() => {
                                 <td style={{ textAlign: 'center' }}>
                                     {item.evidencia && item.estado === 'pendiente' ? (
                                         <button
-                                          className="btn-estado-pendiente"
+                                          className="respuesta-asesor-btn pendiente"
                                           disabled
                                         >
                                           Pendiente
                                         </button>
                                     ) : item.evidencia && item.estado === 'aprobado' ? (
                                         <button
-                                          className="btn-estado-aprobado"
+                                          className="respuesta-asesor-btn aceptado"
                                           disabled
                                         >
                                           Aprobado
                                         </button>
                                     ) :  item.evidencia && item.estado === 'observado' ? (
                                     <button
-                                        className="btn-estado-observado-actividad"
+                                        className="respuesta-asesor-btn observado"
                                         disabled
                                     >
                                         Observado

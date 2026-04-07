@@ -80,15 +80,7 @@
   color: #94a3b8;
 }
 
-.reglamento-badge {
-  background: #10b981;
-  color: #ffffff;
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  flex-shrink: 0;
-}
+
 
 .reglamento-actions {
   display: flex;
@@ -164,11 +156,6 @@
   .reglamento-item {
     flex-wrap: wrap;
   }
-
-  .reglamento-badge {
-    order: 3;
-  }
-
   .reglamento-actions {
     order: 4;
     width: 100%;

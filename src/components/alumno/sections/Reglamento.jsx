@@ -65,7 +65,7 @@ function Reglamento() {
               </div>
               </div>
 
-              <span className="reglamento-badge">{doc.estado}</span>
+              <span className="estado-tramitado">{doc.estado}</span>
 
               <div className="reglamento-actions">
                 <VerBoton
