@@ -85,7 +85,7 @@ const generarHTMLCarta = ({ css, trabajo, firmaBase64, qrBase64, nombreDocente, 
           <div class="carta-footer">
             <p style="margin-top: 100px;">Atentamente,</p>
             <img src="${firmaBase64}" alt="Firma del docente" style="width: 150px; margin-top: 10px;" />
-            <p class="carta-firma-docente"><strong>${nombreDocente}</strong></p>
+            <p class="carta-firma-docente">${nombreDocente}</p>
           </div>
         </div>
       </div>

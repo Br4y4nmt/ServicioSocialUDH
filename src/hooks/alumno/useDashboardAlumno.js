@@ -389,36 +389,30 @@ export function useDashboardAlumno() {
         setActiveSection('conformidad');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Solicitud pendiente',
-          text: 'El docente aún no ha aceptado tu solicitud. Espera su respuesta para continuar al siguiente paso.',
-          confirmButtonText: 'Entendido'
-        });
+        alertInfo(
+          'Solicitud pendiente',
+          'El docente aún no ha aceptado tu solicitud. Espera su respuesta para continuar al siguiente paso.'
+        );
       }
     } else if (activeSection === 'conformidad') {
       if (estadoConformidad === 'aceptado') {
         setActiveSection('seguimiento');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Conformidad pendiente',
-          text: 'Tu asesor aún no ha aprobado el esquema plan. Debes esperar su conformidad para continuar.',
-          confirmButtonText: 'Entendido'
-        });
+        alertInfo(
+          'Conformidad pendiente',
+          'Tu asesor aún no ha aprobado el esquema plan. Debes esperar su conformidad para continuar.'
+        );
       }
     } else if (activeSection === 'seguimiento') {
       if (actividadesCronograma.todasAprobadas && estadoSolicitudTermino === 'aprobada') {
         setActiveSection('informe-final');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Acceso restringido',
-          text: 'Debes completar y obtener la aprobación de todas las actividades antes de continuar.',
-          confirmButtonText: 'Entendido'
-        });
+        alertInfo(
+          'Acceso restringido',
+          'Debes completar y obtener la aprobación de todas las actividades antes de continuar.'
+        );
       }
     }
   }, [activeSection, estadoPlan, estadoConformidad, estadoSolicitudTermino, actividadesCronograma.todasAprobadas]);

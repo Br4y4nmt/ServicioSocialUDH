@@ -14,6 +14,7 @@ import useSupervisores from '../../hooks/gestor/useSupervisores';
 import useInformesFinales from '../../hooks/gestor/useInformesFinales';
 import useEstudiantes from '../../hooks/gestor/useEstudiantes';
 import useSeguimiento from '../../hooks/gestor/useSeguimiento';
+import PageSkeleton from '../loaders/PageSkeleton';
 import './DashboardGestor.css';
 
 
@@ -98,7 +99,7 @@ function DashboardGestor() {
         setActiveSection={setActiveSection}
       />
       <div className={`dashboard-container-gestor ${collapsed ? "expanded" : ""}`}>
-<h2 className="dashboard-gestor-heading-profesional">Dashboard Gestor UDH</h2>        <Suspense fallback={<div className="loading-section">Cargando...</div>}>
+<h2 className="dashboard-gestor-heading-profesional">Dashboard Gestor UDH</h2>        <Suspense fallback={<PageSkeleton xlRows={6} />}>
 
           {activeSection === 'facultades' && (
             <FacultadesSection

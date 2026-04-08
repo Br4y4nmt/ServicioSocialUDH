@@ -6,6 +6,7 @@ import '../ModalGlobal.css';
 import TituloDashboardAlumno from './TituloDashboardAlumno';
 import NavegacionAlumno from './NavegacionAlumno';
 import AlumnoModals from './AlumnoModals';
+import PageSkeleton from '../loaders/PageSkeleton';
 import { useDashboardAlumno } from '../../hooks/alumno/useDashboardAlumno';
 
 const DesignacionDocente = lazy(() => import('./sections/DesignacionDocente'));
@@ -40,7 +41,7 @@ function DashboardAlumno() {
       <main className={`main-content ${hook.collapsed ? 'collapsed' : ''}`}>
         <TituloDashboardAlumno activeSection={hook.activeSection} />
 
-        <Suspense fallback={<div className="loading-section">Cargando...</div>}>
+        <Suspense fallback={<PageSkeleton xlRows={6} />}>
 
           {hook.activeSection === 'reglamento' && (
             <Reglamento />

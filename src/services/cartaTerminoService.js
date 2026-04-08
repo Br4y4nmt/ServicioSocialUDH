@@ -123,11 +123,11 @@ const generarHTMLCartaTermino = async ({
 
           <img
             src="${firmaBase64}"
-            style="width:150px;margin-top:70px;margin-bottom:-15px;display:block;margin-left:auto;margin-right:auto;"
+            style="width:150px;margin-top:40px;margin-bottom:-15px;display:block;margin-left:auto;margin-right:auto;"
           />
 
           <p class="firma-docente" style="text-align: center;">
-            <em>${nombreDocente}</em>
+            ${nombreDocente}
           </p>
         </div>
       </div>

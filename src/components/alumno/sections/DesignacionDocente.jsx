@@ -404,7 +404,7 @@ const eliminarEleccion = useCallback(async () => {
     <div className="documento-card">
   <div className="documento-info">
     <PdfIcon />
-    <span className="titulo-pdf">CARTA DE ACEPTACION</span>
+    <span className="titulo-pdf">CARTA DE ACEPTACION (ESTUDIANTE PRINCIPAL)</span>
   </div>
 
   <div className="acciones-doc">
