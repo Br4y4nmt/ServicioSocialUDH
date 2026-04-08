@@ -1,7 +1,7 @@
 import React from 'react';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import { UserProvider } from './UserContext';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './components/auth/Login/LoginPage';
 import RegisterPage from './components/auth/Register/RegisterPage';
 import DashboardDocente from './components/docente/DashboardDocente';
@@ -18,6 +18,7 @@ import PerfilDocente from './components/docente/PerfilDocente';
 import MiPerfil from './components/alumno/MiPerfil';
 import Dasborasd from "./components/gestor/sections/Dashboard";
 import PerfilAlumno from './components/alumno/PerfilAlumno';
+import LandingPage from './components/landing/LandingPage';
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
     <UserProvider>
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/perfil" element={
             <ProtectedRoute>
@@ -86,7 +88,7 @@ function App() {
             <SolicitudesInformesFinales />
           </ProtectedRoute>
         } />
-        <Route path="*" element={<LoginPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
     </UserProvider>
