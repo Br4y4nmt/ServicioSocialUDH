@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
+import ArrowRightIcon from '../../hooks/componentes/Icons/ArrowRightIcon';
+import CheckCircleIcon from '../../hooks/componentes/Icons/CheckCircleIcon';
+import LoginIcon from '../../hooks/componentes/Icons/LoginIcon';
+import MenuIcon from '../../hooks/componentes/Icons/MenuIcon';
+import PhoneIcon from '../../hooks/componentes/Icons/PhoneIcon';
+import MapPinIcon from '../../hooks/componentes/Icons/MapPinIcon';
+import MailIcon from '../../hooks/componentes/Icons/MailIcon';
+import FacebookIcon from '../../hooks/componentes/Icons/FacebookIcon';
 
 const navLinks = [
-	{ href: '#inicio', label: 'Inicio' },
+	{ href: '#inicio-principal', label: 'Inicio' },
+	{ href: '#programa', label: 'Sobre Programa' },
 	{ href: '#beneficios', label: 'Beneficios' },
 	{ href: '#proceso', label: 'Proceso' },
-	{ href: '#documentos', label: 'Documentos' },
 	{ href: '#galeria', label: 'Galeria' },
-	{ href: '#contacto', label: 'Contacto' }
+	{ href: '#contacto-info', label: 'Contacto' }
 ];
 
 const benefitsItems = [
@@ -163,29 +171,51 @@ const galleryItems = [
 ];
 
 const indicators = [
-	{ value: '1,500+', label: 'Estudiantes registrados' },
-	{ value: '36,000+', label: 'Horas de servicio' },
-	{ value: '120+', label: 'Proyectos activos' }
+	{ value: '500+', label: 'Estudiantes registrados' },
+	{ value: '150+', label: 'Proyectos activos' },
+	{ value: '300+', label: 'Certificados emitidos' }
+
 ];
 
 const audienceItems = [
 	{
 		title: 'Estudiantes',
+		shortDescription: 'Cumple tus requisitos de graduacion',
 		description: 'Gestiona tu servicio social de manera facil y cumple con tus requisitos de graduacion',
 		icon: 'graduation',
-		variant: 'accent'
+		variant: 'accent',
+		image: 'https://images.unsplash.com/photo-1758270705657-f28eec1a5694?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+		points: [
+			'Registro rapido y sencillo',
+			'Seguimiento de horas en tiempo real',
+			'Certificado digital automatico'
+		]
 	},
 	{
-		title: 'Docentes',
+		title: 'Supervisores',
+		shortDescription: 'Supervisa y valida el trabajo',
 		description: 'Supervisa y valida el trabajo de tus estudiantes con herramientas eficientes',
 		icon: 'teacher',
-		variant: 'primary'
+		variant: 'primary',
+		image: 'https://images.unsplash.com/photo-1758270704925-fa59d93119c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+		points: [
+			'Dashboard de supervision',
+			'Aprobacion digital de actividades',
+			'Reportes automatizados'
+		]
 	},
 	{
-		title: 'Gestores',
+		title: 'Personal administrativo',
+		shortDescription: 'Control total del programa',
 		description: 'Administra todo el programa con visibilidad completa y control total',
 		icon: 'building',
-		variant: 'mixed'
+		variant: 'mixed',
+		image: 'https://images.unsplash.com/photo-1758691737644-ef8be18256c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+		points: [
+			'Panel de administracion completo',
+			'Estadisticas y metricas en vivo',
+			'Gestion de documentos masiva'
+		]
 	}
 ];
 
@@ -379,21 +409,8 @@ function LandingPage() {
 						</div>
 
 						<div className="landing-actions-desktop">
-							<Link to="/login" className="landing-login-button">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									aria-hidden="true"
-								>
-									<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-									<polyline points="10 17 15 12 10 7" />
-									<line x1="15" x2="3" y1="12" y2="12" />
-								</svg>
+							<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
+								<LoginIcon />
 								<span>Iniciar sesion</span>
 							</Link>
 						</div>
@@ -405,20 +422,7 @@ function LandingPage() {
 							aria-expanded={menuOpen}
 							onClick={() => setMenuOpen((current) => !current)}
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								aria-hidden="true"
-							>
-								<line x1="4" x2="20" y1="12" y2="12" />
-								<line x1="4" x2="20" y1="6" y2="6" />
-								<line x1="4" x2="20" y1="18" y2="18" />
-							</svg>
+							<MenuIcon />
 						</button>
 					</div>
 
@@ -441,7 +445,7 @@ function LandingPage() {
 			</header>
 
 			<main className="landing-main">
-				<section className="landing-hero" id="inicio">
+				<section className="landing-hero" id="inicio-principal">
 					<div className="landing-hero-grid">
 						<div className="landing-hero-copy">
 							<div className="landing-hero-badge">Universidad de Huanuco</div>
@@ -458,31 +462,19 @@ function LandingPage() {
 							</p>
 
 							<div className="landing-hero-actions">
-								<Link to="/login" className="landing-hero-primary-btn">
+								<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
 									<span>Acceder al sistema</span>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										aria-hidden="true"
-									>
-										<path d="M5 12h14" />
-										<path d="m12 5 7 7-7 7" />
-									</svg>
+									<ArrowRightIcon />
 								</Link>
 
-								<a href="#beneficios" className="landing-hero-secondary-btn">
+								<a href="#programa" className="landing-hero-secondary-btn">
 									Conocer mas
 								</a>
 							</div>
 
 							<div className="landing-hero-stats">
 								<div>
-									<div className="landing-hero-stat-number">2,500+</div>
+									<div className="landing-hero-stat-number">500+</div>
 									<div className="landing-hero-stat-label">Estudiantes activos</div>
 								</div>
 								<div>
@@ -499,7 +491,7 @@ function LandingPage() {
 						<div className="landing-hero-visual">
 							<div className="landing-hero-image-shell">
 								<img
-									src="https://images.unsplash.com/photo-1758599667718-684569efe224?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+									src="/images/landin.png"
 									alt="Estudiantes realizando servicio social"
 									className="landing-hero-image"
 								/>
@@ -510,18 +502,7 @@ function LandingPage() {
 
 							<div className="landing-hero-floating-card">
 								<div className="landing-hero-floating-icon" aria-hidden="true">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<circle cx="12" cy="12" r="10" />
-										<path d="m9 12 2 2 4-4" />
-									</svg>
+									<CheckCircleIcon />
 								</div>
 								<div>
 									<div className="landing-hero-floating-title">Validacion Digital</div>
@@ -532,12 +513,12 @@ function LandingPage() {
 					</div>
 				</section>
 
-				<section className="landing-benefits" id="beneficios">
+				<section className="landing-benefits" id="programa">
 					<div className="landing-benefits-grid">
 						<div className="landing-benefits-visual-wrap">
 							<div className="landing-benefits-visual">
 								<img
-									src="https://images.unsplash.com/photo-1758599668429-121d54188b9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+									src="/images/landin1.png"
 									alt="Servicio Social UDH"
 									className="landing-benefits-image"
 								/>
@@ -546,18 +527,7 @@ function LandingPage() {
 
 							<div className="landing-benefits-floating-card">
 								<div className="landing-hero-floating-icon" aria-hidden="true">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<circle cx="12" cy="12" r="10" />
-										<path d="m9 12 2 2 4-4" />
-									</svg>
+									<CheckCircleIcon />
 								</div>
 								<div>
 									<div className="landing-hero-floating-title">100%</div>
@@ -572,11 +542,11 @@ function LandingPage() {
 									<span>Sobre el Programa</span>
 								</div>
 								<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>
-									<span className="landing-title-line">¿Qué es el Servicio Social</span>
+									<span className="landing-title-line" style={{ fontSize: '40px' }}>¿Qué es el Servicio Social</span>
 									<br />
-									<span className="landing-title-line">Universitario?</span>
+									<span className="landing-title-line"style={{ fontSize: '40px' }}>Universitario?</span>
 								</h2>
-								<p className="landing-hero-description" style={{ marginTop: '10px' }}>
+								<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '16px'}}>
 									El Servicio Social Universitario es un programa obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo su formación profesional y compromiso social.
 								</p>
 							</div>
@@ -585,18 +555,7 @@ function LandingPage() {
 								{benefitsItems.map((item) => (
 									<div className="landing-benefit-item" key={item.title}>
 										<div className="landing-benefit-icon" aria-hidden="true">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											>
-												<circle cx="12" cy="12" r="10" />
-												<path d="m9 12 2 2 4-4" />
-											</svg>
+											<CheckCircleIcon />
 										</div>
 										<div>
 											<h3 className="landing-benefit-title">{item.title}</h3>
@@ -609,11 +568,11 @@ function LandingPage() {
 					</div>
 				</section>
 
-				<section className="landing-importance" id="proceso">
+				<section className="landing-importance" id="importancia">
 					<div className="landing-importance-container">
 						<div className="landing-importance-heading">
 							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>Por que es importante</h2>
-							<p className="landing-importance-subtitle">
+							<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '18px', marginLeft: '280px'}}>
 								El servicio social universitario trasciende lo academico
 							</p>
 						</div>
@@ -632,21 +591,18 @@ function LandingPage() {
 					</div>
 				</section>
 
-				<section className="landing-service-benefits" id="documentos">
+				<section className="landing-service-benefits" id="beneficios">
 					<div className="landing-service-benefits-container">
 						<div className="landing-service-benefits-heading">
 							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>Beneficios del Servicio</h2>
-							<p className="landing-service-benefits-subtitle">Gana experiencia valiosa mientras sirves</p>
+							<p className="landing-hero-description" style={{ fontSize: '18px' }}>Gana experiencia valiosa mientras sirves</p>
 						</div>
 
 						<div className="landing-service-benefits-grid">
 							{serviceBenefitsItems.map((item) => (
 								<article className="landing-service-benefit-card" key={item.title}>
 									<div className="landing-service-benefit-icon" aria-hidden="true">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-											<circle cx="12" cy="12" r="10" />
-											<path d="m9 12 2 2 4-4" />
-										</svg>
+										<CheckCircleIcon />
 									</div>
 									<h3 className="landing-service-benefit-title">{item.title}</h3>
 									<p className="landing-service-benefit-description">{item.description}</p>
@@ -656,11 +612,11 @@ function LandingPage() {
 					</div>
 				</section>
 
-				<section className="landing-process-flow">
+				<section className="landing-process-flow" id="proceso">
 					<div className="landing-process-flow-container">
 						<div className="landing-process-flow-heading">
 							<h2 className="landing-hero-title" style={{ fontSize: '45px' }} >Como funciona</h2>
-							<p className="landing-process-flow-subtitle">Proceso simple en 6 pasos</p>
+							<p className="landing-hero-description"style={{ fontSize: '18px' }}>Proceso simple en 6 pasos</p>
 						</div>
 
 						<div className="landing-process-flow-timeline-wrap">
@@ -685,7 +641,7 @@ function LandingPage() {
 					<div className="landing-action-lines-container">
 						<div className="landing-action-lines-heading">
 							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>Lineas de accion</h2>
-							<p className="landing-action-lines-subtitle">Areas donde puedes hacer la diferencia</p>
+							<p className="landing-hero-description" style={{ fontSize: '18px' }}>Areas donde puedes hacer la diferencia</p>
 						</div>
 
 						<div className="landing-action-lines-grid">
@@ -708,8 +664,8 @@ function LandingPage() {
 
 								<span className="landing-hero-badge">Galeria</span>
 							
-							<h2 className="landing-gallery-title">Estudiantes en accion</h2>
-							<p className="landing-gallery-subtitle">
+							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>Estudiantes en accion</h2>
+							<p className="landing-hero-description">
 								Conoce las actividades de servicio social que realizan nuestros estudiantes en la comunidad
 							</p>
 						</div>
@@ -743,8 +699,8 @@ function LandingPage() {
 				<section className="landing-indicators" id="indicadores">
 					<div className="landing-indicators-container">
 						<div className="landing-indicators-heading">
-							<h2 className="landing-indicators-title">Resultados e indicadores</h2>
-							<p className="landing-indicators-subtitle">Impacto medible y verificable</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '45px', color: '#ffffff' }}>Resultados e indicadores</h2>
+							<p className="landing-hero-description" style={{ color: '#ffffff' }}>Impacto medible y verificable</p>
 						</div>
 
 						<div className="landing-indicators-grid">
@@ -759,36 +715,82 @@ function LandingPage() {
 				</section>
 
 				<section className="landing-audience">
+					<div className="landing-audience-bg-shape top" aria-hidden="true" />
+					<div className="landing-audience-bg-shape bottom" aria-hidden="true" />
+
 					<div className="landing-audience-container">
 						<div className="landing-audience-heading">
-							<h2 className="landing-audience-title">¿Para quien es esta plataforma?</h2>
-							<p className="landing-audience-subtitle">Disenada para toda la comunidad universitaria</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>¿Para quien es esta plataforma?</h2>
+							<p className="landing-hero-description" style={{ marginTop: '14px' }}>Disenada para toda la comunidad universitaria</p>
 						</div>
 
 						<div className="landing-audience-grid">
-							{audienceItems.map((item) => (
-								<article className={`landing-audience-card ${item.variant}`} key={item.title}>
-									<div className="landing-audience-icon" aria-hidden="true">
-										<AudienceIcon icon={item.icon} />
+							{audienceItems.map((item, index) => (
+								<article className={`landing-audience-card landing-audience-card-${item.variant}`} key={item.title}>
+									<div className="landing-audience-card-shell">
+										<div className="landing-audience-face landing-audience-face-front">
+											<img src={item.image} alt={item.title} className="landing-audience-image" />
+											<div className="landing-audience-overlay" />
+											<div className="landing-audience-front-content">
+												<div className="landing-audience-front-header">
+													<div className="landing-audience-icon" aria-hidden="true">
+														<AudienceIcon icon={item.icon} />
+													</div>
+													<h3 className="landing-audience-card-title">{item.title}</h3>
+												</div>
+												<p className="landing-audience-front-description">{item.shortDescription}</p>
+											</div>
+											<div className="landing-audience-arrow" aria-hidden="true">
+													<ArrowRightIcon />
+											</div>
 									</div>
-									<h3 className="landing-audience-card-title">{item.title}</h3>
-									<p className="landing-audience-card-description">{item.description}</p>
+
+										<div className="landing-audience-face landing-audience-face-back">
+											<div className="landing-audience-back-icon" aria-hidden="true">
+												<AudienceIcon icon={item.icon} />
+											</div>
+											<h3 className="landing-audience-card-title back">{item.title}</h3>
+											<p className="landing-audience-card-description">{item.description}</p>
+
+											<ul className="landing-audience-points">
+												{item.points.map((point) => (
+													<li key={point}>
+														<span className="landing-audience-point-dot" aria-hidden="true" />
+														<span>{point}</span>
+													</li>
+												))}
+											</ul>
+
+											<button type="button" className="landing-audience-info-btn">
+												Mas informacion
+												<ArrowRightIcon />
+											</button>
+										</div>
+
+										<div className="landing-audience-frame" aria-hidden="true" />
+									</div>
+
+									<div className="landing-audience-index" aria-hidden="true">{index + 1}</div>
 								</article>
 							))}
+						</div>
+
+						<div className="landing-audience-footnote">
+							<p>Unete a cientos de usuarios que ya estan utilizando la plataforma</p>
 						</div>
 					</div>
 				</section>
 
-				<section className="landing-smart-docs">
+				<section className="landing-smart-docs" id="documentos">
 					<div className="landing-smart-docs-container">
 						<div className="landing-smart-docs-grid">
 							<div className="landing-smart-docs-copy">
-								<h2 className="landing-smart-docs-title">Documentos inteligentes</h2>
-								<p className="landing-smart-docs-description">
+								<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Documentos inteligentes</h2>
+								<p className="landing-hero-description" style={{ marginTop: '10px' }}>
 									Genera certificados y documentos oficiales de forma automatica con validacion digital.
 								</p>
 
-								<div className="landing-smart-docs-feature-list">
+								<div className="landing-smart-docs-feature-list" style={{ marginTop: '20px' }}>
 									{smartDocFeatures.map((feature) => (
 										<div className="landing-smart-docs-feature" key={feature.title}>
 											<div className="landing-smart-docs-feature-icon" aria-hidden="true">
@@ -830,8 +832,8 @@ function LandingPage() {
 				<section className="landing-faq">
 					<div className="landing-faq-container">
 						<div className="landing-faq-heading">
-							<h2 className="landing-faq-title">Preguntas Frecuentes</h2>
-							<p className="landing-faq-subtitle">Resuelve tus dudas sobre el servicio social</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '45px' }}>Preguntas Frecuentes</h2>
+							<p className="landing-hero-description" style={{ fontSize: '18px' }}>Resuelve tus dudas sobre el servicio social</p>
 						</div>
 
 						<div className="landing-faq-list">
@@ -849,40 +851,13 @@ function LandingPage() {
 					</div>
 				</section>
 
-				<section className="landing-final-cta">
-					<div className="landing-final-cta-container">
-						<div className="landing-final-cta-card">
-							<div className="landing-final-cta-glow" aria-hidden="true">
-								<div className="landing-final-cta-glow-top" />
-								<div className="landing-final-cta-glow-bottom" />
-							</div>
-
-							<div className="landing-final-cta-content">
-								<h2 className="landing-final-cta-title">¿Listo para comenzar tu servicio social?</h2>
-								<p className="landing-final-cta-subtitle">
-									Accede a la plataforma y gestiona todo tu proceso de manera digital
-								</p>
-
-								<div className="landing-final-cta-actions">
-									<Link to="/login" className="landing-final-cta-primary-btn">
-										Ingresar al sistema
-									</Link>
-									<button type="button" className="landing-final-cta-secondary-btn">
-										Ver guia de usuario
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-
 				<section className="landing-contact" id="contacto-info">
 					<div className="landing-contact-container">
 						<div className="landing-contact-grid">
 							<div className="landing-contact-copy">
 								<div className="landing-contact-heading">
-									<h2 className="landing-contact-title">Contactanos</h2>
-									<p className="landing-contact-subtitle">
+									<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Contactanos</h2>
+									<p className="landing-hero-description"	style={{ fontSize: '18px', marginTop: '10px' }}>
 										¿Tienes dudas o necesitas asistencia? Estamos aqui para ayudarte
 									</p>
 								</div>
@@ -890,10 +865,7 @@ function LandingPage() {
 								<div className="landing-contact-info-list">
 									<div className="landing-contact-info-item">
 										<div className="landing-contact-info-icon" aria-hidden="true">
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-												<rect width="20" height="16" x="2" y="4" rx="2" />
-												<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-											</svg>
+											<MailIcon />
 										</div>
 										<div>
 											<div className="landing-contact-info-label">Correo electronico</div>
@@ -905,9 +877,7 @@ function LandingPage() {
 
 									<div className="landing-contact-info-item">
 										<div className="landing-contact-info-icon" aria-hidden="true">
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-												<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-											</svg>
+											<PhoneIcon />
 										</div>
 										<div>
 											<div className="landing-contact-info-label">Telefono</div>
@@ -919,10 +889,7 @@ function LandingPage() {
 
 									<div className="landing-contact-info-item">
 										<div className="landing-contact-info-icon" aria-hidden="true">
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-												<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-												<circle cx="12" cy="10" r="3" />
-											</svg>
+											<MapPinIcon />
 										</div>
 										<div>
 											<div className="landing-contact-info-label">Direccion</div>
@@ -966,13 +933,11 @@ function LandingPage() {
 					<div className="landing-footer-grid">
 						<div className="landing-footer-brand-col">
 							<div className="landing-footer-brand-row">
-								<div className="landing-footer-brand-mark">
-									<span>UDH</span>
-								</div>
-								<div>
-									<div className="landing-footer-brand-title">Servicio Social</div>
-									<div className="landing-footer-brand-subtitle">Universidad de Huanuco</div>
-								</div>
+								<img
+									src="/images/blanco.png"
+									alt="Universidad de Huanuco"
+									className="landing-footer-brand-logo"
+								/>
 							</div>
 
 							<p className="landing-footer-brand-description">
@@ -980,29 +945,8 @@ function LandingPage() {
 							</p>
 
 							<div className="landing-footer-socials">
-								<a href="#" className="landing-footer-social-link" aria-label="Facebook">
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-									</svg>
-								</a>
-								<a href="#" className="landing-footer-social-link" aria-label="Instagram">
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-										<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-										<line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-									</svg>
-								</a>
-								<a href="#" className="landing-footer-social-link" aria-label="LinkedIn">
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-										<rect width="4" height="12" x="2" y="9" />
-										<circle cx="4" cy="4" r="2" />
-									</svg>
-								</a>
-								<a href="#" className="landing-footer-social-link" aria-label="Twitter">
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-									</svg>
+								<a href="https://www.facebook.com/udh.universidaddehuanuco" className="landing-footer-social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+									<FacebookIcon />
 								</a>
 							</div>
 						</div>
@@ -1033,23 +977,15 @@ function LandingPage() {
 							<h3 className="landing-footer-col-title">Contacto</h3>
 							<ul className="landing-footer-contact-list">
 								<li>
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-										<circle cx="12" cy="10" r="3" />
-									</svg>
+									<MapPinIcon />
 									<span>Av. Universitaria 601-607, Huanuco, Peru</span>
 								</li>
 								<li>
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-									</svg>
+									<PhoneIcon />
 									<a href="tel:+51062591060">+51 062 591 060</a>
 								</li>
 								<li>
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-										<rect width="20" height="16" x="2" y="4" rx="2" />
-										<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-									</svg>
+									<MailIcon />
 									<a href="mailto:serviciosocial@udh.edu.pe">serviciosocial@udh.edu.pe</a>
 								</li>
 							</ul>
@@ -1060,8 +996,6 @@ function LandingPage() {
 						<p>© 2026 Universidad de Huanuco. Todos los derechos reservados.</p>
 						<div className="landing-footer-legal-links">
 							<a href="#">Terminos y Condiciones</a>
-							<a href="#">Privacidad</a>
-							<a href="#">Cookies</a>
 						</div>
 					</div>
 				</div>

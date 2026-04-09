@@ -131,12 +131,14 @@ useEffect(() => {
     const container = document.getElementById('google-signin-button');
     if (container) {
       container.innerHTML = '';
+      const containerWidth = Math.floor(container.getBoundingClientRect().width || 300);
+      const buttonWidth = Math.max(180, Math.min(containerWidth, 300));
       google.accounts.id.renderButton(container, {
         theme: 'outline',
         size: 'large',
         shape: 'pill',
         text: 'continue_with',
-        width: 300,
+        width: buttonWidth,
       });
     }
   };
@@ -166,7 +168,11 @@ useEffect(() => {
     initGoogleButton();
   }
 
+  const onResize = () => initGoogleButton();
+  window.addEventListener('resize', onResize);
+
   return () => {
+    window.removeEventListener('resize', onResize);
   };
 }, [handleCredentialResponse, GOOGLE_CLIENT_ID]);
 
@@ -197,13 +203,14 @@ useEffect(() => {
         </Link>
 
         <p className="subtitle-login">Inicia sesión con tu cuenta de Google</p>
-        <div style={{ position: 'relative', display: 'inline-block', height: '10px' }}>
+        <div style={{ position: 'relative', width: '100%', minHeight: '44px', marginTop: '20px' }}>
           <div
             id="google-signin-button"
             style={{
               opacity: loadingGoogle ? 0.5 : 1,
               pointerEvents: loadingGoogle ? 'none' : 'auto',
-              height: '100%'
+              width: '100%',
+              minHeight: '44px'
             }}
           ></div>
           {loadingGoogle && (
