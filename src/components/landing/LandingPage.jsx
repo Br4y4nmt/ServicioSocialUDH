@@ -613,7 +613,7 @@ function LandingPage() {
 											<CheckCircleIcon />
 										</div>
 										<div>
-											<h3 className="landing-benefit-title">{item.title}</h3>
+											<h3 className=" landing-service-benefit-title"style={{ fontSize: '16px'}}>{item.title}</h3>
 											<p className="landing-benefit-description">{item.description}</p>
 										</div>
 									</div>
@@ -637,8 +637,8 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 									<div className="landing-importance-icon-shell">
 										<ImportanceIcon icon={item.icon} />
 									</div>
-									<h3 className="landing-importance-card-title">{item.title}</h3>
-									<p className="landing-importance-card-description">{item.description}</p>
+									<h3 className="landing-service-benefit-title">{item.title}</h3>
+									<p className="landing-hero-description-a" style={{ marginTop: '10px' }}>{item.description}</p>
 								</article>
 							))}
 						</div>
@@ -661,7 +661,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 										</div>
 										<div>
 											<h3 className="landing-service-benefit-title">{item.title}</h3>
-											<p className="landing-service-benefit-description">{item.description}</p>
+											<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '0.98rem' }}>{item.description}</p>
 										</div>
 									</div>
 								</article>
@@ -685,8 +685,8 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 									<article className="landing-process-step" key={step.number}>
 										<div className="landing-process-step-inner">
 											<div className="landing-process-step-badge">{step.number}</div>
-											<h3 className="landing-process-step-title">{step.title}</h3>
-											<p className="landing-process-step-description">{step.description}</p>
+											<h3 className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>{step.title}</h3>
+											<p className="landing-hero-description-a" style={{ fontSize: '0.9rem' }}>{step.description}</p>
 										</div>
 									</article>
 								))}
@@ -711,7 +711,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 										</div>
 										<div>
 											<h3 className="landing-service-benefit-title">{item.title}</h3>
-											<p className="landing-service-benefit-description">{item.description}</p>
+											<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '0.98rem' }}>{item.description}</p>
 										</div>
 									</div>
 								</article>
