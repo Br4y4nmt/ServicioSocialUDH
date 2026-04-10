@@ -189,9 +189,10 @@ const galleryItems = [
 ];
 
 const indicators = [
-	{ value: '700+', label: 'Estudiantes registrados' },
-	{ value: '200+', label: 'Proyectos activos' },
-	{ value: '300+', label: 'Certificados emitidos' },
+	{ value: '6', label: 'Lineas de Accion' },
+	{ value: '700', label: 'Estudiantes' },
+	{ value: '200+', label: 'Proyectos' },
+	{ value: '300+', label: 'Certificaciones' },
 
 ];
 
@@ -580,7 +581,7 @@ function LandingPage() {
 								<div className="landing-benefits-image-overlay" />
 							</div>
 
-							<div className="landing-benefits-floating-card">
+							<div className="landing-hero-floating-card" style={{ left: 'auto', right: '-1.5rem', bottom: '-1.0rem' }}>
 								<div className="landing-hero-floating-icon" aria-hidden="true">
 									<CheckCircleIcon />
 								</div>
@@ -597,9 +598,9 @@ function LandingPage() {
 									<span>Sobre el Programa</span>
 								</div>
 								<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>
-									<span className="landing-title-line" style={{ fontSize: '40px' }}>¿Qué es el Servicio Social</span>
+									<span className="landing-title-line" style={{ fontSize: '37px' }}>¿Qué es el Servicio Social</span>
 									<br />
-									<span className="landing-title-line"style={{ fontSize: '40px' }}>Universitario?</span>
+									<span className="landing-title-line"style={{ fontSize: '37px' }}>Universitario?</span>
 								</h2>
 								<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '16px'}}>
 									El Servicio Social Universitario es un programa obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo su formación profesional y compromiso social.
@@ -626,8 +627,8 @@ function LandingPage() {
 				<section className="landing-importance" id="importancia">
 					<div className="landing-importance-container">
 						<div className="landing-importance-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Por que es importante</h2>
-							<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '18px'}}>
+							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Por que es importante?</h2>
+							<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '16px'}}>
 El Servicio Social Universitario proyecta la formación académica más allá del aula, generando experiencias que aportan valor a la comunidad y fortalecen la responsabilidad social. Además, impulsa una universidad comprometida con su entorno, atendiendo necesidades reales desde diversas áreas del conocimiento.							</p>
 						</div>
 
@@ -645,11 +646,13 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-service-benefits" id="beneficios">
+				<section className="landing-benefits" id="beneficios" style={{ padding: '6rem 0 7rem' }}>
 					<div className="landing-service-benefits-container">
 						<div className="landing-service-benefits-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Beneficios del Servicio</h2>
-							<p className="landing-hero-description-a">El Servicio Social Universitario genera beneficios para distintos actores de la comunidad universitaria y del entorno social, consolidando una experiencia formativa, participativa y de impacto.</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>Beneficios del Servicio</h2>
+							<p className="landing-hero-description-a" style={{ fontSize: '16px' }}>
+								El Servicio Social Universitario genera beneficios para distintos actores de la comunidad universitaria y del entorno social, consolidando una experiencia formativa, participativa y de impacto.
+							</p>
 						</div>
 
 						<div className="landing-service-benefits-grid">
@@ -670,11 +673,11 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-process-flow" id="proceso">
+				<section className="landing-importance" id="proceso">
 					<div className="landing-process-flow-container">
 						<div className="landing-process-flow-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }} >¿Como funciona?</h2>
-							<p className="landing-hero-description-a"style={{ fontSize: '18px', marginTop: '12px' }}>Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '37px' }} >¿Como funciona?</h2>
+							<p className="landing-hero-description-a"style={{ fontSize: '16px', marginTop: '12px' }}>Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.</p>
 						</div>
 
 						<div className="landing-process-flow-timeline-wrap">
@@ -695,11 +698,11 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-service-benefits" id="lineas-accion">
+				<section className="landing-benefits " id="lineas-accion">
 					<div className="landing-service-benefits-container">
 						<div className="landing-service-benefits-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Lineas de accion</h2>
-							<p className="landing-hero-description-a"style={{ marginTop: '12px' }}>El Servicio Social Universitario articula sus intervenciones a través de diversas líneas de acción que responden a necesidades formativas, sociales y comunitarias.</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>Lineas de accion</h2>
+							<p className="landing-hero-description-a"style={{ marginTop: '12px', fontSize: '16px' }}>El Servicio Social Universitario articula sus intervenciones a través de diversas líneas de acción que responden a necesidades formativas, sociales y comunitarias.</p>
 						</div>
 
 						<div className="landing-service-benefits-grid">
@@ -720,7 +723,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-gallery" id="galeria">
+				<section className="landing-importance" id="galeria">
 					<div className="landing-gallery-container">
 						<div className="landing-gallery-heading">
 
@@ -758,32 +761,39 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-indicators" id="indicadores">
+				<section className="landing-indicators" id="indicadores" style={{ backgroundImage: "url('/images/estadistica.png')" }}>
+					<div className="landing-indicators-overlay" aria-hidden="true" />
 					<div className="landing-indicators-container">
-						<div className="landing-indicators-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px', color: '#ffffff' }}>Resultados e indicadores</h2>
-							<p className="landing-hero-description-a" style={{ color: '#ffffff' }}>Impacto medible y verificable</p>
-						</div>
+						<div className="landing-indicators-content">
+							<div className="landing-indicators-heading">
+								<h2 className="landing-hero-title" style={{ color: '#FFFFFF', fontSize: '45px', textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>Estadisticas</h2>
+								<p className="landing-hero-description-a" style={{ color: 'rgba(255, 255, 255, 0.85)', marginTop: '12px', textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>
+									Explora las fascinantes estadisticas de nuestra plataforma educativa y descubre como
+									estamos transformando el aprendizaje. Aqui te presentamos un panorama completo de
+									nuestro impacto.
+								</p>
+							</div>
 
-						<div className="landing-indicators-grid">
-							{indicators.map((item) => (
-								<div className="landing-indicator-item" key={item.label}>
-									<div className="landing-indicator-value">{item.value}</div>
-									<div className="landing-indicator-label">{item.label}</div>
-								</div>
-							))}
+							<div className="landing-indicators-grid">
+								{indicators.map((item) => (
+									<div className="landing-indicator-item" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }} key={item.label}>
+										<div className="landing-indicator-value"style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>{item.value}</div>
+										<div className="landing-indicator-label"style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>{item.label}</div>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</section>
 
-				<section className="landing-audience">
+				<section className="landing-benefits" id="preguntas-frecuentes" style={{ padding: '6rem 0 7rem' }}>
 					<div className="landing-audience-bg-shape top" aria-hidden="true" />
 					<div className="landing-audience-bg-shape bottom" aria-hidden="true" />
 
 					<div className="landing-audience-container">
 						<div className="landing-audience-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>¿Para quien es esta plataforma?</h2>
-							<p className="landing-hero-description-a" style={{ marginTop: '16px', fontSize: '18px' }}>Disenada para toda la comunidad universitaria</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Para quien es esta plataforma?</h2>
+							<p className="landing-hero-description-a" style={{ marginTop: '16px', fontSize: '16px' }}>Disenada para toda la comunidad universitaria</p>
 						</div>
 
 						<div className="landing-audience-grid">
@@ -842,9 +852,9 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-smart-docs" id="documentos">
+				<section className="landing-importance" id="documentos">
 					<div className="landing-smart-docs-container">
-						<div className="landing-smart-docs-grid">
+						<div className="landing-smart-docs-grid ">
 							<div className="landing-smart-docs-copy">
 								<h2 className="landing-hero-title" style={{ fontSize: '37px', whiteSpace: 'nowrap' }}>Documentos inteligentes</h2>
 								<p className="landing-hero-description-a" style={{ marginTop: '14px', fontSize: '16px' }}>
@@ -877,11 +887,11 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-faq">
+				<section className="landing-benefits" style={{ padding: '6rem 0 7rem' }}>
 					<div className="landing-faq-container">
 						<div className="landing-faq-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Preguntas Frecuentes</h2>
-							<p className="landing-hero-description-a" style={{ fontSize: '18px', marginTop: '10px' }}>Resuelve tus dudas sobre el servicio social</p>
+							<h2 className="landing-hero-title" style={{ fontSize: '38px' }}>Preguntas Frecuentes</h2>
+							<p className="landing-hero-description-a" style={{ fontSize: '16px', marginTop: '10px'}}>Resuelve tus dudas sobre el servicio social</p>
 						</div>
 
 						<div className="landing-faq-list">
@@ -914,20 +924,20 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 				</section>
 
-				<section className="landing-contact" id="contacto-info">
+				<section className="landing-importance" id="contacto-info">
 					<div className="landing-contact-container">
 						<div className="landing-contact-grid">
 							<div className="landing-contact-copy">
 								<div className="landing-contact-heading">
-									<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Contactanos</h2>
-									<p className="landing-hero-description-a"style={{ fontSize: '18px', marginTop: '10px' }}>
+									<h2 className="landing-hero-title" style={{ fontSize: '35px' }}>Contactanos</h2>
+									<p className="landing-hero-description-a"style={{ fontSize: '16px', marginTop: '10px' }}>
 										¿Tienes dudas o necesitas asistencia? Estamos aqui para ayudarte
 									</p>
 								</div>
 
 								<div className="landing-contact-info-list">
 									<div className="landing-contact-info-item">
-										<div className="landing-contact-info-icon" aria-hidden="true">
+										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
 											<MailIcon />
 										</div>
 										<div>
@@ -939,7 +949,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 									</div>
 
 									<div className="landing-contact-info-item">
-										<div className="landing-contact-info-icon" aria-hidden="true">
+										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
 											<PhoneIcon />
 										</div>
 										<div>
@@ -951,7 +961,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 									</div>
 
 									<div className="landing-contact-info-item">
-										<div className="landing-contact-info-icon" aria-hidden="true">
+										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
 											<MapPinIcon />
 										</div>
 										<div>
@@ -1035,7 +1045,7 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 							<h3 className="landing-footer-col-title">Recursos</h3>
 							<ul className="landing-footer-link-list">
 								<li><a href="#">Guia de Usuario</a></li>
-								<li><a href="#">Preguntas Frecuentes</a></li>
+								<li><a href="#preguntas-frecuentes">Preguntas Frecuentes</a></li>
 								<li><a href="#">Tutoriales</a></li>
 								<li><a href="#">Reglamento</a></li>
 								<li><a href="#">Soporte Tecnico</a></li>
@@ -1062,7 +1072,9 @@ El Servicio Social Universitario proyecta la formación académica más allá de
 					</div>
 
 					<div className="landing-footer-bottom">
-						<p>© 2026 Universidad de Huanuco. Todos los derechos reservados.</p>
+						<p>
+							© 2026 <a href="#inicio-principal" className="landing-footer-home-button">Servicio Social UDH</a>. Todos los derechos reservados.
+						</p>
 						<div className="landing-footer-legal-links">
 							<a href="#">Terminos y Condiciones</a>
 						</div>
