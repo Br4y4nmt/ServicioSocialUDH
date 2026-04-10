@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
-import ArrowRightIcon from '../../hooks/componentes/Icons/ArrowRightIcon';
-import CheckCircleIcon from '../../hooks/componentes/Icons/CheckCircleIcon';
+
 import MenuIcon from '../../hooks/componentes/Icons/MenuIcon';
 import PhoneIcon from '../../hooks/componentes/Icons/PhoneIcon';
 import MapPinIcon from '../../hooks/componentes/Icons/MapPinIcon';
@@ -12,6 +11,20 @@ import InstagramIcon from '../../hooks/componentes/Icons/InstagramIcon';
 import TwitterIcon from '../../hooks/componentes/Icons/TwitterIcon';
 import BookIcon from '../../hooks/componentes/Icons/BookIcon';
 import UsersIcon from '../../hooks/componentes/Icons/UsersIcon';
+import useInView from './hooks/useInView';
+
+const HeroSection = lazy(() => import('./sections/HeroSection'));
+const ProgramSection = lazy(() => import('./sections/ProgramSection'));
+const ImportanceSection = lazy(() => import('./sections/ImportanceSection'));
+const ServiceBenefitsSection = lazy(() => import('./sections/ServiceBenefitsSection'));
+const ProcessSection = lazy(() => import('./sections/ProcessSection'));
+const ActionLinesSection = lazy(() => import('./sections/ActionLinesSection'));
+const GallerySection = lazy(() => import('./sections/GallerySection'));
+const IndicatorsSection = lazy(() => import('./sections/IndicatorsSection'));
+const AudienceSection = lazy(() => import('./sections/AudienceSection'));
+const SmartDocsSection = lazy(() => import('./sections/SmartDocsSection'));
+const FaqSection = lazy(() => import('./sections/FaqSection'));
+const ContactSection = lazy(() => import('./sections/ContactSection'));
 
 
 const navLinks = [
@@ -443,6 +456,19 @@ function ServiceBenefitsIcon({ icon }) {
 function LandingPage() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+	const preloadOffset = '300px';
+	const [programRef, showProgram] = useInView(preloadOffset);
+	const [importanceRef, showImportance] = useInView(preloadOffset);
+	const [serviceBenefitsRef, showServiceBenefits] = useInView(preloadOffset);
+	const [processRef, showProcess] = useInView(preloadOffset);
+	const [actionLinesRef, showActionLines] = useInView(preloadOffset);
+	const [galleryRef, showGallery] = useInView(preloadOffset);
+	const [indicatorsRef, showIndicators] = useInView(preloadOffset);
+	const [audienceRef, showAudience] = useInView(preloadOffset);
+	const [smartDocsRef, showSmartDocs] = useInView(preloadOffset);
+	const [faqRef, showFaq] = useInView(preloadOffset);
+	const [contactRef, showContact] = useInView(preloadOffset);
+	const lazyFallback = <div className="landing-hero-description-a" style={{ textAlign: 'center', padding: '2rem 1rem' }}>Cargando contenido...</div>;
 
 	return (
 		<div className="landing-page">
@@ -501,504 +527,116 @@ function LandingPage() {
 			</header>
 
 			<main className="landing-main">
-				<section className="landing-hero" id="inicio-principal">
-					<div className="landing-hero-grid">
-						<div className="landing-hero-copy">
-							<div className="landing-hero-badge">Universidad de Huanuco</div>
+				<Suspense fallback={lazyFallback}>
+					<HeroSection />
+				</Suspense>
 
-							<h1 className="landing-hero-title">
-								Servicio Social
-								<br />
-								Universitario
-							</h1>
+				<div ref={programRef} style={{ minHeight: '1px' }}>
+					{showProgram ? (
+						<Suspense fallback={lazyFallback}>
+							<ProgramSection benefitsItems={benefitsItems} />
+						</Suspense>
+					) : null}
+				</div>
 
-							<p className="landing-hero-description">
-								Plataforma digital para gestionar, supervisar y validar el servicio social en la
-								Universidad de Huanuco.
-							</p>
+				<div ref={importanceRef} style={{ minHeight: '1px' }}>
+					{showImportance ? (
+						<Suspense fallback={lazyFallback}>
+							<ImportanceSection
+								importanceItems={importanceItems}
+								renderImportanceIcon={(icon) => <ImportanceIcon icon={icon} />}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-							<div className="landing-hero-actions">
-								<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
-									<span>Acceder al sistema</span>
-									<ArrowRightIcon />
-								</Link>
+				<div ref={serviceBenefitsRef} style={{ minHeight: '1px' }}>
+					{showServiceBenefits ? (
+						<Suspense fallback={lazyFallback}>
+							<ServiceBenefitsSection
+								serviceBenefitsItems={serviceBenefitsItems}
+								renderServiceBenefitsIcon={(icon) => <ServiceBenefitsIcon icon={icon} />}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-								<a href="#programa" className="landing-hero-secondary-btn">
-									Conocer mas
-								</a>
-							</div>
+				<div ref={processRef} style={{ minHeight: '1px' }}>
+					{showProcess ? (
+						<Suspense fallback={lazyFallback}>
+							<ProcessSection processSteps={processSteps} />
+						</Suspense>
+					) : null}
+				</div>
 
-							<div className="landing-hero-stats">
-								<div>
-									<div className="landing-hero-stat-number">500+</div>
-									<div className="landing-hero-stat-label">Estudiantes activos</div>
-								</div>
-								<div>
-									<div className="landing-hero-stat-number">150+</div>
-									<div className="landing-hero-stat-label">Proyectos</div>
-								</div>
-								<div>
-									<div className="landing-hero-stat-number">100%</div>
-									<div className="landing-hero-stat-label">Digital</div>
-								</div>
-							</div>
-						</div>
+				<div ref={actionLinesRef} style={{ minHeight: '1px' }}>
+					{showActionLines ? (
+						<Suspense fallback={lazyFallback}>
+							<ActionLinesSection
+								actionLineItems={actionLineItems}
+								renderActionLineIcon={(icon) => <ActionLineIcon icon={icon} />}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-						<div className="landing-hero-visual">
-							<div className="landing-hero-image-shell">
-								<img
-									src="/images/landin.png"
-									alt="Estudiantes realizando servicio social"
-									className="landing-hero-image"
-								/>
-								<div className="landing-hero-image-overlay" />
-								<div className="landing-hero-image-copy">
-								</div>
-							</div>
+				<div ref={galleryRef} style={{ minHeight: '1px' }}>
+					{showGallery ? (
+						<Suspense fallback={lazyFallback}>
+							<GallerySection galleryItems={galleryItems} />
+						</Suspense>
+					) : null}
+				</div>
 
-							<div className="landing-hero-floating-card">
-								<div className="landing-hero-floating-icon" aria-hidden="true">
-									<CheckCircleIcon />
-								</div>
-								<div>
-									<div className="landing-hero-floating-title">Validacion Digital</div>
-									<div className="landing-hero-floating-subtitle">Certificados con QR verificable</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
+				<div ref={indicatorsRef} style={{ minHeight: '1px' }}>
+					{showIndicators ? (
+						<Suspense fallback={lazyFallback}>
+							<IndicatorsSection indicators={indicators} />
+						</Suspense>
+					) : null}
+				</div>
 
-				<section className="landing-benefits" id="programa">
-					<div className="landing-benefits-grid">
-						<div className="landing-benefits-visual-wrap">
-							<div className="landing-benefits-visual">
-								<img
-									src="/images/landin1.png"
-									alt="Servicio Social UDH"
-									className="landing-benefits-image"
-								/>
-								<div className="landing-benefits-image-overlay" />
-							</div>
+				<div ref={audienceRef} style={{ minHeight: '1px' }}>
+					{showAudience ? (
+						<Suspense fallback={lazyFallback}>
+							<AudienceSection
+								audienceItems={audienceItems}
+								renderAudienceIcon={(icon) => <AudienceIcon icon={icon} />}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-							<div className="landing-hero-floating-card" style={{ left: 'auto', right: '-1.5rem', bottom: '-1.0rem' }}>
-								<div className="landing-hero-floating-icon" aria-hidden="true">
-									<CheckCircleIcon />
-								</div>
-								<div>
-									<div className="landing-hero-floating-title">100%</div>
-									<div className="landing-hero-floating-subtitle">Digital</div>
-								</div>
-							</div>
-						</div>
+				<div ref={smartDocsRef} style={{ minHeight: '1px' }}>
+					{showSmartDocs ? (
+						<Suspense fallback={lazyFallback}>
+							<SmartDocsSection
+								smartDocFeatures={smartDocFeatures}
+								renderSmartDocIcon={(icon) => <SmartDocIcon icon={icon} />}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-						<div className="landing-benefits-copy">
-							<div>
-								<div className="landing-hero-badge">
-									<span>Sobre el Programa</span>
-								</div>
-								<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>
-									<span className="landing-title-line" style={{ fontSize: '37px' }}>¿Qué es el Servicio Social</span>
-									<br />
-									<span className="landing-title-line"style={{ fontSize: '37px' }}>Universitario?</span>
-								</h2>
-								<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '16px'}}>
-									El Servicio Social Universitario es un programa obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo su formación profesional y compromiso social.
-								</p>
-							</div>
+				<div ref={faqRef} style={{ minHeight: '1px' }}>
+					{showFaq ? (
+						<Suspense fallback={lazyFallback}>
+							<FaqSection
+								faqItems={faqItems}
+								openFaqIndex={openFaqIndex}
+								setOpenFaqIndex={setOpenFaqIndex}
+							/>
+						</Suspense>
+					) : null}
+				</div>
 
-							<div className="landing-benefits-list"style={{ marginTop: ' -15px' }}>
-								{benefitsItems.map((item) => (
-									<div className="landing-benefit-item" key={item.title}>
-										<div className="landing-benefit-icon" aria-hidden="true">
-											<CheckCircleIcon />
-										</div>
-										<div>
-											<h3 className=" landing-service-benefit-title"style={{ fontSize: '16px'}}>{item.title}</h3>
-											<p className="landing-benefit-description">{item.description}</p>
-										</div>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-importance" id="importancia">
-					<div className="landing-importance-container">
-						<div className="landing-importance-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Por que es importante?</h2>
-							<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '16px'}}>
-El Servicio Social Universitario proyecta la formación académica más allá del aula, generando experiencias que aportan valor a la comunidad y fortalecen la responsabilidad social. Además, impulsa una universidad comprometida con su entorno, atendiendo necesidades reales desde diversas áreas del conocimiento.							</p>
-						</div>
-
-						<div className="landing-importance-grid">
-							{importanceItems.map((item) => (
-								<article className="landing-importance-card" key={item.title}>
-									<div className="landing-importance-icon-shell">
-										<ImportanceIcon icon={item.icon} />
-									</div>
-									<h3 className="landing-service-benefit-title">{item.title}</h3>
-									<p className="landing-hero-description-a" style={{ marginTop: '10px' }}>{item.description}</p>
-								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-benefits" id="beneficios" style={{ padding: '6rem 0 7rem' }}>
-					<div className="landing-service-benefits-container">
-						<div className="landing-service-benefits-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>Beneficios del Servicio</h2>
-							<p className="landing-hero-description-a" style={{ fontSize: '16px' }}>
-								El Servicio Social Universitario genera beneficios para distintos actores de la comunidad universitaria y del entorno social, consolidando una experiencia formativa, participativa y de impacto.
-							</p>
-						</div>
-
-						<div className="landing-service-benefits-grid">
-							{serviceBenefitsItems.map((item) => (
-								<article className="landing-service-benefit-card" key={item.title}>
-									<div className="landing-service-benefit-content">
-										<div className="landing-service-benefit-icon" aria-hidden="true">
-											<ServiceBenefitsIcon icon={item.icon} />
-										</div>
-										<div>
-											<h3 className="landing-service-benefit-title">{item.title}</h3>
-											<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '0.98rem' }}>{item.description}</p>
-										</div>
-									</div>
-								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-importance" id="proceso">
-					<div className="landing-process-flow-container">
-						<div className="landing-process-flow-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '37px' }} >¿Como funciona?</h2>
-							<p className="landing-hero-description-a"style={{ fontSize: '16px', marginTop: '12px' }}>Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.</p>
-						</div>
-
-						<div className="landing-process-flow-timeline-wrap">
-							<div className="landing-process-flow-line" aria-hidden="true" />
-
-							<div className="landing-process-flow-grid">
-								{processSteps.map((step) => (
-									<article className="landing-process-step" key={step.number}>
-										<div className="landing-process-step-inner">
-											<div className="landing-process-step-badge">{step.number}</div>
-											<h3 className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>{step.title}</h3>
-											<p className="landing-hero-description-a" style={{ fontSize: '0.9rem' }}>{step.description}</p>
-										</div>
-									</article>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-benefits " id="lineas-accion">
-					<div className="landing-service-benefits-container">
-						<div className="landing-service-benefits-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>Lineas de accion</h2>
-							<p className="landing-hero-description-a"style={{ marginTop: '12px', fontSize: '16px' }}>El Servicio Social Universitario articula sus intervenciones a través de diversas líneas de acción que responden a necesidades formativas, sociales y comunitarias.</p>
-						</div>
-
-						<div className="landing-service-benefits-grid">
-							{actionLineItems.map((item) => (
-								<article className="landing-service-benefit-card" key={item.title}>
-									<div className="landing-service-benefit-content">
-										<div className="landing-service-benefit-icon" aria-hidden="true">
-											<ActionLineIcon icon={item.icon} />
-										</div>
-										<div>
-											<h3 className="landing-service-benefit-title">{item.title}</h3>
-											<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '0.98rem' }}>{item.description}</p>
-										</div>
-									</div>
-								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-importance" id="galeria">
-					<div className="landing-gallery-container">
-						<div className="landing-gallery-heading">
-
-								<span className="landing-hero-badge">Galeria</span>
-							
-							<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Estudiantes en accion</h2>
-							<p className="landing-hero-description-a"style={{ fontSize: '18px', marginTop: '12px', whiteSpace: 'nowrap' }}>
-								Conoce las actividades de servicio social que realizan nuestros estudiantes en la comunidad
-							</p>
-						</div>
-
-						<div className="landing-gallery-grid">
-							{galleryItems.map((item) => (
-								<article className="landing-gallery-card" key={`${item.title}-${item.badge}`}>
-									<img src={item.image} alt={item.alt} className="landing-gallery-image" />
-									<div className="landing-gallery-overlay" />
-									<div className="landing-gallery-content">
-										<div className="landing-gallery-badge-inline-wrap">
-											<span className="landing-gallery-badge-inline">{item.badge}</span>
-										</div>
-										<h3 className="landing-gallery-card-title">{item.title}</h3>
-										<div className="landing-gallery-action-wrap">
-											<button type="button" className="landing-gallery-action-btn">
-												<span>Ver mas</span>
-												<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-													<path d="M9 5l7 7-7 7" />
-												</svg>
-											</button>
-										</div>
-									</div>
-									<div className="landing-gallery-corner" aria-hidden="true" />
-								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-indicators" id="indicadores" style={{ backgroundImage: "url('/images/estadistica.png')" }}>
-					<div className="landing-indicators-overlay" aria-hidden="true" />
-					<div className="landing-indicators-container">
-						<div className="landing-indicators-content">
-							<div className="landing-indicators-heading">
-								<h2 className="landing-hero-title" style={{ color: '#FFFFFF', fontSize: '45px', textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>Estadisticas</h2>
-								<p className="landing-hero-description-a" style={{ color: 'rgba(255, 255, 255, 0.85)', marginTop: '12px', textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>
-									Explora las fascinantes estadisticas de nuestra plataforma educativa y descubre como
-									estamos transformando el aprendizaje. Aqui te presentamos un panorama completo de
-									nuestro impacto.
-								</p>
-							</div>
-
-							<div className="landing-indicators-grid">
-								{indicators.map((item) => (
-									<div className="landing-indicator-item" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }} key={item.label}>
-										<div className="landing-indicator-value"style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>{item.value}</div>
-										<div className="landing-indicator-label"style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}>{item.label}</div>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-benefits" id="preguntas-frecuentes" style={{ padding: '6rem 0 7rem' }}>
-					<div className="landing-audience-bg-shape top" aria-hidden="true" />
-					<div className="landing-audience-bg-shape bottom" aria-hidden="true" />
-
-					<div className="landing-audience-container">
-						<div className="landing-audience-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Para quien es esta plataforma?</h2>
-							<p className="landing-hero-description-a" style={{ marginTop: '16px', fontSize: '16px' }}>Disenada para toda la comunidad universitaria</p>
-						</div>
-
-						<div className="landing-audience-grid">
-							{audienceItems.map((item, index) => (
-								<article className={`landing-audience-card landing-audience-card-${item.variant}`} key={item.title}>
-									<div className="landing-audience-card-shell">
-										<div className="landing-audience-face landing-audience-face-front">
-											<img src={item.image} alt={item.title} className="landing-audience-image" />
-											<div className="landing-audience-overlay" />
-											<div className="landing-audience-front-content">
-												<div className="landing-audience-front-header">
-													<div className="landing-audience-icon" aria-hidden="true">
-														<AudienceIcon icon={item.icon} />
-													</div>
-													<h3 className="landing-audience-card-title">{item.title}</h3>
-												</div>
-												<p className="landing-audience-front-description">{item.shortDescription}</p>
-											</div>
-											<div className="landing-audience-arrow" aria-hidden="true">
-													<ArrowRightIcon />
-											</div>
-									</div>
-
-										<div className="landing-audience-face landing-audience-face-back">
-											<div className="landing-audience-back-icon" aria-hidden="true">
-												<AudienceIcon icon={item.icon} />
-											</div>
-											<h3 className="landing-audience-card-title back">{item.title}</h3>
-											<p className="landing-audience-card-description">{item.description}</p>
-
-											<ul className="landing-audience-points">
-												{item.points.map((point) => (
-													<li key={point}>
-														<span className="landing-audience-point-dot" aria-hidden="true" />
-														<span>{point}</span>
-													</li>
-												))}
-											</ul>
-
-											<button type="button" className="landing-audience-info-btn">
-												Mas informacion
-												<ArrowRightIcon />
-											</button>
-										</div>
-
-										<div className="landing-audience-frame" aria-hidden="true" />
-									</div>
-
-								</article>
-							))}
-						</div>
-
-						<div className="landing-hero-description-a" style={{ marginTop: '45px', fontSize: '18px', textAlign: 'center' }}>
-							<p>Unete a cientos de usuarios que ya estan utilizando la plataforma</p>
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-importance" id="documentos">
-					<div className="landing-smart-docs-container">
-						<div className="landing-smart-docs-grid ">
-							<div className="landing-smart-docs-copy">
-								<h2 className="landing-hero-title" style={{ fontSize: '37px', whiteSpace: 'nowrap' }}>Documentos inteligentes</h2>
-								<p className="landing-hero-description-a" style={{ marginTop: '14px', fontSize: '16px' }}>
-									Genera certificados y documentos oficiales de forma automatica con validacion digital.
-								</p>
-
-								<div className="landing-smart-docs-feature-list" style={{ marginTop: '20px' }}>
-									{smartDocFeatures.map((feature) => (
-										<div className="landing-smart-docs-feature" key={feature.title}>
-											<div className="landing-smart-docs-feature-icon" aria-hidden="true">
-												<SmartDocIcon icon={feature.icon} />
-											</div>
-											<div>
-												<h4 className="landing-service-benefit-title" style={{fontSize: '1.1rem'}}>{feature.title}</h4>
-												<p className="landing-hero-description-a" style={{fontSize: '14px'}}>{feature.description}</p>
-											</div>
-										</div>
-									))}
-								</div>
-							</div>
-
-							<div className="landing-smart-docs-preview-wrap">
-								<img
-									src="/images/certificado.png"
-									alt="Vista previa del certificado de servicio social"
-									className="landing-smart-docs-preview-image"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-benefits" style={{ padding: '6rem 0 7rem' }}>
-					<div className="landing-faq-container">
-						<div className="landing-faq-heading">
-							<h2 className="landing-hero-title" style={{ fontSize: '38px' }}>Preguntas Frecuentes</h2>
-							<p className="landing-hero-description-a" style={{ fontSize: '16px', marginTop: '10px'}}>Resuelve tus dudas sobre el servicio social</p>
-						</div>
-
-						<div className="landing-faq-list">
-							{faqItems.map((item, index) => {
-								const isOpen = openFaqIndex === index;
-								const answerId = `faq-answer-${index}`;
-
-								return (
-									<div className={`landing-faq-item ${isOpen ? 'is-open' : ''}`} key={item.question}>
-										<button
-											type="button"
-											className="landing-faq-question-btn"
-											onClick={() => setOpenFaqIndex((current) => (current === index ? -1 : index))}
-											aria-expanded={isOpen}
-											aria-controls={answerId}
-										>
-											<span className="landing-faq-question-text">{item.question}</span>
-											<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`landing-faq-chevron ${isOpen ? 'is-open' : ''}`}>
-											<path d="m6 9 6 6 6-6" />
-										</svg>
-									</button>
-
-										<div id={answerId} className={`landing-faq-answer ${isOpen ? 'is-open' : ''}`}>
-											<p className="landing-faq-answer-text">{item.answer}</p>
-										</div>
-								</div>
-								);
-							})}
-						</div>
-					</div>
-				</section>
-
-				<section className="landing-importance" id="contacto-info">
-					<div className="landing-contact-container">
-						<div className="landing-contact-grid">
-							<div className="landing-contact-copy">
-								<div className="landing-contact-heading">
-									<h2 className="landing-hero-title" style={{ fontSize: '35px' }}>Contactanos</h2>
-									<p className="landing-hero-description-a"style={{ fontSize: '16px', marginTop: '10px' }}>
-										¿Tienes dudas o necesitas asistencia? Estamos aqui para ayudarte
-									</p>
-								</div>
-
-								<div className="landing-contact-info-list">
-									<div className="landing-contact-info-item">
-										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
-											<MailIcon />
-										</div>
-										<div>
-											<div className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>Correo electronico</div>
-											<a href="mailto:serviciosocial@udh.edu.pe" className="landing-contact-info-link">
-												servico.social@udh.edu.pe
-											</a>
-										</div>
-									</div>
-
-									<div className="landing-contact-info-item">
-										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
-											<PhoneIcon />
-										</div>
-										<div>
-											<div className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>Telefono</div>
-											<a href="tel:+51062591060" className="landing-contact-info-link">
-												+51 952 072 469
-											</a>
-										</div>
-									</div>
-
-									<div className="landing-contact-info-item">
-										<div className="landing-smart-docs-feature-icon" aria-hidden="true">
-											<MapPinIcon />
-										</div>
-										<div>
-											<div className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>Ciudad Universitaria</div>
-											<p className="landing-hero-description-a">
-												Carretera Central km 2.6
-												<br />
-												Huanuco, Peru
-											</p>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="landing-contact-form-wrap">
-								<form className="landing-contact-form">
-									<div className="landing-contact-field-wrap">
-										<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-name">Nombre completo</label>
-										<input id="contact-name" type="text" placeholder="Tu nombre" className="landing-contact-input" />
-									</div>
-
-									<div className="landing-contact-field-wrap">
-										<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-email">Correo electronico</label>
-										<input id="contact-email" type="email" placeholder="tu@email.com" className="landing-contact-input" />
-									</div>
-
-									<div className="landing-contact-field-wrap">
-										<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-message">Mensaje</label>
-										<textarea id="contact-message" rows="5" placeholder="Escribe tu mensaje aqui..." className="landing-contact-textarea" />
-									</div>
-
-									<button type="submit" className="landing-contact-submit-btn">Enviar mensaje</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</section>
+				<div ref={contactRef} style={{ minHeight: '1px' }}>
+					{showContact ? (
+						<Suspense fallback={lazyFallback}>
+							<ContactSection />
+						</Suspense>
+					) : null}
+				</div>
 			</main>
 
 			<footer className="landing-footer" id="contacto">
