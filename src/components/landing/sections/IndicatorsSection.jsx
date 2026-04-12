@@ -4,7 +4,7 @@ import AnimatedSection from '../AnimatedSection';
 function IndicatorsSection({ indicators }) {
 	return (
 		<AnimatedSection>
-			<section className="landing-indicators" id="indicadores" style={{ backgroundImage: "url('/images/estadistica.png')" }}>
+			<section className="landing-indicators" id="indicadores" style={{ backgroundImage: "url('/images/estadistica.webp')" }}>
 			<div className="landing-indicators-overlay" aria-hidden="true" />
 			<div className="landing-indicators-container">
 				<div className="landing-indicators-content">

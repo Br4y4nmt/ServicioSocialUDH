@@ -53,7 +53,7 @@ function HeroSection() {
 				<div className="landing-hero-visual">
 					<div className="landing-hero-image-shell">
 						<img
-							src="/images/landin.png"
+							src="/images/landin.webp"
 							alt="Estudiantes realizando servicio social"
 							className="landing-hero-image"
 						/>

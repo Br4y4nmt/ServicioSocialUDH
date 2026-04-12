@@ -10,7 +10,7 @@ function ProgramSection({ benefitsItems }) {
 				<div className="landing-benefits-visual-wrap">
 					<div className="landing-benefits-visual">
 						<img
-							src="/images/landin1.png"
+							src="/images/landin1.webp"
 							alt="Servicio Social UDH"
 							className="landing-benefits-image"
 						/>

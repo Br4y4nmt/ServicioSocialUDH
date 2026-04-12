@@ -164,37 +164,37 @@ const actionLineItems = [
 
 const galleryItems = [
 	{
-		image: '/images/galeria1.png',
+		image: '/images/galeria1.webp',
 		alt: 'Servicio Comunitario',
 		badge: 'Ayuda Social',
 		title: 'Servicio Comunitario'
 	},
 	{
-		image: '/images/galeria3.png',
+		image: '/images/galeria3.webp',
 		alt: 'Apoyo a Adultos Mayores',
 		badge: 'Bienestar Social',
 		title: 'Apoyo a Adultos Mayores'
 	},
 	{
-		image: '/images/galeria2.png',
+		image: '/images/galeria2.webp',
 		alt: 'Educacion Infantil',
 		badge: 'Ensenanza',
 		title: 'Educacion Infantil'
 	},
 	{
-		image: '/images/galeria5.png',
+		image: '/images/galeria5.webp',
 		alt: 'Trabajo en Equipo',
 		badge: 'Colaboracion',
 		title: 'Trabajo en Equipo'
 	},
 	{
-		image: '/images/galeria4.png',
+		image: '/images/galeria4.webp',
 		alt: 'Conservacion Ambiental',
 		badge: 'Medio Ambiente',
 		title: 'Conservacion Ambiental'
 	},
 	{
-		image: '/images/galeria6.png',
+		image: '/images/galeria6.webp',
 		alt: 'Actividades Grupales',
 		badge: 'Integracion',
 		title: 'Actividades Grupales'
