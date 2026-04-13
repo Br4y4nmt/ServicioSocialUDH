@@ -138,6 +138,40 @@ export default function useDocentes(token) {
     }
   }, [nombreDocenteEditado, emailDocenteEditado, programaDocenteEditado, facultadDocenteEditada, token, fetchDocentes]);
 
+  const reiniciarDatosDocente = useCallback(async (idDocente) => {
+    const emailActual = (emailDocenteEditado || '').trim();
+    const facultadActual = facultadDocenteEditada || '';
+    const programaActual = programaDocenteEditado || '';
+
+    if (!emailActual || !facultadActual || !programaActual) {
+      showTopWarningToast('Campos incompletos', 'Completa todos los campos obligatorios.');
+      return false;
+    }
+
+    try {
+      await axios.put(`/api/docentes/reiniciar-datos/${idDocente}`, {
+        email: emailActual,
+        facultad: facultadActual,
+        programa_academico_id: programaActual,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      showTopSuccessToast('Datos del docente reiniciados correctamente');
+      setEditandoDocenteId(null);
+      await fetchDocentes();
+      return true;
+    } catch (error) {
+      console.error('Error al reiniciar datos del docente:', error);
+      if (error.response?.status === 409) {
+        await alertError('Correo duplicado', error.response?.data?.message || 'El correo ya está registrado.');
+      } else {
+        await alertError('Error al reiniciar datos', error.response?.data?.message || 'No se pudo reiniciar los datos del docente.');
+      }
+      return false;
+    }
+  }, [emailDocenteEditado, facultadDocenteEditada, programaDocenteEditado, token, fetchDocentes]);
+
   const eliminarDocente = useCallback(async (id) => {
     const confirmacion = await alertconfirmacion({ text: 'Esta acción eliminará el docente de forma permanente.' });
     if (!confirmacion.isConfirmed) return;
@@ -208,6 +242,7 @@ export default function useDocentes(token) {
     fetchDocentes,
     crearDocente,
     guardarEdicionDocente,
+    reiniciarDatosDocente,
     eliminarDocente,
   };
 }

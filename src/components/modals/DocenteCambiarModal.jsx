@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
-function DocenteEditarModal({
+function DocenteCambiarModal({
   isOpen,
-  nombre,
-  onChangeNombre,
   email,
   onChangeEmail,
   facultad,
@@ -17,19 +15,17 @@ function DocenteEditarModal({
   onGuardar,
 }) {
   const [initialSnapshot, setInitialSnapshot] = useState({
-    nombre: '',
-    email: '',
-    facultad: '',
-    programa: ''
+    email: "",
+    facultad: "",
+    programa: "",
   });
 
   useEffect(() => {
     if (isOpen) {
       setInitialSnapshot({
-        nombre: (nombre || '').trim(),
-        email: (email || '').trim(),
-        facultad: facultad || '',
-        programa: programa || ''
+        email: (email || "").trim(),
+        facultad: facultad || "",
+        programa: programa || "",
       });
     }
   }, [isOpen]);
@@ -39,16 +35,7 @@ function DocenteEditarModal({
   return (
     <div className="programas-modal show">
       <div className="programas-modal-content">
-        <h3>Editar Docente</h3>
-
-        <input
-          type="text"
-          className="programas-modal-input"
-          placeholder="Nombre del docente"
-          value={nombre}
-          onChange={(e) => onChangeNombre(e.target.value)}
-          autoFocus
-        />
+        <h3>Cambiar Docente</h3>
 
         <input
           type="email"
@@ -56,6 +43,7 @@ function DocenteEditarModal({
           placeholder="Correo del docente"
           value={email}
           onChange={(e) => onChangeEmail(e.target.value)}
+          autoFocus
         />
 
         <select
@@ -85,31 +73,24 @@ function DocenteEditarModal({
         </select>
 
         <div className="programas-modal-actions">
-          <button
-            className="docentes-btn cancelar"
-            type="button"
-            onClick={onClose}
-          >
+          <button className="docentes-btn cancelar" type="button" onClick={onClose}>
             Cancelar
           </button>
           <button
             className="docentes-btn guardar"
             type="button"
             onClick={async () => {
-              const nombreActual = (nombre || '').trim();
-              const emailActual = (email || '').trim();
-              const facultadActual = facultad || '';
-              const programaActual = programa || '';
+              const emailActual = (email || "").trim();
+              const facultadActual = facultad || "";
+              const programaActual = programa || "";
 
-              const sinCambios = (
-                nombreActual === (initialSnapshot.nombre || '') &&
-                emailActual === (initialSnapshot.email || '') &&
-                String(facultadActual) === String(initialSnapshot.facultad || '') &&
-                String(programaActual) === String(initialSnapshot.programa || '')
-              );
+              const sinCambios =
+                emailActual === (initialSnapshot.email || "") &&
+                String(facultadActual) === String(initialSnapshot.facultad || "") &&
+                String(programaActual) === String(initialSnapshot.programa || "");
 
               if (sinCambios) {
-                showTopWarningToast('Sin cambios', 'No se realizaron cambios.');
+                showTopWarningToast("Sin cambios", "No se realizaron cambios.");
                 return;
               }
 
@@ -124,4 +105,4 @@ function DocenteEditarModal({
   );
 }
 
-export default DocenteEditarModal;
+export default DocenteCambiarModal;

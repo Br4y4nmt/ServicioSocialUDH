@@ -262,9 +262,10 @@ function DashboardGestor() {
               setNuevoProgramaDocente={docentesHook.setNuevoProgramaDocente}
               setNuevoDocenteDni={docentesHook.setNuevoDocenteDni}
               facultades={facultadesHook.facultades}
-              programas={docentesHook.programasFiltrados}
+              programas={programasHook.programas}
               eliminarDocente={docentesHook.eliminarDocente}
               guardarEdicionDocente={docentesHook.guardarEdicionDocente}
+              reiniciarDatosDocente={docentesHook.reiniciarDatosDocente}
               crearDocente={docentesHook.crearDocente}
             />
           )}

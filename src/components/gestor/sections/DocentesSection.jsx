@@ -4,7 +4,9 @@ import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
+import ChangeIcon from "../../../hooks/componentes/Icons/ChangeIcon";
 import DocenteEditarModal from "../../modals/DocenteEditarModal";
+import DocenteCambiarModal from "../../modals/DocenteCambiarModal";
 import DocenteNuevoModal from "../../modals/DocenteNuevoModal";
 import TablePagination from '../../ui/TablePagination';
 import PageSkeleton from '../../loaders/PageSkeleton';
@@ -41,9 +43,11 @@ function DocentesSection({
   programas,
   eliminarDocente,
   guardarEdicionDocente,
+  reiniciarDatosDocente,
   crearDocente
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [modalCambiarDocenteVisible, setModalCambiarDocenteVisible] = useState(false);
   const ITEMS_PER_PAGE = 30;
 
   const docentesFiltrados = useMemo(
@@ -53,6 +57,12 @@ function DocentesSection({
       ),
     [docentes, busquedaDocente]
   );
+
+  const programasEdicionFiltrados = useMemo(() => {
+    const idFacultad = parseInt(facultadDocenteEditada || 0, 10);
+    if (!idFacultad) return [];
+    return programas.filter((prog) => prog.id_facultad === idFacultad);
+  }, [programas, facultadDocenteEditada]);
 
   const totalPages = Math.max(1, Math.ceil(docentesFiltrados.length / ITEMS_PER_PAGE));
 
@@ -156,14 +166,30 @@ function DocentesSection({
                             setModalEditarDocenteVisible(true);
                           }}
                           className="facultades-btn editar"
+                          title="Editar docente"
                         >
                           <EditIcon />
                         </button>
                         <button
                           onClick={() => eliminarDocente(doc.id_docente)}
                           className="facultades-btn eliminar"
+                          title="Eliminar docente"
                         >
                           <DeleteIcon />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditandoDocenteId(doc.id_docente);
+                            setNombreDocenteEditado(doc.nombre_docente);
+                            setEmailDocenteEditado(doc.email || '');
+                            setProgramaDocenteEditado(doc.programa_academico_id);
+                            setFacultadDocenteEditada(doc.facultad_id);
+                            setModalCambiarDocenteVisible(true);
+                          }}
+                          className="facultades-btn editar"
+                          title="Cambiar"
+                        >
+                          <ChangeIcon />
                         </button>
                       </td>
                     </tr>
@@ -201,11 +227,14 @@ function DocentesSection({
         email={emailDocenteEditado}
         onChangeEmail={setEmailDocenteEditado}
         facultad={facultadDocenteEditada}
-        onChangeFacultad={setFacultadDocenteEditada}
+        onChangeFacultad={(value) => {
+          setFacultadDocenteEditada(value);
+          setProgramaDocenteEditado("");
+        }}
         programa={programaDocenteEditado}
         onChangePrograma={setProgramaDocenteEditado}
         facultades={facultades}
-        programas={programas}
+        programas={programasEdicionFiltrados}
         onClose={() => {
           setModalEditarDocenteVisible(false);
           setEditandoDocenteId(null);
@@ -270,6 +299,40 @@ function DocentesSection({
           const success = await crearDocente();
           if (success) {
             setModalDocenteVisible(false);
+          }
+        }}
+      />
+
+      <DocenteCambiarModal
+        isOpen={modalCambiarDocenteVisible}
+        email={emailDocenteEditado}
+        onChangeEmail={setEmailDocenteEditado}
+        facultad={facultadDocenteEditada}
+        onChangeFacultad={(value) => {
+          setFacultadDocenteEditada(value);
+          setProgramaDocenteEditado("");
+        }}
+        programa={programaDocenteEditado}
+        onChangePrograma={setProgramaDocenteEditado}
+        facultades={facultades}
+        programas={programasEdicionFiltrados}
+        onClose={() => {
+          setModalCambiarDocenteVisible(false);
+          setEditandoDocenteId(null);
+          setNombreDocenteEditado('');
+          setEmailDocenteEditado('');
+          setFacultadDocenteEditada('');
+          setProgramaDocenteEditado('');
+        }}
+        onGuardar={async () => {
+          const success = await reiniciarDatosDocente(editandoDocenteId);
+          if (success) {
+            setModalCambiarDocenteVisible(false);
+            setEditandoDocenteId(null);
+            setNombreDocenteEditado('');
+            setEmailDocenteEditado('');
+            setFacultadDocenteEditada('');
+            setProgramaDocenteEditado('');
           }
         }}
       />
