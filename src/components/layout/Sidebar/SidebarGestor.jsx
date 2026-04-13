@@ -4,7 +4,7 @@ import AcademicManagementIcon from "../../../hooks/componentes/Icons/AcademicMan
 import TeacherClipboardIcon from "../../../hooks/componentes/Icons/TeacherClipboardIcon";
 import ActionLinesIcon  from "../../../hooks/componentes/Icons/ActionLinesIcon";
 import SocialServiceIcon  from "../../../hooks/componentes/Icons/SocialServiceIcon";
-import StudentsIcon  from "../../../hooks/componentes/Icons/StudentsIcon";
+import UsersIcon from "../../../hooks/componentes/Icons/UsersIcon";
 import ImpersonateIcon  from "../../../hooks/componentes/Icons/ImpersonateIcon";
 import DashboardIcon from "../../../hooks/componentes/Icons/DashboardIcon";
 import CambioAsesorIcon from "../../../hooks/componentes/Icons/CambioAsesorIcon";
@@ -210,7 +210,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       onClick={() => setActiveSection('estudiantes')}
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <StudentsIcon size={18} color="#2e9e7f" />
+                        <UsersIcon size={18} color="#2e9e7f" />
                         Estudiantes
                       </span>
                     </li>

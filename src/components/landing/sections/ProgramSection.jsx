@@ -31,7 +31,7 @@ function ProgramSection({ benefitsItems }) {
 				<div className="landing-benefits-copy">
 					<div>
 						<div className="landing-hero-badge">
-							<span>Sobre el Programa</span>
+							<span>Sobre el programa</span>
 						</div>
 						<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>
 							<span className="landing-title-line" style={{ fontSize: '37px' }}>¿Qué es el Servicio Social</span>

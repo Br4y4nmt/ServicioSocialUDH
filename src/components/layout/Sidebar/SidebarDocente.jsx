@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './SidebarAlumno.css';
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import InformesFinalesIcon from "../../../hooks/componentes/Icons/InformesFinalesIcon";
-import StudentMonitoringIcon from "../../../hooks/componentes/Icons/StudentMonitoringIcon";
+ import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -15,9 +15,9 @@ function SidebarDocente({
 }) {
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
-
   const navigate = useNavigate();
   const location = useLocation();
+
 
   const isRevision = location.pathname === '/dashboard-docente';
   const isConformidad = location.pathname === '/revision-documento-docente';
@@ -87,7 +87,7 @@ function SidebarDocente({
                       gap: '6px',
                     }}
                   >
-                    <ReportIcon size={32} color="#2e9e7f" />
+                    <PlanIcon  size={32} color="#2e9e7f" />
                     <span>Revisión de Planes</span>
                   </div>
 
@@ -133,7 +133,7 @@ function SidebarDocente({
                       gap: '6px',
                     }}
                   >
-                    <StudentMonitoringIcon size={32} color="#2e9e7f" />
+                    <InformesFinalesIcon  size={32} color="#2e9e7f" />
                     <span>Seguimiento</span>
                   </div>
 
@@ -173,7 +173,7 @@ function SidebarDocente({
                       gap: '6px',
                     }}
                   >
-                    <InformesFinalesIcon size={32} color="#2e9e7f" />
+                    <ReportIcon size={32} color="#2e9e7f" />
                     <span>Informes Finales</span>
                   </div>
 

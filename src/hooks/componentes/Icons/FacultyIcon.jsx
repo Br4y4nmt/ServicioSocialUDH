@@ -2,25 +2,31 @@ import React from "react";
 
 function FacultyIcon({ size = 32, color = "#2e9e7f", className = "" }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      stroke={color}
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <polygon points="32 8 6 20 32 32 58 20 32 8" />
-      <line x1="10" y1="48" x2="54" y2="48" />
-      <line x1="16" y1="48" x2="16" y2="28" />
-      <line x1="26" y1="48" x2="26" y2="28" />
-      <line x1="38" y1="48" x2="38" y2="28" />
-      <line x1="48" y1="48" x2="48" y2="28" />
-      <rect x="8" y="48" width="48" height="8" />
-    </svg>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke={color}
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			aria-hidden="true"
+			className={className}
+		>
+			<rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+			<path d="M9 22v-4h6v4" />
+			<path d="M8 6h.01" />
+			<path d="M16 6h.01" />
+			<path d="M12 6h.01" />
+			<path d="M12 10h.01" />
+			<path d="M12 14h.01" />
+			<path d="M16 10h.01" />
+			<path d="M16 14h.01" />
+			<path d="M8 10h.01" />
+			<path d="M8 14h.01" />
+		</svg>
   );
 }
 

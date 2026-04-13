@@ -13,10 +13,11 @@ function SupervisorCheckIcon({ size = 18, color = "#2e9e7f", className = "" }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
+      aria-hidden="true"
     >
-      <circle cx="12" cy="7" r="4" />
-      <path d="M5.5 21a8.38 8.38 0 0113 0" />
-      <path d="M16.5 11.5l1.5 1.5 3-3" /> 
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <polyline points="16 11 18 13 22 9" />
     </svg>
   );
 }

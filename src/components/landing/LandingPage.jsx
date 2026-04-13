@@ -9,9 +9,17 @@ import MailIcon from '../../hooks/componentes/Icons/MailIcon';
 import FacebookIcon from '../../hooks/componentes/Icons/FacebookIcon';
 import InstagramIcon from '../../hooks/componentes/Icons/InstagramIcon';
 import TwitterIcon from '../../hooks/componentes/Icons/TwitterIcon';
-import BookIcon from '../../hooks/componentes/Icons/BookIcon';
 import UsersIcon from '../../hooks/componentes/Icons/UsersIcon';
+import DashboardIcon from "../../hooks/componentes/Icons/DashboardIcon";
+import SocialServiceIcon  from "../../hooks/componentes/Icons/SocialServiceIcon";
+import SupervisorCheckIcon from '../../hooks/componentes/Icons/SupervisorCheckIcon';
+import AcademicManagementIcon from '../../hooks/componentes/Icons/AcademicManagementIcon';
+import FacultyIcon from '../../hooks/componentes/Icons/FacultyIcon';
+import FinalReportIcon  from "../../hooks/componentes/Icons/FinalReportIcon";
+import TrackingCheckIcon from '../../hooks/componentes/Icons/TrackingCheckIcon';
+import JusticeIcon from '../../hooks/componentes/Icons/JusticeIcon';
 import useInView from './hooks/useInView';
+import PageSkeleton from '../loaders/PageSkeleton';
 
 const HeroSection = lazy(() => import('./sections/HeroSection'));
 const ProgramSection = lazy(() => import('./sections/ProgramSection'));
@@ -294,15 +302,11 @@ const faqItems = [
 
 function ImportanceIcon({ icon }) {
 	if (icon === 'heart') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-			</svg>
-		);
+		return <SocialServiceIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'book') {
-		return <BookIcon />;
+		return <SupervisorCheckIcon size={24} color="currentColor" />;
 	}
 
 	return (
@@ -321,7 +325,7 @@ function ActionLineIcon({ icon }) {
 	}
 
 	if (icon === 'book') {
-		return <BookIcon />;
+		return <FinalReportIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'users') {
@@ -329,79 +333,33 @@ function ActionLineIcon({ icon }) {
 	}
 
 	if (icon === 'computer') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<rect x="3" y="4" width="18" height="12" rx="2" />
-				<path d="M8 20h8" />
-				<path d="M12 16v4" />
-			</svg>
-		);
+		return <DashboardIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'justice') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="M12 3v18" />
-				<path d="M5 7h14" />
-				<path d="M7.5 7 5 12h5z" />
-				<path d="M19 7 16.5 12h5z" />
-				<path d="M8 21h8" />
-			</svg>
-		);
+		return <JusticeIcon size={24} color="currentColor" />;
 	}
 
 	return (
-		<ImportanceIcon icon="heart" />
+		<SocialServiceIcon size={24} color="currentColor" icon="heart" />
 	);
 }
 
 function AudienceIcon({ icon }) {
 	if (icon === 'graduation') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
-				<path d="M22 10v6" />
-				<path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-			</svg>
-		);
+		return <AcademicManagementIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'teacher') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-				<circle cx="9" cy="7" r="4" />
-				<polyline points="16 11 18 13 22 9" />
-			</svg>
-		);
+		return <SupervisorCheckIcon size={24} color="currentColor" />;
 	}
 
-	return (
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-			<rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-			<path d="M9 22v-4h6v4" />
-			<path d="M8 6h.01" />
-			<path d="M16 6h.01" />
-			<path d="M12 6h.01" />
-			<path d="M12 10h.01" />
-			<path d="M12 14h.01" />
-			<path d="M16 10h.01" />
-			<path d="M16 14h.01" />
-			<path d="M8 10h.01" />
-			<path d="M8 14h.01" />
-		</svg>
-	);
+	return <FacultyIcon size={24} color="currentColor" />;
 }
 
 function SmartDocIcon({ icon }) {
 	if (icon === 'sparkles') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-				<path d="M14 2v4a2 2 0 0 0 2 2h4" />
-				<path d="m9 15 2 2 4-4" />
-			</svg>
-		);
+		return <TrackingCheckIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'file') {
@@ -436,20 +394,15 @@ function ServiceBenefitsIcon({ icon }) {
 	}
 
 	if (icon === 'book') {
-		return <BookIcon />;
+		return <SupervisorCheckIcon size={24} color="currentColor" />;
 	}
 
 	if (icon === 'award') {
-		return (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-				<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
-				<circle cx="12" cy="8" r="6" />
-			</svg>
-		);
+		return <FacultyIcon size={24} color="currentColor" />;
 	}
 
 	return (
-		<ImportanceIcon icon="heart" />
+		<SocialServiceIcon size={24} color="currentColor" icon="heart" />
 	);
 }
 
@@ -468,7 +421,7 @@ function LandingPage() {
 	const [smartDocsRef, showSmartDocs] = useInView(preloadOffset);
 	const [faqRef, showFaq] = useInView(preloadOffset);
 	const [contactRef, showContact] = useInView(preloadOffset);
-	const lazyFallback = <div className="landing-hero-description-a" style={{ textAlign: 'center', padding: '2rem 1rem' }}>Cargando contenido...</div>;
+	const lazyFallback = <PageSkeleton />;
 
 	return (
 		<div className="landing-page">
@@ -682,11 +635,11 @@ function LandingPage() {
 						<div className="landing-footer-links-col">
 							<h3 className="landing-footer-col-title">Recursos</h3>
 							<ul className="landing-footer-link-list">
-								<li><a href="#">Guia de Usuario</a></li>
-								<li><a href="#preguntas-frecuentes">Preguntas Frecuentes</a></li>
-								<li><a href="#">Tutoriales</a></li>
-								<li><a href="#">Reglamento</a></li>
-								<li><a href="#">Soporte Tecnico</a></li>
+								<li><a href="https://serviciosocial.udh.edu.pe/">Guia de Usuario</a></li>
+								<li><a href="https://serviciosocial.udh.edu.pe/">Preguntas Frecuentes</a></li>
+								<li><a href="https://serviciosocial.udh.edu.pe/">Tutoriales</a></li>
+								<li><a href="https://serviciosocial.udh.edu.pe/">Reglamento</a></li>
+								<li><a href="https://wa.me/51956224252?text=Hola%20necesito%20soporte%20tecnico%20para%20la%20plataforma%20servicio%20social%20UDH" target="_blank" rel="noopener noreferrer">Soporte Tecnico</a></li>
 							</ul>
 						</div>
 
@@ -714,7 +667,7 @@ function LandingPage() {
 							© 2026 <a href="#inicio-principal" className="landing-footer-home-button">Servicio Social UDH</a>. Todos los derechos reservados.
 						</p>
 						<div className="landing-footer-legal-links">
-							<a href="#">Terminos y Condiciones</a>
+							<a href="https://serviciosocial.udh.edu.pe/">Terminos y Condiciones</a>
 						</div>
 					</div>
 				</div>
