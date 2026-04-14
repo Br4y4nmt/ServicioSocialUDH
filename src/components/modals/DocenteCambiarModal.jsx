@@ -20,15 +20,16 @@ function DocenteCambiarModal({
     programa: "",
   });
 
-  useEffect(() => {
-    if (isOpen) {
-      setInitialSnapshot({
-        email: (email || "").trim(),
-        facultad: facultad || "",
-        programa: programa || "",
-      });
-    }
-  }, [isOpen]);
+useEffect(() => {
+  if (isOpen) {
+    setInitialSnapshot({
+      email: (email || "").trim(),
+      facultad: facultad || "",
+      programa: programa || "",
+    });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isOpen]);
 
   if (!isOpen) return null;
 

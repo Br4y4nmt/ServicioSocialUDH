@@ -5,7 +5,7 @@ import axios from 'axios';
 import { alertError, alertSuccess } from '../../hooks/alerts/alertas';
 import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 import '../alumno/perfil.css';
-import PerfilIcon from '../alumno/PerfilIcon';
+import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
 import Spinner from '../ui/Spinner';
 import { useUser } from '../../UserContext';
 import ExecutionIcon from '../../hooks/componentes/Icons/ExecutionIcon';

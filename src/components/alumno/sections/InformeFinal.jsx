@@ -158,8 +158,23 @@ export default function InformeFinal({
       }));
       clearFile();
     } catch (err) {
-      console.error(err);
-      showTopErrorToast("No se pudo enviar el documento.", "Intenta nuevamente.");
+      console.error('Error al enviar informe final:', err);
+      const backendMessage = err.response?.data?.message;
+      if (backendMessage) {
+        await alertError('Error al enviar documento', backendMessage, {
+          timer: null,
+          showConfirmButton: true,
+          confirmButtonText: 'Cerrar',
+          confirmButtonColor: '#dc2626'
+        });
+      } else {
+        await alertError('No se pudo enviar el documento', 'Intenta nuevamente.', {
+          timer: null,
+          showConfirmButton: true,
+          confirmButtonText: 'Cerrar',
+          confirmButtonColor: '#dc2626'
+        });
+      }
     } finally {
       setUploading(false);
     }

@@ -32,6 +32,7 @@ function DocenteEditarModal({
         programa: programa || ''
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!isOpen) return null;

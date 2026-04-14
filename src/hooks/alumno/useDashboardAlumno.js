@@ -310,12 +310,10 @@ export function useDashboardAlumno() {
   useEffect(() => {
     if (activeSection === 'seguimiento' && datosCargados) {
       if (estadoConformidad !== 'aceptado') {
-        Swal.fire({
-          icon: 'info',
-          title: 'Acceso restringido',
-          text: 'Debes esperar que tu asesor acepte el esquema plan antes de acceder al seguimiento.',
-          confirmButtonText: 'Entendido'
-        });
+        alertInfo(
+          'Acceso restringido',
+          'Debes esperar que tu asesor acepte el esquema plan antes de acceder al seguimiento.'
+        );
         setActiveSection('conformidad');
       }
     }
@@ -325,12 +323,10 @@ export function useDashboardAlumno() {
   useEffect(() => {
     if (activeSection === 'conformidad' && datosCargados) {
       if (estadoPlan !== 'aceptado') {
-        Swal.fire({
-          icon: 'info',
-          title: 'Solicitud pendiente',
-          text: 'Tu docente aún no ha aceptado tu solicitud. Espera su respuesta antes de continuar.',
-          confirmButtonText: 'Entendido'
-        });
+        alertInfo(
+          'Solicitud pendiente',
+          'Tu docente aún no ha aceptado tu solicitud. Espera su respuesta antes de continuar.'
+        );
         setActiveSection('designacion');
       }
     }

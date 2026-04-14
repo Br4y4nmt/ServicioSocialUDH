@@ -4,7 +4,7 @@ import SidebarAlumno from '../layout/Sidebar/SidebarAlumno';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './perfil.css';
-import PerfilIcon from './PerfilIcon';
+import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
 import { useUser } from '../../UserContext';
 import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 import Spinner from 'components/ui/Spinner';

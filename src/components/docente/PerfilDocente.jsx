@@ -3,7 +3,7 @@ import Header from '../layout/Header/Header';
 import axios from 'axios';
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import '../alumno/perfil.css';
-import PerfilIcon from '../alumno/PerfilIcon';
+import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
 import UploadIcon from "../../hooks/componentes/Icons/UploadIcon";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext';

@@ -1,6 +1,7 @@
 import React from "react";
 import Swal from "sweetalert2";
-import { FiUsers, FiUser, FiPlus, FiX } from "react-icons/fi";
+import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
+import UsersIcon from '../../hooks/componentes/Icons/UsersIcon';
 import { showTopWarningToast } from "../../hooks/alerts/useWelcomeToast";
 
 
@@ -61,15 +62,6 @@ function GrupoModalAlumno({
   return (
     <div className="grupo-alumno-modal-overlay">
       <div className="grupo-alumno-modal-container">
-        <button
-          type="button"
-          className="grupo-alumno-modal-close"
-          onClick={handleCerrar}
-          aria-label="Cerrar modal"
-        >
-          <FiX />
-        </button>
-
         <div className="grupo-alumno-modal-header">
           <div className="grupo-alumno-header-blur grupo-alumno-header-blur-right"></div>
           <div className="grupo-alumno-header-blur grupo-alumno-header-blur-left"></div>
@@ -77,7 +69,7 @@ function GrupoModalAlumno({
           <div className="grupo-alumno-modal-header-content">
             <h3 className="grupo-alumno-modal-title">
               <span className="grupo-alumno-modal-title-icon">
-                <FiUsers />
+                <UsersIcon />
               </span>
               Integrantes del grupo
             </h3>
@@ -115,7 +107,7 @@ function GrupoModalAlumno({
               {codigosGrupo.slice(0, MAX_INTEGRANTES).map((codigo, index) => (
                 <div className="grupo-alumno-field" key={index}>
                   <label className="grupo-alumno-label">
-                    <FiUser className="grupo-alumno-label-icon" />
+                    <PerfilIcon className="grupo-alumno-label-icon" />
                     <span>Código universitario N°{index + 1}</span>
                   </label>
 
@@ -158,14 +150,14 @@ function GrupoModalAlumno({
                     />
 
                     {codigosGrupo.length > 1 && (
-                      <button
-                        type="button"
-                        className="grupo-alumno-btn-remove"
-                        onClick={() => handleEliminarIntegrante(index)}
-                        aria-label={`Eliminar integrante ${index + 1}`}
-                      >
-                        <FiX />
-                      </button>
+              <button
+                type="button"
+                className="grupo-alumno-btn-remove"
+                onClick={() => handleEliminarIntegrante(index)}
+                aria-label={`Eliminar integrante ${index + 1}`}
+              >
+                <span className="icon-x"></span>
+              </button>
                     )}
                   </div>
                 </div>
@@ -177,7 +169,7 @@ function GrupoModalAlumno({
                   onClick={handleAgregarOtro}
                   className="grupo-alumno-btn-add"
                 >
-                  <FiPlus />
+                  <span style={{ fontSize: '1.5em', color: '#39B49E', lineHeight: '1' }}>+</span>
                   Agregar otro integrante
                 </button>
               )}

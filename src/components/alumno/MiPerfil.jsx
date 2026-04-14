@@ -3,7 +3,7 @@ import Header from '../layout/Header/Header';
 import SidebarAlumno from '../layout/Sidebar/SidebarAlumno';
 import axios from 'axios';
 import './perfil.css';
-import PerfilIcon from './PerfilIcon';
+import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext';
 import {
@@ -128,7 +128,9 @@ function MiPerfil() {
           <aside className="perfil-left">
             <button className="perfil-nav active">
               <PerfilIcon className="perfil-icon" />
-              <span>Perfil</span>
+              <span className="bold-text" style={{ color: '#ffff' }}>
+                Perfil
+              </span>
             </button>
           </aside>
 

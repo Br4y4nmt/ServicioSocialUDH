@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Header.css';
-import { FaBars } from 'react-icons/fa';
+import MenuIcon from '../../../hooks/componentes/Icons/MenuIcon';
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../UserContext';
@@ -78,7 +78,7 @@ function Header({ onToggleSidebar }) {
   return (
     <header className="custom-header">
       <div className="left-section">
-        <FaBars className="menu-icon" onClick={onToggleSidebar} />
+        <MenuIcon className="menu-icon" onClick={onToggleSidebar} />
       </div>
 
       <div className="right-section" ref={menuRef}>
