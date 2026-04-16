@@ -64,7 +64,6 @@ function FacultadesSection({
               <tr>
                 <th>Nº</th>
                 <th>Nombre</th>
-                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -74,9 +73,6 @@ function FacultadesSection({
                   <tr key={f.id_facultad}>
                     <td>{inicio + index + 1}</td>
                     <td>{(f.nombre_facultad || '').toUpperCase()}</td>
-                    <td>
-                      <span className="facultades-badge-activo">Activo</span>
-                    </td>
                     <td>
                       <>
                         <button

@@ -3,7 +3,7 @@ import React from "react";
 function PlanIcon({ size = 32, color = "#2e9e7f", className = "" }) {
   return (
     <svg
-      fill={color}
+      fill="currentColor"
       height={size}
       width={size}
       viewBox="0 0 32 32"

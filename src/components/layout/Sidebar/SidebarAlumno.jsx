@@ -5,9 +5,7 @@ import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import ExecutionIcon from "../../../hooks/componentes/Icons/ExecutionIcon";
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
-import {
-  alertInfo,
-} from "../../../hooks/alerts/alertas";
+import { alertInfo } from "../../../hooks/alerts/alertas";
 
 function SidebarAlumno({ 
   collapsed, 
@@ -22,88 +20,91 @@ function SidebarAlumno({
 }) {
 
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [openMenu, setOpenMenu] = useState(null);
-  
+  const [openMenus, setOpenMenus] = useState([]);
 
   useEffect(() => {
     const foto = localStorage.getItem('foto_perfil');
     if (foto) setFotoPerfil(foto);
-    
+
     if (isPerfilIncompleto) {
-      setOpenMenu(null);
+      setOpenMenus([]);
       return;
     }
-    
-    if (activeSection === 'designacion' || activeSection === 'conformidad') {
-      setOpenMenu(0); 
+
+    if (['designacion', 'conformidad'].includes(activeSection)) {
+      setOpenMenus([0]);
     } else if (activeSection === 'seguimiento') {
-      setOpenMenu(1); 
-    } else if (activeSection === 'informe') {
-      setOpenMenu(2); 
-    } else if (activeSection === 'informe-final') {
-      setOpenMenu(2); 
+      setOpenMenus([1]);
+    } else if (['informe', 'informe-final'].includes(activeSection)) {
+      setOpenMenus([2]);
     } else if (activeSection === 'reglamento') {
-      setOpenMenu(3);
+      setOpenMenus([3]);
     } else {
-      setOpenMenu(null);
+      setOpenMenus([]);
     }
   }, [activeSection, isPerfilIncompleto]);
 
   const toggleMenu = (index) => {
     if (isPerfilIncompleto) return;
-    setOpenMenu(openMenu === index ? null : index);
+    setOpenMenus((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
   };
-  
- return (
-  <aside
-    className={`sidebar-alumno 
-      ${collapsed ? 'collapsed' : ''} 
-      ${!collapsed && window.innerWidth <= 768 ? 'show' : ''}`}
-  >
-    <button
-    type="button"
-    className="toggle-btn"
-    onClick={onToggleSidebar}
-    aria-label={collapsed ? 'Abrir menú lateral' : 'Cerrar menú lateral'}
-    aria-expanded={!collapsed}
-  >
-    <span aria-hidden="true">
-      <ArrowLeftIcon/>
-    </span>
-  </button>
 
-    {!collapsed && (
-      <>
-        <div className="sidebar-header">
-          <img
-            src={fotoPerfil || 'https://via.placeholder.com/100'}
-            alt="Foto de perfil"
-            className="profile-pic"
-            referrerPolicy="no-referrer"
-          />
-          <h4 className="nombre">{nombre}</h4>
-          <span className="rol">Estudiante</span>
-        </div>
+  const isActiveMenu = (index) => {
+    const map = {
+      0: ['designacion', 'conformidad'],
+      1: ['seguimiento'],
+      2: ['informe-final'],
+      3: ['reglamento']
+    };
 
-        <nav className="sidebar-nav">
-          <ul>
-            <li className="menu-item">
-              <button 
-                onClick={() => toggleMenu(0)} 
-                className={`menu-title ${openMenu === 0 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
-                disabled={isPerfilIncompleto}
-              >
-                <PlanIcon size={32} color="#2e9e7f" />
-                Plan de Servicio Social
-                <i
-                  className={`fas ${
-                    openMenu === 0 ? 'fa-chevron-up' : 'fa-chevron-down'
-                  }`}
-                ></i>
-              </button>
+    // Only consider the activeSection mapping for the active highlight.
+    return map[index]?.includes(activeSection);
+  };
 
-              {openMenu === 0 && (
-                <ul className="submenu">
+  return (
+    <aside
+      className={`sidebar-alumno 
+        ${collapsed ? 'collapsed' : ''} 
+        ${!collapsed && window.innerWidth <= 768 ? 'show' : ''}`}
+    >
+      <button
+        type="button"
+        className="toggle-btn"
+        onClick={onToggleSidebar}
+      >
+        <ArrowLeftIcon/>
+      </button>
+
+      {!collapsed && (
+        <>
+          <div className="sidebar-header">
+            <img
+              src={fotoPerfil || 'https://via.placeholder.com/100'}
+              alt="Foto de perfil"
+              className="profile-pic"
+            />
+            <h4 className="nombre">{nombre}</h4>
+            <span className="rol">Estudiante</span>
+          </div>
+
+          <nav className="sidebar-nav">
+            <ul>
+
+              {/* PLAN */}
+              <li className="menu-item">
+                <button 
+                  onClick={() => toggleMenu(0)} 
+                  className={`menu-title ${isActiveMenu(0) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                  disabled={isPerfilIncompleto}
+                >
+                  <PlanIcon size={32}/>
+                  Plan de Servicio Social
+                  <i className={`fas ${openMenus.includes(0) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </button>
+
+                <ul className={`submenu ${openMenus.includes(0) ? "open" : ""}`}>
                   <li
                     className={activeSection === 'designacion' ? 'selected' : ''}
                     onClick={() => {
@@ -111,7 +112,7 @@ function SidebarAlumno({
                       if (window.innerWidth <= 768) onToggleSidebar();
                     }}
                   >
-                    Designación de Supervisor
+                    Designación de supervisor
                   </li>
 
                   <li
@@ -125,29 +126,24 @@ function SidebarAlumno({
                       }
                     }}
                   >
-                    Conformidad de Plan
+                    Conformidad de plan
                   </li>
                 </ul>
-              )}
-            </li>
+              </li>
 
-            <li className="menu-item">
-              <button 
-                onClick={() => toggleMenu(1)} 
-                className={`menu-title ${openMenu === 1 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
-                disabled={isPerfilIncompleto}
-              >
-                <ExecutionIcon size={32} color="#2e9e7f" />
-                Ejecución
-                <i
-                  className={`fas ${
-                    openMenu === 1 ? 'fa-chevron-up' : 'fa-chevron-down'
-                  }`}
-                ></i>
-              </button>
+              {/* EJECUCIÓN */}
+              <li className="menu-item">
+                <button 
+                  onClick={() => toggleMenu(1)} 
+                  className={`menu-title ${isActiveMenu(1) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                  disabled={isPerfilIncompleto}
+                >
+                  <ExecutionIcon size={32} />
+                  Ejecución
+                  <i className={`fas ${openMenus.includes(1) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </button>
 
-              {openMenu === 1 && (
-                <ul className="submenu">
+                <ul className={`submenu ${openMenus.includes(1) ? "open" : ""}`}>
                   <li
                     className={activeSection === 'seguimiento' ? 'selected' : ''}
                     onClick={async () => {
@@ -162,34 +158,25 @@ function SidebarAlumno({
                     Seguimiento
                   </li>
                 </ul>
-              )}
-            </li>
+              </li>
 
-            <li className="menu-item">
-              <button 
-                onClick={() => toggleMenu(2)} 
-                className={`menu-title ${openMenu === 2 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
-                disabled={isPerfilIncompleto}
-              >
-                <ReportIcon size={32} color="#2e9e7f" />
-                Informe Final
-                <i
-                  className={`fas ${
-                    openMenu === 2 ? 'fa-chevron-up' : 'fa-chevron-down'
-                  }`}
-                ></i>
-              </button>
+              {/* INFORME */}
+              <li className="menu-item">
+                <button 
+                  onClick={() => toggleMenu(2)} 
+                  className={`menu-title ${isActiveMenu(2) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                  disabled={isPerfilIncompleto}
+                >
+                  <ReportIcon size={32} />
+                  Informe Final
+                  <i className={`fas ${openMenus.includes(2) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </button>
 
-              {openMenu === 2 && (
-                <ul className="submenu">
+                <ul className={`submenu ${openMenus.includes(2) ? "open" : ""}`}>
                   <li
                     className={activeSection === 'informe-final' ? 'selected' : ''}
                     onClick={async () => {
-                      if (
-                        estadoSolicitudTermino
-                          ?.trim()
-                          .toLowerCase() === 'aprobada'
-                      ) {
+                      if (estadoSolicitudTermino?.trim().toLowerCase() === 'aprobada') {
                         setActiveSection('informe-final');
                         if (window.innerWidth <= 768) onToggleSidebar();
                       } else {
@@ -197,29 +184,24 @@ function SidebarAlumno({
                       }
                     }}
                   >
-                    Informe Final
+                    Informe final
                   </li>
                 </ul>
-              )}
-            </li>
+              </li>
 
-            <li className="menu-item">
-              <button 
-                onClick={() => toggleMenu(3)} 
-                className={`menu-title ${openMenu === 3 ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
-                disabled={isPerfilIncompleto}
-              >
-                <DocumentIcon size={32} color="#2e9e7f" />
-                Documentos
-                <i
-                  className={`fas ${
-                    openMenu === 3 ? 'fa-chevron-up' : 'fa-chevron-down'
-                  }`}
-                ></i>
-              </button>
+              {/* DOCUMENTOS */}
+              <li className="menu-item">
+                <button 
+                  onClick={() => toggleMenu(3)} 
+                  className={`menu-title ${isActiveMenu(3) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+                  disabled={isPerfilIncompleto}
+                >
+                  <DocumentIcon size={32} />
+                  Documentos
+                  <i className={`fas ${openMenus.includes(3) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </button>
 
-              {openMenu === 3 && (
-                <ul className="submenu">
+                <ul className={`submenu ${openMenus.includes(3) ? "open" : ""}`}>
                   <li
                     className={activeSection === 'reglamento' ? 'selected' : ''}
                     onClick={() => {
@@ -230,14 +212,14 @@ function SidebarAlumno({
                     Documentos oficiales
                   </li>
                 </ul>
-              )}
-            </li>
-          </ul>
-        </nav>
-      </>
-    )}
-  </aside>
-);
+              </li>
+
+            </ul>
+          </nav>
+        </>
+      )}
+    </aside>
+  );
 }
 
 export default SidebarAlumno;

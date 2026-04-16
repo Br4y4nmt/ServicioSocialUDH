@@ -374,7 +374,7 @@ useEffect(() => {
         </button>
       </div>
     </div>
-    <h4 className="titulo-aceptacion">Aprobación de Actividades:</h4>
+    <h4 className="bold-text">Aprobación de Actividades</h4>
       {estadoSolicitudTermino === 'aprobada' ? (
         <p className="texto-cursiva">
           Se aprobó correctamente su solicitud. Puede ver y descargar su

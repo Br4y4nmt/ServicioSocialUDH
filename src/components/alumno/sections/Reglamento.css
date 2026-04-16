@@ -11,24 +11,10 @@
 
 .reglamento-card-header {
   background: #1e293b;
-  padding: 18px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.reglamento-title {
-  color: #ffffff;
-  font-size: 1.1rem;
-  line-height: 1.25;
-  font-weight: 700;
-  margin: 0;
-}
-
-.reglamento-subtitle {
-  color: #cbd5e1;
-  font-size: 0.86rem;
-  margin: 2px 0 0;
 }
 
 .reglamento-card-body {
@@ -114,34 +100,6 @@
 
 .reglamento-btn-download i {
   font-size: 13px;
-}
-
-.reglamento-info-box {
-  margin-top: 8px;
-  border: 1px solid #bfdbfe;
-  border-radius: 10px;
-  background: #eff6ff;
-  color: #1e3a8a;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px;
-}
-
-.reglamento-info-box > i {
-  margin-top: 3px;
-}
-
-.reglamento-info-title {
-  margin: 0 0 4px;
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.reglamento-info-text {
-  margin: 0;
-  font-size: 0.83rem;
-  color: #1d4ed8;
 }
 
 @media (max-width: 768px) {

@@ -44,8 +44,8 @@ function Reglamento() {
           <i className="fas fa-check" aria-hidden="true"></i>
         </span>
         <div>
-          <h2 className="reglamento-title">DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
-          <p className="reglamento-subtitle">Consulta y descarga de documentos oficiales vigentes</p>
+          <h2 style={{ color: '#ffffff', fontSize: '1.2rem' }}>DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
+          <p style={{ color: '#cbd5e1', fontSize: '0.86rem', margin: '2px 0 0' }}>Consulta y descarga de documentos oficiales vigentes</p>
         </div>
       </div>
 
@@ -90,16 +90,6 @@ function Reglamento() {
             </article>
           ))}
 
-          <div className="reglamento-info-box">
-            <i className="fas fa-info-circle" aria-hidden="true"></i>
-            <div>
-              <p className="reglamento-info-title">Informacion importante</p>
-              <p className="reglamento-info-text">
-                Todos los documentos son de caracter oficial. Asegurate de revisar la version
-                vigente antes de realizar cualquier tramite.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>

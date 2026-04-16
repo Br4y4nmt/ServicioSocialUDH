@@ -256,6 +256,7 @@
   border: none;
   border-radius: 5px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   margin: 20px auto 0 auto; 
   display: block; 
@@ -311,7 +312,7 @@
     justify-content: flex-start !important;
     font-weight: 600; 
     font-size: 18px;
-    color: #2d2d2d;
+    color: #575757 !important;
     gap: 10px;
     width: 100%;
   }
@@ -364,7 +365,7 @@
   .respuesta-asesor-btn {
     background-color: #38a169 ;
     color: white;
-    padding: 6px 8px;
+    padding: 3px 6px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -1400,12 +1401,7 @@
   z-index: 1100; 
 }
 
-.titulo-aceptacion {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 600; 
-  color: #333;
-}
+
 .check-circle {
   display: flex;
   align-items: center;
@@ -1596,9 +1592,6 @@
   }
   .respuesta-asesor-title {
     font-size: 15px; 
-  }
-  .titulo-aceptacion {
-    font-size: 0.85rem; 
   }
   .step-header {
     font-size: 16px;     

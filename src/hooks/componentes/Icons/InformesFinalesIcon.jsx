@@ -1,6 +1,6 @@
 import React from "react";
 
-function InformesFinalesIcon({ size = 32, color = "#2e9e7f", className = "" }) {
+function InformesFinalesIcon({ size = 32, className = "" }) {
   return (
     <svg
       viewBox="0 0 48 64"
@@ -8,7 +8,7 @@ function InformesFinalesIcon({ size = 32, color = "#2e9e7f", className = "" }) {
       width={size}
       height={size}
       fill="none"
-      stroke={color}
+      stroke="currentColor"  // 👈 clave
       strokeWidth="4"
       strokeLinecap="round"
       strokeLinejoin="round"

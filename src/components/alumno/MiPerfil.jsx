@@ -144,12 +144,12 @@ function MiPerfil() {
               <input className="input-disabled" value={perfil.dni} disabled />
             </div>
             <div className="form-group">
-              <label className="bold-text">Código</label>
-              <input className="input-disabled" value={perfil.codigo} disabled />
+              <label className="bold-text">Facultad</label>
+              <input className="input-disabled" value={perfil.facultad} disabled />
             </div>
             <div className="form-group">
-              <label className="bold-text">Correo Institucional</label>
-              <input className="input-disabled" value={perfil.correo} disabled />
+              <label className="bold-text">Programa Académico</label>
+              <input className="input-disabled" value={perfil.programa} disabled />
             </div>
             <div className="form-group">
               <label className="bold-text">Número Celular</label>
@@ -185,14 +185,13 @@ function MiPerfil() {
               />
             </div>
             <div className="form-group">
-              <label className="bold-text">Facultad</label>
-              <input className="input-disabled" value={perfil.facultad} disabled />
+              <label className="bold-text">Correo Institucional</label>
+              <input className="input-disabled" value={perfil.correo} disabled />
             </div>
             <div className="form-group">
-              <label className="bold-text">Programa Académico</label>
-              <input className="input-disabled" value={perfil.programa} disabled />
+              <label className="bold-text">Código</label>
+              <input className="input-disabled" value={perfil.codigo} disabled />
             </div>
-
             <div className="alerta-boton-wrapper">
               <div className="alerta-importante bounce">
                 <strong>¡Importante!</strong> Mantén tu número celular actualizado para recibir notificaciones.

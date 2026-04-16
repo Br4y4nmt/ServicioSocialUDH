@@ -51,16 +51,6 @@
   margin-left: 0;       
 }
 
-.facultades-badge-activo {
-  display: inline-block;
-  background-color: #d1fae5;
-  color: #059669;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-
 .facultades-btn {
   border: none;
   border-radius: 6px;

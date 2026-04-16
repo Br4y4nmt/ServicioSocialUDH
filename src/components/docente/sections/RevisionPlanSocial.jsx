@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../../layout/Header/Header';
 import './RevisionPlanSocial.css';
 import '../DashboardDocente.css';
-import { useNavigate } from 'react-router-dom';
+// useNavigate not needed here
 import SidebarDocente from 'components/layout/Sidebar/SidebarDocente';
 import { useUser } from '../../../UserContext'; 
 import axios from 'axios';
@@ -31,11 +31,8 @@ function RevisionPlanSocial() {
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [cargandoCambioId, setCargandoCambioId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
-
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setCollapsed(prev => !prev);
@@ -342,12 +339,6 @@ function RevisionPlanSocial() {
                 <p className="revision-no-data">No hay trabajos sociales disponibles aún.</p>
               )}
             </div>
-          </div>
-
-          <div className="revision-footer">
-            <button className="revision-btn siguiente" onClick={() => navigate('/revision-documento-docente')}>
-              Siguiente
-            </button>
           </div>
         </div>
       </main>

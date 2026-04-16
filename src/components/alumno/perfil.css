@@ -34,6 +34,10 @@
   transition: all 0.25s ease;
 }
 
+.perfil-left .perfil-nav span {
+  font-weight: 600;
+}
+
 .perfil-left .perfil-nav:hover {
   background: #f3f4f6;
   color: #374151;
@@ -88,8 +92,8 @@
 .input-disabled {
     width: 100%;
     padding: 8px 10px;
-    border: 1px solid #ccc;
-    background-color: #f2f2f2;
+    border: 1px solid #F1F5F9;
+    background-color: #F1F5F9;
     border-radius: 4px;
 }
 .perfil-card .form-group label {

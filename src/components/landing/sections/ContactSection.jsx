@@ -26,7 +26,7 @@ function ContactSection() {
 								<div>
 									<div className="landing-service-benefit-title" style={{ fontSize: '1rem' }}>Correo electronico</div>
 									<a href="mailto:serviciosocial@udh.edu.pe" className="landing-contact-info-link">
-										servico.social@udh.edu.pe
+										servicio.social@udh.edu.pe
 									</a>
 								</div>
 							</div>

@@ -238,25 +238,6 @@
 .revision-btn.editar:hover {
   background-color: #115293;
 }
-.revision-btn.siguiente {
-  background-color: #39b49e;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.revision-btn.siguiente:hover {
-  background-color: #2e9c89;
-}
-
-.revision-footer {
-  margin-top: 20px;
-  text-align: right;
-}
 
 .revision-no-data {
   padding: 20px;
@@ -589,9 +570,7 @@
 .revision-table {
   min-width: 700px;
 }
-  .revision-footer {
-    justify-content: center;
-  }
+
 }
 
 @media (max-width: 480px) {

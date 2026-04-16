@@ -1541,11 +1541,64 @@
 	.landing-indicators {
 		padding: 4.6rem 0;
 	}
+	.landing-hero-description-a {
+		font-size: 0.95rem !important;
+		text-align: center;
+	}
+	.landing-smart-docs-preview-image {
+		width: 100%;
+		height: auto;
+		max-height: 260px;
+		object-fit: contain;
+	}
+	.landing-smart-docs-feature {
+		gap: 0.7rem;
+	}
 
+	.landing-smart-docs-feature-icon {
+		width: 40px;
+		height: 40px;
+	}
+
+	.landing-service-benefit-title {
+		font-size: 0.95rem !important;
+	}
+
+	.landing-smart-docs-feature p {
+		font-size: 0.8rem !important;
+	}
+	.landing-benefit-item {
+		padding: 0.6rem;
+		gap: 0.6rem;
+	}
+	.landing-hero-title {
+		font-size: 1.6rem !important;
+		white-space: normal !important;
+		text-align: center;
+	}
+	.landing-service-benefit-title {
+		font-size: 0.9rem !important;
+	}
+
+	.landing-benefit-description {
+		font-size: 0.8rem;
+	}
 	.landing-indicators-heading {
 		margin-bottom: 2rem;
 	}
-
+	.landing-benefits-image {
+		height: 220px;
+	}
+	.landing-benefits-title-two-lines {
+		font-size: 1.6rem !important;
+	}
+	.landing-hero-description {
+		font-size: 0.95rem !important;
+	}
+	.landing-title-line {
+		font-size: 1.6rem !important;
+		white-space: normal; /* evita que se desborde */
+	}
 	.landing-indicators-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1.25rem 1rem;
@@ -1576,11 +1629,17 @@
 		right: 1.35rem;
 		bottom: 1.35rem;
 	}
-
+	.landing-hero-stats {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		text-align: center; /* opcional para que se vea mejor */
+	}
 	.landing-audience-card-title {
 		font-size: 1.7rem;
 	}
-
+	.landing-benefits-grid {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
 	.landing-audience-card-description {
 		font-size: 0.95rem;
 	}
@@ -1629,8 +1688,8 @@
 	}
 
 	.landing-smart-docs-grid {
-		grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-		gap: 2.25rem;
+		grid-template-columns: 1fr 1fr; /* 👈 clave */
+		gap: 2rem;
 	}
 
 	.landing-contact-grid {

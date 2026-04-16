@@ -106,15 +106,6 @@ const RevisionContent = memo(function RevisionContent({
           />
         )}
       </div>
-
-      <div className="revision-footer">
-        <button
-          className="revision-btn siguiente"
-          onClick={() => navigate('/revision-documento-docente')}
-        >
-          Siguiente
-        </button>
-      </div>
     </div>
   );
 });

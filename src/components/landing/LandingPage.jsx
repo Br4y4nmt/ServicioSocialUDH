@@ -446,7 +446,7 @@ function LandingPage() {
 						<div className="landing-actions-desktop">
 							<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
 								
-								<span>Iniciar sesion</span>
+								<span>Ir a la plataforma  </span>
 							</Link>
 						</div>
 
@@ -656,7 +656,7 @@ function LandingPage() {
 								</li>
 								<li>
 									<MailIcon />
-									<a href="mailto:serviciosocial@udh.edu.pe">servico.social@udh.edu.pe</a>
+									<a href="mailto:serviciosocial@udh.edu.pe">servicio.social@udh.edu.pe</a>
 								</li>
 							</ul>
 						</div>

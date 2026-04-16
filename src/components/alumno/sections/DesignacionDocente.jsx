@@ -319,7 +319,7 @@ const eliminarEleccion = useCallback(async () => {
           <i className="fas fa-info-circle icono-azul" />
           <span className="respuesta-asesor-title">Respuesta del docente:</span>
         </div>
-        <h4 className="titulo-aceptacion">Carta de aceptación</h4>
+        <h4 className="bold-text">Carta de aceptación</h4>
       </div>
         <div className="respuesta-acciones">
               {estadoPlan === "rechazado" && (

@@ -19,13 +19,11 @@ function HeroSection() {
 					</h1>
 
 					<p className="landing-hero-description">
-						Plataforma digital para gestionar, supervisar y validar el servicio social en la
-						Universidad de Huanuco.
-					</p>
+Infórmate, participa y accede al Servicio Social Universitario de la Universidad de Huánuco desde un espacio claro y orientado a estudiantes, supervisores y comunidad universitaria.					</p>
 
 					<div className="landing-hero-actions">
 						<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
-							<span>Acceder al sistema</span>
+							<span>Ingresar a la plataforma</span>
 							<ArrowRightIcon />
 						</Link>
 
