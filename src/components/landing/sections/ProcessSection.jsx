@@ -7,11 +7,13 @@ function ProcessSection({ processSteps }) {
 			<section className="landing-importance" id="proceso">
 			<div className="landing-process-flow-container">
 				<div className="landing-process-flow-heading">
-					<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Como funciona?</h2>
+					<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Cómo participar?</h2>
 					<p className="landing-hero-description-a" style={{ fontSize: '16px', marginTop: '12px' }}>
-						Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.
+						Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.					
 					</p>
 				</div>
+
+
 
 				<div className="landing-process-flow-timeline-wrap">
 					<div className="landing-process-flow-line" aria-hidden="true" />
@@ -29,6 +31,17 @@ function ProcessSection({ processSteps }) {
 					</div>
 				</div>
 			</div>
+
+				<div className="landing-cta-container" style={{marginTop: '80px'}}>
+					<a
+						href="https://serviciosocial.udh.edu.pe/"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="landing-cta-primary"
+					>
+						Ver guía completa
+					</a>
+					</div>
 			</section>
 		</AnimatedSection>
 	);

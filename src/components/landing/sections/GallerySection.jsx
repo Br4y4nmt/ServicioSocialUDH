@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AnimatedSection from '../AnimatedSection';
+import GalleryModal from '../../modals/GalleryModal';
 
 function GallerySection({ galleryItems }) {
+	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedItem, setSelectedItem] = useState(null);
+
 	return (
 		<AnimatedSection>
 			<section className="landing-importance" id="galeria">
@@ -26,7 +30,14 @@ function GallerySection({ galleryItems }) {
 								</div>
 								<h3 className="landing-gallery-card-title">{item.title}</h3>
 								<div className="landing-gallery-action-wrap">
-									<button type="button" className="landing-gallery-action-btn">
+									<button
+										type="button"
+										className="landing-gallery-action-btn"
+										onClick={() => {
+											setSelectedItem(item);
+											setModalOpen(true);
+										}}
+									>
 										<span>Ver mas</span>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
 											<path d="M9 5l7 7-7 7" />
@@ -37,6 +48,16 @@ function GallerySection({ galleryItems }) {
 							<div className="landing-gallery-corner" aria-hidden="true" />
 						</article>
 					))}
+
+					{/** Modal for viewing gallery item details */}
+					<GalleryModal
+						open={modalOpen}
+						onClose={() => {
+							setModalOpen(false);
+							setSelectedItem(null);
+						}}
+						item={selectedItem}
+					/>
 				</div>
 			</div>
 			</section>

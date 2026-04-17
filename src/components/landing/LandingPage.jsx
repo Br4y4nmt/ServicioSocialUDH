@@ -46,37 +46,40 @@ const navLinks = [
 		
 const benefitsItems = [
 	{
-		title: 'Gestion 100% digital',
-		description: 'Todos los procesos se realizan en linea sin necesidad de tramites presenciales'
-	},
+    title: 'Beneficios del programa',
+    description: [
+      'Formación integral',
+      'Impacto social',
+      'Experiencia práctica',
+      'Responsabilidad ciudadana'
+    ]
+  },
 	{
-		title: 'Seguimiento en tiempo real',
-		description: 'Monitorea el progreso de tus actividades y recibe retroalimentacion inmediata'
-	},
-	{
-		title: 'Certificacion automatica',
-		description: 'Obten tu certificado digital al completar todas las actividades requeridas'
-	},
-	{
-		title: 'Soporte institucional',
-		description: 'Respaldado oficialmente por la Universidad de Huanuco'
+		title: 'Ventajas de la plataforma digital',
+		description: [
+			'Gestión en línea',
+			'Seguimiento en tiempo real',
+			'Certificados digitales',
+			'Soporte institucional'
+		]
 	}
+
 ];
 
 const importanceItems = [
 	{
 		title: 'Impacto Social',
-		description: 'Contribuyes directamente al desarrollo de tu comunidad y generas cambios positivos',
+		description: 'Contribuyes al bienestar de tu comunidad mediante acciones que generan cambios reales y sostenibles',
 		icon: 'heart'
 	},
 	{
 		title: 'Formacion Profesional',
-		description: 'Aplicas conocimientos teoricos en contextos reales fortaleciendo competencias',
+		description: 'Aplicas tus conocimientos en escenarios reales y desarrollas habilidades clave para tu futuro laboral',
 		icon: 'book'
 	},
 	{
-		title: 'Responsabilidad Ciudadana',
-		description: 'Desarrollas conciencia social y compromiso con el bienestar colectivo',
+		title: 'Compromiso ciudadano',
+		description: 'Fortaleces valores de responsabilidad, empatía y participación activa con la sociedad',
 		icon: 'users'
 	}
 ];
@@ -107,33 +110,33 @@ const serviceBenefitsItems = [
 const processSteps = [
 	{
 		number: '01',
-		title: 'Registro del estudiante',
-		description: 'Inscribete en la plataforma con tus datos academicos'
+		title: 'Conoce el servicio social universitario',
+		description: 'Infórmate sobre objetivos, requisitos y beneficios del programa'
 	},
 	{
 		number: '02',
-		title: 'Seleccion de supervisor y area de servicio',
-		description: 'Elige el area de servicio acorde a tu carrera'
+		title: 'Ingresa a la plataforma',
+		description: 'Accede al portal oficial con tus datos institucionales y completa tu perfil de usuario'
 	},
 	{
 		number: '03',
-		title: 'Conformidad de plan de trabajo',
-		description: 'Define tus actividades y objetivos'
+		title: 'Registra tu participación',
+		description: 'Completa tu solicitud y selecciona el área correspondiente a tu interés y perfil académico'
 	},
 	{
 		number: '04',
-		title: 'Seguimiento y validacion de actividades',
-		description: 'Seguimiento continuo por parte de tu tutor asignado'
+		title: 'Desarrolla tus actividades',
+		description: 'Realiza tu servicio con seguimiento y acompañamiento institucional '
 	},
 	{
 		number: '05',
-		title: 'Informe final',
-		description: 'Presenta un informe de tus experiencias y aprendizajes obtenidos'
+		title: 'Presenta tus evidencias',
+		description: 'Carga tus documentos e informe final para la validación del proceso'
 	},
 	{
 		number: '06',
-		title: 'Certificacion final',
-		description: 'Certificado digital con codigo QR verificable'
+		title: 'Obtén tu certificación',
+		description: 'Recibe tu certificado digital al culminar satisfactoriamente tu servicio social universitario'
 	}
 ];
 
@@ -175,40 +178,87 @@ const galleryItems = [
 		image: '/images/galeria1.webp',
 		alt: 'Servicio Comunitario',
 		badge: 'Ayuda Social',
-		title: 'Servicio Comunitario'
+		title: 'Servicio Comunitario',
+		description: 'Brindamos atención y apoyo en salud y bienestar a comunidades vulnerables, promoviendo la prevención y el cuidado integral.',
+		bullets: [
+			'Atención y apoyo en salud y bienestar a comunidades vulnerables',
+			'Promoción de la prevención y el cuidado integral',
+			'Acompañamiento y fortalecimiento comunitario',
+			'Participación activa en jornadas de ayuda social'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
+		]
 	},
 	{
 		image: '/images/galeria3.webp',
 		alt: 'Apoyo a Adultos Mayores',
 		badge: 'Bienestar Social',
-		title: 'Apoyo a Adultos Mayores'
+		title: 'Apoyo a Adultos Mayores',
+		description: 'Acompañamos a adultos mayores mediante actividades recreativas, asistencia básica y fortalecimiento de su bienestar emocional.',
+		bullets: [
+			'Acompañamiento en actividades recreativas y sociales',
+			'Asistencia básica en necesidades cotidianas',
+			'Fomento del bienestar emocional y la compañía',
+			'Promoción de la inclusión y el respeto generacional'
+		]
 	},
 	{
 		image: '/images/galeria2.webp',
 		alt: 'Educacion Infantil',
 		badge: 'Ensenanza',
-		title: 'Educacion Infantil'
+		title: 'Educacion Infantil',
+		description: 'Desarrollamos actividades educativas para niños, reforzando el aprendizaje y promoviendo valores desde temprana edad.',
+		bullets: [
+			'Refuerzo del aprendizaje en áreas básicas',
+			'Promoción de valores y habilidades sociales',
+			'Actividades lúdicas y educativas dinámicas',
+			'Estimulación del desarrollo cognitivo y creativo'
+		]
 	},
 	{
 		image: '/images/galeria5.webp',
 		alt: 'Trabajo en Equipo',
 		badge: 'Colaboracion',
-		title: 'Trabajo en Equipo'
+		title: 'Trabajo en Equipo',
+		description: 'Fomentamos el trabajo colaborativo entre estudiantes, fortaleciendo habilidades de liderazgo y comunicación.',
+		bullets: [
+			'Desarrollo de habilidades de liderazgo',
+			'Fortalecimiento de la comunicación efectiva',
+			'Fomento de la cooperación y el respeto mutuo',
+			'Resolución conjunta de problemas y retos'
+		]
 	},
 	{
 		image: '/images/galeria4.webp',
 		alt: 'Conservacion Ambiental',
 		badge: 'Medio Ambiente',
-		title: 'Conservacion Ambiental'
+		title: 'Conservacion Ambiental',
+		description: 'Realizamos campañas de limpieza y concientización ambiental para proteger nuestros recursos naturales.',
+		bullets: [
+			'Organización de campañas de limpieza comunitaria',
+			'Promoción de la conciencia ambiental',
+			'Protección de recursos naturales locales',
+			'Fomento de prácticas sostenibles y ecológicas'
+		]
 	},
 	{
 		image: '/images/galeria6.webp',
 		alt: 'Actividades Grupales',
 		badge: 'Integracion',
-		title: 'Actividades Grupales'
+		title: 'Actividades Grupales',
+		description: 'Organizamos actividades comunitarias que fortalecen la integración social y el sentido de pertenencia.',
+		bullets: [
+			'Organización de eventos comunitarios',
+			'Fomento de la integración social',
+			'Fortalecimiento del sentido de pertenencia',
+			'Promoción de la participación activa grupal'
+		]
 	}
 ];
-
 const indicators = [
 	{ value: '6', label: 'Lineas de Accion' },
 	{ value: '700', label: 'Estudiantes' },
@@ -261,17 +311,17 @@ const audienceItems = [
 
 const smartDocFeatures = [
 	{
-		title: 'Generacion automatica',
+		title: 'Emisión oficial inmediata',
 		description: 'Documentos listos al instante',
 		icon: 'sparkles'
 	},
 	{
-		title: 'Firmas digitales',
+		title: 'Firmas institucionales digitales',
 		description: 'Autenticidad garantizada',
 		icon: 'file'
 	},
 	{
-		title: 'Codigo QR unico',
+		title: 'Código QR verificable en línea',
 		description: 'Verificacion instantanea',
 		icon: 'qr'
 	}

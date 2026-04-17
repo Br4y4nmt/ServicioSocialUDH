@@ -2,33 +2,7 @@ import React from "react";
 
 function JusticeIcon({ size = 24, color = "currentColor", ...props }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
-      width={size}
-      height={size}
-      fill="none"
-      stroke={color}
-      strokeWidth="16"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <line x1="120" y1="120" x2="392" y2="120" />
-      <path d="M120 120 q-20 -20 -40 0" />
-      <path d="M392 120 q20 -20 40 0" />
-      <line x1="120" y1="120" x2="100" y2="200" />
-      <line x1="392" y1="120" x2="412" y2="200" />
-      <path d="M60 200 h80 a40 40 0 0 1 -80 0 z" />
-      <path d="M372 200 h80 a40 40 0 0 1 -80 0 z" />
-      <path d="M200 120 v-40 q0 -20 20 -20 q20 0 20 20 v40" />
-      <path d="M240 120 v-50 q0 -20 20 -20 q20 0 20 20 v50" />
-      <path d="M280 120 v-40 q0 -20 20 -20 q20 0 20 20 v40" />
-      <path d="M200 120 h120 v40 q0 30 -30 30 h-60 q-30 0 -30 -30 z" />
-      <rect x="210" y="190" width="92" height="200" rx="20" />
-      <path d="M256 250 q-40 40 0 100" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale w-7 h-7 text-teal-300 group-hover:text-white transition-colors duration-500" data-fg-dzeo19="3.16:3.6401:/src/app/components/ActionLines.tsx:80:21:4907:114:e:Icon" data-fgid-dzeo19=":r4e:"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></svg>
   );
 }
 

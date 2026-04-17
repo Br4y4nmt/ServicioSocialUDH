@@ -21,10 +21,7 @@ function ProgramSection({ benefitsItems }) {
 						<div className="landing-hero-floating-icon" aria-hidden="true">
 							<CheckCircleIcon />
 						</div>
-						<div>
-							<div className="landing-hero-floating-title">100%</div>
-							<div className="landing-hero-floating-subtitle">Digital</div>
-						</div>
+						<div>Programa Oficial</div>
 					</div>
 				</div>
 
@@ -39,8 +36,7 @@ function ProgramSection({ benefitsItems }) {
 							<span className="landing-title-line" style={{ fontSize: '37px' }}>Universitario?</span>
 						</h2>
 						<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '16px' }}>
-							El Servicio Social Universitario es un programa obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo su formación profesional y compromiso social.
-						</p>
+						El Servicio Social Universitario es un programa formativo y obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo valores de responsabilidad social, compromiso ciudadano y experiencia profesional.						</p>
 					</div>
 
 					<div className="landing-benefits-list" style={{ marginTop: ' -15px' }}>
@@ -51,7 +47,15 @@ function ProgramSection({ benefitsItems }) {
 								</div>
 								<div>
 									<h3 className=" landing-service-benefit-title" style={{ fontSize: '16px' }}>{item.title}</h3>
-									<p className="landing-benefit-description">{item.description}</p>
+									{Array.isArray(item.description) ? (
+										<ul className="landing-benefit-description-list" style={{ margin: 0, paddingLeft: '1.2em', fontSize: '14px' }}>
+											{item.description.map((line, i) => (
+												<li key={i}>{line}</li>
+											))}
+										</ul>
+									) : (
+										<p className="landing-benefit-description">{item.description}</p>
+									)}
 								</div>
 							</div>
 						))}

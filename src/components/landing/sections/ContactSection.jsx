@@ -59,8 +59,9 @@ function ContactSection() {
 						</div>
 					</div>
 
-					<div className="landing-contact-form-wrap">
-						<form className="landing-contact-form">
+				<div className="landing-contact-form-wrap">
+					<p style={{ marginBottom: '1rem', fontWeight: 600 }}>Si tienes dudas sobre el SSU o sobre el acceso a la plataforma, escríbenos.</p>
+					<form className="landing-contact-form">
 							<div className="landing-contact-field-wrap">
 								<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-name">Nombre completo</label>
 								<input id="contact-name" type="text" placeholder="Tu nombre" className="landing-contact-input" />
@@ -69,6 +70,17 @@ function ContactSection() {
 							<div className="landing-contact-field-wrap">
 								<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-email">Correo electronico</label>
 								<input id="contact-email" type="email" placeholder="tu@email.com" className="landing-contact-input" />
+							</div>
+
+							<div className="landing-contact-field-wrap">
+								<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-type">Tipo de usuario</label>
+								<select id="contact-type" name="contact-type" className="landing-contact-select" style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #e5e7eb' }}>
+									<option value="">Selecciona...</option>
+									<option value="estudiante">Estudiante</option>
+									<option value="supervisor">Supervisor</option>
+									<option value="administrativo">Administrativo</option>
+									<option value="otro">Otro</option>
+								</select>
 							</div>
 
 							<div className="landing-contact-field-wrap">

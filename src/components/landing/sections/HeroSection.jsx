@@ -28,22 +28,22 @@ Infórmate, participa y accede al Servicio Social Universitario de la Universida
 						</Link>
 
 						<a href="#programa" className="landing-hero-secondary-btn">
-							Conocer mas
+							Conocer el programa
 						</a>
 					</div>
 
 					<div className="landing-hero-stats">
 						<div>
 							<div className="landing-hero-stat-number">500+</div>
-							<div className="landing-hero-stat-label">Estudiantes activos</div>
+							<div className="landing-hero-stat-label">Estudiantes participantes</div>
 						</div>
 						<div>
 							<div className="landing-hero-stat-number">150+</div>
-							<div className="landing-hero-stat-label">Proyectos</div>
+							<div className="landing-hero-stat-label">Proyectos activos</div>
 						</div>
 						<div>
 							<div className="landing-hero-stat-number">100%</div>
-							<div className="landing-hero-stat-label">Digital</div>
+							<div className="landing-hero-stat-label">Certificación digital</div>
 						</div>
 					</div>
 				</div>
@@ -64,8 +64,8 @@ Infórmate, participa y accede al Servicio Social Universitario de la Universida
 							<CheckCircleIcon />
 						</div>
 						<div>
-							<div className="landing-hero-floating-title">Validacion Digital</div>
-							<div className="landing-hero-floating-subtitle">Certificados con QR verificable</div>
+							<div className="landing-hero-floating-title">Experiencia Real</div>
+							<div className="landing-hero-floating-subtitle">Aprendizaje aplicado fuera del aula</div>
 						</div>
 					</div>
 				</div>
