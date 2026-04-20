@@ -44,7 +44,7 @@ function GalleryModal({ open, onClose, item }) {
 
             {/* show paragraph description first (if any) */}
             {item.description && typeof item.description === 'string' && (
-              <p className="landing-hero-description-a" style={{ marginTop: '12px', fontSize: '18px' }}>
+              <p className="landing-hero-description-a" style={{ marginTop: '12px', fontSize: '17px', color: '#64748b' }}>
                 {item.description}
               </p>
             )}
@@ -73,7 +73,7 @@ function GalleryModal({ open, onClose, item }) {
                 {item.stats.map((s, idx) => (
                   <div className="gallery-stat" key={idx}>
                     <div className="gallery-stat-value">{s.value}</div>
-                    <div className="landing-hero-description-a"style={{color: '#64748b'}}>{s.label}</div>
+                    <div className="landing-hero-description-a"style={{color: '#0F2F54', fontSize: '20px'}}>{s.label}</div>
                   </div>
                 ))}
               </div>

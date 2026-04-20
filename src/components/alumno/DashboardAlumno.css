@@ -1676,7 +1676,7 @@
 
 @media (max-width: 420px) {
   .dashboard-title-animada {
-    font-size: 26px;
+    font-size: 15px;
     margin-top: 40px !important;
     padding: 0 10px;
     word-break: break-word;
@@ -1700,6 +1700,12 @@
     padding: 0 10px;
     margin-top: 40px !important;
     word-break: break-word;          
+  }
+    .dashboard-title-animada {
+    font-size: 30px;
+    margin-top: 40px !important;
+    padding: 0 10px;
+    word-break: break-word;
   }
 
   .dashboard-title-animada span {

@@ -19,7 +19,7 @@ function HeroSection() {
 					</h1>
 
 					<p className="landing-hero-description">
-Infórmate, participa y accede al Servicio Social Universitario de la Universidad de Huánuco desde un espacio claro y orientado a estudiantes, supervisores y comunidad universitaria.					</p>
+Infórmate, participa y accede al Servicio Social Universitario de la Universidad de Huánuco desde un espacio claro y orientado a estudiantes, supervisores y comunidad universitaria</p>
 
 					<div className="landing-hero-actions">
 						<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">

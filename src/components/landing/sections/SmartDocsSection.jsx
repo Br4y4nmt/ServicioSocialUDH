@@ -8,20 +8,20 @@ function SmartDocsSection({ smartDocFeatures, renderSmartDocIcon }) {
 			<div className="landing-smart-docs-container">
 				<div className="landing-smart-docs-grid ">
 					<div className="landing-smart-docs-copy">
-						<h2 className="landing-hero-title" style={{ fontSize: '37px', whiteSpace: 'nowrap' }}>Certificación y validación digital</h2>
+						<h2 className="landing-hero-title" style={{ fontSize: '37px', whiteSpace: 'normal', lineHeight: '1.1' }}>Certificación y validación digital</h2>
 						<p className="landing-hero-description-a" style={{ marginTop: '14px', fontSize: '16px' }}>
 							Obtén certificados y documentos oficiales del Servicio Social Universitario con firma institucional y validación digital verificable.
 						</p>
 
-						<div className="landing-smart-docs-feature-list" style={{ marginTop: '20px' }}>
+						<div className="landing-smart-docs-feature-list" style={{ marginTop: '50px' }}>
 							{smartDocFeatures.map((feature) => (
 								<div className="landing-smart-docs-feature" key={feature.title}>
 									<div className="landing-smart-docs-feature-icon" aria-hidden="true">
 										{renderSmartDocIcon(feature.icon)}
 									</div>
-									<div>
-										<h4 className="landing-service-benefit-title" style={{ fontSize: '1rem', marginTop: '5px' }}>{feature.title}</h4>
-										<p className="landing-hero-description-a" style={{ fontSize: '13px' }}>{feature.description}</p>
+									<div className="landing-service-benefit-text">
+										<h4 className="landing-service-benefit-title-a">{feature.title}</h4>
+										<p className="landing-service-benefit-desc">{feature.description}</p>
 									</div>
 								</div>
 							))}

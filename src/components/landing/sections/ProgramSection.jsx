@@ -31,9 +31,9 @@ function ProgramSection({ benefitsItems }) {
 							<span>Sobre el programa</span>
 						</div>
 						<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>
-							<span className="landing-title-line" style={{ fontSize: '37px' }}>¿Qué es el Servicio Social</span>
+							<span className="landing-hero-title" style={{ fontSize: '37px' }}>¿Qué es el servicio social</span>
 							<br />
-							<span className="landing-title-line" style={{ fontSize: '37px' }}>Universitario?</span>
+							<span className="landing-hero-title" style={{ fontSize: '37px' }}>universitario?</span>
 						</h2>
 						<p className="landing-hero-description" style={{ marginTop: '10px', fontSize: '16px' }}>
 						El Servicio Social Universitario es un programa formativo y obligatorio que permite a los estudiantes aplicar sus conocimientos académicos en beneficio de la comunidad, fortaleciendo valores de responsabilidad social, compromiso ciudadano y experiencia profesional.						</p>

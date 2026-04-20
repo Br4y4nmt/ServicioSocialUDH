@@ -14,7 +14,7 @@ function GallerySection({ galleryItems }) {
 					<span className="landing-hero-badge">Galeria</span>
 
 					<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Estudiantes en accion</h2>
-					<p className="landing-hero-description-a" style={{ fontSize: '18px', marginTop: '12px', whiteSpace: 'nowrap' }}>
+					<p className="landing-hero-description-a landing-gallery-description" style={{ fontSize: '16px' }}>
 						Conoce las actividades de servicio social que realizan nuestros estudiantes en la comunidad
 					</p>
 				</div>

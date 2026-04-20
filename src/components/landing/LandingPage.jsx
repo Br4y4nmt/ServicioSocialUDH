@@ -204,6 +204,12 @@ const galleryItems = [
 			'Asistencia básica en necesidades cotidianas',
 			'Fomento del bienestar emocional y la compañía',
 			'Promoción de la inclusión y el respeto generacional'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
 		]
 	},
 	{
@@ -217,6 +223,12 @@ const galleryItems = [
 			'Promoción de valores y habilidades sociales',
 			'Actividades lúdicas y educativas dinámicas',
 			'Estimulación del desarrollo cognitivo y creativo'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
 		]
 	},
 	{
@@ -230,6 +242,12 @@ const galleryItems = [
 			'Fortalecimiento de la comunicación efectiva',
 			'Fomento de la cooperación y el respeto mutuo',
 			'Resolución conjunta de problemas y retos'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
 		]
 	},
 	{
@@ -243,6 +261,12 @@ const galleryItems = [
 			'Promoción de la conciencia ambiental',
 			'Protección de recursos naturales locales',
 			'Fomento de prácticas sostenibles y ecológicas'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
 		]
 	},
 	{
@@ -256,6 +280,12 @@ const galleryItems = [
 			'Fomento de la integración social',
 			'Fortalecimiento del sentido de pertenencia',
 			'Promoción de la participación activa grupal'
+		],
+		stats: [
+			{
+				label: 'Trabajos sociales activos',
+				value: 100
+			}
 		]
 	}
 ];
@@ -522,9 +552,6 @@ function LandingPage() {
 								{link.label}
 							</a>
 						))}
-						<Link to="/login" className="landing-login-button mobile" onClick={() => setMenuOpen(false)}>
-							<span>Iniciar sesion</span>
-						</Link>
 					</div>
 				</nav>
 			</header>

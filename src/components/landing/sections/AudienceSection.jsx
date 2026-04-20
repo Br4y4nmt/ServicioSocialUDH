@@ -66,7 +66,7 @@ function AudienceSection({ audienceItems, renderAudienceIcon }) {
 					))}
 				</div>
 
-				<div className="landing-hero-description-a" style={{ marginTop: '45px', fontSize: '18px', textAlign: 'center' }}>
+				<div className="landing-hero-description-a" style={{ marginTop: '45px', fontSize: '16px', textAlign: 'center' }}>
 					<p>Unete a cientos de usuarios que ya estan utilizando la plataforma</p>
 				</div>
 			</div>

@@ -103,24 +103,16 @@
 }
 
 .landing-menu-toggle {
-	width: 42px;
-	height: 42px;
+	background: transparent; /* quita el plomo */
 	border: none;
-	border-radius: 12px;
-	background: #eef2f7;
-	color: #475569;
-	display: inline-grid;
-	place-items: center;
-	transition: background 0.2s ease;
-}
-
-.landing-menu-toggle:hover {
-	background: #dbe4ee;
-}
-
-.landing-menu-toggle svg {
-	width: 24px;
-	height: 24px;
+	padding: 0;
+	width: auto;
+	height: auto;
+	color: #0F2F54; /* color del icono */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
 }
 
 .landing-mobile-menu {
@@ -151,11 +143,6 @@
 .landing-mobile-link:hover {
 	background: #f1f5f9;
 	color: var(--landing-primary-dark);
-}
-
-.landing-login-button.mobile {
-	margin-top: 0.25rem;
-	width: fit-content;
 }
 
 .landing-main {
@@ -212,10 +199,7 @@
 	line-height: 1.7;
 	color: #64748b;
 }
-.landing-hero-description-a {
-	line-height: 1.7;
-	color: #64748b;
-}
+
 .landing-hero-actions {
 	display: flex;
 	flex-direction: column;
@@ -405,6 +389,90 @@
 .landing-benefits-visual-wrap {
 	position: relative;
 	padding-bottom: 2rem;
+}
+
+.landing-smart-docs-feature {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+	margin-bottom: 0.75rem;
+	min-width: 0; /* important for flex children to allow wrapping */
+}
+.landing-smart-docs-feature-icon {
+	flex: 0 0 44px;
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.landing-service-benefit-text {
+	flex: 1 1 auto;
+	min-width: 0; /* allow text to shrink and wrap inside flex */
+}
+.landing-service-benefit-title {
+	font-size: 1rem;
+	margin: 5px 0 4px 0;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	color: #0f2f54;
+}
+.landing-service-benefit-title-a {
+	font-size: 1rem;
+	margin: 5px 0 4px 0;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	color: #0f2f54;
+}
+.landing-service-benefit-desc,
+.landing-hero-description-a {
+	font-size: 13px;
+	margin: 0;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	color: #64748b;
+}
+
+@media (max-width: 640px) {
+	.landing-smart-docs-grid {
+		grid-template-columns: 1fr;
+	}
+	.landing-smart-docs-preview-wrap {
+		margin-top: 1rem;
+		order: 2;
+	}
+	.landing-smart-docs-copy {
+		order: 1;
+	}
+	.landing-service-benefit-title {
+		font-size: 0.95rem;
+	}
+	.landing-service-benefit-title-a {
+		font-size: 0.95rem;
+	}
+	.landing-service-benefit-desc {
+		font-size: 0.92rem;
+	}
+	.landing-smart-docs-feature-icon {
+		flex: 0 0 36px;
+		width: 36px;
+		height: 36px;
+	}
+
+	/* Centrar títulos de beneficio en móviles */
+	.landing-service-benefit-title {
+		text-align: center;
+	}
+
+	/* Reducir altura del botón secundario en móviles */
+	.landing-hero-secondary-btn {
+		padding: 0.85rem 1rem;
+		font-size: 1rem;
+		line-height: 1;
+	}
 }
 
 .landing-benefits-visual {
@@ -608,13 +676,6 @@
 	height: 28px;
 }
 
-.landing-service-benefit-title {
-	margin: 0;
-	font-size: 1.24rem;
-	font-weight: 700;
-	color: #0f2f54;
-}
-
 .landing-process-flow-container {
 	width: min(1200px, calc(100% - 2rem));
 	margin: 0 auto;
@@ -772,7 +833,7 @@
 }
 
 .gallery-modal-list {
-	margin: 0.65rem 0 0 0;
+	
 	padding-left: 1.25rem;
 	color: #64748b;
 }
@@ -780,7 +841,7 @@
 	margin: 0.6rem 0;
 	font-size: 0.95rem;
 	line-height: 1.6;
-	color: #64748b;
+	color: #334155;
 	list-style-type: disc;
 }
 
@@ -789,11 +850,11 @@
 }
 
 .gallery-modal-separator {
-	height: 1px;
+	height: 2px;
 	width: 100%;
-	background: rgba(15,47,84,0.06);
+	background: rgba(67, 67, 68, 0.06) ;
 	margin: 1rem 0 0.75rem;
-	border-radius: 2px;
+	border-radius: 4px;
 }
 .gallery-modal-info {
 	width: 50%;
@@ -822,13 +883,13 @@
   align-items: center;
   margin-top: 15px;
   margin-left: 55px; 
-  gap: 22px; /* espacio entre número y etiqueta */
+  gap: 22px; 
 }
 
 .gallery-stat-value {
   color: #011B4B;
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 2rem;
   line-height: 1;
   display: inline-block;
   margin: 0;
@@ -898,6 +959,108 @@
 
 	.gallery-modal-title {
 		font-size: 1.2rem;
+	}
+}
+
+/* Mobile improvements for gallery modal: full-width, stacked layout, larger tap targets */
+@media (max-width: 600px) {
+	.gallery-modal-overlay {
+		padding: 0.75rem;
+		align-items: center; /* center modal vertically */
+		justify-content: center;
+	}
+
+	.gallery-modal-content {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		max-height: 96vh;
+		border-radius: 12px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		box-shadow: 0 18px 36px rgba(1, 27, 75, 0.18);
+	}
+
+	.gallery-modal-body {
+		flex-direction: column;
+		height: auto;
+		gap: 0;
+	}
+
+	.gallery-modal-image-wrapper {
+		width: 100%;
+		height: 220px;
+		flex: 0 0 220px;
+	}
+
+	.gallery-modal-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.gallery-modal-info {
+		width: 100%;
+		padding: 1rem 1rem 1.25rem 1rem;
+		overflow: auto;
+		max-height: calc(96vh - 220px - 60px); /* leave space for header/close */
+	}
+
+	.gallery-modal-close {
+		top: 10px;
+		right: 10px;
+		width: 40px;
+		height: 40px;
+		font-size: 22px;
+	}
+
+	/* When badge is over the image, make it sit inside the image flow on mobile */
+	.gallery-modal-image-wrapper .gallery-modal-badge {
+		position: absolute;
+		left: 12px;
+		bottom: 12px;
+		background: rgba(255,255,255,0.95);
+		color: #011B4B;
+		padding: 0.3rem 0.65rem;
+		font-size: 0.82rem;
+	}
+
+	.gallery-modal-separator {
+		margin: 0.65rem 0 0.5rem;
+	}
+
+	.gallery-stat {
+		margin-top: 12px;
+		margin-left: 0;
+		justify-content: center;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.gallery-stat-value {
+		font-size: 1.5rem;
+	}
+
+	.gallery-modal-list {
+		padding-left: 1rem;
+		margin-top: 0.45rem;
+	}
+
+}
+
+/* Center service benefit titles on mobile */
+@media (max-width: 768px) {
+	.landing-service-benefit-title {
+		display: block;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.landing-service-benefit-title-a {
+		display: block;
+		margin-left: 0;
+		margin-right: 0;
 	}
 }
 .landing-gallery-card:hover {
@@ -1327,6 +1490,15 @@
 	background: #011b4b;
 }
 
+@media (max-width: 767px) {
+	/* Desplazar la tarjeta flotante de la sección 'Sobre el programa' más a la izquierda en móviles */
+	.landing-benefits .landing-hero-floating-card {
+		left: 2px !important;
+		right: auto !important;
+		transform: none !important;
+	}
+}
+
 .landing-audience-info-btn {
 	margin-top: 1.5rem;
 	width: fit-content;
@@ -1405,6 +1577,7 @@
 .landing-smart-docs-feature-list {
 	display: grid;
 	gap: 1rem;
+	margin-top: 0.5rem;
 }
 
 .landing-smart-docs-feature {
@@ -1439,6 +1612,27 @@
 	height: auto;
 	border: 1px solid #e5e7eb;
 	box-shadow: 0 22px 40px rgba(15, 47, 84, 0.14);
+}
+
+/* Gallery heading description: allow wrapping and responsive sizing */
+.landing-gallery-heading .landing-gallery-description,
+.landing-gallery-heading .landing-hero-description-a {
+	font-size: 18px;
+	margin-top: 12px;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	color: #64748b;
+}
+
+@media (max-width: 640px) {
+	.landing-gallery-heading .landing-gallery-description {
+		font-size: 15px;
+		text-align: center;
+	}
+	.landing-gallery-heading .landing-hero-description-a {
+		font-size: 15px;
+	}
 }
 
 .landing-faq-container {
@@ -1794,6 +1988,23 @@
 		font-size: 0.95rem !important;
 		text-align: center;
 	}
+
+	/* Center main hero paragraph on small screens */
+	.landing-hero-description {
+		text-align: center !important;
+	}
+
+	/* En móviles, apilar el visual encima del copy pero con la imagen al final */
+	.landing-benefits-grid {
+		display: flex;
+		flex-direction: column-reverse;
+		gap: 1rem;
+	}
+
+	.landing-benefits-visual-wrap,
+	.landing-benefits-copy {
+		width: 100%;
+	}
 	.landing-smart-docs-preview-image {
 		width: 100%;
 		height: auto;
@@ -1810,7 +2021,7 @@
 	}
 
 	.landing-service-benefit-title {
-		font-size: 0.95rem !important;
+		font-size: 1rem !important;
 	}
 
 	.landing-smart-docs-feature p {
@@ -1821,14 +2032,9 @@
 		gap: 0.6rem;
 	}
 	.landing-hero-title {
-		font-size: 1.6rem !important;
-		white-space: normal !important;
+		font-size: 2rem !important;
 		text-align: center;
 	}
-	.landing-service-benefit-title {
-		font-size: 0.9rem !important;
-	}
-
 	.landing-benefit-description {
 		font-size: 0.8rem;
 	}
@@ -1844,10 +2050,7 @@
 	.landing-hero-description {
 		font-size: 0.95rem !important;
 	}
-	.landing-title-line {
-		font-size: 1.6rem !important;
-		white-space: normal; /* evita que se desborde */
-	}
+
 	.landing-indicators-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1.25rem 1rem;
@@ -1881,6 +2084,11 @@
 	.landing-hero-stats {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		text-align: center; /* opcional para que se vea mejor */
+	}
+
+	/* Oculta la etiqueta pequeña sobre la imagen en dispositivos móviles */
+	.landing-hero-badge {
+		display: none !important;
 	}
 	.landing-audience-card-title {
 		font-size: 1.7rem;
