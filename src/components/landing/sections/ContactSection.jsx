@@ -60,7 +60,9 @@ function ContactSection() {
 					</div>
 
 				<div className="landing-contact-form-wrap">
-					<p style={{ marginBottom: '1rem', fontWeight: 600 }}>Si tienes dudas sobre el SSU o sobre el acceso a la plataforma, escríbenos.</p>
+					<p className="landing-hero-description-a" style={{ fontSize: '16px', color: '#0F2F54', fontWeight: 600 }}>
+						Si tienes dudas sobre el SSU o sobre el acceso a la plataforma, escríbenos
+					</p>
 					<form className="landing-contact-form">
 							<div className="landing-contact-field-wrap">
 								<label className="landing-service-benefit-title" style={{ fontSize: '15px' }} htmlFor="contact-name">Nombre completo</label>

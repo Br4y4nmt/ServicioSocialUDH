@@ -13,8 +13,8 @@ import "../DashboardAlumno.css";
 import UploadIcon from "../../../hooks/componentes/Icons/UploadIcon";
 import DownloadIcon from "../../../hooks/componentes/Icons/DownloadIcon";
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
-import CheckCircleBig from "../../../hooks/componentes/Icons/CheckCircleBig";
-import InfoIcon from "../../../hooks/componentes/Icons/InfoIcon";
+import CheckCircleIcon from "../../../hooks/componentes/Icons/CheckCircleIcon";
+import InfoCircleSVG from "../../../hooks/componentes/Icons/InfoCircleSVG";
 import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import Spinner from 'components/ui/Spinner';
 import ModalMotivoRechazoInforme from '../../modals/ModalMotivoRechazoInforme';
@@ -243,19 +243,19 @@ useEffect(() => {
                   <p className="if-box-title">La plantilla incluye:</p>
                   <ul className="if-checklist">
                     <li>
-                      <CheckCircleBig className="if-check-icon" />
+                      <CheckCircleIcon className="if-check-icon" />
                       Información personal
                     </li>
                     <li>
-                      <CheckCircleBig className="if-check-icon" />
+                      <CheckCircleIcon className="if-check-icon" />
                       Guía de llenado
                     </li>
                     <li>
-                      <CheckCircleBig className="if-check-icon" />
+                      <CheckCircleIcon className="if-check-icon" />
                       Secciones estructuradas
                     </li>
                     <li>
-                      <CheckCircleBig className="if-check-icon" />
+                      <CheckCircleIcon className="if-check-icon" />
                       Formato institucional
                     </li>
                   </ul>
@@ -278,7 +278,7 @@ useEffect(() => {
                 <header className="if-card-header">
                   <div className="if-title-row">
                     <span className="if-icon if-icon-green" aria-hidden="true">
-                      <CheckCircleBig className="icon-inner" aria-hidden="true" />
+                      <CheckCircleIcon className="icon-inner" aria-hidden="true" />
                     </span>
                     <div>
                       <h2 className="if-title">Certificados</h2>
@@ -326,7 +326,7 @@ useEffect(() => {
                       <header className="if-card-header">
                         <div className="if-title-row">
                           <span className="if-icon if-icon-green" aria-hidden="true">
-                            <CheckCircleBig className="icon-inner" aria-hidden="true" />
+                            <CheckCircleIcon className="icon-inner" aria-hidden="true" />
                           </span>
                           <div>
                             <h2 className="if-title">Certificados del grupo</h2>
@@ -397,8 +397,8 @@ useEffect(() => {
 
     <div className="if-card-body">
       <div className="if-dropzone is-disabled" style={{ cursor: "not-allowed" }}>
-        <div className="if-dropzone-empty">
-          <CheckCircleBig className="if-upload-icon " aria-hidden="true" />
+          <div className="if-dropzone-empty">
+          <CheckCircleIcon className="if-upload-icon " aria-hidden="true" />
           <p className="if-dropzone-title">Documento enviado</p>
           <p className="if-dropzone-or">Tu supervisor está revisando el informe</p>
           <p className="if-dropzone-sub">Cuando sea aprobado, podrás descargar tus certificados.</p>
@@ -551,7 +551,7 @@ useEffect(() => {
           <aside className="if-right">
             <section className="if-card">
               <header className="if-card-header">
-                <h3 className="if-side-title">Instrucciones</h3>
+                <h3 className="if-title" style={{color: '#ffff', fontSize: '18px'}}>Instrucciones</h3>
               </header>
 
               <div className="if-card-body">
@@ -582,9 +582,16 @@ useEffect(() => {
             </section>
 
             <section className="if-card if-note">
-              <header className="if-note-header">
-                <InfoIcon className="if-note-icon" aria-hidden="true" />
-                <h3 className="if-note-title">Nota Importante</h3>
+                <header className="if-note-header">
+                <InfoCircleSVG
+                  className="if-note-icon"
+                  aria-hidden="true"
+                  bg="#2E9E7F"
+                  width={28}
+                  height={28}
+                  style={{ width: '24px', height: '24px' }}
+                />
+                <h3 className="if-title">Nota Importante</h3>
               </header>
               <p className="if-note-text">
                 El documento debe estar correctamente llenado, firmado y con información
@@ -594,7 +601,7 @@ useEffect(() => {
 
             <section className="if-card">
               <header className="if-card-header">
-                <h3 className="if-side-title">Requisitos del Documento</h3>
+                <h3 className="if-title" style={{color: '#ffff', fontSize: '18px'}}>Requisitos del Documento</h3>
               </header>
 
               <div className="if-card-body">

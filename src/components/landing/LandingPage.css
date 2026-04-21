@@ -567,43 +567,6 @@
 	gap: 1rem;
 }
 
-.landing-importance-card {
-	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 18px;
-	padding: 1.8rem;
-	transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.landing-importance-card:hover {
-	border-color: #39b49e;
-	box-shadow: 0 16px 30px rgba(15, 47, 84, 0.1);
-	transform: translateY(-2px);
-}
-
-.landing-importance-icon-shell {
-	width: 54px;
-	height: 54px;
-	border-radius: 12px;
-	background: rgba(57, 180, 158, 0.1);
-	color: #39b49e;
-	display: grid;
-	place-items: center;
-	margin-bottom: 1rem;
-	transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
-}
-
-.landing-importance-card:hover .landing-importance-icon-shell {
-	background: #39b49e;
-	color: #fff;
-	transform: scale(1.07);
-}
-
-.landing-importance-icon-shell svg {
-	width: 28px;
-	height: 28px;
-}
-
 .landing-service-benefits-container {
 	width: min(1200px, calc(100% - 2rem));
 	margin: 0 auto;
@@ -833,7 +796,7 @@
 }
 
 .gallery-modal-list {
-	
+	margin-top: 30px;
 	padding-left: 1.25rem;
 	color: #64748b;
 }
@@ -1424,22 +1387,6 @@
 
 .landing-audience-card-primary .landing-audience-face-back {
 	background: linear-gradient(135deg, rgba(1, 27, 75, 0.1), rgba(1, 27, 75, 0.03));
-}
-
-.landing-audience-back-icon {
-	width: 70px;
-	height: 70px;
-	border-radius: 18px;
-	display: grid;
-	place-items: center;
-	box-shadow: 0 15px 30px rgba(15, 47, 84, 0.2);
-	margin-bottom: 1rem;
-}
-
-.landing-audience-back-icon svg {
-	width: 36px;
-	height: 36px;
-	color: #ffffff;
 }
 
 .landing-audience-card-primary .landing-audience-back-icon,

@@ -14,12 +14,25 @@ El Servicio Social Universitario fortalece tu formación académica, genera impa
 
 				<div className="landing-importance-grid">
 					{importanceItems.map((item) => (
-						<article className="landing-importance-card" key={item.title}>
-							<div className="landing-importance-icon-shell">
+						<article
+							className="landing-service-benefit-card"
+							key={item.title}
+							style={{
+							display: 'flex',
+							gap: '1.25rem',
+							padding: '1.5rem 2rem',
+							width: '100%',
+							boxSizing: 'border-box',
+							
+							}}
+						>
+							<div className="landing-service-benefit-icon" style={{ flexShrink: 0 }}>
 								{renderImportanceIcon(item.icon)}
 							</div>
-							<h3 className="landing-service-benefit-title">{item.title}</h3>
-							<p className="landing-hero-description-a" style={{ marginTop: '10px' }}>{item.description}</p>
+							<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+								<h3 className="landing-service-benefit-title" style={{ margin: 0, fontSize: '1rem' }}>{item.title}</h3>
+								<p className="landing-hero-description-a" style={{ marginTop: '6px', fontSize: '14px' }}>{item.description}</p>
+							</div>
 						</article>
 					))}
 				</div>
@@ -27,7 +40,7 @@ El Servicio Social Universitario fortalece tu formación académica, genera impa
 				<div className="landing-importance-cta" style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
 					<div style={{ maxWidth: '900px', textAlign: 'center' }}>
 						<p style={{ margin: 0,marginTop: '2rem', fontSize: '1.2rem', fontWeight: 700 }}>Sé parte del cambio desde tu formación universitaria</p>
-						<p style={{ margin: '0.45rem 0 0', color: '#6b7280' }}>Únete hoy y comienza a generar impacto con tu trabajo.</p>
+						<p className="landing-hero-description-a" style={{ marginTop: '10px', fontSize: '15px' }}>Únete hoy y comienza a generar impacto con tu trabajo.</p>
 					</div>
 					<div className="landing-cta-container">
 					<a href="/login" className="landing-cta-primary">

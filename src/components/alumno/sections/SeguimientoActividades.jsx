@@ -15,7 +15,9 @@ import { useUser } from '../../../UserContext';
 import ModalDetalleActividad from '../../modals/ModalDetalleActividad';
 import EvidenciaCameraIcon from "../../../hooks/componentes/Icons/EvidenciaCameraIcon";
 import CheckSuccessIcon from "../../../hooks/componentes/Icons/CheckSuccessIcon";
+import CheckCircleFilledIcon from '../../../hooks/componentes/Icons/CheckCircleFilledIcon';
 import InfoTooltipIcon from "../../../hooks/componentes/Icons/InfoTooltipIcon";
+import InfoCircleSVG from '../../../hooks/componentes/Icons/InfoCircleSVG';
 import Spinner from 'components/ui/Spinner';
 
 
@@ -358,7 +360,7 @@ useEffect(() => {
     <div className="respuesta-asesor-header">
       <div className="respuesta-contenedor">
         <div className="respuesta-icono-titulo">
-          <i className="fas fa-info-circle icono-azul" />
+          <InfoCircleSVG width={22} height={22}/>
           <span className="respuesta-asesor-title">
             Solicitud enviada al docente:
           </span>
@@ -392,7 +394,7 @@ useEffect(() => {
   <div className="seccion-documentos-designacion">
     <div className="seccion-header">
       <span className="check-circle">
-        <i className="fas fa-check"></i>
+        <CheckCircleFilledIcon width={28} height={28} />
       </span>
 
        <h3>

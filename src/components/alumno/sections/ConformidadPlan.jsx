@@ -1,4 +1,9 @@
 import React from 'react';
+import InfoCircleSVG from '../../../hooks/componentes/Icons/InfoCircleSVG';
+import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
+import UserTieIcon from "../../../hooks/componentes/Icons/UserTieIcon";
+import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
+import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import Swal from 'sweetalert2';
 import '../DashboardAlumno.css';
 import Spinner from 'components/ui/Spinner';
@@ -90,26 +95,18 @@ function ConformidadPlan({
          <div className="plan-details">
            <div className="plan-info-box">
            <div className="plan-icon">
-             <i className="fas fa-user-tie text-azul text-4xl mb-3"></i>
+             <UserTieIcon width={58} height={58} style={{ marginBottom: 12 }} />
            </div>
            <h4>Docente Supervisor</h4>
            <p>{nombreDocente || 'Cargando docente...'}</p>
          </div>
          <div className="plan-info-box">
      <div className="plan-icon">
-       <i className="fas fa-file-alt text-azul text-4xl mb-2"></i>
+      <PlanIcon style={{ color: '#011B4B', width: 38, height: 38, marginBottom: 8 }} />
      </div>
      <h4>Título de Plan De Servicio Social</h4>
      <p>{nombreLaborSocial}</p>
    </div>
-  {estadoConformidad !== 'aceptado' && (
-  <button
-    className="subir-proyecto-btn oculto"
-    onClick={abrirModalProyecto}
-  >
-    <i className="fas fa-upload"></i> Subir Proyecto
-  </button>
-)}
  </div>
 </div>
 )}
@@ -373,7 +370,7 @@ function ConformidadPlan({
        </div>
        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
        <button className="btn-agregar-alumno" onClick={abrirModalActividad}>
-         Agregar <i className="fas fa-plus"></i>
+        + Agregar
        </button>
        </div>
        <div className="tabla-cronograma-wrapper">
@@ -416,18 +413,7 @@ function ConformidadPlan({
        }}
        title="Editar"
      >
-       <svg
-         xmlns="http://www.w3.org/2000/svg"
-         height="20"
-         viewBox="0 0 24 24"
-         width="20"
-         fill="#f0ad4e"
-       >
-         <path d="M0 0h24v24H0z" fill="none" />
-         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 
-         7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 
-         0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-       </svg>
+       <EditIcon width={20} height={20} color="#f0ad4e" />
      </button>
      <button
        onClick={() => {
@@ -441,18 +427,7 @@ function ConformidadPlan({
        }}
        title="Eliminar"
      >
-       <svg
-         xmlns="http://www.w3.org/2000/svg"
-         height="20"
-         viewBox="0 0 24 24"
-         width="20"
-         fill="#dc3545"
-       >
-         <path d="M0 0h24v24H0V0z" fill="none" />
-         <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1zM18 
-         7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 
-         2-2V7z" />
-       </svg>
+       <DeleteIcon width={20} height={20} color="#dc3545" />
      </button>
    </td>
        </tr>
@@ -586,21 +561,6 @@ function ConformidadPlan({
     </>
   ) : (
     <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        style={{
-          marginRight: '6px',
-          position: 'relative',
-          top: '-2px',
-          verticalAlign: 'middle'
-        }}
-      >
-        <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V9h5.5L14 3.5zM8 13h8v-2H8v2zm0 4h8v-2H8v2z" />
-      </svg>
       Ver PDF
     </>
   )}
@@ -616,7 +576,7 @@ function ConformidadPlan({
   <div className="solicitar-revision-card">
    <div className="solicitar-revision-header">
   <div className="solicitar-revision-titulo">
-    <i className="fas fa-info-circle icono-azul" /> 
+    <InfoCircleSVG width={20} height={20} />
     <h3>Solicitar revisión al supervisor:</h3>      
   </div>
 
@@ -670,7 +630,7 @@ function ConformidadPlan({
     )}
 
    <button
-  className={`btn-revision ${estadoConformidad === 'aceptado' ? 'oculto' : ''}`}
+  className={`btn-solicitar-aprobaciones ${estadoConformidad === 'aceptado' ? 'oculto' : ''}`}
   onClick={async () => {
     if (archivoYaEnviado) {
       Swal.fire({
@@ -704,7 +664,7 @@ function ConformidadPlan({
     </>
   ) : (
     <>
-      Solicitar revisión <i className="fas fa-edit"></i>
+      Solicitar revisión 
     </>
   )}
 </button>

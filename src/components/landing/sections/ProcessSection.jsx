@@ -9,7 +9,7 @@ function ProcessSection({ processSteps }) {
 				<div className="landing-process-flow-heading">
 					<h2 className="landing-hero-title" style={{ fontSize: '37px' }}>¿Cómo participar?</h2>
 					<p className="landing-hero-description-a" style={{ fontSize: '16px', marginTop: '12px' }}>
-						Sigue estos pasos para iniciar y completar tu Servicio Social Universitario de manera sencilla.					
+						Sigue estos pasos para iniciar y completar tu servicio social universitario de manera sencilla.					
 					</p>
 				</div>
 

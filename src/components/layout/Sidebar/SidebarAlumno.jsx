@@ -5,6 +5,7 @@ import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import ExecutionIcon from "../../../hooks/componentes/Icons/ExecutionIcon";
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
+import ChevronDownIcon from "../../../hooks/componentes/Icons/ChevronDownIcon";
 import { alertInfo } from "../../../hooks/alerts/alertas";
 
 function SidebarAlumno({ 
@@ -94,15 +95,30 @@ function SidebarAlumno({
 
               {/* PLAN */}
               <li className="menu-item">
-                <button 
-                  onClick={() => toggleMenu(0)} 
-                  className={`menu-title ${isActiveMenu(0) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
-                  disabled={isPerfilIncompleto}
-                >
-                  <PlanIcon size={32}/>
-                  Plan de Servicio Social
-                  <i className={`fas ${openMenus.includes(0) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-                </button>
+             <button 
+              onClick={() => toggleMenu(0)} 
+              className={`menu-title ${isActiveMenu(0) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
+              disabled={isPerfilIncompleto}
+            >
+              <PlanIcon size={32} />
+              Plan de Servicio Social
+
+            <ChevronDownIcon
+              width={16}
+              height={16}
+              strokeWidth={1.5}
+              style={{
+                marginLeft: "auto",
+                marginRight: "0px",
+                flexShrink: 0,
+                color: '#787879',
+                transform: openMenus.includes(0)
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+                transition: "transform 0.3s ease"
+              }}
+            />
+            </button>
 
                 <ul className={`submenu ${openMenus.includes(0) ? "open" : ""}`}>
                   <li
@@ -140,7 +156,19 @@ function SidebarAlumno({
                 >
                   <ExecutionIcon size={32} />
                   Ejecución
-                  <i className={`fas ${openMenus.includes(1) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(1) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(1) ? "open" : ""}`}>
@@ -169,7 +197,19 @@ function SidebarAlumno({
                 >
                   <ReportIcon size={32} />
                   Informe Final
-                  <i className={`fas ${openMenus.includes(2) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(2) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(2) ? "open" : ""}`}>
@@ -198,7 +238,19 @@ function SidebarAlumno({
                 >
                   <DocumentIcon size={32} />
                   Documentos
-                  <i className={`fas ${openMenus.includes(3) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(3) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(3) ? "open" : ""}`}>

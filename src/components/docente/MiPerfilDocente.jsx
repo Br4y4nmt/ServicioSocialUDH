@@ -9,6 +9,8 @@ import PerfilIcon from '../../hooks/componentes/Icons/PerfilIcon';
 import Spinner from '../ui/Spinner';
 import { useUser } from '../../UserContext';
 import ExecutionIcon from '../../hooks/componentes/Icons/ExecutionIcon';
+import UploadIcon from '../../hooks/componentes/Icons/UploadIcon';
+import { cleanSignature } from '../../utils/signatureCleanup';
 
 function MiPerfilDocente() {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
@@ -28,9 +30,13 @@ function MiPerfilDocente() {
     facultad_nombre: '',
     programa_nombre: '',
   });
-  
+
   const [celularOriginal, setCelularOriginal] = useState('');
   const [loading, setLoading] = useState(false);
+  const [firmaFile, setFirmaFile] = useState(null);
+  const [firmaPreview, setFirmaPreview] = useState(null);
+  const [uploadingFirma, setUploadingFirma] = useState(false);
+  const [processingSignature, setProcessingSignature] = useState(false);
 
   useEffect(() => {
     setNombre(localStorage.getItem('nombre_usuario') || 'NOMBRE DEL DOCENTE');
@@ -60,7 +66,7 @@ function MiPerfilDocente() {
           programa_nombre: data.ProgramaDelDocente?.nombre_programa || ''
         });
 
-        setCelularOriginal(data.celular || ''); 
+        setCelularOriginal(data.celular || '');
       } catch (error) {
         console.error('Error al obtener perfil docente:', error);
       }
@@ -224,47 +230,149 @@ const firmaUrl = perfil.firma_digital
             {seccionActiva === 'firma' && (
               <div className="firma-escaneada-contenedor">
 
-                <div style={{ marginTop: '24px', maxWidth: '350px', marginLeft: '170px' }}>
-                  <label className="bold-text" style={{ marginLeft: '120px', display: 'inline-block' }}>Firma actual</label>
+                <div className="firma-columns" style={{ marginTop: '24px', maxWidth: '760px', display: 'flex', gap: '24px' }}>
+                  <div style={{ flex: '1 1 50%', maxWidth: '420px' }}>
+                    <label className="bold-text" style={{ display: 'block', marginBottom: '18px', marginLeft: '130px' }}>Firma actual</label>
 
-                  <div
-                    style={{
-                      marginTop: '12px',
-                      border: '1px dashed #cbd5e1',
-                      borderRadius: '10px',
-                      minHeight: '220px',
-                      maxWidth: '420px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: '#f8fafc',
-                      overflow: 'hidden',
-                      padding: '12px'
-                    }}
-                  >
-                    {firmaUrl ? (
-                      <img
-                        src={firmaUrl}
-                        alt="Firma del docente"
-                        style={{
-                          maxWidth: '100%',
-                          maxHeight: '100px',
-                          objectFit: 'contain'
+                    <div className="firma-container">
+                      {firmaUrl ? (
+                        <img
+                          src={firmaUrl}
+                          alt="Firma del docente"
+                          style={{
+                            maxWidth: '100%',
+                            maxHeight: '100px',
+                            objectFit: 'contain'
+                          }}
+                        />
+                      ) : (
+                        <span style={{ color: '#64748b' }}>Aún no guardó ninguna firma</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ flex: '0 0 340px' }}>
+                    <label className="bold-text" style={{ display: 'block', marginBottom: '8px', marginLeft: '90px' }}>Actualiza tu firma</label>
+                    <div className="firma-upload-box" style={{ margin: '0 auto', marginTop: '20px', position: 'relative' }}>
+
+                      {firmaPreview ? (
+                        <img
+                          src={firmaPreview}
+                          alt="firma"
+                          className="firma-preview-img"
+                        />
+                      ) : (
+                        <>
+                          <UploadIcon size={16} color="#555" />
+                          <p>
+                            Haz clic para subir tu firma
+                            <span>PNG (MAX 2MB)</span>
+                          </p>
+                        </>
+                      )}
+
+                      {processingSignature && (
+                        <div className="firma-busy-overlay">
+                          <div className="spinner-lg"></div>
+                          <span className="busy-text">Procesando firma...</span>
+                        </div>
+                      )}
+
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg"
+                        className="firma-input"
+                        disabled={processingSignature}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          const preview = URL.createObjectURL(file);
+                          setFirmaPreview(preview);
+
+                          setProcessingSignature(true);
+
+                          try {
+                            const { file: cleanFile, previewUrl } = await cleanSignature(file);
+                            setFirmaFile(cleanFile);
+                            setFirmaPreview(previewUrl);
+                          } catch (err) {
+                            // fallback: keep original file
+                            setFirmaFile(file);
+                          }
+
+                          setProcessingSignature(false);
                         }}
                       />
-                    ) : (
-                      <span style={{ color: '#64748b' }}>Aún no guardó ninguna firma</span>
-                    )}
+
+                    </div>
+
+                    <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+                      <button
+                        className="btn-guardar-cambios"
+                        type="button"
+                        style={{ padding: '8px 14px', fontSize: '14px', minWidth: '100px', marginLeft: '120px' }}
+                        onClick={async () => {
+                          if (!firmaFile) return showTopWarningToast('Selecciona un archivo', 'Selecciona una imagen de firma para subir.');
+                          setUploadingFirma(true);
+                          try {
+                            const form = new FormData();
+                            form.append('nombre_docente', perfil.nombre_docente || '');
+                            form.append('dni', perfil.dni || '');
+                            form.append('email', perfil.email || '');
+                            form.append('facultad', perfil.facultad_id || '');
+                            form.append('programa_academico_id', perfil.programa_academico_id || '');
+                            form.append('celular', perfil.celular || '');
+                            form.append('id_usuario', localStorage.getItem('id_usuario'));
+                            form.append('firma_digital', firmaFile);
+
+                            const res = await axios.put('/api/docentes', form, {
+                              headers: {
+                                Authorization: `Bearer ${token}`
+                              }
+                            });
+
+                            const newFilename = res.data?.docente?.firma_digital || res.data?.firma_digital || res.data?.filename || res.data?.nombre_archivo || null;
+                            if (newFilename) {
+                              setPerfil((prev) => ({ ...prev, firma_digital: newFilename }));
+                              alertSuccess('Firma subida', 'Tu firma se actualizó correctamente.');
+                              setFirmaFile(null);
+                            } else if (res.data?.docente && res.data.docente.firma_digital) {
+                              setPerfil((prev) => ({ ...prev, firma_digital: res.data.docente.firma_digital }));
+                              alertSuccess('Firma subida', 'Tu firma se actualizó correctamente.');
+                              setFirmaFile(null);
+                            } else {
+                              alertSuccess('Subida completa', 'La firma se subió correctamente.');
+                            }
+                          } catch (err) {
+                            console.error('Error subiendo firma', err);
+                            alertError('Error', 'No se pudo subir la firma. Intenta nuevamente.');
+                          } finally {
+                            setUploadingFirma(false);
+                            try {
+                              if (firmaPreview && typeof firmaPreview === 'string' && firmaPreview.startsWith('blob:')) {
+                                URL.revokeObjectURL(firmaPreview);
+                              }
+                            } catch (e) {
+                              // ignore
+                            }
+                            setFirmaPreview(null);
+                          }
+                        }}
+                        disabled={uploadingFirma || processingSignature}
+                      >
+                        {uploadingFirma ? 'Subiendo...' : processingSignature ? 'Procesando...' : 'Guardar'}
+                      </button>
+
+                    </div>
                   </div>
                 </div>
-              
                 <div className="firma-alerta-derecha" style={{ marginLeft: '-220px', marginTop: '20px' }}>
                   <div className="alerta-importante bounce">
                     <strong>¡Importante!</strong> Su firma se utilizará para validar documentos en el sistema.
                   </div>
                 </div>  
               </div>
-              
             )}
             </div>
           </div>

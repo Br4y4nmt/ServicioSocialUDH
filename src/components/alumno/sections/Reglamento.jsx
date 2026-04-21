@@ -2,6 +2,8 @@ import React from 'react';
 import './Reglamento.css';
 import VerBoton from '../../../hooks/componentes/VerBoton';
 import PdfIcon from '../../../hooks/componentes/PdfIcon';
+import DownloadIcon from "../../../hooks/componentes/Icons/DownloadIcon";
+import CheckCircleFilledIcon from '../../../hooks/componentes/Icons/CheckCircleFilledIcon';
 
 function Reglamento() {
   const documentos = [
@@ -41,7 +43,7 @@ function Reglamento() {
     <section className="reglamento-card">
       <div className="reglamento-card-header">
         <span className="check-circle">
-          <i className="fas fa-check" aria-hidden="true"></i>
+          <CheckCircleFilledIcon width={28} height={28} />
         </span>
         <div>
           <h2 style={{ color: '#ffffff', fontSize: '1.2rem' }}>DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
@@ -84,7 +86,7 @@ function Reglamento() {
                   }
                   aria-label={`Descargar ${doc.titulo}`}
                 >
-                  <i className="fas fa-download" aria-hidden="true"></i>
+                  <DownloadIcon width={18} height={18} />
                 </button>
               </div>
             </article>

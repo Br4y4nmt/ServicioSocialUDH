@@ -4,7 +4,9 @@ import { useUser } from '../../../UserContext';
 import '../../docente/DashboardDocente.css';
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import InfoTooltipIcon from "../../../hooks/componentes/Icons/InfoTooltipIcon";
+import InfoCircleSVG from "../../../hooks/componentes/Icons/InfoCircleSVG";
 import VerBoton from "../../../hooks/componentes/VerBoton";
+import CheckCircleFilledIcon from '../../../hooks/componentes/Icons/CheckCircleFilledIcon';
 import MotivoRechazoModal from "../../modals/MotivoRechazoModal";
 import Spinner from '../../ui/Spinner';
 import { useCartasAceptacion } from "../../../hooks/alumno/useCartasAceptacion";
@@ -141,7 +143,7 @@ const eliminarEleccion = useCallback(async () => {
     <>
       <div className="step-header">
       <span className="check-circle">
-        <i className="fas fa-check"></i>
+        <CheckCircleFilledIcon width={28} height={28} />
       </span>
       <h3>Designación De Docente Supervisor</h3>
     </div>
@@ -316,7 +318,7 @@ const eliminarEleccion = useCallback(async () => {
       
       <div className="respuesta-contenedor">
         <div className="respuesta-icono-titulo">
-          <i className="fas fa-info-circle icono-azul" />
+          <InfoCircleSVG width={24} height={24}/>
           <span className="respuesta-asesor-title">Respuesta del docente:</span>
         </div>
         <h4 className="bold-text">Carta de aceptación</h4>
@@ -388,7 +390,7 @@ const eliminarEleccion = useCallback(async () => {
       <div className="seccion-documentos-designacion">
     <div className="seccion-header">
       <span className="check-circle">
-      <i className="fas fa-check"></i>
+      <CheckCircleFilledIcon width={28} height={28} />
     </span>
 
       <h3>Documentos para la designación de supervisor</h3>

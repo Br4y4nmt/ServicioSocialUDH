@@ -297,47 +297,47 @@ const indicators = [
 
 ];
 
-const audienceItems = [
+	const audienceItems = [
 	{
 		title: 'Estudiantes',
-		shortDescription: 'Cumple tus requisitos de graduacion',
-		description: 'Gestiona tu servicio social de manera facil y cumple con tus requisitos de graduacion',
+		shortDescription: 'Cumple con tu servicio social y avanza hacia tu graduación',
+		description: 'Participa en proyectos con impacto social, gestiona tus actividades y completa tu servicio social de forma sencilla',
 		icon: 'graduation',
 		variant: 'accent',
 		image: 'https://images.unsplash.com/photo-1758270705657-f28eec1a5694?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
 		points: [
-			'Registro rapido y sencillo',
-			'Seguimiento de horas en tiempo real',
-			'Certificado digital automatico'
+		'Registro rápido y sencillo',
+		'Seguimiento de tu progreso en tiempo real',
+		'Certificación digital al finalizar'
 		]
 	},
 	{
 		title: 'Supervisores',
-		shortDescription: 'Supervisa y valida el trabajo',
-		description: 'Supervisa y valida el trabajo de tus estudiantes con herramientas eficientes',
+		shortDescription: 'Acompaña y valida el proceso de tus estudiantes',
+		description: 'Realiza el seguimiento del desempeño de los estudiantes y valida sus actividades de manera ágil y organizada',
 		icon: 'teacher',
 		variant: 'primary',
 		image: 'https://images.unsplash.com/photo-1758270704925-fa59d93119c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
 		points: [
-			'Dashboard de supervision',
-			'Aprobacion digital de actividades',
-			'Reportes automatizados'
+		'Seguimiento del avance de estudiantes',
+		'Validación de actividades en línea',
+		'Generación de reportes de progreso'
 		]
 	},
 	{
 		title: 'Personal administrativo',
-		shortDescription: 'Control total del programa',
-		description: 'Administra todo el programa con visibilidad completa y control total',
+		shortDescription: 'Gestiona y supervisa el programa de servicio social',
+		description: 'Administra el programa de manera integral, con control de procesos, participantes y documentación',
 		icon: 'building',
 		variant: 'mixed',
 		image: 'https://images.unsplash.com/photo-1758691737644-ef8be18256c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
 		points: [
-			'Panel de administracion completo',
-			'Estadisticas y metricas en vivo',
-			'Gestion de documentos masiva'
+		'Gestión integral del servicio social',
+		'Monitoreo de indicadores del programa',
+		'Organización y control documental'
 		]
 	}
-];
+	];
 
 const smartDocFeatures = [
 	{

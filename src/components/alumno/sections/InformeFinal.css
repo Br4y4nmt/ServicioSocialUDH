@@ -85,12 +85,6 @@
   color: #64748b;
 }
 
-.if-side-title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-}
-
 .if-right .if-card-header {
   background: #003B5C;
   color: #ffffff;
@@ -464,12 +458,6 @@
   flex-shrink: 0;
 }
 .if-note-icon svg { width: 18px; height: 18px; }
-
-.if-note-title {
-  margin: 0;
-  color: #003B5C; 
-  font-weight: 600;
-}
 
 .if-note-text {
   padding: 0 18px 18px;

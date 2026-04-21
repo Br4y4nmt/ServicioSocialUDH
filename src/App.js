@@ -8,7 +8,6 @@ import DashboardDocente from './components/docente/DashboardDocente';
 import DashboardAlumno from './components/alumno/DashboardAlumno';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DocumentosTrabajo from './components/DocumentosTrabajo';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import MiPerfilDocente from './components/docente/MiPerfilDocente';
 import SeguimientoServicioDocente from './components/docente/sections/SeguimientoServicioDocente';
 import SolicitudesInformesFinales from './components/docente/sections/SolicitudesInformesFinales';

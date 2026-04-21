@@ -1002,24 +1002,6 @@
     font-weight: 500;
   }
 
-  .btn-revision {
-    background-color: #39B49E;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 15px;
-    cursor: pointer;
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .btn-revision i {
-    margin-left: 6px;
-  }
-
 .solicitar-revision-card .btn-revision {
     margin-left: auto;
     margin-right: auto;
@@ -1031,33 +1013,7 @@
     line-height: 1.6;
     font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
   }
-  .btn-revision:hover {
-    background-color: #29A790; 
-    transform: scale(1.03);
-  }
-  .subir-proyecto-btn {
-    background-color: #011b4b; 
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 550;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s ease;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
-  }
-  
-  .subir-proyecto-btn:hover {
-    background-color: #214a85;
-  }
-  
-  .subir-proyecto-btn i {
-    font-size: 16px;
-  }
+
   .alerta-importante {
     padding: 8px 16px;
     border: 2px solid #f28b82;
@@ -1401,7 +1357,6 @@
   z-index: 1100; 
 }
 
-
 .check-circle {
   display: flex;
   align-items: center;
@@ -1409,10 +1364,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #10b981;
+  background-color: #0e9f6e;
   color: white;
   font-size: 13px;
-  border: 2px solid #10b981;
   flex-shrink: 0;
   align-self: flex-start; 
   margin-top: 2px;        

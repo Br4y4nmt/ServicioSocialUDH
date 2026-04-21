@@ -1,14 +1,16 @@
 import React from "react";
 
-function InformesFinalesIcon({ size = 32, className = "" }) {
+function InformesFinalesIcon({ size = 32, className = "", style = {} }) {
+  const px = typeof size === 'number' ? `${size}px` : size;
   return (
     <svg
       viewBox="0 0 48 64"
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
+      style={{ ...style, width: px, height: px }}
       fill="none"
-      stroke="currentColor"  // 👈 clave
+      stroke="currentColor"
       strokeWidth="4"
       strokeLinecap="round"
       strokeLinejoin="round"

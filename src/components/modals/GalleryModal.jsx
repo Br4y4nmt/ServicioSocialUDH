@@ -73,7 +73,7 @@ function GalleryModal({ open, onClose, item }) {
                 {item.stats.map((s, idx) => (
                   <div className="gallery-stat" key={idx}>
                     <div className="gallery-stat-value">{s.value}</div>
-                    <div className="landing-hero-description-a"style={{color: '#0F2F54', fontSize: '20px'}}>{s.label}</div>
+                    <div className="landing-hero-description-a" style={{ color: '#0F2F54', fontSize: '20px', fontWeight: 600 }}>{s.label}</div>
                   </div>
                 ))}
               </div>

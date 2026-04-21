@@ -39,9 +39,6 @@ function AudienceSection({ audienceItems, renderAudienceIcon }) {
 								</div>
 
 								<div className="landing-audience-face landing-audience-face-back">
-									<div className="landing-audience-back-icon" aria-hidden="true">
-										{renderAudienceIcon(item.icon)}
-									</div>
 									<h3 className="landing-audience-card-title back">{item.title}</h3>
 									<p className="landing-audience-card-description">{item.description}</p>
 

@@ -4,6 +4,7 @@ import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import InformesFinalesIcon from "../../../hooks/componentes/Icons/InformesFinalesIcon";
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
+import ChevronDownIcon from "../../../hooks/componentes/Icons/ChevronDownIcon";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function SidebarDocente({
@@ -94,7 +95,19 @@ function SidebarDocente({
                 >
                   <PlanIcon size={32}/>
                   Revisión de Planes
-                  <i className={`fas ${openMenus.includes(0) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(0) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(0) ? 'open' : ''}`}>
@@ -122,9 +135,21 @@ function SidebarDocente({
                   }}
                   className={`menu-title ${isActiveMenu(1) ? 'menu-title--active' : ''}`}
                 >
-                  <InformesFinalesIcon size={32}/>
+                  <InformesFinalesIcon size={34}/>
                   Seguimiento
-                  <i className={`fas ${openMenus.includes(1) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(1) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(1) ? 'open' : ''}`}>
@@ -148,7 +173,19 @@ function SidebarDocente({
                 >
                   <ReportIcon size={32}/>
                   Informes Finales
-                  <i className={`fas ${openMenus.includes(2) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                  <ChevronDownIcon
+                    width={16}
+                    height={16}
+                    strokeWidth={1.5}
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "0px",
+                      flexShrink: 0,
+                      color: '#787879',
+                      transform: openMenus.includes(2) ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.3s ease"
+                    }}
+                  />
                 </button>
 
                 <ul className={`submenu ${openMenus.includes(2) ? 'open' : ''}`}>
