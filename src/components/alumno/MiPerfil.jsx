@@ -152,7 +152,7 @@ function MiPerfil() {
               <input className="input-disabled" value={perfil.programa} disabled />
             </div>
             <div className="form-group">
-              <label className="bold-text">Número Celular</label>
+              <label className="bold-text">Número Celular <span className="campo-obligatorio">*</span></label>
               <input
                 className="input-editable"
                 value={perfil.celular}

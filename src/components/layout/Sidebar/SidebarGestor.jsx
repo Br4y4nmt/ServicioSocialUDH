@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FacultyIcon from "../../../hooks/componentes/Icons/FacultyIcon";
 import AcademicManagementIcon from "../../../hooks/componentes/Icons/AcademicManagementIcon";
-import TeacherClipboardIcon from "../../../hooks/componentes/Icons/TeacherClipboardIcon";
+import UserTieIcon from "../../../hooks/componentes/Icons/UserTieIcon";
 import ActionLinesIcon  from "../../../hooks/componentes/Icons/ActionLinesIcon";
 import SocialServiceIcon  from "../../../hooks/componentes/Icons/SocialServiceIcon";
 import UsersIcon from "../../../hooks/componentes/Icons/UsersIcon";
@@ -183,7 +183,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                       onClick={() => setActiveSection('docentes')}
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <TeacherClipboardIcon size={22} color="#2e9e7f" />
+                        <UserTieIcon size={22} color="#2e9e7f" />
                         Docentes
                       </span>
                     </li>

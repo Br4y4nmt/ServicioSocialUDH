@@ -94,8 +94,8 @@ function ConformidadPlan({
           </div>
          <div className="plan-details">
            <div className="plan-info-box">
-           <div className="plan-icon">
-             <UserTieIcon width={58} height={58} style={{ marginBottom: 12 }} />
+            <div className="plan-icon">
+             <UserTieIcon width={58} height={58} color="#011B4B" style={{ marginBottom: 12 }} />
            </div>
            <h4>Docente Supervisor</h4>
            <p>{nombreDocente || 'Cargando docente...'}</p>

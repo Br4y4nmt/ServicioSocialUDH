@@ -212,7 +212,7 @@ const handleCelularChange = (e) => {
 
               <div className="form-group">
                 <label className="bold-text">
-                  Número Celular <span style={{ color: 'red' }}>*</span>
+                  Número Celular <span className="campo-obligatorio">*</span>
                 </label>
                 <input
                   name="celular"

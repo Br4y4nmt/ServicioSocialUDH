@@ -239,7 +239,7 @@ function PerfilDocente() {
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
 
-        <h1 className="dashboard-title-animada">
+        <h1 className="dashboard-title-animada" style={{fontSize: '30px'}}>
           Datos Docente
         </h1>
 

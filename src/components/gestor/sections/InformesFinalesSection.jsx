@@ -23,8 +23,8 @@ function InformesFinalesSection({
   const [currentPage, setCurrentPage] = useState(1);
 
   const informesFiltrados = useMemo(
-    () =>
-      informesFinales
+    () => {
+      const lista = informesFinales
         .filter((inf) =>
           programaSeleccionado
             ? inf.ProgramasAcademico?.nombre_programa
@@ -37,7 +37,23 @@ function InformesFinalesSection({
             inf.Estudiante?.nombre_estudiante || '',
             busquedaDocente
           )
-        ),
+        );
+
+      // Priorizar aquellos que pueden generar certificado: estado 'aprobado' y sin certificado_final
+      lista.sort((a, b) => {
+        const estadoA = String(a.estado_informe_final || '').toLowerCase();
+        const estadoB = String(b.estado_informe_final || '').toLowerCase();
+        const prioridadA = (estadoA === 'aprobado' && !a.certificado_final) ? 1 : 0;
+        const prioridadB = (estadoB === 'aprobado' && !b.certificado_final) ? 1 : 0;
+
+        // Si uno tiene mayor prioridad, ponerlo antes
+        if (prioridadA !== prioridadB) return prioridadB - prioridadA;
+
+        return 0;
+      });
+
+      return lista;
+    },
     [informesFinales, programaSeleccionado, busquedaDocente]
   );
 

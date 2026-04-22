@@ -107,7 +107,18 @@ function MiPerfilDocente() {
 
   } catch (error) {
     console.error('Error al actualizar celular:', error);
-    await alertError('Error al actualizar celular', 'No se pudo actualizar el número celular. Inténtalo más tarde.');
+    const status = error.response?.status;
+    const serverMessage = error.response?.data?.message;
+
+    if (status === 409) {
+      await alertError('Número duplicado', serverMessage || 'Ya existe un docente con este número de celular.');
+    } else if (status === 400) {
+      showTopWarningToast('Celular inválido', serverMessage || 'Celular inválido. Debe tener exactamente 9 dígitos.');
+    } else if (status === 404) {
+      await alertError('No encontrado', serverMessage || 'No se encontró el docente.');
+    } else {
+      await alertError('Error al actualizar celular', serverMessage || 'No se pudo actualizar el número celular. Inténtalo más tarde.');
+    }
   }
   finally {
     setLoading(false);
@@ -316,21 +327,20 @@ const firmaUrl = perfil.firma_digital
                           if (!firmaFile) return showTopWarningToast('Selecciona un archivo', 'Selecciona una imagen de firma para subir.');
                           setUploadingFirma(true);
                           try {
-                            const form = new FormData();
-                            form.append('nombre_docente', perfil.nombre_docente || '');
-                            form.append('dni', perfil.dni || '');
-                            form.append('email', perfil.email || '');
-                            form.append('facultad', perfil.facultad_id || '');
-                            form.append('programa_academico_id', perfil.programa_academico_id || '');
-                            form.append('celular', perfil.celular || '');
-                            form.append('id_usuario', localStorage.getItem('id_usuario'));
-                            form.append('firma_digital', firmaFile);
+                              const form = new FormData();
+                              form.append('celular', perfil.celular || '');
+                              form.append('firma_digital', firmaFile);
+                              const usuario_id = localStorage.getItem('id_usuario');
 
-                            const res = await axios.put('/api/docentes', form, {
-                              headers: {
-                                Authorization: `Bearer ${token}`
-                              }
-                            });
+                              const res = await axios.put(
+                                `/api/docentes/actualizar-celular/${usuario_id}`,
+                                form,
+                                {
+                                  headers: {
+                                    Authorization: `Bearer ${token}`
+                                  }
+                                }
+                              );
 
                             const newFilename = res.data?.docente?.firma_digital || res.data?.firma_digital || res.data?.filename || res.data?.nombre_archivo || null;
                             if (newFilename) {
