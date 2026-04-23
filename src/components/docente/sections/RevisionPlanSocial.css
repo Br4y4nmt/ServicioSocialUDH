@@ -157,29 +157,6 @@
   transform: translateY(-2px);
 }
 
-.modal-evidencia-content {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 2rem 2.2rem;
-  width: 95%;
-  max-width: 650px;
-  height: 600px; 
-  box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.08),
-    0 10px 40px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  animation: fadeInModal 0.35s ease-out;
-  font-family: "Inter", "Segoe UI", sans-serif;
-  text-align: center;
-  transition: all 0.3s ease-in-out;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 
 .modal-evidencia-title {
   font-size: 1.5rem;
@@ -231,7 +208,6 @@
 }
 
 @media (max-width: 992px) {
-  .modal-evidencia-content,
   .modal-evidencia-content.mejorado {
     height: 650px;
     max-height: 88vh;
@@ -246,23 +222,12 @@
 
 /* Celulares */
 @media (max-width: 768px) {
-  .modal-evidencia-content,
   .modal-evidencia-content.mejorado {
     width: 94%;
     height: 720px;
     max-height: 92vh;
     padding: 1.4rem 1.2rem;
     border-radius: 16px;
-  }
-
-  .modal-evidencia-img-wrapper {
-    width: 100%;
-    max-height: none;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    -webkit-overflow-scrolling: touch;
   }
 
   .modal-evidencia-img {
@@ -279,22 +244,12 @@
 }
 
 @media (max-width: 480px) {
-  .modal-evidencia-content,
   .modal-evidencia-content.mejorado {
     width: 95%;
     height: 78vh;
     max-height: 94vh;
     padding: 1.2rem 1rem;
     border-radius: 14px;
-  }
-
-  .modal-evidencia-img-wrapper {
-    width: 100%;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    -webkit-overflow-scrolling: touch;
   }
 
   .modal-evidencia-img {

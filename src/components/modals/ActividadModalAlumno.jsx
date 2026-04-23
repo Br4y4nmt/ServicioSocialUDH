@@ -182,9 +182,9 @@ function ActividadModalAlumno({
           />
         </div>
 
-        <div className="modal-actions-alumno">
-          <button onClick={handleGuardar}>Guardar</button>
-          <button onClick={onClose}>Cancelar</button>
+        <div className="grupo-alumno-modal-footer">
+          <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={handleGuardar}>Guardar</button>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>Cancelar</button>
         </div>
       </div>
     </div>

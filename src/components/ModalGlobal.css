@@ -40,53 +40,6 @@
     border-radius: 6px;
     background-color: #f9f9f9;
   }
-  
-  .modal-actions-alumno {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
-  
-  .modal-actions-alumno button {
-    padding: 10px 20px;
-    font-size: 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s;
-  }
-  
-  .modal-actions-alumno button:first-child {
-    background-color: #0a2240; 
-    color: white;
-  }
-  
-  .modal-actions-alumno button:first-child:hover {
-    background-color: #0d2a59;
-    transform: scale(1.02);
-  }
-  
-  .modal-actions-alumno button:last-child {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  
-  .modal-actions-alumno button:last-child:hover {
-    background-color: #dddddd;
-    transform: scale(1.02);
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 
 .modal-evidencia-overlay {
   position: fixed;
@@ -135,14 +88,7 @@
   box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
   transition: all 0.25s ease;
 }
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+
 .modal-evidencia-btn-cerrar:hover {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   transform: translateY(-2px);
@@ -169,16 +115,6 @@
   overflow: hidden; 
   position: relative;
 }
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.96);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 
 .detalle-actividad-overlay {
   position: fixed;
@@ -207,21 +143,6 @@
   max-height: 80vh;
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
   transition: all 0.3s ease-in-out;
-}
-
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.detalle-actividad-modal div[style*="text-align: center"] {
-  margin-top: 25px;
 }
 
 .detalle-actividad-modal h3 {
@@ -293,18 +214,6 @@
 .detalle-actividad-btn-cerrar:hover {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   transform: translateY(-2px);
-}
-
-
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 @media (max-width: 480px) {

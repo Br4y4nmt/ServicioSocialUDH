@@ -17,7 +17,7 @@ function GalleryModal({ open, onClose, item }) {
     return () => {
       document.removeEventListener('keydown', handleKey);
       document.body.style.overflow = previousBodyOverflow || '';
-    };
+    };  
   }, [open, onClose]);
 
   if (!open || !item) return null;

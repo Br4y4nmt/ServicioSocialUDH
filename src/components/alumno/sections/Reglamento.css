@@ -10,7 +10,7 @@
 }
 
 .reglamento-card-header {
-  background: #1e293b;
+  background: linear-gradient(135deg, #011b4b 0%, #013a7a 100%);
   padding: 12px 24px;
   display: flex;
   align-items: center;

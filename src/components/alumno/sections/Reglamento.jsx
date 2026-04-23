@@ -46,7 +46,7 @@ function Reglamento() {
           <CheckCircleFilledIcon width={28} height={28} />
         </span>
         <div>
-          <h2 style={{ color: '#ffffff', fontSize: '1.2rem' }}>DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
+          <h2 style={{ color: '#ffffff', fontSize: '1.2rem', fontWeight: 600 }}>DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
           <p style={{ color: '#cbd5e1', fontSize: '0.86rem', margin: '2px 0 0' }}>Consulta y descarga de documentos oficiales vigentes</p>
         </div>
       </div>

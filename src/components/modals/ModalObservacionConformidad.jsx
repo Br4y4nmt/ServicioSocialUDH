@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import '../../components/docente/DashboardDocente.css';
 import { alertconfirmacion } from '../../hooks/alerts/alertas';
+import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
   visible,
@@ -28,12 +29,17 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
           </button>
           <button
             onClick={async () => {
+              if (!observacion || !observacion.trim()) {
+                showTopWarningToast('Observación requerida', 'Por favor, escriba una observación antes de enviar.');
+                return;
+              }
+
               const confirm = await alertconfirmacion({
                 title: '¿Está seguro de enviar esta observación?',
                 text: 'Esta acción registrará la observación y continuará con el flujo.',
                 icon: 'warning',
-                confirmButtonColor: '#003366',
-                cancelButtonColor: '#6c757d',
+                confirmButtonColor: '#39B49E',
+                cancelButtonColor: '#003366',
                 confirmButtonText: 'Sí, enviar',
                 cancelButtonText: 'Cancelar'
               });

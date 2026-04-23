@@ -324,7 +324,8 @@ useEffect(() => {
            {todasAprobadas && estadoSolicitudTermino === 'no_solicitada' && (
             <div style={{ marginTop: '20px', textAlign: 'center' }}>
               <button
-                className="btn-carta-termino"
+                className="btn-solicitar-aprobaciones"
+                style={{fontSize: '15px'}}
                 onClick={async () => {
                   setEnviandoSolicitudTermino(true);
                   try {

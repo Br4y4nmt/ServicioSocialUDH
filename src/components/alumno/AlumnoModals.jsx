@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react';
 
-const ProyectoModal = lazy(() => import('../modals/ProyectoModal'));
 const ObservacionEstudianteModal = lazy(() => import('../modals/ObservacionEstudianteModal'));
 const GrupoModalAlumno = lazy(() => import('../modals/GrupoModalAlumno'));
 const EvidenciaModal = lazy(() => import('../modals/EvidenciaModal'));
@@ -26,15 +25,6 @@ function AlumnoModals({ hook, ac, ga }) {
         actividades={ac.actividades}
         setActividades={ac.setActividades}
         onClose={() => ac.setModalActividadVisible(false)}
-      />
-
-      <ProyectoModal
-        visible={hook.modalProyectoVisible}
-        proyectoFile={hook.proyectoFile}
-        pdfGenerado={hook.pdfGenerado}
-        onFileChange={hook.handleProyectoFileChange}
-        onClose={hook.cerrarModalProyecto}
-        onCancel={hook.cerrarModalProyecto}
       />
 
       <ObservacionEstudianteModal

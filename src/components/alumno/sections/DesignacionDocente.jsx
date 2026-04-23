@@ -325,18 +325,10 @@ const eliminarEleccion = useCallback(async () => {
       </div>
         <div className="respuesta-acciones">
               {estadoPlan === "rechazado" && (
-                  <button
-                    className="btn-motivo-rechazo"
-                    onClick={abrirModalMotivoRechazo}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-                              10-4.48 10-10S17.52 2 12 2zm0 15a1.5 1.5 0 110-3
-                              1.5 1.5 0 010 3zm1-5h-2V7h2v5z"/>
-                    </svg>
-                    Motivo de rechazo
-                  </button>
-                )}
+                <VerBoton
+                  onClick={abrirModalMotivoRechazo}
+                />
+              )}
               <button className={`respuesta-asesor-btn ${estadoPlan}`}>
                 {estadoPlan.charAt(0).toUpperCase() + estadoPlan.slice(1)}
               </button>
@@ -356,7 +348,7 @@ const eliminarEleccion = useCallback(async () => {
               </p>
               <div className="contenedor-eliminar">
               <button
-              className="btn-eliminar-eleccion"
+              className="btn-solicitar-aprobaciones"
               onClick={async () => {
               const result = await alertconfirmacion({
                 title: 'Eliminar selección',

@@ -209,31 +209,33 @@ const FilaTrabajo = memo(function FilaTrabajo({
 
       <td>
         {trabajo.estado_plan_labor_social === 'pendiente' ? (
-          <div style={ESTILOS.flexColumnGap}>
-            <button
-              className="btn-accion aceptar"
-              onClick={() => handleCambiarEstado(trabajo, 'aceptado')}
-              disabled={trabajoEnProcesoId === trabajo.id}
-            >
-              {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Aceptar'}
-            </button>
+            <div style={ESTILOS.flexColumnGap}>
+              <button
+                className="btn-accion aceptar"
+                onClick={() => handleCambiarEstado(trabajo, 'aceptado')}
+                disabled={trabajoEnProcesoId === trabajo.id}
+              >
+                {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Aceptar'}
+              </button>
 
-        <button
-          className="btn-accion rechazar"
-          onClick={() => abrirModalDeclinar(trabajo, 'rechazar')}
-          disabled={trabajoEnProcesoId === trabajo.id}
-        >
-          {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Rechazar'}
-        </button>
-          </div>
-        ) : (
-      <button
-        className="boton-declinar"
-        onClick={() => abrirModalDeclinar(trabajo, 'declinar')}
-      >
-        Declinar
-      </button>
-        )}
+              <button
+                className="btn-accion rechazar"
+                onClick={() => abrirModalDeclinar(trabajo, 'rechazar')}
+                disabled={trabajoEnProcesoId === trabajo.id}
+              >
+                {trabajoEnProcesoId === trabajo.id ? <FullScreenSpinner /> : 'Rechazar'}
+              </button>
+            </div>
+          ) : (
+            trabajo.estado_plan_labor_social === 'rechazado' ? null : (
+              <button
+                className="boton-declinar"
+                onClick={() => abrirModalDeclinar(trabajo, 'declinar')}
+              >
+                Declinar
+              </button>
+            )
+          )}
       </td>
 
       <td>
