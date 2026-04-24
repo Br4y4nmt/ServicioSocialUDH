@@ -20,11 +20,22 @@ function RegisterPage() {
 const handleRegister = async (e) => {
   e.preventDefault();
 
-  const anio = codigo.startsWith('120')
-    ? parseInt(codigo.substring(1, 5), 10)
-    : parseInt(codigo.substring(0, 4), 10);
+  const codigoStr = String(codigo).trim();
+  let anioStr;
+  // Códigos virtuales: empiezan con '1' y los siguientes 4 dígitos indican el año
+  if (codigoStr.startsWith('1') && codigoStr.length >= 5) {
+    anioStr = codigoStr.substring(1, 5);
+  } else if (codigoStr.length >= 4) {
+    // Códigos presenciales: los primeros 4 dígitos indican el año
+    anioStr = codigoStr.substring(0, 4);
+  } else {
+    await alertWarning('Código no permitido', 'Código inválido');
+    return;
+  }
 
-  if (isNaN(anio) || anio < 2020) {
+  const anio = parseInt(anioStr, 10);
+
+  if (isNaN(anio) || anio < 2021) {
     await alertWarning('Código no permitido', 'Solo se permiten el registro a estudiantes ingresados del 2021-1 en adelante.');
     return;
   }
