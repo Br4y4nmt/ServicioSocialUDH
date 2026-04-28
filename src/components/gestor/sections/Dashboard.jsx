@@ -26,6 +26,9 @@ import {
 import { Switch } from "@mui/material";
 import axios from "axios";
 import { useUser } from "../../../UserContext";  
+import TrackingCheckIcon from "../../../hooks/componentes/Icons/TrackingCheckIcon";
+import FinalReportIcon from "../../../hooks/componentes/Icons/FinalReportIcon";
+import UsersIcon from "../../../hooks/componentes/Icons/UsersIcon";
 import {
   alertconfirmacion,
 } from "../../../hooks/alerts/alertas";
@@ -204,26 +207,6 @@ useEffect(() => {
   fetchDistribuciones();
 }, [token]);
 
-const StudentIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <circle cx="12" cy="8" r="3.2" />
-    <path d="M5 19.5c0-3.2 2.6-5.5 7-5.5s7 2.3 7 5.5" />
-  </svg>
-);
-
-const ProjectIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="5" y="4" width="14" height="16" rx="2" ry="2" />
-    <path d="M9 8h6M9 12h6M9 16h3" />
-  </svg>
-);
-
-const ReportIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M7 4h8l4 4v12H7z" />
-    <path d="M11 11l2 2 4-4M9 17h6" />
-  </svg>
-);
 
 
   useEffect(() => {
@@ -359,7 +342,7 @@ return (
       <Grid xs={12}>
         <Paper className="kpi-card kpi-blue" elevation={3}>
           <div className="kpi-card-icon">
-            <StudentIcon />
+            <UsersIcon />
           </div>
           <div className="kpi-card-content">
             <span className="kpi-value">{resumen.alumnosActivos}</span>
@@ -371,7 +354,7 @@ return (
       <Grid xs={12} md={4}>
         <Paper className="kpi-card kpi-gray" elevation={3}>
           <div className="kpi-card-icon">
-            <ProjectIcon />
+            <FinalReportIcon />
           </div>
           <div className="kpi-card-content">
             <span className="kpi-value">{resumen.proyectosActivos}</span>
@@ -383,7 +366,7 @@ return (
       <Grid xs={12} md={4}>
       <Paper className="kpi-card kpi-blue" elevation={3}>
         <div className="kpi-card-icon">
-          <ReportIcon />
+          <TrackingCheckIcon />
         </div>
         <div className="kpi-card-content">
           <span className="kpi-value">{resumen.certificadosFinales}</span>
@@ -750,10 +733,7 @@ return (
     <div className="config-card-top">
       <div className="config-card-titlewrap">
         <div className="config-card-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3a4 4 0 100 8 4 4 0 000-8z" />
-            <path d="M4.5 21a7.5 7.5 0 0115 0" />
-          </svg>
+          <UsersIcon />
         </div>
 
         <div>
