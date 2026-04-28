@@ -17,10 +17,52 @@
 	left: 0;
 	right: 0;
 	z-index: 50;
-	background: rgba(255, 255, 255, 0.8);
-	backdrop-filter: blur(16px);
-	box-shadow: 0 12px 30px rgba(15, 47, 84, 0.08);
-	border-bottom: 1px solid #e6edf5;
+	/* transparente por defecto */
+	background: transparent !important;
+	border-bottom: 1px solid transparent;
+	box-shadow: none;
+	transition: background 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+/* Cuando el usuario hace scroll aplicamos fondo y sombra */
+.landing-header.landing-header--scrolled {
+	background: #ffffff !important;
+	border-bottom: 1px solid #ddd;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* En estado transparente (top) los enlaces se muestran claros */
+.landing-header:not(.landing-header--scrolled) .landing-link,
+.landing-header:not(.landing-header--scrolled) .landing-mobile-link {
+	color: #ffffff;
+}
+
+/* En estado scrolled los enlaces vuelven a su color normal */
+.landing-header.landing-header--scrolled .landing-link,
+.landing-header.landing-header--scrolled .landing-mobile-link {
+	color: #475569;
+}
+
+.landing-header.landing-header--scrolled .landing-login-button {
+	/* botón visible sobre fondo claro */
+	background: linear-gradient(90deg, #39b49e, #2f9c8a);
+	color: #fff;
+}
+
+/* Cuando header está transparente ajustar estilo del botón y toggle */
+.landing-header:not(.landing-header--scrolled) .landing-login-button {
+	border-color: rgba(255,255,255,0.6);
+	color: #ffffff;
+	background: rgba(255,255,255,0.06);
+}
+
+.landing-header:not(.landing-header--scrolled) .landing-menu-toggle {
+	color: #ffffff; /* icon color */
+}
+
+.landing-header:not(.landing-header--scrolled) .landing-brand-logo {
+	/* si usas un logo SVG/png con fondo, mantén la imagen blanca; este filtro puede ayudar */
+	filter: none;
 }
 
 .landing-header-nav {
@@ -147,7 +189,7 @@
 
 .landing-main {
 	min-height: 100vh;
-	padding-top: 120px;
+	padding-top: 0px;
 	background:
 		radial-gradient(circle at 8% 12%, rgba(14, 165, 164, 0.1), transparent 28%),
 		radial-gradient(circle at 88% 9%, rgba(15, 47, 84, 0.08), transparent 24%),

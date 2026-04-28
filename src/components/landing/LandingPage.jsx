@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
 
@@ -488,6 +488,7 @@ function ServiceBenefitsIcon({ icon }) {
 
 function LandingPage() {
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
 	const [openFaqIndex, setOpenFaqIndex] = useState(-1);
 	const preloadOffset = '300px';
 	const [programRef, showProgram] = useInView(preloadOffset);
@@ -503,13 +504,20 @@ function LandingPage() {
 	const [contactRef, showContact] = useInView(preloadOffset);
 	const lazyFallback = <PageSkeleton />;
 
+	useEffect(() => {
+		const handleScroll = () => setScrolled(window.scrollY > 10);
+		window.addEventListener('scroll', handleScroll, { passive: true });
+		handleScroll();
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
+
 	return (
 		<div className="landing-page">
-			<header className="landing-header" id="inicio">
+			<header className={`landing-header ${scrolled ? 'landing-header--scrolled' : ''}`} id="inicio">
 				<nav className="landing-header-nav">
 					<div className="landing-header-row">
 						<img
-							src="/images/logoudh.png"
+							src={!scrolled ? '/images/blanco.png' : '/images/logoudh.png'}
 							alt="Servicio Social UDH"
 							className="landing-brand-logo"
 						/>
