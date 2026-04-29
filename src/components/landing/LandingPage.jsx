@@ -18,6 +18,7 @@ import FacultyIcon from '../../hooks/componentes/Icons/FacultyIcon';
 import FinalReportIcon  from "../../hooks/componentes/Icons/FinalReportIcon";
 import TrackingCheckIcon from '../../hooks/componentes/Icons/TrackingCheckIcon';
 import JusticeIcon from '../../hooks/componentes/Icons/JusticeIcon';
+import ImpersonateIcon from '../../hooks/componentes/Icons/ImpersonateIcon';
 import useInView from './hooks/useInView';
 import PageSkeleton from '../loaders/PageSkeleton';
 
@@ -505,7 +506,7 @@ function LandingPage() {
 	const lazyFallback = <PageSkeleton />;
 
 	useEffect(() => {
-		const handleScroll = () => setScrolled(window.scrollY > 10);
+		const handleScroll = () => setScrolled(window.scrollY > 80);
 		window.addEventListener('scroll', handleScroll, { passive: true });
 		handleScroll();
 		return () => window.removeEventListener('scroll', handleScroll);
@@ -534,7 +535,10 @@ function LandingPage() {
 						<div className="landing-actions-desktop">
 							<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
 								
-								<span>Ir a la plataforma  </span>
+								<span>Ir a la plataforma</span>
+								<span style={{ marginLeft: '0.6rem', display: 'inline-flex', alignItems: 'center' }}>
+									<ImpersonateIcon size={18} color="#ffffff" aria-hidden="true" />
+								</span>
 							</Link>
 						</div>
 

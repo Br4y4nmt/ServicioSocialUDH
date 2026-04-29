@@ -6,6 +6,7 @@ function ProgramSection({ benefitsItems }) {
 	return (
 		<AnimatedSection>
 			<section className="landing-benefits" id="programa">
+				
 			<div className="landing-benefits-grid">
 				<div className="landing-benefits-visual-wrap">
 					<div className="landing-benefits-visual">
@@ -27,7 +28,7 @@ function ProgramSection({ benefitsItems }) {
 
 				<div className="landing-benefits-copy">
 					<div>
-						<div className="landing-hero-badge">
+						<div className="landing-hero-badge-s" style={{color: '#39B49E', fontSize: '20px'}}>
 							<span>Sobre el programa</span>
 						</div>
 						<h2 className="landing-hero-title landing-benefits-title-two-lines" style={{ marginTop: '10px' }}>

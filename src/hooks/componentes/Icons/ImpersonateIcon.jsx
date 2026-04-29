@@ -1,26 +1,24 @@
 import React from "react";
 
-function ImpersonateIcon({ size = 22, color = "#2e9e7f", className = "" }) {
+function ImpersonateIcon({ size = 24, color = "currentColor", className = "", ...props }) {
   return (
     <svg
+      xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      viewBox="0 0 48 48"
+      viewBox="0 0 24 24"
       fill="none"
       stroke={color}
-      strokeWidth="4"
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
+      aria-hidden="true"
+      {...props}
     >
-      {/* Puerta */}
-      <path d="M30 10 H38 V38 L30 41 Z" />
-
-      {/* Marco redondeado de la puerta */}
-      <path d="M30 10 H16 C13 10 11 12 11 15 V33 C11 36 13 38 16 38 H30" />
-
-      {/* Flecha hacia la derecha */}
-      <path d="M6 24 H22 M22 24 L17 19 M22 24 L17 29" />
+      <path d="m10 17 5-5-5-5"></path>
+      <path d="M15 12H3"></path>
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
     </svg>
   );
 }

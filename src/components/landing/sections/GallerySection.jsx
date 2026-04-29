@@ -11,7 +11,7 @@ function GallerySection({ galleryItems }) {
 			<section className="landing-importance" id="galeria">
 			<div className="landing-gallery-container">
 				<div className="landing-gallery-heading">
-					<span className="landing-hero-badge">Galeria</span>
+					<span className="landing-hero-badge-s" style={{color: '#39B49E', fontSize: '20px'}}>Galeria</span>
 
 					<h2 className="landing-hero-title" style={{ fontSize: '40px' }}>Estudiantes en accion</h2>
 					<p className="landing-hero-description-a landing-gallery-description" style={{ fontSize: '16px' }}>
