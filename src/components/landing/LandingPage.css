@@ -300,38 +300,6 @@
 	padding-top: 0.35rem;
 }
 
-.landing-hero-visual {
-	position: relative;
-}
-
-.landing-hero-image-shell {
-	position: relative;
-	overflow: hidden;
-	border-radius: 12px;
-	box-shadow: 0 24px 44px rgba(15, 47, 84, 0.18);
-}
-
-.landing-hero-image {
-	display: block;
-	width: 100%;
-	height: min(66vh, 600px);
-	object-fit: cover;
-}
-
-.landing-hero-image-overlay {
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(to top, rgba(15, 47, 84, 0.6), transparent 45%);
-}
-
-.landing-hero-image-copy {
-	position: absolute;
-	left: 1.25rem;
-	right: 1.25rem;
-	bottom: 1.25rem;
-	color: #fff;
-}
-
 .landing-hero-floating-card {
 	position: absolute;
 	left: 0.75rem;
@@ -408,16 +376,10 @@
   transform: skewX(-25deg);
 }
 
-/* Hover */
 .landing-cta-primary:hover {
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 8px 25px rgba(56, 178, 156, 0.4),
 				0 0 20px rgba(56, 178, 156, 0.3);
-}
-
-.landing-hero-floating-subtitle {
-	font-size: 0.78rem;
-	color: #64748b;
 }
 
 .landing-benefits {
@@ -431,10 +393,10 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 120px; /* altura del degradado de conexión */
+    height: 120px;
     background: linear-gradient(
         to bottom,
-        rgba(15, 47, 84, 0.18),  /* mismo azul del overlay del hero */
+        rgba(15, 47, 84, 0.18),  
         transparent
     );
     pointer-events: none;
@@ -458,7 +420,7 @@
 	gap: 0.75rem;
 	align-items: flex-start;
 	margin-bottom: 0.75rem;
-	min-width: 0; /* important for flex children to allow wrapping */
+	min-width: 0; 
 }
 .landing-smart-docs-feature-icon {
 	flex: 0 0 44px;
@@ -470,7 +432,7 @@
 }
 .landing-service-benefit-text {
 	flex: 1 1 auto;
-	min-width: 0; /* allow text to shrink and wrap inside flex */
+	min-width: 0; 
 }
 .landing-service-benefit-title {
 	font-size: 1rem;
