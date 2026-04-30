@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import ArrowRightIcon from '../../../hooks/componentes/Icons/ArrowRightIcon';
 import ArrowLeftIcon from '../../../hooks/componentes/Icons/ArrowLeftIcon';
-import CheckCircleIcon from '../../../hooks/componentes/Icons/CheckCircleIcon';
+// removed unused imports: Link, ArrowRightIcon, CheckCircleIcon
 import AnimatedSection from '../AnimatedSection';
 
 function HeroSection() {
@@ -21,7 +19,7 @@ function HeroSection() {
         }}
       >
         <img
-          src="/images/61.png"
+          src="/images/61.webp"
           alt=""
           style={{
             position: 'absolute',

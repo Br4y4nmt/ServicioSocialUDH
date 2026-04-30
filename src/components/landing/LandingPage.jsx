@@ -518,7 +518,7 @@ function LandingPage() {
 				<nav className="landing-header-nav">
 					<div className="landing-header-row">
 						<img
-							src={!scrolled ? '/images/blanco.png' : '/images/logoudh.png'}
+							src={!scrolled ? '/images/blanco.webp' : '/images/logoudh.png'}
 							alt="Servicio Social UDH"
 							className="landing-brand-logo"
 						/>
@@ -687,7 +687,7 @@ function LandingPage() {
 						<div className="landing-footer-brand-col">
 							<div className="landing-footer-brand-row">
 								<img
-									src="/images/blanco.png"
+									src="/images/blanco.webp"
 									alt="Universidad de Huanuco"
 									className="landing-footer-brand-logo"
 								/>

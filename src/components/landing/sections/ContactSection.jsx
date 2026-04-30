@@ -42,8 +42,6 @@ function ContactSection() {
 	});
 
 	const [loading, setLoading] = useState(false);
-	const [success, setSuccess] = useState('');
-	const [error, setError] = useState('');
 
 	const handleChange = (e) => {
 		setFormData({
@@ -57,15 +55,12 @@ function ContactSection() {
 
 		try {
 			setLoading(true);
-			setSuccess('');
-			setError('');
 
 			const res = await axios.post(
 				'/api/contactos/contacto',
 				formData
 			);
 
-				setSuccess(res.data.message);
 				alertSuccess('Mensaje enviado', res.data.message);
 
 			setFormData({
@@ -76,7 +71,6 @@ function ContactSection() {
 			});
 
 			} catch (err) {
-				setError('No se pudo enviar el mensaje. Intente nuevamente.');
 				alertError('Error', 'No se pudo enviar el mensaje. Intente nuevamente.');
 		} finally {
 			setLoading(false);
