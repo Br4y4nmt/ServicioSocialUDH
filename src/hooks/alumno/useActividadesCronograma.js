@@ -85,7 +85,7 @@ export function useActividadesCronograma({ datosCargados, activeSection }) {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
-        Swal.fire('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.', 'success');
+        alertSuccess('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.');
 
         setActividadesSeguimiento((prev) =>
           prev.map((a) =>

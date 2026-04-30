@@ -148,12 +148,6 @@
   opacity: 1;
 }
 
-.step-header h3 {
-    font-weight: 640; 
-    font-size: 24px;
-    color: #2d2d2d;
-    margin: 0;
-}
   .info-icon {
     margin-left: auto;
     cursor: pointer;
@@ -1225,41 +1219,10 @@
   margin-bottom: 20px;
 }
 
-.modal-observacion-btn-volver-subir {
-  background-color: #2e9e7f;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.modal-observacion-btn-volver-subir:hover {
-  background-color: #238f72;
-}
-
 .contenedor-eliminar {
   display: flex;
   justify-content: center;
   margin-top: 15px;
-}
-
-.modal-observacion-btn-cerrar-estudiante {
-  background-color: #011b4b;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modal-observacion-btn-cerrar-estudiante:hover {
-  background-color: #1E429F;
 }
 
 .modal-observacion-actions {

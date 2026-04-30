@@ -122,11 +122,6 @@ body, html, #root {
   background-color: #057A55 ;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 @media screen and (max-width: 768px) {
   .login-page {
     flex-direction: column;

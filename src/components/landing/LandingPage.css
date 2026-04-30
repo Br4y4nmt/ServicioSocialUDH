@@ -1,18 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
 
-
 :root {
 	--landing-primary: #0ea5a4;
 	--landing-primary-dark: #0a8a89;
 	--landing-text: #334155;
+	--landing-backdrop: rgba(241, 243, 245, 0.95); /* gris plomo suave y claro */
+	--landing-separator: rgba(15, 20, 25, 0.06); /* línea separadora fina */
 }
 
 .landing-page {
 	font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
 	color: var(--landing-text);
 }
+.landing-hamburger {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 !important;
+}
 
+.landing-hamburger:hover {
+    background: transparent !important;
+}
+.landing-mobile-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 8px 24px rgba(15, 47, 84, 0.12);
+    z-index: 49;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.5rem;
+    gap: 0.25rem;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 1024px) {
+    .landing-hamburger {
+        display: none;
+    }
+}
+.landing-mobile-link {
+    padding: 0.85rem 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #334155;
+    text-decoration: none;
+    border-bottom: 1px solid #f1f5f9;
+    transition: color 0.2s ease;
+}
+
+.landing-mobile-link:last-of-type {
+    border-bottom: none;
+}
+
+.landing-mobile-link:hover {
+    color: #39b49e;
+}
 .landing-header {
 	position: fixed;
 	top: 0;
@@ -24,15 +82,22 @@
 	box-shadow: none;
 	transition: background 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
-
-/* Cuando el usuario hace scroll aplicamos fondo y sombra */
+@media (max-width: 1023px) {
+  .landing-header:not(.landing-header--scrolled) .landing-brand-logo {
+    filter: none !important;
+  }
+    .landing-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
 .landing-header.landing-header--scrolled {
 	background: #ffffff !important;
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* En estado transparente (top) los enlaces se muestran claros */
 .landing-header:not(.landing-header--scrolled) .landing-link,
 .landing-header:not(.landing-header--scrolled) .landing-mobile-link {
 	color: #ffffff;
@@ -40,7 +105,6 @@
 
 }
 
-/* En estado scrolled los enlaces vuelven a su color normal */
 .landing-header.landing-header--scrolled .landing-link,
 .landing-header.landing-header--scrolled .landing-mobile-link {
 	color: #475569;
@@ -48,7 +112,6 @@
 }
 
 .landing-header.landing-header--scrolled .landing-login-button {
-	/* botón visible sobre fondo claro */
 	background: linear-gradient(90deg, #39b49e, #2f9c8a);
 	color: #fff;
 }
@@ -57,10 +120,6 @@
 	background: linear-gradient(90deg, #39b49e, #2f9c8a);
 	border: none;
 	color: #ffffff;
-}
-
-.landing-header:not(.landing-header--scrolled) .landing-menu-toggle {
-	color: #ffffff; 
 }
 
 .landing-header:not(.landing-header--scrolled) .landing-brand-logo {
@@ -117,7 +176,6 @@
 	background: var(--landing-primary);
 	transition: width 0.25s ease;
 }
-
 .landing-link:hover .landing-link-line {
 	width: 100%;
 }
@@ -164,49 +222,6 @@
 	transform: translateY(-1px);
 	box-shadow: 0 16px 26px rgba(57, 180, 158, 0.32);
 	color: #fff;
-}
-
-.landing-menu-toggle {
-	background: transparent; /* quita el plomo */
-	border: none;
-	padding: 0;
-	width: auto;
-	height: auto;
-	color: #0F2F54; /* color del icono */
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-}
-
-.landing-mobile-menu {
-	display: grid;
-	gap: 0.35rem;
-	max-height: 0;
-	overflow: hidden;
-	opacity: 0;
-	padding: 0;
-	transition: max-height 0.32s ease, opacity 0.2s ease, padding 0.2s ease;
-}
-
-.landing-mobile-menu.is-open {
-	max-height: 360px;
-	opacity: 1;
-	padding: 0.5rem 0 1rem;
-}
-
-.landing-mobile-link {
-	text-decoration: none;
-	color: #334155;
-	font-weight: 500;
-	border-radius: 10px;
-	padding: 0.6rem 0.75rem;
-	transition: background 0.2s ease, color 0.2s ease;
-}
-
-.landing-mobile-link:hover {
-	background: #f1f5f9;
-	color: var(--landing-primary-dark);
 }
 
 .landing-main {
@@ -477,6 +492,7 @@
 	.landing-service-benefit-title-a {
 		font-size: 0.95rem;
 	}
+	
 	.landing-service-benefit-desc {
 		font-size: 0.92rem;
 	}
@@ -2131,11 +2147,6 @@
 	.landing-actions-desktop {
 		display: flex;
 		align-items: center;
-	}
-
-	.landing-menu-toggle,
-	.landing-mobile-menu {
-		display: none;
 	}
 
 	.landing-hero {

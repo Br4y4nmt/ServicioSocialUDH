@@ -15,8 +15,8 @@ import DownloadIcon from "../../../hooks/componentes/Icons/DownloadIcon";
 import PdfIcon from "../../../hooks/componentes/PdfIcon";
 import CheckCircleIcon from "../../../hooks/componentes/Icons/CheckCircleIcon";
 import InfoCircleSVG from "../../../hooks/componentes/Icons/InfoCircleSVG";
-import { VerBotonInline } from "../../../hooks/componentes/VerBoton";
 import Spinner from 'components/ui/Spinner';
+import VerBoton from "../../../hooks/componentes/VerBoton";
 import ModalMotivoRechazoInforme from '../../modals/ModalMotivoRechazoInforme';
 
 export default function InformeFinal({
@@ -303,7 +303,7 @@ useEffect(() => {
 
                     <div className="if-doc-right">
                       {planSeleccionado?.certificado_final ? (
-                        <VerBotonInline
+                        <VerBoton
                           onClick={() =>
                             window.open(
                               `${process.env.REACT_APP_API_URL}/uploads/certificados_finales/${planSeleccionado.certificado_final}`,
@@ -353,7 +353,7 @@ useEffect(() => {
                               </div>
 
                               <div className="if-doc-right">
-                                <VerBotonInline
+                                <VerBoton
                                   onClick={() =>
                                     window.open(
                                       `${process.env.REACT_APP_API_URL}/uploads/certificados_finales_miembros/${cert.nombre_archivo_pdf}`,
@@ -449,8 +449,9 @@ useEffect(() => {
                       </div>
 
                       <div className="if-doc-right">
-                        <VerBotonInline
+                        <VerBoton
                           onClick={handleVerMotivoRechazo}
+                          label={cargandoMotivo ? 'Cargando...' : 'Ver'}
                           disabled={cargandoMotivo}
                         />
                         <span className="btn-estado-rechazado" style={{

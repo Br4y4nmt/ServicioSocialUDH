@@ -490,6 +490,7 @@ function ServiceBenefitsIcon({ icon }) {
 function LandingPage() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
+	const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
 	const [openFaqIndex, setOpenFaqIndex] = useState(-1);
 	const preloadOffset = '300px';
 	const [programRef, showProgram] = useInView(preloadOffset);
@@ -512,61 +513,100 @@ function LandingPage() {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
+	useEffect(() => {
+		const handleResize = () => setIsMobile(window.innerWidth < 1024);
+		window.addEventListener('resize', handleResize);
+		handleResize();
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	useEffect(() => {
+		if (!isMobile) setMenuOpen(false);
+	}, [isMobile]);
+
 	return (
 		<div className="landing-page">
 			<header className={`landing-header ${scrolled ? 'landing-header--scrolled' : ''}`} id="inicio">
-				<nav className="landing-header-nav">
-					<div className="landing-header-row">
-						<img
-							src={!scrolled ? '/images/blanco.webp' : '/images/logoudh.png'}
-							alt="Servicio Social UDH"
-							className="landing-brand-logo"
-						/>
+			<nav className="landing-header-nav">
+				<div className="landing-header-row">
+					<img
+						src={(!scrolled && !isMobile) ? '/images/blanco.webp' : '/images/logoudh.png'}
+						alt="Servicio Social UDH"
+						className="landing-brand-logo"
+					/>
+					{isMobile && (
+			<button
+				className="landing-hamburger"
+				onClick={() => setMenuOpen(!menuOpen)}
+				aria-label="Abrir menú"
+			>
+				<MenuIcon size={26} color={scrolled ? '#0f2f54' : '#0f2f54'} />
+			</button>
+		)}
 
-						<div className="landing-links-desktop">
-							{navLinks.map((link) => (
-								<a key={link.href} href={link.href} className="landing-link">
-									{link.label}
-									<span className="landing-link-line" />
-								</a>
-							))}
-						</div>
+            <div className="landing-links-desktop">
+                {navLinks.map((link) => (
+                    <a key={link.href} href={link.href} className="landing-link">
+                        {link.label}
+                        <span className="landing-link-line" />
+                    </a>
+                ))}
+            </div>
 
-						<div className="landing-actions-desktop">
-							<Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
-								
-								<span>Ir a la plataforma</span>
-								<span style={{ marginLeft: '0.6rem', display: 'inline-flex', alignItems: 'center' }}>
-									<ImpersonateIcon size={18} color="#ffffff" aria-hidden="true" />
-								</span>
-							</Link>
-						</div>
+            <div className="landing-actions-desktop">
+                <Link to="/login" className="landing-login-button" target="_blank" rel="noopener noreferrer">
+                    <span>Ir a la plataforma</span>
+                    <span style={{ marginLeft: '0.6rem', display: 'inline-flex', alignItems: 'center' }}>
+                        <ImpersonateIcon size={18} color="#ffffff" aria-hidden="true" />
+                    </span>
+                </Link>
+            </div>
+        </div>
+    </nav>
+	
+</header>
 
-						<button
-							type="button"
-							className="landing-menu-toggle"
-							aria-label="Abrir menu"
-							aria-expanded={menuOpen}
-							onClick={() => setMenuOpen((current) => !current)}
+			{isMobile && menuOpen && (
+				<div className={`landing-mobile-menu ${menuOpen ? 'is-open' : ''}`}>
+					{navLinks.map((link) => (
+						<a
+							key={link.href}
+							href={link.href}
+							className="landing-mobile-link"
+							onClick={(e) => {
+								e.preventDefault();
+								setMenuOpen(false);
+								setTimeout(() => {
+									const target = document.querySelector(link.href);
+									if (target) {
+										target.scrollIntoView({ behavior: 'smooth' });
+									}
+								}, 150);
+							}}
 						>
-							<MenuIcon />
-						</button>
-					</div>
+							{link.label}
+						</a>
+					))}
 
-					<div className={`landing-mobile-menu ${menuOpen ? 'is-open' : ''}`}>
-						{navLinks.map((link) => (
-							<a
-								key={link.href}
-								href={link.href}
-								className="landing-mobile-link"
-								onClick={() => setMenuOpen(false)}
-							>
-								{link.label}
-							</a>
-						))}
-					</div>
-				</nav>
-			</header>
+					<Link
+						to="/login"
+						className="landing-login-button"
+						style={{ marginTop: '0.5rem' }}
+						onClick={() => setMenuOpen(false)}
+					>
+						Ir a la plataforma
+					</Link>
+				</div>
+			)}
+
+			{isMobile && (
+				<div
+					className={`landing-overlay ${menuOpen ? 'is-visible' : ''}`}
+					onClick={() => setMenuOpen(false)}
+					role="button"
+					aria-hidden={!menuOpen}
+				/>
+			)}
 
 			<main className="landing-main">
 				<Suspense fallback={lazyFallback}>

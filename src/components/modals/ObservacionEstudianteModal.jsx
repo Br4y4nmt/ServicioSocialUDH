@@ -10,23 +10,29 @@ function ObservacionEstudianteModal({
   if (!visible) return null;
 
   return (
-    <div className="modal-observacion-overlay">
-      <div className="modal-observacion-content">
-        <h3 style={{ marginBottom: "10px" }}>Observación del Docente</h3>
-        <p style={{ color: "#4A5568" }}>{observacionSeleccionada}</p>
+    <div className="motivo-rechazo-modal-overlay">
+      <div className="motivo-rechazo-modal">
+        <h3 className="motivo-rechazo-title">Observación del Docente</h3>
 
-        <div className="modal-observacion-actions">
+        <textarea
+          className="motivo-rechazo-textarea"
+          readOnly
+          value={
+            observacionSeleccionada ||
+            "No hay observación disponible."
+          }
+        />
+
+        <div className="motivo-rechazo-footer">
           <button
-            className="modal-observacion-btn-volver-subir"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
+            style={{fontSize: '14px'}}
             onClick={() => onVolverASubir(actividadSeleccionada)}
             disabled={!actividadSeleccionada}
           >
             Volver a subir
           </button>
-          <button
-            className="modal-observacion-btn-cerrar-estudiante"
-            onClick={onClose}
-          >
+          <button className="motivo-rechazo-btn-cerrar" onClick={onClose}>
             Cerrar
           </button>
         </div>

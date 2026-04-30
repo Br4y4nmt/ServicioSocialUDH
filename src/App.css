@@ -62,3 +62,19 @@ button.btn-primary, button.btn-danger {
 .swal2-container {
   z-index: 100000 !important;
 }
+
+/* Global animations and helper utilities */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.08);
+  border-top-color: rgba(15,47,84,0.9);
+  animation: spin 1s linear infinite;
+}

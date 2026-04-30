@@ -58,29 +58,6 @@
   -webkit-overflow-scrolling: touch; 
 }
 
-.btn-motivo-rechazo {
-  background-color: #c62828;     
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-motivo-rechazo:hover {
-  background-color: #b71c1c;
-  transform: translateY(-1px);
-}
-
-.btn-motivo-rechazo:active {
-  transform: scale(0.96);
-}
 
 .motivo-rechazo-modal-overlay {
   position: fixed;         
@@ -154,12 +131,6 @@
 
 .motivo-rechazo-btn-cerrar:active {
   transform: translateY(0);
-}
-
-.btn-motivo-rechazo svg {
-  width: 16px;
-  height: 16px;
-  fill: white;
 }
 
 .revision-table {
@@ -408,10 +379,7 @@
   color: #333;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+
 
 .btn-enviar:hover,
 .btn-cancelar:hover {
@@ -561,12 +529,6 @@
     font-size: 1.5rem !important; 
     text-align: center;
   }
-  .revision-table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch; 
-}
-
 .revision-table {
   min-width: 700px;
 }
