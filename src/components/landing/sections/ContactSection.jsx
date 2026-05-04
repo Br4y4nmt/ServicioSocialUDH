@@ -123,12 +123,11 @@ function ContactSection() {
 											Correo electrónico
 										</div>
 
-										<a
-											href="mailto:servicio.social@udh.edu.pe"
+										<span
 											className="landing-contact-info-link"
 										>
 											servicio.social@udh.edu.pe
-										</a>
+										</span>
 									</div>
 								</div>
 

@@ -1,5 +1,6 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './LandingPage.css';
 
 import MenuIcon from '../../hooks/componentes/Icons/MenuIcon';
@@ -21,6 +22,30 @@ import JusticeIcon from '../../hooks/componentes/Icons/JusticeIcon';
 import ImpersonateIcon from '../../hooks/componentes/Icons/ImpersonateIcon';
 import useInView from './hooks/useInView';
 import PageSkeleton from '../loaders/PageSkeleton';
+
+function WhatsAppIcon() {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+			<path d="M20.52 3.48A11.81 11.81 0 0 0 12.02 0C5.4 0 0 5.4 0 12.02c0 2.12.55 4.18 1.6 6.01L0 24l6.17-1.61a12 12 0 0 0 5.85 1.49h.01c6.62 0 12.02-5.4 12.02-12.02 0-3.21-1.25-6.23-3.53-8.4ZM12.03 22.1h-.01a10.1 10.1 0 0 1-5.14-1.41l-.37-.22-3.66.96.98-3.57-.24-.38a10.07 10.07 0 0 1-1.54-5.44C2.04 6.6 6.62 2.02 12.02 2.02c2.7 0 5.24 1.05 7.14 2.95a9.98 9.98 0 0 1 2.96 7.06c0 5.4-4.58 10.07-10.09 10.07Zm5.53-7.56c-.3-.15-1.78-.88-2.06-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.96 1.18-.18.2-.36.22-.66.07-.3-.15-1.27-.47-2.42-1.5-.89-.8-1.5-1.8-1.68-2.1-.18-.3-.02-.46.13-.61.14-.14.3-.36.45-.54.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.64-.94-2.25-.25-.6-.5-.52-.68-.53h-.58c-.2 0-.53.07-.8.38-.27.3-1.05 1.02-1.05 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.22 5.1 4.51.71.31 1.27.5 1.7.64.72.23 1.37.2 1.88.12.57-.09 1.78-.73 2.03-1.44.25-.7.25-1.31.18-1.44-.07-.13-.27-.2-.57-.35Z"/>
+		</svg>
+	);
+}
+
+function FloatingWhatsAppButton({ showButton }) {
+	if (!showButton) return null;
+
+	return (
+		<a
+			href="https://wa.me/51952072469?text=Hola%20necesito%20soporte%20tecnico%20para%20la%20plataforma%20servicio%20social%20UDH"
+			target="_blank"
+			rel="noopener noreferrer"
+			className="landing-whatsapp-float"
+			aria-label="Contactar por WhatsApp"
+		>
+			<WhatsAppIcon />
+		</a>
+	);
+}
 
 const HeroSection = lazy(() => import('./sections/HeroSection'));
 const ProgramSection = lazy(() => import('./sections/ProgramSection'));
@@ -290,7 +315,7 @@ const galleryItems = [
 		]
 	}
 ];
-const indicators = [
+const indicatorsDefault = [
 	{ value: '6', label: 'Lineas de Accion' },
 	{ value: '700', label: 'Estudiantes' },
 	{ value: '200+', label: 'Proyectos' },
@@ -490,8 +515,14 @@ function ServiceBenefitsIcon({ icon }) {
 function LandingPage() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
+	const [showWhatsApp, setShowWhatsApp] = useState(false);
 	const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
 	const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+	const [indicators, setIndicators] = useState(indicatorsDefault);
+	const [totalProyectos, setTotalProyectos] = useState(0);
+	const [totalCertificaciones, setTotalCertificaciones] = useState(0);
+	const [totalLineasAccion, setTotalLineasAccion] = useState(0);
+	const footerRef = useRef(null);
 	const preloadOffset = '300px';
 	const [programRef, showProgram] = useInView(preloadOffset);
 	const [importanceRef, showImportance] = useInView(preloadOffset);
@@ -507,7 +538,12 @@ function LandingPage() {
 	const lazyFallback = <PageSkeleton />;
 
 	useEffect(() => {
-		const handleScroll = () => setScrolled(window.scrollY > 80);
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 80);
+			const footerTop = footerRef.current?.getBoundingClientRect().top ?? Infinity;
+			const footerVisible = footerTop <= window.innerHeight;
+			setShowWhatsApp(window.scrollY > 600 && !footerVisible);
+		};
 		window.addEventListener('scroll', handleScroll, { passive: true });
 		handleScroll();
 		return () => window.removeEventListener('scroll', handleScroll);
@@ -523,6 +559,68 @@ function LandingPage() {
 	useEffect(() => {
 		if (!isMobile) setMenuOpen(false);
 	}, [isMobile]);
+
+	useEffect(() => {
+		const fetchEstudiantes = async () => {
+			try {
+				const res = await axios.get('/api/dashboard/estudiantes-por-programa');
+				const porPrograma = res.data || [];
+				const totalEstudiantes = porPrograma.reduce((sum, item) => sum + (item.total || 0), 0);
+
+				setIndicators((prev) => [
+				{ value: totalLineasAccion.toString(), label: 'Lineas de Accion' },
+				{ value: totalEstudiantes.toString(), label: 'Estudiantes' },
+				{ value: totalProyectos.toString(), label: 'Proyectos' },
+				{ value: totalCertificaciones.toString(), label: 'Certificaciones' },
+			]);
+		} catch (error) {
+			console.error('Error obteniendo estudiantes:', error);
+		}
+	};
+
+	fetchEstudiantes();
+}, [totalProyectos, totalCertificaciones, totalLineasAccion]);
+	useEffect(() => {
+		const fetchProyectos = async () => {
+			try {
+				const res = await axios.get('/api/dashboard/total-trabajos-sociales-activos');
+				const total = res.data?.total || 0;
+				setTotalProyectos(total);
+			} catch (error) {
+				console.error('Error obteniendo proyectos activos:', error);
+			}
+		};
+
+		fetchProyectos();
+	}, []);
+
+	useEffect(() => {
+		const fetchCertificaciones = async () => {
+			try {
+				const res = await axios.get('/api/dashboard/total-certificados-finales');
+				const total = res.data?.total || 0;
+				setTotalCertificaciones(total);
+			} catch (error) {
+				console.error('Error obteniendo certificaciones:', error);
+			}
+		};
+
+		fetchCertificaciones();
+	}, []);
+
+	useEffect(() => {
+		const fetchLineasAccion = async () => {
+			try {
+				const res = await axios.get('/api/dashboard/total-lineas-accion');
+				const total = res.data?.total || 0;
+				setTotalLineasAccion(total);
+			} catch (error) {
+				console.error('Error obteniendo líneas de acción:', error);
+			}
+		};
+
+		fetchLineasAccion();
+	}, []);
 
 	return (
 		<div className="landing-page">
@@ -721,7 +819,9 @@ function LandingPage() {
 				</div>
 			</main>
 
-			<footer className="landing-footer" id="contacto">
+			<FloatingWhatsAppButton showButton={showWhatsApp} />
+
+			<footer className="landing-footer" id="contacto" ref={footerRef}>
 				<div className="landing-footer-container">
 					<div className="landing-footer-grid">
 						<div className="landing-footer-brand-col">

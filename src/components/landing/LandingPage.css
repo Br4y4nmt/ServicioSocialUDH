@@ -315,36 +315,6 @@
 	padding-top: 0.35rem;
 }
 
-.landing-hero-floating-card {
-	position: absolute;
-	left: 0.75rem;
-	bottom: -1.2rem;
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;              /* menos separación interna */
-	padding: 0.7rem 0.8rem;   /* menos alto y menos ancho */
-	max-width: 220px;         /* más angosta */
-	background: #fff;
-	border-radius: 6px;
-	box-shadow: 0 12px 24px rgba(15, 47, 84, 0.14); /* sombra más sutil */
-}
-
-.landing-hero-floating-icon {
-	width: 44px;
-	height: 44px;
-	border-radius: 999px;
-	display: grid;
-	place-items: center;
-	background: rgba(14, 165, 164, 0.11);
-	color: var(--landing-primary);
-	flex-shrink: 0;
-}
-
-.landing-hero-floating-icon svg {
-	width: 22px;
-	height: 22px;
-}
-
 .landing-hero-floating-title {
 	font-size: 0.88rem;
 	font-weight: 700;
@@ -1474,7 +1444,7 @@
 	.landing-hero-grid {
 		padding-left: 1rem !important;
 	}
-	.landing-benefits .landing-hero-floating-card {
+	.landing-benefits {
 		left: 2px !important;
 		right: auto !important;
 		transform: none !important;
@@ -1962,7 +1932,63 @@
 	color: #39b49e;
 }
 
+.landing-whatsapp-float {
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+	width: 60px;
+	height: 60px;
+	background: #25d366;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ffffff;
+	text-decoration: none;
+
+	/* 👇 clave: sombra más elegante */
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+
+	transition: all 0.25s ease;
+	z-index: 40;
+}
+
+.landing-whatsapp-float:hover {
+	transform: scale(1.08);
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
+/* 👇 ícono más proporcionado */
+.landing-whatsapp-float svg {
+	width: 26px;
+	height: 26px;
+	fill: #ffffff;
+}
+
+@keyframes slideInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 @media (max-width: 767px) {
+	.landing-whatsapp-float {
+		bottom: 1rem;
+		right: 1rem;
+		width: 50px;
+		height: 50px;
+	}
+
+	.landing-whatsapp-float svg {
+		width: 28px;
+		height: 28px;
+	}
+
 	.landing-indicators {
 		padding: 4.6rem 0;
 	}
@@ -2167,11 +2193,6 @@
 
 	.landing-audience-grid {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	.landing-hero-floating-card {
-		left: -1.5rem;
-		bottom: -1.8rem;
 	}
 
 	.landing-benefits-grid {

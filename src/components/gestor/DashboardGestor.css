@@ -828,6 +828,3 @@ td select{
   100% { left: 120%; }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}

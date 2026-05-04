@@ -18,12 +18,6 @@ function ProgramSection({ benefitsItems }) {
 						<div className="landing-benefits-image-overlay" />
 					</div>
 
-					<div className="landing-hero-floating-card" style={{ left: 'auto', right: '-1.5rem', bottom: '-1.0rem' }}>
-						<div className="landing-hero-floating-icon" aria-hidden="true">
-							<CheckCircleIcon />
-						</div>
-						<div>Programa Oficial</div>
-					</div>
 				</div>
 
 				<div className="landing-benefits-copy">
