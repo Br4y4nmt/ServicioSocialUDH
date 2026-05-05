@@ -36,7 +36,7 @@ function FloatingWhatsAppButton({ showButton }) {
 
 	return (
 		<a
-			href="https://wa.me/51952072469?text=Hola%20necesito%20soporte%20tecnico%20para%20la%20plataforma%20servicio%20social%20UDH"
+			href="https://wa.me/51952072469?text=Hola%2C%20necesito%20resolver%20algunas%20dudas%20sobre%20el%20servicio%20social%20universitario"
 			target="_blank"
 			rel="noopener noreferrer"
 			className="landing-whatsapp-float"

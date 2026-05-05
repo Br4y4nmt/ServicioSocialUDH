@@ -147,12 +147,11 @@ function ContactSection() {
 											Teléfono
 										</div>
 
-										<a
-											href="tel:+51952072469"
+										<span
 											className="landing-contact-info-link"
 										>
 											+51 952 072 469
-										</a>
+										</span>
 									</div>
 								</div>
 
