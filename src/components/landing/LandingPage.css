@@ -2146,7 +2146,7 @@
 	}
 
 	.landing-smart-docs-grid {
-		grid-template-columns: 1fr 1fr; /* 👈 clave */
+		grid-template-columns: 1fr 1.15fr; 
 		gap: 2rem;
 	}
 

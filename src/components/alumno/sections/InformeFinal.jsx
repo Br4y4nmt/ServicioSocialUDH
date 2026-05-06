@@ -315,7 +315,7 @@ useEffect(() => {
                         <span className="if-doc-empty">No disponible</span>
                       )}
 
-                      <span className={estadoCertificado === 'tramitado' ? 'estado-tramitado' : 'btn-estado-pendiente'}>
+                      <span className={estadoCertificado === 'tramitado' ? 'estado-tramitado' : 'respuesta-asesor-btn pendiente'}>
                         {estadoCertificado === 'tramitado' ? 'Tramitado' : 'Pendiente'}
                       </span>
                     </div>
@@ -361,7 +361,7 @@ useEffect(() => {
                                     )
                                   }
                                 />
-                                <span className={cert.nombre_archivo_pdf ? 'estado-tramitado' : 'btn-estado-pendiente'}>
+                                <span className={cert.nombre_archivo_pdf ? 'estado-tramitado' : 'respuesta-asesor-btn pendiente'}>
                                   {cert.nombre_archivo_pdf ? 'Tramitado' : 'Pendiente'}
                                 </span>
                               </div>
@@ -389,7 +389,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <span className="if-review-chip">Pendiente</span>
+        <span className="respuesta-asesor-btn pendiente">Pendiente</span>
       </div>
 
       <div className="if-divider" aria-hidden="true" />
@@ -454,14 +454,7 @@ useEffect(() => {
                           label={cargandoMotivo ? 'Cargando...' : 'Ver'}
                           disabled={cargandoMotivo}
                         />
-                        <span className="btn-estado-rechazado" style={{
-                          padding: '4px 12px',
-                          backgroundColor: '#DC2626',
-                          color: '#fff',
-                          borderRadius: '9999px',
-                          fontSize: '13px',
-                          fontWeight: '600'
-                        }}>
+                        <span className="respuesta-asesor-btn rechazado">
                           Rechazado
                         </span>
                       </div>

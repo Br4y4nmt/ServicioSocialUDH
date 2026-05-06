@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './SidebarAlumno.css';
-import DocumentIcon from "../../../hooks/componentes/Icons/DocumentIcon";
 import ReportIcon from "../../../hooks/componentes/Icons/ReportIcon";
 import ExecutionIcon from "../../../hooks/componentes/Icons/ExecutionIcon";
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import ArrowLeftIcon from "../../../hooks/componentes/Icons/ArrowLeftIcon";
 import ChevronDownIcon from "../../../hooks/componentes/Icons/ChevronDownIcon";
+import TrackingCheckIcon from '../../../hooks/componentes/Icons/TrackingCheckIcon';
 import { alertInfo } from "../../../hooks/alerts/alertas";
 
 function SidebarAlumno({ 
@@ -95,7 +95,7 @@ function SidebarAlumno({
 
               {/* PLAN */}
               <li className="menu-item">
-             <button 
+            <button 
               onClick={() => toggleMenu(0)} 
               className={`menu-title ${isActiveMenu(0) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
               disabled={isPerfilIncompleto}
@@ -236,7 +236,7 @@ function SidebarAlumno({
                   className={`menu-title ${isActiveMenu(3) ? "menu-title--active" : ""} ${isPerfilIncompleto ? "menu-disabled" : ""}`}
                   disabled={isPerfilIncompleto}
                 >
-                  <DocumentIcon size={32} />
+                  <TrackingCheckIcon size={32} />
                   Documentos
                   <ChevronDownIcon
                     width={16}

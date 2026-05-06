@@ -126,7 +126,7 @@ export default function SolicitudesInformesFinales() {
     const confirm = await alertconfirmacion({
       title: '¿Estás seguro de aprobar este informe?',
       text: 'Esta acción marcará el informe como aprobado.',
-      icon: 'warning',
+      icon: 'question',
       confirmButtonColor: '#39B49E',
       cancelButtonColor: '#003366',
       confirmButtonText: 'Sí, aprobar',

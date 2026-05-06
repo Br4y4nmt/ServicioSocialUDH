@@ -140,8 +140,8 @@ function RevisionPlanSocial() {
     const accion = nuevoEstado === 'aceptado' ? 'aceptar' : 'rechazar';
     const confirmacion = await alertconfirmacion({
       title: `¿Estás seguro de ${accion} este trabajo?`,
-      text: `Esta acción marcará el trabajo como ${nuevoEstado}.`,
-      icon: 'warning',
+      text: `Esta acción marcará el trabajos como ${nuevoEstado}.`,
+      icon: 'question',
       confirmButtonText: `Sí, ${accion}`,
       cancelButtonText: 'Cancelar'
     });

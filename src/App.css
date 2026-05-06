@@ -63,10 +63,84 @@ button.btn-primary, button.btn-danger {
   z-index: 100000 !important;
 }
 
-/* Global animations and helper utilities */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.respuesta-asesor-btn {
+    background-color: #38a169 ;
+    color: white;
+    padding: 3px 6px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: auto; 
+    display: block; 
+  }
+
+.respuesta-asesor-btn.pendiente {
+    background-color: #8898AA;
+    color: white;
+}
+
+.respuesta-asesor-btn.aceptado {
+  background-color: #38a169;;
+  color: #ffffff;
+}
+
+.respuesta-asesor-btn.rechazado {
+    background-color: #D32F2F;
+    color: white;
+}
+
+.respuesta-asesor-btn.observado {
+    background-color: #ED8936;
+    color: white;
+}
+
+.respuesta-asesor-btn.solicitada {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.estado-tramitado {
+  background: #38a169;
+  color: white;
+  padding: 4px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.grupo-alumno-btn {
+  min-width: 90px;
+  height: 35px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.grupo-alumno-btn-cancel {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #dbe3ee;
+}
+
+.grupo-alumno-btn-cancel:hover {
+  background: #f1f5f9;
+}
+
+.grupo-alumno-btn-save {
+  background: #011b4b;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 8px 18px rgba(1, 27, 75, 0.22);
+}
+
+.grupo-alumno-btn-save:hover {
+  background: #02245f;
+  box-shadow: 0 10px 22px rgba(1, 27, 75, 0.28);
 }
 
 .spinner {
@@ -77,4 +151,9 @@ button.btn-primary, button.btn-danger {
   border: 2px solid rgba(0,0,0,0.08);
   border-top-color: rgba(15,47,84,0.9);
   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

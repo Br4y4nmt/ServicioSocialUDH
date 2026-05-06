@@ -290,6 +290,7 @@ const eliminarEleccion = useCallback(async () => {
           const confirmado = await alertconfirmacion({
             title: '¿Estás seguro?',
             text: 'Una vez enviada la solicitud, no podrás modificar los datos seleccionados',
+            icon: 'question',
             confirmButtonText: 'Sí, enviar',
             cancelButtonText: 'Cancelar',
           });

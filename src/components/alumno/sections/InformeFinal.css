@@ -36,6 +36,10 @@
   gap: 12px;
 }
 
+.if-title-row .respuesta-asesor-btn {
+  align-self: center;
+}
+
 .if-divider {
   height: 1px;
   background: #e6edf3;
@@ -247,7 +251,6 @@
   height: 100%;
 }
 
-
 .if-dropzone-empty{
   display:flex;
   flex-direction:column;
@@ -396,14 +399,6 @@
   align-items: center;
   gap: 10px;
 }
-.estado-tramitado {
-  background: #38a169;
-  color: white;
-  padding: 4px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  font-weight: 500;
-}
 
 .documento-info-nu {
   display: flex;
@@ -424,16 +419,6 @@
     width: 100%;
 }
 
-.if-review-chip{
-  background:#94a3b8;
-  color:#fff;
-  font-weight:600;
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:8px;
-  align-self:flex-start;
-}
-
 .if-doc-empty{
   color: #94a3b8;
   font-size: 13px;
@@ -447,16 +432,6 @@
   background: transparent;
 }
 
-.if-note-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #2e9e7f; 
-  display: grid;
-  place-items: center;
-  color: #ffffff; 
-  flex-shrink: 0;
-}
 .if-note-icon svg { width: 18px; height: 18px; }
 
 .if-note-text {

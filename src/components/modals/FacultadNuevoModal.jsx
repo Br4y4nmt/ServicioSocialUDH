@@ -25,14 +25,14 @@ const FacultadNuevoModal = ({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onClose}
           >
             Cancelar
           </button>
 
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             onClick={() => {
               if (!nombreFacultad || nombreFacultad.trim() === '') {
                 showTopWarningToast('Campo vacío', 'Ingrese el nombre de la facultad.');

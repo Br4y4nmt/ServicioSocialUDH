@@ -329,40 +329,17 @@
   color: #3b82f6; 
   font-size: 18px;
 }
-.respuesta-asesor-btn.solicitada {
-  background-color: #f59e0b;
-  color: #ffffff;
-}
 
-.respuesta-asesor-btn.solicitada:hover,
-.respuesta-asesor-btn.solicitada:focus,
-.respuesta-asesor-btn.solicitada:active {
-  background-color: #f59e0b !important;
-  color: #ffffff !important;
+.respuesta-asesor-body p {
+  color: #3d7f6f; 
+  margin-bottom: 0px;    
+  line-height: 1.4;        
 }
-
-  .respuesta-asesor-body p {
-    color: #3d7f6f; 
-    margin-bottom: 0px;    
-    line-height: 1.4;        
-  }
   .texto-revision-supervisor p {
   margin-bottom: 4px;
   line-height: 1.4;
   font-size: 14.2px; 
 }
-
-  .respuesta-asesor-btn {
-    background-color: #38a169 ;
-    color: white;
-    padding: 3px 6px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: auto; 
-    display: block; 
-  }
 
   .botones-acciones-docente {
     display: flex;
@@ -444,11 +421,6 @@
     background-color: #e2e8f0;
   }
   
-  .respuesta-asesor-btn:active {
-    background-color: #209c80; 
-    transform: translateY(1px);
-  }
-
 .boton-siguiente {
     margin-left: auto;
     margin-right: 20px;
@@ -469,14 +441,7 @@
   .boton-siguiente:hover {
     background-color: #147760;
   }
-  .respuesta-asesor-btn.pendiente {
-    background-color: #8898AA;
-    color: white;
-  }
-  .respuesta-asesor-btn.observado {
-    background-color: #ED8936;
-    color: white;
-  }
+
   .universidad-readonly {
     background-color: #f0f0f0;
     font-weight: bold;
@@ -727,39 +692,6 @@
   gap: 12px;
 }
 
-.grupo-alumno-btn {
-  min-width: 90px;
-  height: 35px;
-  padding: 0 16px;
-  border-radius: 6px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.grupo-alumno-btn-cancel {
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #dbe3ee;
-}
-
-.grupo-alumno-btn-cancel:hover {
-  background: #f1f5f9;
-}
-
-.grupo-alumno-btn-save {
-  background: #011b4b;
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 8px 18px rgba(1, 27, 75, 0.22);
-}
-
-.grupo-alumno-btn-save:hover {
-  background: #02245f;
-  box-shadow: 0 10px 22px rgba(1, 27, 75, 0.28);
-}
-
 .grupo-alumno-lista {
   list-style: none;
   padding: 0;
@@ -831,24 +763,15 @@
     align-items: flex-start;
   }
 } 
-  .respuesta-asesor-btn.aceptado {
-    background-color: #38A169;
-    color: white;
-  }
-  
-  .respuesta-asesor-btn.rechazado {
-    background-color: #D32F2F;
-    color: white;
-  }
 
-  .conformidad-plan {
+.conformidad-plan {
     display: block; 
     margin: 0 0 40px 0; 
     padding: 20px;
     background-color: #f6f6f6;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
+}
 
 .plan-info {
   display: flex;
@@ -1395,14 +1318,7 @@
 .main-content.sidebar-open {
   background-color: #f3f4f6 !important;
 }
-.estado-tramitado {
-  background: #38a169;
-  color: white;
-  padding: 4px 10px;
-  font-size: 13px;
-  border-radius: 5px;
-  font-weight: 500;
-}
+
 .respuesta-icono-titulo {
   display: flex;
   align-items: center;

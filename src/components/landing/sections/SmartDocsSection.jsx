@@ -30,7 +30,7 @@ function SmartDocsSection({ smartDocFeatures, renderSmartDocIcon }) {
 
 					<div className="landing-smart-docs-preview-wrap">
 						<img
-							src="/images/certificado.png"
+							src="/images/certificado.webp"
 							alt="Vista previa del certificado de servicio social"
 							className="landing-smart-docs-preview-image"
 						/>
