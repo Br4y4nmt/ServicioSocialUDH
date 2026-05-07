@@ -25,14 +25,14 @@ function ObservacionEstudianteModal({
 
         <div className="motivo-rechazo-footer">
           <button
-            className="grupo-alumno-btn grupo-alumno-btn-cancel"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             style={{fontSize: '14px'}}
             onClick={() => onVolverASubir(actividadSeleccionada)}
             disabled={!actividadSeleccionada}
           >
             Volver a subir
           </button>
-          <button className="motivo-rechazo-btn-cerrar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cerrar
           </button>
         </div>

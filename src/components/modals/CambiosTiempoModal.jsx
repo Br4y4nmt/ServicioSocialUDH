@@ -136,7 +136,7 @@ function CambiosTiempoModal({
         )}
 
         <div className="programas-modal-actions">
-          <button className="docentes-btn cancelar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cerrar
           </button>
         </div>

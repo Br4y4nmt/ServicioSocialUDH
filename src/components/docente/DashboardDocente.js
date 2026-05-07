@@ -31,16 +31,23 @@ const RevisionContent = memo(function RevisionContent({
 
   const trabajosFiltrados = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return trabajosSociales;
+    const base = term
+      ? trabajosSociales.filter((trabajo) => {
+          const estudiante = trabajo.Estudiante?.nombre_estudiante || '';
+          const programa = trabajo.ProgramasAcademico?.nombre_programa || '';
+          const servicio = trabajo.LaboresSociale?.nombre_labores || '';
+          const tipo = trabajo.tipo_servicio_social || '';
 
-    return trabajosSociales.filter((trabajo) => {
-      const estudiante = trabajo.Estudiante?.nombre_estudiante || '';
-      const programa = trabajo.ProgramasAcademico?.nombre_programa || '';
-      const servicio = trabajo.LaboresSociale?.nombre_labores || '';
-      const tipo = trabajo.tipo_servicio_social || '';
+          return [estudiante, programa, servicio, tipo]
+            .some((valor) => String(valor).toLowerCase().includes(term));
+        })
+      : trabajosSociales;
 
-      return [estudiante, programa, servicio, tipo]
-        .some((valor) => String(valor).toLowerCase().includes(term));
+    return [...base].sort((a, b) => {
+      const aPendiente = a.estado_plan_labor_social === 'pendiente';
+      const bPendiente = b.estado_plan_labor_social === 'pendiente';
+      if (aPendiente === bPendiente) return 0;
+      return aPendiente ? -1 : 1;
     });
   }, [trabajosSociales, searchTerm]);
 

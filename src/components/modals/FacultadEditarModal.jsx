@@ -24,13 +24,13 @@ function FacultadEditarModal({
         />
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onCancelar}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             onClick={() => {
               if ((originalNombre || '').trim() === (nombre || '').trim()) {
                 showTopWarningToast('Sin cambios', 'No se realizaron cambios.');

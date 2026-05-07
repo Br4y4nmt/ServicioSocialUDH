@@ -11,7 +11,7 @@ const ModalDetalleActividad = memo(function ModalDetalleActividad({
   return ReactDOM.createPortal(
     <div className="detalle-actividad-overlay">
       <div className="detalle-actividad-modal">
-        <h3>Detalle de Actividad</h3>
+        <h3 className="modal-evidencia-title" style={{ textAlign: 'center' }}>Detalle de Actividad</h3>
         <p><strong>Actividad:</strong> {actividad.actividad}</p>
         <p><strong>Justificación:</strong> {actividad.justificacion}</p>
         <p><strong>Fecha Inicio:</strong> {actividad.fecha}</p>
@@ -24,7 +24,7 @@ const ModalDetalleActividad = memo(function ModalDetalleActividad({
         <p><strong>Fecha Término:</strong> {actividad.fecha_fin || 'Sin completar'}</p>
         <p><strong>Resultados Esperados:</strong> {actividad.resultados}</p>
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <button className="detalle-actividad-btn-cerrar" onClick={onCerrar}>
+          <button className="modal-evidencia-btn-cerrar" onClick={onCerrar}>
             Cerrar
           </button>
         </div>

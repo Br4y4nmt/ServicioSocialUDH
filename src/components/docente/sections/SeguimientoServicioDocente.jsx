@@ -51,16 +51,23 @@ function SeguimientoServicioDocente() {
 
   const trabajosFiltrados = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return trabajosSociales;
+    const base = term
+      ? trabajosSociales.filter((plan) => {
+          const estudiante = plan.Estudiante?.nombre_estudiante || '';
+          const programa = plan.ProgramasAcademico?.nombre_programa || '';
+          const servicio = plan.LaboresSociale?.nombre_labores || '';
+          const tipo = plan.tipo_servicio_social || '';
 
-    return trabajosSociales.filter((plan) => {
-      const estudiante = plan.Estudiante?.nombre_estudiante || '';
-      const programa = plan.ProgramasAcademico?.nombre_programa || '';
-      const servicio = plan.LaboresSociale?.nombre_labores || '';
-      const tipo = plan.tipo_servicio_social || '';
+          return [estudiante, programa, servicio, tipo]
+            .some((valor) => String(valor).toLowerCase().includes(term));
+        })
+      : trabajosSociales;
 
-      return [estudiante, programa, servicio, tipo]
-        .some((valor) => String(valor).toLowerCase().includes(term));
+    return [...base].sort((a, b) => {
+      const aSolicitada = a.solicitud_termino === 'solicitada';
+      const bSolicitada = b.solicitud_termino === 'solicitada';
+      if (aSolicitada === bSolicitada) return 0;
+      return aSolicitada ? -1 : 1;
     });
   }, [trabajosSociales, searchTerm]);
 
@@ -476,7 +483,7 @@ function SeguimientoServicioDocente() {
       {modalVisible && (
         <div className="modal-cronograma-overlay">
           <div className="modal-cronograma-content">
-            <h3 className="modal-cronograma-title">Cronograma de Actividades</h3>
+            <h3 className="modal-evidencia-title" style={{ textAlign: 'center' }}>Cronograma de Actividades</h3>
             {cronogramaSeleccionado.length > 0 ? (
               <div className="modal-cronograma-table-wrapper">
                 <table className="modal-cronograma-table">
@@ -539,7 +546,7 @@ function SeguimientoServicioDocente() {
               <p className="modal-cronograma-empty">No hay cronograma disponible para este trabajo social.</p>
             )}
             <div className="modal-cronograma-actions">
-              <button className="modal-cronograma-btn-cerrar" onClick={handleCloseModal}>Cerrar</button>
+              <button className="modal-evidencia-btn-cerrar" onClick={handleCloseModal}>Cerrar</button>
             </div>
           </div>
         </div>
@@ -563,11 +570,11 @@ function SeguimientoServicioDocente() {
               placeholder="Escribe tu observación aquí..."
             />
             <div className="modal-observacion-actions">
-              <button className="enviar-btn" onClick={handleEnviarObservacion}>
+              <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={handleEnviarObservacion}>
                 Enviar
               </button>
               <button
-                className="cancelar-btn"
+                className="grupo-alumno-btn grupo-alumno-btn-cancel"
                 onClick={() => setModalObservacionVisible(false)}
               >
                 Cancelar

@@ -36,13 +36,13 @@ function EstudianteNuevoModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             onClick={onGuardar}
           >
             Guardar

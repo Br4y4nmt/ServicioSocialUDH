@@ -337,6 +337,18 @@ export function useDashboardAlumno() {
   const handleSolicitarRevision = useCallback(async () => {
     const usuario_id = user?.id;
     const token = user?.token;
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const esFechaPasada = (value) => {
+      if (!value) return false;
+      const parts = String(value).split('-').map((part) => Number(part));
+      if (parts.length !== 3 || parts.some((part) => Number.isNaN(part))) return true;
+      const [year, month, day] = parts;
+      const date = new Date(year, month - 1, day);
+      date.setHours(0, 0, 0, 0);
+      return date < hoy;
+    };
 
     if (!usuario_id || !token) {
       await alertError('Sesión inválida', 'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.');
@@ -345,6 +357,19 @@ export function useDashboardAlumno() {
     if (!proyectoFile) {
       await alertWarning('Archivo no seleccionado', 'Por favor selecciona un archivo PDF antes de enviar.');
       return;
+    }
+    if (Array.isArray(actividadesCronograma.actividades)) {
+      const hayFechasPasadas = actividadesCronograma.actividades.some(
+        (actividad) => esFechaPasada(actividad?.fecha) || esFechaPasada(actividad?.fechaFin)
+      );
+
+      if (hayFechasPasadas) {
+        await alertWarning(
+          'Fechas inválidas',
+          'No puedes enviar el cronograma con fechas anteriores a hoy.'
+        );
+        return;
+      }
     }
 
     try {

@@ -368,10 +368,6 @@
   opacity: 0.6;
 }
 
-  .btn-ver-documento-inline:hover {
-    background-color: #e2e8f0;
-  }
-  
 .oculto {
   display: none !important;
 }
@@ -403,24 +399,7 @@
     transform: translateY(-2px);
   }
 }
-.btn-ver-documento-inline {
-  background-color: white;
-  border: 1px solid #CBD5E0;
-  color: #1A202C;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  }
-  .btn-ver-documento:hover {
-    background-color: #e2e8f0;
-  }
-  
+
 .boton-siguiente {
     margin-left: auto;
     margin-right: 20px;
@@ -1362,12 +1341,6 @@
     gap: 10px;
     width: 100%;
   }
-
-    .btn-ver-documento-inline,
-    .respuesta-asesor-btn {
-    width: auto;
-    justify-content: center;
-  }
   .respuesta-icono-titulo {
     display: flex;
     align-items: center;
@@ -1515,13 +1488,6 @@
     margin-top: 10px;
   }
 
-  .btn-ver-documento-inline {
-    width: fit-content;
-    max-width: 80px;      
-    padding: 4px 10px;         
-    font-size: 12px;           
-    justify-content: center;
-  }
   .estado-tramitado {
     font-size: 12px;
     padding: 4px 10px;
@@ -1609,6 +1575,13 @@
   white-space: normal;      
   word-wrap: break-word;
   border-bottom: 1px solid #eee;
+}
+
+.tabla-cronograma-se .respuesta-asesor-btn {
+  margin-left: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tabla-cronograma-se th {

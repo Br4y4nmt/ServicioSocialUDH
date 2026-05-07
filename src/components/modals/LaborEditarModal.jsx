@@ -27,7 +27,7 @@ function LaborEditarModal({
   return (
     <div className="programas-modal show">
       <div className="programas-modal-content">
-        <h3>Editar Labor Social</h3>
+        <h3>Editar servicio social</h3>
 
         <input
           type="text"
@@ -52,14 +52,14 @@ function LaborEditarModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             type="button"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             type="button"
             onClick={async () => {
               const nombreActual = (nombreLabor || '').trim();

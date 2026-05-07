@@ -1,4 +1,3 @@
-// src/components/modals/EvidenciaModal.jsx
 import React from "react";
 
 function EvidenciaModal({ visible, imagen, onClose }) {

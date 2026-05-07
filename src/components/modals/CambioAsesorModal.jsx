@@ -41,7 +41,7 @@ function CambioAsesorModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onClose}
             disabled={guardando}
           >
@@ -49,11 +49,11 @@ function CambioAsesorModal({
           </button>
 
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             onClick={onSave}
             disabled={guardando}
           >
-            {guardando ? "Guardando..." : "Guardar cambio"}
+            {guardando ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </div>

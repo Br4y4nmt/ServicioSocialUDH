@@ -91,16 +91,23 @@ function RevisionPlanSocial() {
 
   const trabajosFiltrados = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return trabajosSociales;
+    const base = term
+      ? trabajosSociales.filter((plan) => {
+          const estudiante = plan.Estudiante?.nombre_estudiante || '';
+          const programa = plan.ProgramasAcademico?.nombre_programa || '';
+          const servicio = plan.LaboresSociale?.nombre_labores || '';
+          const tipo = plan.tipo_servicio_social || '';
 
-    return trabajosSociales.filter((plan) => {
-      const estudiante = plan.Estudiante?.nombre_estudiante || '';
-      const programa = plan.ProgramasAcademico?.nombre_programa || '';
-      const servicio = plan.LaboresSociale?.nombre_labores || '';
-      const tipo = plan.tipo_servicio_social || '';
+          return [estudiante, programa, servicio, tipo]
+            .some((valor) => String(valor).toLowerCase().includes(term));
+        })
+      : trabajosSociales;
 
-      return [estudiante, programa, servicio, tipo]
-        .some((valor) => String(valor).toLowerCase().includes(term));
+    return [...base].sort((a, b) => {
+      const aPendiente = a.conformidad_plan_social === 'pendiente';
+      const bPendiente = b.conformidad_plan_social === 'pendiente';
+      if (aPendiente === bPendiente) return 0;
+      return aPendiente ? -1 : 1;
     });
   }, [trabajosSociales, searchTerm]);
 

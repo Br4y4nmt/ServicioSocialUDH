@@ -61,13 +61,13 @@ function ProgramaNuevoModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             onClick={() => {
               if (!nombrePrograma || !nombrePrograma.trim() || !facultadPrograma || !emailPrograma || !emailPrograma.trim() || !whatsappPrograma || !whatsappPrograma.trim()) {
                 showTopWarningToast('Faltan campos', 'Completa todos los campos requeridos.');

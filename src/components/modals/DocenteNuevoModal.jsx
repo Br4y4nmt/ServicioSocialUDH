@@ -65,10 +65,10 @@ function DocenteNuevoModal({
         </select>
 
         <div className="programas-modal-actions">
-          <button className="docentes-btn cancelar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button className="docentes-btn guardar" onClick={onGuardar}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={onGuardar}>
             Guardar
           </button>
         </div>

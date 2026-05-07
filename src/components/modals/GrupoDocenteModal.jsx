@@ -42,7 +42,7 @@ function GrupoDocenteModal({
 
         <div className="modal-grupo-actions">
           <button
-            className="modal-grupo-btn cerrar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             onClick={onClose}
           >
             Cerrar

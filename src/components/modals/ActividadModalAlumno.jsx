@@ -22,19 +22,25 @@ function ActividadModalAlumno({
   if (!visible) return null;
 
   const hoyISO = new Date().toISOString().split("T")[0];
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const parseISODate = (value) => {
+    if (!value) return null;
+    const parts = value.split("-").map((part) => Number(part));
+    if (parts.length !== 3 || parts.some((part) => Number.isNaN(part))) return null;
+    const [year, month, day] = parts;
+    const date = new Date(year, month - 1, day);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
 
   const contarPalabras = (texto) => {
     return texto.trim() === "" ? 0 : texto.trim().split(/\s+/).length;
   };
 
-  const handleGuardar = async () => {
-    if (nuevaActividad.trim() === "" || nuevaFecha.trim() === "") {
-      await alertWarning(
-        "Campos incompletos",
-        "Completa todos los campos obligatorios antes de guardar."
-      );
-      return;
-    }
+  const handleGuardar = async (event) => {
+    event.preventDefault();
 
     if (contarPalabras(nuevaActividad) > 40) {
       await alertWarning(
@@ -52,16 +58,24 @@ function ActividadModalAlumno({
       return;
     }
 
-    if ((nuevaFechaFin || "").trim() === "") {
+    const fechaInicio = parseISODate(nuevaFecha);
+    const fechaFin = parseISODate(nuevaFechaFin);
+
+    if (!fechaInicio || !fechaFin) {
       await alertWarning(
-        "Fecha fin requerida",
-        "Ingresa la fecha fin de la actividad."
+        "Fechas inválidas",
+        "Ingresa fechas válidas para la actividad."
       );
       return;
     }
 
-    const fechaInicio = new Date(nuevaFecha);
-    const fechaFin = new Date(nuevaFechaFin);
+    if (fechaInicio < hoy || fechaFin < hoy) {
+      await alertWarning(
+        "Fechas inválidas",
+        "No puedes registrar actividades con fechas anteriores a hoy."
+      );
+      return;
+    }
 
     if (nuevaFechaFin.trim() !== "") {
       const diferenciaMs = fechaFin - fechaInicio;
@@ -114,16 +128,18 @@ function ActividadModalAlumno({
       <div className="modal-content-alumno">
         <h3>Agregar Actividad</h3>
 
-        <div className="form-group">
-          <label className="bold-text">Actividad</label>
-          <input
-            type="text"
-            className="input-estilo-select"
-            style={{ width: "100%" }}
-            value={nuevaActividad}
-            onChange={(e) => setNuevaActividad(e.target.value)}
-            placeholder="Ingrese nombre de la actividad"
-          />
+        <form onSubmit={handleGuardar}>
+          <div className="form-group">
+            <label className="bold-text">Actividad</label>
+            <input
+              type="text"
+              className="input-estilo-select"
+              style={{ width: "100%" }}
+              value={nuevaActividad}
+              onChange={(e) => setNuevaActividad(e.target.value)}
+              placeholder="Ingrese nombre de la actividad"
+              required
+            />
           <small
             style={{
               color: contarPalabras(nuevaActividad) > 40 ? "red" : "#666",
@@ -131,16 +147,17 @@ function ActividadModalAlumno({
           >
             {contarPalabras(nuevaActividad)} / 40 palabras
           </small>
-        </div>
+          </div>
 
-        <div className="form-group">
-          <label className="bold-text">Justificación</label>
-          <textarea
-            className="input-estilo-select"
-            value={nuevaJustificacion}
-            onChange={(e) => setNuevaJustificacion(e.target.value)}
-            placeholder="Describa aquí..."
-          />
+          <div className="form-group">
+            <label className="bold-text">Justificación</label>
+            <textarea
+              className="input-estilo-select"
+              value={nuevaJustificacion}
+              onChange={(e) => setNuevaJustificacion(e.target.value)}
+              placeholder="Describa aquí..."
+              required
+            />
           <small
             style={{
               color: contarPalabras(nuevaJustificacion) > 40 ? "red" : "#666",
@@ -148,44 +165,47 @@ function ActividadModalAlumno({
           >
             {contarPalabras(nuevaJustificacion)} / 40 palabras
           </small>
-        </div>
+          </div>
 
-        <div className="form-group">
-          <label className="bold-text">Fecha Estimada</label>
-          <input
-            type="date"
-            className="input-estilo-select"
-            value={nuevaFecha}
-            onChange={(e) => setNuevaFecha(e.target.value)}
-            min={hoyISO}
-          />
-        </div>
+          <div className="form-group">
+            <label className="bold-text">Fecha Estimada</label>
+            <input
+              type="date"
+              className="input-estilo-select"
+              value={nuevaFecha}
+              onChange={(e) => setNuevaFecha(e.target.value)}
+              min={hoyISO}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label className="bold-text">Fecha Fin</label>
-          <input
-            type="date"
-            className="input-estilo-select"
-            value={nuevaFechaFin}
-            onChange={(e) => setNuevaFechaFin(e.target.value)}
-            min={hoyISO}
-          />
-        </div>
+          <div className="form-group">
+            <label className="bold-text">Fecha Fin</label>
+            <input
+              type="date"
+              className="input-estilo-select"
+              value={nuevaFechaFin}
+              onChange={(e) => setNuevaFechaFin(e.target.value)}
+              min={hoyISO}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label className="bold-text">Resultados Esperados</label>
-          <textarea
-            className="input-estilo-select"
-            value={nuevosResultados}
-            onChange={(e) => setNuevosResultados(e.target.value)}
-            placeholder="Describa aquí los resultados..."
-          />
-        </div>
+          <div className="form-group">
+            <label className="bold-text">Resultados Esperados</label>
+            <textarea
+              className="input-estilo-select"
+              value={nuevosResultados}
+              onChange={(e) => setNuevosResultados(e.target.value)}
+              placeholder="Describa aquí los resultados..."
+            />
+          </div>
 
-        <div className="grupo-alumno-modal-footer">
-          <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={handleGuardar}>Guardar</button>
-          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>Cancelar</button>
-        </div>
+          <div className="grupo-alumno-modal-footer">
+            <button className="grupo-alumno-btn grupo-alumno-btn-save" type="submit">Guardar</button>
+            <button className="grupo-alumno-btn grupo-alumno-btn-cancel" type="button" onClick={onClose}>Cancelar</button>
+          </div>
+        </form>
       </div>
     </div>
   );

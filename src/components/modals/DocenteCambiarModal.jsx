@@ -74,11 +74,11 @@ useEffect(() => {
         </select>
 
         <div className="programas-modal-actions">
-          <button className="docentes-btn cancelar" type="button" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" type="button" onClick={onClose}>
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             type="button"
             onClick={async () => {
               const emailActual = (email || "").trim();

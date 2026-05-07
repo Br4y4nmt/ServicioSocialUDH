@@ -64,9 +64,16 @@ export default function SolicitudesInformesFinales() {
   }, [fetchData]);
 
   const informesFiltrados = useMemo(() => {
-    return informesFinales.filter((inf) =>
+    const base = informesFinales.filter((inf) =>
       buscarSinTildes(inf.Estudiante?.nombre_estudiante || '', busqueda)
     );
+
+    return [...base].sort((a, b) => {
+      const aPendiente = a.estado_informe_final === 'pendiente';
+      const bPendiente = b.estado_informe_final === 'pendiente';
+      if (aPendiente === bPendiente) return 0;
+      return aPendiente ? -1 : 1;
+    });
   }, [informesFinales, busqueda]);
 
   const totalPages = Math.max(1, Math.ceil(informesFiltrados.length / ITEMS_PER_PAGE));

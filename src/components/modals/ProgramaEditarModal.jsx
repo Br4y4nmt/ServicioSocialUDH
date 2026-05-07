@@ -21,7 +21,7 @@ function ProgramaEditarModal({
   return (
     <div className="programas-modal show">
       <div className="programas-modal-content">
-        <h3>Editar Programa Académico</h3>
+        <h3>Editar programa académico</h3>
 
         <input
           type="text"
@@ -54,10 +54,10 @@ function ProgramaEditarModal({
         />
 
         <div className="programas-modal-actions">
-          <button className="docentes-btn cancelar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button className="docentes-btn guardar" onClick={() => {
+          <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={() => {
             const nameSame = (originalNombre || '').trim() === (nombre || '').trim();
             const facultadSame = String(originalFacultad || '') === String(facultad || '');
             const emailSame = (originalEmail || '').trim() === (email || '').trim();

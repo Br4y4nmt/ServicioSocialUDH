@@ -71,7 +71,7 @@
 
 .motivo-rechazo-modal {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 10px;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
   width: 640px;
   max-width: 95%;
@@ -112,27 +112,6 @@
   margin-top: 20px;
 }
 
-.motivo-rechazo-btn-cerrar {
-  background: #0b1f46;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 22px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.motivo-rechazo-btn-cerrar:hover {
-  background: #06142d;
-  transform: translateY(-1px);
-}
-
-.motivo-rechazo-btn-cerrar:active {
-  transform: translateY(0);
-}
-
 .revision-table {
   width: 100%;       
   min-width: 700px;   
@@ -147,25 +126,6 @@
 
 .revision-table thead tr {
   background-color: transparent !important;
-}
-.btn-ver-documento {
-  display: inline-flex;        
-  align-items: center;
-  justify-content: center;     
-  gap: 6px;
-  background-color: transparent;
-  color: #263238;
-  border: 1.8px solid #cfd8dc;
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.btn-ver-documento:hover {
-  background-color: #eceff1;
-  border-color: #90a4ae;
 }
 
 .revision-table thead th {
@@ -353,25 +313,6 @@
   background-color: #142e68;
 }
 
-.btn-cancelar {
-  background-color: #011b4b;
-  color: white;
-  padding: 8px 18px;
-  font-size: 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-enviar {
-  background-color: #38a169;
-  color: white;
-  padding: 8px 18px;
-  font-size: 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
 .modal-grupo-item {
   font-size: 0.95rem;
   padding: 4px 0;
@@ -379,12 +320,6 @@
   color: #333;
 }
 
-
-
-.btn-enviar:hover,
-.btn-cancelar:hover {
-  opacity: 0.9;
-}
 .modal-grupo-overlay {
   position: fixed;
   top: 0;
@@ -459,22 +394,6 @@
   text-align: center;
 }
 
-.modal-grupo-btn.cerrar {
-  padding: 8px 15px;
-  background-color: #0b1f46;
-  color: white;
-  border: none;
-  font-size: 14px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.modal-grupo-btn.cerrar:hover {
-  background-color: #132f6b;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -532,7 +451,6 @@
 .revision-table {
   min-width: 700px;
 }
-
 }
 
 @media (max-width: 480px) {

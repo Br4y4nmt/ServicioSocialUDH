@@ -41,7 +41,7 @@ function SeguimientoModal({ isOpen, seguimiento, onClose }) {
         </ul>
 
         <div className="seguimiento-actions">
-          <button className="seguimiento-btn-cerrar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cerrar
           </button>
         </div>

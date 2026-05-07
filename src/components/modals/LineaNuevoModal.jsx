@@ -25,14 +25,14 @@ function LineaNuevoModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             type="button"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             type="button"
             onClick={async () => {
               if (!nombreLinea || !nombreLinea.trim()) {

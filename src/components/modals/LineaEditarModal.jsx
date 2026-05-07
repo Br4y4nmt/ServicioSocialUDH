@@ -19,7 +19,7 @@ function LineaEditarModal({
   return (
     <div className="programas-modal show">
       <div className="programas-modal-content">
-        <h3>Editar Línea de Acción</h3>
+        <h3>Editar línea de acción</h3>
 
         <input
           type="text"
@@ -31,14 +31,14 @@ function LineaEditarModal({
 
         <div className="programas-modal-actions">
           <button
-            className="docentes-btn cancelar"
+            className="grupo-alumno-btn grupo-alumno-btn-cancel"
             type="button"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="docentes-btn guardar"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
             type="button"
             onClick={async () => {
               const actual = (nombreLinea || '').trim();

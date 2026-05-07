@@ -24,7 +24,7 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
           onChange={(e) => onObservacionChange(e.target.value)}
         />
         <div className="modal-observacion-actions">
-          <button onClick={onCancelar} className="cancelar-btn">
+          <button onClick={onCancelar} className="grupo-alumno-btn grupo-alumno-btn-cancel">
             Cancelar
           </button>
           <button
@@ -48,7 +48,7 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
                 if (typeof onEnviar === 'function') onEnviar();
               }
             }}
-            className="enviar-btn"
+            className="grupo-alumno-btn grupo-alumno-btn-save"
           >
             Enviar
           </button>

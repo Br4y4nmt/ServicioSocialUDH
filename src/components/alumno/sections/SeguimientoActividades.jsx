@@ -277,23 +277,23 @@ useEffect(() => {
                                         Observado
                                     </button>
                                     ) : (
-    <button
-      onClick={() => handleEnviarEvidencia(item.id)}
-      className="btn-enviar-evidenciasss"
-      title="Enviar evidencia"
-      disabled={cargandoEvidencia[item.id]}
-    >
-          {cargandoEvidencia[item.id] ? (
-        <>
-          <Spinner size={18} />
-          <span style={{ marginLeft: '8px' }}>Enviando...</span>
-        </>
-      ) : (
-        'Enviar'
-      )}
-    </button>
-     )}
-    </td>
+                                      <button
+                                        onClick={() => handleEnviarEvidencia(item.id)}
+                                        className="btn-enviar-evidenciasss"
+                                        title="Enviar evidencia"
+                                        disabled={cargandoEvidencia[item.id]}
+                                      >
+                                            {cargandoEvidencia[item.id] ? (
+                                          <>
+                                            <Spinner size={18} />
+                                            <span style={{ marginLeft: '8px' }}>Enviando...</span>
+                                          </>
+                                        ) : (
+                                          'Enviar'
+                                        )}
+                                      </button>
+                                      )}
+                                      </td>
                                 {hayObservaciones && (
                                     <td style={{ textAlign: 'center' }}>
                                         {item.estado === 'observado' && item.observacion ? (

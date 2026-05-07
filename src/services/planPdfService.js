@@ -193,7 +193,7 @@ export async function generarPlanServicioSocialPDF({
 
   doc.setFontSize(12);
   doc.text("HUÁNUCO - PERÚ", 105, 270, { align: "center" });
-  doc.text("2025", 105, 278, { align: "center" });
+  doc.text("2026", 105, 278, { align: "center" });
 
   doc.addPage();
   doc.setFont("times", "bold");
