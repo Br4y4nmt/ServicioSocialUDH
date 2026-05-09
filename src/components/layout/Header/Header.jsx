@@ -73,7 +73,7 @@ function Header({ onToggleSidebar }) {
   const enlaceGuia =
     rolUsuario === 'docente supervisor'
       ? 'https://drive.google.com/file/d/1b1ecTv9eRWmvgt-q82q9rbee-z03Wkwe/view?usp=sharing'
-      : 'https://drive.google.com/file/d/1tjKS3sYvq47OTkOm7uPUU3mfV_F_O3m9/view?usp=sharing';
+      : 'https://drive.google.com/file/d/1k6LHkZ89INboMhoXdZfbDm3L5v_yv5gV/view?usp=sharing';
 
   return (
     <header className="custom-header">
