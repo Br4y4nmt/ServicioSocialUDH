@@ -502,17 +502,17 @@ const handleSolicitarAprobacion = useCallback(async () => {
     const status = error.response?.status;
     const data = error.response?.data;
 
-    const showBackendAlert = async (title, text, icon = 'warning') => {
-      await Swal.fire({
-        icon,
-        title,
-        text,
-        confirmButtonText: 'OK',
-        confirmButtonColor: icon === 'error' ? '#dc2626' : '#f59e0b',
-        allowOutsideClick: false,
-        allowEscapeKey: true,
-      });
-    };
+    const showBackendAlert = async (title, html, icon = 'warning') => {
+    await Swal.fire({
+      icon,
+      title,
+      html,
+      confirmButtonText: 'OK',
+      confirmButtonColor: icon === 'error' ? '#dc2626' : '#f59e0b',
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+    });
+  };
 
     if (status === 409 && Array.isArray(data?.duplicados)) {
       await showBackendAlert('Códigos duplicados', data.duplicados.join(', '));
@@ -553,7 +553,57 @@ const handleSolicitarAprobacion = useCallback(async () => {
       );
       return;
     }
+if (status === 400 && Array.isArray(data?.detalles)) {
 
+  const mensajes = data.detalles.map((item) => {
+
+    const erroresTraducidos = (item.errores || []).map((err) => {
+
+      switch (err) {
+
+        case 'codigo_menor_2021':
+          return 'El código debe ser mayor a 2021(año de ingreso)';
+
+        case 'ciclo_menor_8':
+          return `Ciclo menor a 8 (actual: ${item.ciclo})`;
+
+        default:
+          return err;
+      }
+    });
+
+    return `
+      <div style="
+        margin-bottom:12px;
+        padding:12px;
+        border-radius:10px;
+        background:#fef2f2;
+        border:1px solid #fecaca;
+        text-align:left;
+      ">
+        <div style="
+          font-weight:bold;
+          color:#991b1b;
+          margin-bottom:5px;
+        ">
+          Código: ${item.codigo}
+        </div>
+
+        <div style="color:#7f1d1d;">
+          ${erroresTraducidos.join('<br>')}
+        </div>
+      </div>
+    `;
+  });
+
+  await showBackendAlert(
+    'Integrantes no válidos',
+    mensajes.join(''),
+    'error'
+  );
+
+  return;
+}
     const backendMessage = data?.message;
     await showBackendAlert('Error al enviar solicitud', backendMessage || 'Error al enviar solicitud', 'error');
   }

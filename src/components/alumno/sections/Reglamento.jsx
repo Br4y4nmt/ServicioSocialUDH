@@ -31,11 +31,21 @@ function Reglamento() {
       estado: 'Vigente',
       url: 'https://drive.google.com/file/d/1vusDPWYiod_V3KslegCuMHFHuHPp3rew/view?usp=sharing',
     },
+    {
+      id: 4,
+      titulo: 'CONVENIO DE COLABORACIÓN SSU',
+      tipo: 'PDF',
+      cargado: '14/5/2026',
+      estado: 'Vigente',
+      url: 'https://docs.google.com/document/d/12iYO-g07OXeD0a_3XWCnnVfry0YhbEAp/edit?usp=sharing&ouid=110596459322840430150&rtpof=true&sd=true',
+    },
   ];
 
   const getGoogleDriveDownloadUrl = (url) => {
     const match = url.match(/\/d\/([^/]+)/);
+
     if (!match?.[1]) return url;
+
     return `https://drive.google.com/uc?export=download&id=${match[1]}`;
   };
 
@@ -45,9 +55,27 @@ function Reglamento() {
         <span className="check-circle">
           <CheckCircleFilledIcon width={28} height={28} />
         </span>
+
         <div>
-          <h2 style={{ color: '#ffffff', fontSize: '1.2rem', fontWeight: 600 }}>DOCUMENTOS OFICIALES SERVICIO SOCIAL</h2>
-          <p style={{ color: '#cbd5e1', fontSize: '0.86rem', margin: '2px 0 0' }}>Consulta y descarga de documentos oficiales vigentes</p>
+          <h2
+            style={{
+              color: '#ffffff',
+              fontSize: '1.2rem',
+              fontWeight: 600,
+            }}
+          >
+            DOCUMENTOS OFICIALES SERVICIO SOCIAL
+          </h2>
+
+          <p
+            style={{
+              color: '#cbd5e1',
+              fontSize: '0.86rem',
+              margin: '2px 0 0',
+            }}
+          >
+            Consulta y descarga de documentos oficiales vigentes
+          </p>
         </div>
       </div>
 
@@ -57,21 +85,37 @@ function Reglamento() {
             <article className="reglamento-item" key={doc.id}>
               <div className="documento-info reglamento-documento-info">
                 <PdfIcon />
+
                 <div className="reglamento-item-content">
-                  <span className="titulo-pdf">{doc.titulo}</span>
-                <div className="reglamento-meta">
-                  <span>Tipo: {doc.tipo}</span>
-                  <span className="reglamento-meta-dot">•</span>
-                  <span>Cargado: {doc.cargado}</span>
+                  <span className="titulo-pdf">
+                    {doc.titulo}
+                  </span>
+
+                  <div className="reglamento-meta">
+                    <span>Tipo: {doc.tipo}</span>
+
+                    <span className="reglamento-meta-dot">•</span>
+
+                    <span>
+                      Cargado: {doc.cargado}
+                    </span>
+                  </div>
                 </div>
               </div>
-              </div>
 
-              <span className="estado-tramitado">{doc.estado}</span>
+              <span className="estado-tramitado">
+                {doc.estado}
+              </span>
 
               <div className="reglamento-actions">
                 <VerBoton
-                  onClick={() => window.open(doc.url, '_blank', 'noopener,noreferrer')}
+                  onClick={() =>
+                    window.open(
+                      doc.url,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }
                 />
 
                 <button
@@ -91,7 +135,6 @@ function Reglamento() {
               </div>
             </article>
           ))}
-
         </div>
       </div>
     </section>
