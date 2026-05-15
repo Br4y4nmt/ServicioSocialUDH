@@ -11,6 +11,9 @@ function NavegacionAlumno({ activeSection, setActiveSection, handleGoToNextSecti
   const hideNavFor = ['reglamento', 'plan-trabajo'];
   if (hideNavFor.includes(activeSection)) return null;
 
+  // Ocultar navegación en la sección de conformidad
+  if (activeSection === 'conformidad') return null;
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>
       {activeSection !== 'designacion' && (

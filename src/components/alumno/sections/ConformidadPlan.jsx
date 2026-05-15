@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import InfoCircleSVG from '../../../hooks/componentes/Icons/InfoCircleSVG';
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import UserTieIcon from "../../../hooks/componentes/Icons/UserTieIcon";
 import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import VerBoton from "../../../hooks/componentes/VerBoton";
 import '../DashboardAlumno.css';
 import Spinner from 'components/ui/Spinner';
 import Lottie from "lottie-react";
 import studyAnim from "../../../assets/study.json";
+import MotivoRechazoModal from "../../modals/MotivoRechazoModal";
+import { useUser } from '../../../UserContext';
 
 
 function ConformidadPlan({
+  trabajoId,
   estadoConformidad,
   nombreDocente,
   nombreLaborSocial,
@@ -74,8 +79,39 @@ function ConformidadPlan({
   handleSolicitarRevision,
   activeSection
 }) {
-  const [cargandoPDF, setCargandoPDF] = React.useState(false);
-  const [enviandoRevision, setEnviandoRevision] = React.useState(false);
+  const { user } = useUser();
+  const token = user?.token;
+  const [cargandoPDF, setCargandoPDF] = useState(false);
+  const [enviandoRevision, setEnviandoRevision] = useState(false);
+  const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
+  const [motivoRechazo, setMotivoRechazo] = useState('');
+  const [cargandoMotivo, setCargandoMotivo] = useState(false);
+
+  const abrirModalMotivoRechazo = useCallback(async () => {
+    if (!trabajoId || !token) return;
+
+    setCargandoMotivo(true);
+    try {
+      const { data } = await axios.get(
+        `/api/trabajo-social/observacion-conformidad/${trabajoId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      setMotivoRechazo(data.observacion || 'No se encontró un motivo registrado.');
+      setModalMotivoVisible(true);
+    } catch (error) {
+      console.error(error);
+      const mensaje =
+        error.response?.data?.message ||
+        'Ocurrió un error al cargar la observación. Inténtelo más tarde.';
+      setMotivoRechazo(mensaje);
+      setModalMotivoVisible(true);
+    } finally {
+      setCargandoMotivo(false);
+    }
+  }, [trabajoId, token]);
 
   return (
     <>
@@ -587,6 +623,15 @@ function ConformidadPlan({
         : 'Pendiente'}
     </button>
   )}
+
+  {archivoYaEnviado && estadoConformidad === 'rechazado' && (
+    <VerBoton
+      onClick={() => {
+        if (!cargandoMotivo) abrirModalMotivoRechazo();
+      }}
+      label={cargandoMotivo ? 'Cargando...' : 'Ver'}
+    />
+  )}
 </div>
 
     {estadoConformidad === 'aceptado' && (
@@ -623,6 +668,12 @@ function ConformidadPlan({
   </>
   </div>
 )}
+
+  <MotivoRechazoModal
+    visible={modalMotivoVisible}
+    motivo={motivoRechazo}
+    onClose={() => setModalMotivoVisible(false)}
+  />
     {proyectoFile && !archivoYaEnviado && (
       <p className="archivo-seleccionado">
         Archivo listo para enviar: <strong>{proyectoFile.name}</strong>

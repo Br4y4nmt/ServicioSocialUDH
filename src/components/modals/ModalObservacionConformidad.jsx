@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import '../../components/docente/DashboardDocente.css';
-import { alertconfirmacion } from '../../hooks/alerts/alertas';
 import { showTopWarningToast } from '../../hooks/alerts/useWelcomeToast';
 
 const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
@@ -19,7 +18,7 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
         <textarea
           id="observacion-declinar"
           placeholder="Escriba aquí su observación..."
-          maxLength={300}
+          maxLength={1000}
           value={observacion}
           onChange={(e) => onObservacionChange(e.target.value)}
         />
@@ -28,25 +27,13 @@ const ModalObservacionConformidad = memo(function ModalObservacionConformidad({
             Cancelar
           </button>
           <button
-            onClick={async () => {
+            onClick={() => {
               if (!observacion || !observacion.trim()) {
                 showTopWarningToast('Observación requerida', 'Por favor, escriba una observación antes de enviar.');
                 return;
               }
 
-              const confirm = await alertconfirmacion({
-                title: '¿Está seguro de enviar esta observación?',
-                text: 'Esta acción registrará la observación y continuará con el flujo.',
-                icon: 'warning',
-                confirmButtonColor: '#39B49E',
-                cancelButtonColor: '#003366',
-                confirmButtonText: 'Sí, enviar',
-                cancelButtonText: 'Cancelar'
-              });
-
-              if (confirm?.isConfirmed) {
-                if (typeof onEnviar === 'function') onEnviar();
-              }
+              if (typeof onEnviar === 'function') onEnviar();
             }}
             className="grupo-alumno-btn grupo-alumno-btn-save"
           >

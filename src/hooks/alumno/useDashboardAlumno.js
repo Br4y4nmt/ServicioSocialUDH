@@ -246,7 +246,10 @@ export function useDashboardAlumno() {
       setEstadoSolicitudTermino(plan.solicitud_termino || 'no_solicitada');
       setEstadoConformidad(plan.conformidad_plan_social || '');
       setSolicitudEnviada(true);
+
       formularioPlanRef.current?.setLineaAccion(plan.linea_accion || '');
+      const nombreLabor = plan.LaboresSociale?.nombre_labores || plan.nombre_labores || '';
+      setNombreLaborSocial(nombreLabor);
 
       if (plan.archivo_plan_social) setArchivoYaEnviado(true);
 
@@ -268,7 +271,7 @@ export function useDashboardAlumno() {
   }, [labores, laborSeleccionada]);
 
   useEffect(() => {
-    if (activeSection !== 'designacion') return;
+    if (!['designacion', 'conformidad'].includes(activeSection)) return;
     const token = user?.token;
     if (programaSeleccionado && token) {
       const fetchDocentes = async () => {
@@ -288,7 +291,7 @@ export function useDashboardAlumno() {
   }, [programaSeleccionado, user?.token, activeSection]);
 
   useEffect(() => {
-    if (activeSection !== 'designacion') return;
+    if (!['designacion', 'conformidad'].includes(activeSection)) return;
     const token = user?.token;
     if (lineaSeleccionada && token) {
       const fetchLaboresPorLinea = async () => {

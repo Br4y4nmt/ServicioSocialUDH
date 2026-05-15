@@ -97,6 +97,7 @@ function DashboardAlumno() {
           {hook.activeSection === 'conformidad' && (
             <ConformidadPlan
                 activeSection={hook.activeSection}
+                trabajoId={hook.planSeleccionado?.id}
                 estadoConformidad={hook.estadoConformidad}
                 nombreDocente={hook.nombreDocente}
                 nombreLaborSocial={hook.nombreLaborSocial}

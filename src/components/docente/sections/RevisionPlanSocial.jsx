@@ -27,6 +27,7 @@ function RevisionPlanSocial() {
   const [observacionTexto, setObservacionTexto] = useState('');
   const [loading, setLoading] = useState(true);
   const [trabajoADeclinar, setTrabajoADeclinar] = useState(null);
+  const [accionModalDeclinar, setAccionModalDeclinar] = useState('');
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [cargandoCambioId, setCargandoCambioId] = useState(null);
@@ -143,7 +144,7 @@ function RevisionPlanSocial() {
     }
   };
 
-  const cambiarConformidad = async (idTrabajo, nuevoEstado) => {
+  const cambiarConformidad = async (idTrabajo, nuevoEstado, observacion = '') => {
     const accion = nuevoEstado === 'aceptado' ? 'aceptar' : 'rechazar';
     const confirmacion = await alertconfirmacion({
       title: `¿Estás seguro de ${accion} este trabajo?`,
@@ -156,9 +157,15 @@ function RevisionPlanSocial() {
     if (confirmacion.isConfirmed) {
       setCargandoCambioId(idTrabajo);
       try {
-        await axios.put(`/api/trabajo-social/${idTrabajo}`, {
+        const payload = {
           conformidad_plan_social: nuevoEstado
-        }, {
+        };
+
+        if (observacion?.trim()) {
+          payload.observacion = observacion.trim();
+        }
+
+        await axios.put(`/api/trabajo-social/${idTrabajo}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -185,6 +192,13 @@ function RevisionPlanSocial() {
 
   const capitalizarPrimeraLetra = (texto) =>
     texto ? texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase() : '';
+
+  const abrirModalObservacion = (trabajo, accion) => {
+    setTrabajoADeclinar(trabajo);
+    setAccionModalDeclinar(accion);
+    setObservacionTexto('');
+    setModalObservacionVisible(true);
+  };
 
   return (
     <>
@@ -307,7 +321,7 @@ function RevisionPlanSocial() {
                                 </button>
                                 <button
                                   className="btn-accion rechazar"
-                                  onClick={() => cambiarConformidad(plan.id, 'rechazado')}
+                                  onClick={() => abrirModalObservacion(plan, 'rechazar')}
                                   disabled={!!cargandoCambioId}
                                 >
                                   Rechazar
@@ -317,8 +331,7 @@ function RevisionPlanSocial() {
                               <button
                                 className="btn-accion declinar"
                                 onClick={() => {
-                                  setTrabajoADeclinar(plan);
-                                  setModalObservacionVisible(true);
+                                  abrirModalObservacion(plan, 'declinar');
                                 }}
                                 disabled={!!cargandoCambioId}
                               >
@@ -356,18 +369,17 @@ function RevisionPlanSocial() {
         onObservacionChange={setObservacionTexto}
         onCancelar={() => setModalObservacionVisible(false)}
         onEnviar={() => {
-          if (!observacionTexto || !observacionTexto.trim()) {
-            showTopWarningToast('Observación requerida', 'Por favor, escriba una observación antes de enviar.');
-            return;
-          }
           if (!trabajoADeclinar || !trabajoADeclinar.id) {
             showTopWarningToast('Error', 'No hay trabajo seleccionado.');
             return;
           }
-          cambiarConformidad(trabajoADeclinar.id, 'pendiente');
+
+          const nuevoEstado = accionModalDeclinar === 'rechazar' ? 'rechazado' : 'pendiente';
+          cambiarConformidad(trabajoADeclinar.id, nuevoEstado, observacionTexto);
           setModalObservacionVisible(false);
           setObservacionTexto('');
           setTrabajoADeclinar(null);
+          setAccionModalDeclinar('');
         }}
       />
 

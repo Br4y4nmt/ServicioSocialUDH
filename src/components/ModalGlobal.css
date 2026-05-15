@@ -149,7 +149,9 @@
   border-radius: 4px;
   margin: 0.7rem auto 0;
 }
-
+#observacion-declinar {
+  min-height: 160px;
+}
 .detalle-actividad-modal {
   max-height: 80vh;        
   overflow-y: auto;         
