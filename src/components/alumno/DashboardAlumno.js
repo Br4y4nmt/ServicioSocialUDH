@@ -150,9 +150,11 @@ function DashboardAlumno() {
                 nombreResponsable={fp.nombreResponsable}
                 setNombreResponsable={fp.setNombreResponsable}
                 lineaAccion={fp.lineaAccion}
+                onCorregirPlan={hook.handleCorregirPlan}
                 setLineaAccion={fp.setLineaAccion}
                 handleFileChange={hook.handleFileChange}
                 archivoYaEnviado={hook.archivoYaEnviado}
+                setArchivoYaEnviado={hook.setArchivoYaEnviado}
                 handleGenerarPDF={hook.handleGenerarPDF}
                 nuevaFechaFin={ac.nuevaFechaFin}
                 setNuevaFechaFin={ac.setNuevaFechaFin}

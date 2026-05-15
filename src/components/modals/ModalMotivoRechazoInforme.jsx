@@ -16,7 +16,7 @@ function ModalMotivoRechazoInforme({ visible, motivo, onClose }) {
         />
 
         <div className="motivo-rechazo-footer">
-          <button className="motivo-rechazo-btn-cerrar" onClick={onClose}>
+          <button className="grupo-alumno-btn grupo-alumno-btn-cancel" onClick={onClose}>
             Cerrar
           </button>
         </div>

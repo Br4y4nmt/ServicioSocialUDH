@@ -21,6 +21,7 @@ function ConformidadPlan({
   nombreDocente,
   nombreLaborSocial,
   abrirModalProyecto,
+  onCorregirPlan,
   cartaAceptacionPdf,
   introduccion,
   setIntroduccion,
@@ -73,6 +74,7 @@ function ConformidadPlan({
   setPeriodoEstimado,
   handleFileChange,
   archivoYaEnviado,
+  setArchivoYaEnviado,
   handleGenerarPDF,
   pdfDescargado,
   proyectoFile,
@@ -85,6 +87,7 @@ function ConformidadPlan({
   const [enviandoRevision, setEnviandoRevision] = useState(false);
   const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
+  const [corrigiendoPlan, setCorrigiendoPlan] = useState(false);
   const [cargandoMotivo, setCargandoMotivo] = useState(false);
 
   const abrirModalMotivoRechazo = useCallback(async () => {
@@ -148,7 +151,7 @@ function ConformidadPlan({
 )}
      
 
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div id="esquema-plan-pdf">
      <div className="solicitar-revision-card">
 
@@ -286,7 +289,7 @@ function ConformidadPlan({
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">  
        <div className="solicitar-revision-header">
          <h3>INTRODUCCION</h3>
@@ -303,7 +306,7 @@ function ConformidadPlan({
      </div>
    )}
 
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>JUSTIFICACION</h3>
@@ -319,7 +322,7 @@ function ConformidadPlan({
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
 
      <div className="solicitar-revision-card">
    
@@ -346,12 +349,10 @@ function ConformidadPlan({
        placeholder="Enumerar metas concretas que se quieren alcanzar (mínimo 3), alineadas a la solución de problemáticas específicas de la institución o comunidad."
      />
    </div>
-   
-   
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>MARCO INSTITUCIONAL</h3>
@@ -399,7 +400,7 @@ function ConformidadPlan({
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>Cronograma de Actividades</h3>
@@ -475,7 +476,7 @@ function ConformidadPlan({
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
 
      <div className="solicitar-revision-card">
    
@@ -491,12 +492,10 @@ function ConformidadPlan({
      placeholder="Descripción precisa del grupo o comunidad beneficiaria directa del servicio, especificando características sociales, económicas o demográficas."
    />
        </div>
-   
-   
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
 
      <div className="solicitar-revision-card">
    
@@ -514,8 +513,8 @@ function ConformidadPlan({
        </div>
      </div>
    )}
-   
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>RECURSOS REQUERIDOS</h3>
@@ -531,9 +530,8 @@ function ConformidadPlan({
        </div>
      </div>
    )}
-   
-   
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
+
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
 
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
@@ -551,8 +549,7 @@ function ConformidadPlan({
      </div>
    )}
    
-   {activeSection === 'conformidad' && !['pendiente', 'aceptado'].includes(estadoConformidad) && (
-
+   {activeSection === 'conformidad' && !['pendiente', 'aceptado', 'rechazado'].includes(estadoConformidad) && (
      <div className="solicitar-revision-card">
        <div className="solicitar-revision-header">
          <h3>ANEXOS</h3>
@@ -569,120 +566,126 @@ function ConformidadPlan({
    
        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
         <button
-  className="boton-ver-pdf-conf"
-  onClick={async () => {
-    if (!cartaAceptacionPdf) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Falta el archivo anexo',
-        text: 'Debes adjuntar el archivo de Convenio de Cooperación Institucional antes de poder generar el PDF.',
-        confirmButtonText: 'Aceptar'
-      });
-      return;
-    }
+        className="boton-ver-pdf-conf"
+        onClick={async () => {
+          if (!cartaAceptacionPdf) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Falta el archivo anexo',
+              text: 'Debes adjuntar el archivo de Convenio de Cooperación Institucional antes de poder generar el PDF.',
+              confirmButtonText: 'Aceptar'
+            });
+            return;
+          }
 
-    setCargandoPDF(true);
-    try {
-      await Promise.resolve(handleGenerarPDF());
-    } finally {
-      setTimeout(() => setCargandoPDF(false), 1000);
-    }
-  }}
-  disabled={archivoYaEnviado || cargandoPDF}
->
-      {cargandoPDF ? (
-    <>
-      <Spinner size={18} />
-      Generando...
-    </>
-  ) : (
-    <>
-      Ver PDF
-    </>
-  )}
-</button>
+          setCargandoPDF(true);
+          try {
+            await Promise.resolve(handleGenerarPDF());
+          } finally {
+            setTimeout(() => setCargandoPDF(false), 1000);
+          }
+        }}
+        disabled={archivoYaEnviado || cargandoPDF}
+      >
+            {cargandoPDF ? (
+          <>
+            <Spinner size={18} />
+            Generando...
+          </>
+        ) : (
+          <>
+            Ver PDF
+          </>
+        )}
+      </button>
        </div>
-       
      </div>
-     
    )}
 
-   
-   {activeSection === 'conformidad' && (pdfDescargado || archivoYaEnviado) && (
+   {activeSection === 'conformidad' && (pdfDescargado || archivoYaEnviado || estadoConformidad === 'rechazado') && (
   <div className="solicitar-revision-card">
-   <div className="solicitar-revision-header">
-  <div className="solicitar-revision-titulo">
-    <InfoCircleSVG width={20} height={20} />
-    <h3>Solicitar revisión al supervisor:</h3>      
-  </div>
+    <div className="solicitar-revision-header">
+      <div className="solicitar-revision-titulo">
+        <InfoCircleSVG width={20} height={20} />
+        <h3>Solicitar revisión al supervisor:</h3>      
+      </div>
 
-  {archivoYaEnviado && (
-    <button className={`respuesta-asesor-btn ${estadoConformidad}`}>
-      {estadoConformidad
-        ? estadoConformidad.charAt(0).toUpperCase() + estadoConformidad.slice(1)
-        : 'Pendiente'}
-    </button>
-  )}
+      {(archivoYaEnviado || estadoConformidad === 'rechazado') && (
+        <button className={`respuesta-asesor-btn ${estadoConformidad}`}>
+          {estadoConformidad
+            ? estadoConformidad.charAt(0).toUpperCase() + estadoConformidad.slice(1)
+            : 'Pendiente'}
+        </button>
+      )}
 
-  {archivoYaEnviado && estadoConformidad === 'rechazado' && (
-    <VerBoton
-      onClick={() => {
-        if (!cargandoMotivo) abrirModalMotivoRechazo();
-      }}
-      label={cargandoMotivo ? 'Cargando...' : 'Ver'}
-    />
-  )}
-</div>
+      {estadoConformidad === 'rechazado' && (
+        <VerBoton
+          onClick={() => {
+            if (!cargandoMotivo) abrirModalMotivoRechazo();
+          }}
+          label={cargandoMotivo ? 'Cargando...' : 'Ver'}
+        />
+      )}
+    </div>
 
     {estadoConformidad === 'aceptado' && (
-  <>
-    <div className="texto-cursiva">
-      El docente supervisor ha aceptado tu solicitud, continúa al siguiente paso para poder confirmar tu plan de trabajo.
-    </div>
-
-   
-    <div className="aviso-importante">
-      <strong>¡Importante!</strong> Si el tiempo establecido en el plan del servicio social es excedido, este se reiniciará automáticamente y tendra que iniciar nuevamente su servicio social.
-    </div>
-  </>
-)}
-
+      <>
+        <div className="texto-cursiva">
+          El docente supervisor ha aceptado tu solicitud, continúa al siguiente paso para poder confirmar tu plan de trabajo.
+        </div>
+        <div className="aviso-importante">
+          <strong>¡Importante!</strong> Si el tiempo establecido en el plan del servicio social es excedido, este se reiniciará automáticamente y tendra que iniciar nuevamente su servicio social.
+        </div>
+      </>
+    )}
 
     {estadoConformidad !== 'aceptado' && (
       <div className="texto-revision-supervisor">
-  <>
-    {estadoConformidad === 'pendiente' ? (
-      <p style={{ fontStyle: 'italic', color: '#3d7f6f', fontWeight: 400 }}>
-         Su solicitud de revisión se ha enviado exitosamente. Ahora el docente revisará su documento.
-      </p>
-    ) : (
-      <>
-        <p>
-          Revisar su documento detalladamente antes de enviar, lo puede descargar en <strong className="enlace-revision">"Ver PDF"</strong>.
-        </p>
-        <p>
-          Luego, haz clic en <strong className="enlace-revision">"Solicitar revisión"</strong> para recibir sugerencias de corrección por parte del supervisor.
-        </p>
-      </>
+        {estadoConformidad === 'pendiente' ? (
+          <p style={{ fontStyle: 'italic', color: '#3d7f6f', fontWeight: 400 }}>
+            Su solicitud de revisión se ha enviado exitosamente. Ahora el docente revisará su documento.
+          </p>
+        ) : (
+          <>
+            <p>
+              Revisar su documento detalladamente antes de enviar, lo puede descargar en <strong className="enlace-revision">"Ver PDF"</strong>.
+            </p>
+            <p>
+              Luego, haz clic en <strong className="enlace-revision">"Solicitar revisión"</strong> para recibir sugerencias de corrección por parte del supervisor.
+            </p>
+          </>
+        )}
+      </div>
     )}
-  </>
-  </div>
-)}
 
-  <MotivoRechazoModal
-    visible={modalMotivoVisible}
-    motivo={motivoRechazo}
-    onClose={() => setModalMotivoVisible(false)}
-  />
+    <MotivoRechazoModal
+      visible={modalMotivoVisible}
+      motivo={motivoRechazo}
+      onClose={() => setModalMotivoVisible(false)}
+    />
+
     {proyectoFile && !archivoYaEnviado && (
       <p className="archivo-seleccionado">
         Archivo listo para enviar: <strong>{proyectoFile.name}</strong>
       </p>
     )}
 
-   <button
-  className={`btn-solicitar-aprobaciones ${estadoConformidad === 'aceptado' ? 'oculto' : ''}`}
+    {estadoConformidad !== 'pendiente' && (
+  <button
+  className={`btn-solicitar-aprobaciones ${
+    estadoConformidad === 'aceptado' ? 'oculto' : ''
+  }`}
   onClick={async () => {
+    if (estadoConformidad === 'rechazado') {
+      setCorrigiendoPlan(true);
+      try {
+        await Promise.resolve(onCorregirPlan());
+      } finally {
+        setCorrigiendoPlan(false);
+      }
+      return;
+    }
+
     if (archivoYaEnviado) {
       Swal.fire({
         icon: 'info',
@@ -700,30 +703,33 @@ function ConformidadPlan({
       setTimeout(() => setEnviandoRevision(false), 1000);
     }
   }}
-  disabled={archivoYaEnviado || enviandoRevision}
+  disabled={enviandoRevision || corrigiendoPlan}
   style={{
-    opacity: archivoYaEnviado || enviandoRevision ? 0.6 : 1,
-    cursor: archivoYaEnviado || enviandoRevision ? 'not-allowed' : 'pointer'
+    opacity: enviandoRevision || corrigiendoPlan ? 0.6 : 1,
+    cursor: enviandoRevision || corrigiendoPlan ? 'not-allowed' : 'pointer'
   }}
 >
-  {archivoYaEnviado ? (
-    'Ya enviado'
-  ) : enviandoRevision ? (
+  {enviandoRevision ? (
     <>
       <Spinner size={18} />
       Enviando...
     </>
-  ) : (
+  ) : corrigiendoPlan ? (
     <>
-      Solicitar revisión 
+      <Spinner size={18} />
+      Procesando...
     </>
+  ) : estadoConformidad === 'rechazado' ? (
+    'Corregir y volver a enviar'
+  ) : (
+    'Solicitar revisión'
   )}
 </button>
+)}
 
   </div>
 )}
-
-   </>
+</>
   );
 };
 

@@ -441,6 +441,30 @@ export function useDashboardAlumno() {
     }
   }, [activeSection, estadoPlan, estadoConformidad, estadoSolicitudTermino, actividadesCronograma.todasAprobadas]);
 
+const handleCorregirPlan = useCallback(async () => {
+  const token = user?.token;
+  const trabajoId = planSeleccionado?.id;
+
+  if (!token || !trabajoId) return;
+
+  try {
+    await axios.patch(
+      `/api/trabajo-social/${trabajoId}/corregir-plan`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setArchivoYaEnviado(false);
+    setEstadoConformidad(null);  // o '' según cómo manejes el estado vacío
+    await fetchTrabajoSocial();  // refresca todos los datos
+
+  } catch (error) {
+    console.error('Error al corregir plan:', error);
+    const mensaje = error.response?.data?.message;
+    await alertError('Error', mensaje || 'No se pudo restablecer el plan. Inténtalo más tarde.');
+  }
+}, [user?.token, planSeleccionado?.id, fetchTrabajoSocial]);
+
 const handleSolicitarAprobacion = useCallback(async () => {
   if (solicitudEnviada) {
     await alertInfo('Solicitud ya enviada', 'Ya has enviado una solicitud anteriormente.');
@@ -724,10 +748,12 @@ if (status === 400 && Array.isArray(data?.detalles)) {
     nombreFacultad,
     nombrePrograma,
     nombreCompleto,
+    handleCorregirPlan,
     codigoUniversitario,
     tipoServicio, setTipoServicio,
     nombreDocente, setNombreDocente,
     archivoYaEnviado,
+    setArchivoYaEnviado,
     modalProyectoVisible, setModalProyectoVisible,
     proyectoFile, setProyectoFile,
     pdfGenerado,
