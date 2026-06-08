@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import InfoCircleSVG from '../../../hooks/componentes/Icons/InfoCircleSVG';
 import PlanIcon from "../../../hooks/componentes/Icons/PlanIcon";
 import UserTieIcon from "../../../hooks/componentes/Icons/UserTieIcon";
@@ -89,6 +89,8 @@ function ConformidadPlan({
   const [motivoRechazo, setMotivoRechazo] = useState('');
   const [corrigiendoPlan, setCorrigiendoPlan] = useState(false);
   const [cargandoMotivo, setCargandoMotivo] = useState(false);
+  const [inicioServicioSocialHabilitado, setInicioServicioSocialHabilitado] = useState(true);
+  const [loadingInicioServicioSocial, setLoadingInicioServicioSocial] = useState(true);
 
   const abrirModalMotivoRechazo = useCallback(async () => {
     if (!trabajoId || !token) return;
@@ -115,6 +117,36 @@ function ConformidadPlan({
       setCargandoMotivo(false);
     }
   }, [trabajoId, token]);
+
+  useEffect(() => {
+  const fetchEstadoInicioServicioSocial = async () => {
+    try {
+      if (!token) return;
+
+      const { data } = await axios.get(
+        "/api/system-config/inicio-servicio-social/alumno",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setInicioServicioSocialHabilitado(
+        !!data.inicio_servicio_social_habilitado
+      );
+    } catch (error) {
+      console.error(
+        "Error obteniendo estado de inicio de servicio social:",
+        error
+      );
+    } finally {
+      setLoadingInicioServicioSocial(false);
+    }
+  };
+
+  fetchEstadoInicioServicioSocial();
+}, [token]);
 
   return (
     <>
@@ -602,7 +634,26 @@ function ConformidadPlan({
      </div>
    )}
 
-   {activeSection === 'conformidad' && (pdfDescargado || archivoYaEnviado || estadoConformidad === 'rechazado') && (
+   {activeSection === 'conformidad' &&
+  !loadingInicioServicioSocial &&
+  !inicioServicioSocialHabilitado &&
+  !archivoYaEnviado &&
+  estadoConformidad !== 'pendiente' &&
+  estadoConformidad !== 'aceptado' && (
+    <div className="solicitar-revision-card">
+      <div className="texto-revision-supervisor">
+        <p style={{ fontStyle: 'italic', color: '#d32f2f', fontWeight: 500 }}>
+          La subida de su plan de servicio social se encuentra deshabilitada temporalmente.
+          Cuando la universidad lo habilite, podrás solicitar la revisión de tu plan.
+        </p>
+      </div>
+    </div>
+)}
+
+   {activeSection === 'conformidad' &&
+  (inicioServicioSocialHabilitado || archivoYaEnviado || estadoConformidad === 'rechazado') &&
+  (pdfDescargado || archivoYaEnviado || estadoConformidad === 'rechazado') && (
+    
   <div className="solicitar-revision-card">
     <div className="solicitar-revision-header">
       <div className="solicitar-revision-titulo">
@@ -703,11 +754,25 @@ function ConformidadPlan({
       setTimeout(() => setEnviandoRevision(false), 1000);
     }
   }}
-  disabled={enviandoRevision || corrigiendoPlan}
+  disabled={
+    enviandoRevision ||
+    corrigiendoPlan ||
+    (!inicioServicioSocialHabilitado && !archivoYaEnviado)
+  }
   style={{
-    opacity: enviandoRevision || corrigiendoPlan ? 0.6 : 1,
-    cursor: enviandoRevision || corrigiendoPlan ? 'not-allowed' : 'pointer'
-  }}
+  opacity:
+    enviandoRevision ||
+    corrigiendoPlan ||
+    (!inicioServicioSocialHabilitado && !archivoYaEnviado)
+      ? 0.6
+      : 1,
+  cursor:
+    enviandoRevision ||
+    corrigiendoPlan ||
+    (!inicioServicioSocialHabilitado && !archivoYaEnviado)
+      ? 'not-allowed'
+      : 'pointer'
+}}
 >
   {enviandoRevision ? (
     <>

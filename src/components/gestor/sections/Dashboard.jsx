@@ -46,6 +46,8 @@ function Dasborasd() {
   const [programaSeleccionado, setProgramaSeleccionado] = useState(null);
   const [topProgramas, setTopProgramas] = useState([]);
   const [topLineasAccion, setTopLineasAccion] = useState([]);
+  const [inicioServicioSocialHabilitado, setInicioServicioSocialHabilitado] = useState(true);
+  const [loadingInicioServicioSocial, setLoadingInicioServicioSocial] = useState(false);
   const [registroHabilitado, setRegistroHabilitado] = useState(true);
   const [loadingRegistro, setLoadingRegistro] = useState(false);
   const totalEstudiantesProgramas = porPrograma.reduce(
@@ -292,6 +294,22 @@ const fetchEstadoRegistro = useCallback(async () => {
   }
 }, [token]);
 
+const fetchEstadoInicioServicioSocial = useCallback(async () => {
+  try {
+    if (!token) return;
+
+    const res = await axios.get("/api/system-config/inicio-servicio-social", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setInicioServicioSocialHabilitado(
+      !!res.data.inicio_servicio_social_habilitado
+    );
+  } catch (error) {
+    console.error("Error obteniendo estado de inicio de servicio social:", error);
+  }
+}, [token]);
+
 const toggleRegistro = async () => {
   if (!token) return;
 
@@ -333,9 +351,64 @@ const toggleRegistro = async () => {
     setLoadingRegistro(false);
   }
 };
+
+const toggleInicioServicioSocial = async () => {
+  if (!token) return;
+
+  const action = inicioServicioSocialHabilitado ? "deshabilitar" : "habilitar";
+
+  const result = await alertconfirmacion({
+    title: `¿Estás seguro de ${action} el inicio de servicio social?`,
+    text: inicioServicioSocialHabilitado
+      ? "Esto impedirá que los alumnos que aún no iniciaron puedan iniciar su servicio social."
+      : "Esto permitirá que los alumnos puedan iniciar su servicio social.",
+    icon: "warning",
+    confirmButtonText: inicioServicioSocialHabilitado
+      ? "Sí, deshabilitar"
+      : "Sí, habilitar",
+    cancelButtonText: "Cancelar",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    setLoadingInicioServicioSocial(true);
+
+    const nuevoValor = inicioServicioSocialHabilitado ? 0 : 1;
+
+    const res = await axios.put(
+      "/api/system-config/inicio-servicio-social",
+      { inicio_servicio_social_habilitado: nuevoValor },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setInicioServicioSocialHabilitado(
+      !!res.data.inicio_servicio_social_habilitado
+    );
+
+    showTopSuccessToast(
+      nuevoValor === 1
+        ? "Inicio de servicio social habilitado correctamente"
+        : "Inicio de servicio social deshabilitado correctamente"
+    );
+  } catch (error) {
+    console.error("Error actualizando inicio de servicio social:", error);
+
+    showTopErrorToast(
+      "No se pudo actualizar el estado del inicio de servicio social"
+    );
+  } finally {
+    setLoadingInicioServicioSocial(false);
+  }
+};
+
 useEffect(() => {
   fetchEstadoRegistro();
 }, [fetchEstadoRegistro]);
+
+useEffect(() => {
+  fetchEstadoInicioServicioSocial();
+}, [fetchEstadoInicioServicioSocial]);
 return (
   <Box sx={{ p: 3 }}>
     <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -779,6 +852,62 @@ return (
       </span>
 
       {loadingRegistro && (
+        <span className="config-loading">Actualizando…</span>
+      )}
+    </div>
+  </Paper>
+</Grid>
+<Grid xs={12} sx={{ width: "100%" }}>
+  <Paper elevation={3} className="config-card">
+    <div className="config-card-top">
+      <div className="config-card-titlewrap">
+        <div className="config-card-icon">
+          <TrackingCheckIcon />
+        </div>
+
+        <div>
+          <Typography className="config-card-title">
+            Inicio de servicio social
+          </Typography>
+          <Typography className="config-card-subtitle">
+            Controla si los alumnos pueden iniciar su servicio social
+          </Typography>
+        </div>
+      </div>
+
+      <div className="config-card-actions">
+        <span
+          className={
+            inicioServicioSocialHabilitado
+              ? "config-chip chip-on"
+              : "config-chip chip-off"
+          }
+        >
+          {inicioServicioSocialHabilitado ? "HABILITADO" : "DESHABILITADO"}
+        </span>
+
+        <Switch
+          checked={inicioServicioSocialHabilitado}
+          onChange={toggleInicioServicioSocial}
+          disabled={loadingInicioServicioSocial}
+        />
+      </div>
+    </div>
+
+    <div className="config-card-bottom">
+      <span
+        className={
+          inicioServicioSocialHabilitado
+            ? "config-status status-on"
+            : "config-status status-off"
+        }
+      >
+        {inicioServicioSocialHabilitado
+          ? "Actualmente los alumnos pueden iniciar su servicio social."
+          : "Inicio desactivado: los alumnos que aún no iniciaron no podrán iniciar."}
+      </span>
+
+      {loadingInicioServicioSocial && (
         <span className="config-loading">Actualizando…</span>
       )}
     </div>

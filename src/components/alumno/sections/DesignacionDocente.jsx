@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../../../UserContext';
 import '../../docente/DashboardDocente.css';
@@ -49,7 +49,9 @@ function DesignacionDocente({
   const [loadingSolicitud, setLoadingSolicitud] = useState(false);
   const [modalMotivoVisible, setModalMotivoVisible] = useState(false);
   const [motivoRechazo, setMotivoRechazo] = useState('');
-
+  const [inicioServicioSocialHabilitado, setInicioServicioSocialHabilitado] = useState(true);
+  const [loadingConfigInicio, setLoadingConfigInicio] = useState(true);
+  
   const docentesPorId = useMemo(() => {
     const map = {};
     for (const d of docentes) map[String(d.id_docente)] = d.nombre_docente;
@@ -139,6 +141,38 @@ const eliminarEleccion = useCallback(async () => {
     Boolean(tipoServicio && docenteSeleccionado && lineaSeleccionada && laborSeleccionada)
   ), [tipoServicio, docenteSeleccionado, lineaSeleccionada, laborSeleccionada]);
 
+
+  useEffect(() => {
+  const fetchEstadoInicioServicioSocial = async () => {
+    try {
+      if (!token) return;
+
+      const { data } = await axios.get(
+        "/api/system-config/inicio-servicio-social/alumno",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setInicioServicioSocialHabilitado(
+        !!data.inicio_servicio_social_habilitado
+      );
+    } catch (error) {
+      console.error(
+        "Error obteniendo estado de inicio de servicio social:",
+        error
+      );
+    } finally {
+      setLoadingConfigInicio(false);
+    }
+  };
+
+  fetchEstadoInicioServicioSocial();
+}, [token]);
+
+
   return (
     <>
       <div className="step-header">
@@ -171,7 +205,7 @@ const eliminarEleccion = useCallback(async () => {
       setTipoServicio(value);
       if (value === 'grupal') setModalGrupoVisible(true);
     }}
-    disabled={solicitudEnviada}
+    disabled={solicitudEnviada || (!inicioServicioSocialHabilitado && !trabajoId)}
     className={`input-estilo-select texto-mayuscula ${tipoServicio ? 'select-filled' : ''}`}
   >
     <option value="">Seleccione una opción</option>
@@ -216,7 +250,7 @@ const eliminarEleccion = useCallback(async () => {
                               setDocenteSeleccionado(id);
                               setNombreDocente(docentesPorId[id] || '');
                             }}
-                            disabled={solicitudEnviada}
+                            disabled={solicitudEnviada || (!inicioServicioSocialHabilitado && !trabajoId)}
                             className={`input-estilo-select texto-mayuscula ${docenteSeleccionado ? 'select-filled' : ''}`}
                           >
                             <option value="">Seleccione Docente Supervisor</option>
@@ -238,7 +272,7 @@ const eliminarEleccion = useCallback(async () => {
                     setLineaSeleccionada(e.target.value);
                     setLaborSeleccionada('');
                   }}
-                  disabled={solicitudEnviada}
+                  disabled={solicitudEnviada || (!inicioServicioSocialHabilitado && !trabajoId)}
                   className={`input-estilo-select texto-mayuscula ${lineaSeleccionada ? 'select-filled' : ''}`}
                 >
                   <option value="">Seleccione Línea de Acción</option>
@@ -261,7 +295,7 @@ const eliminarEleccion = useCallback(async () => {
                             setLaborSeleccionada(id);
                             setNombreLaborSocial(laboresPorId[parseInt(id)] || '');
                           }}
-                          disabled={solicitudEnviada}
+                          disabled={solicitudEnviada || (!inicioServicioSocialHabilitado && !trabajoId)}
                           className={`input-estilo-select texto-mayuscula ${laborSeleccionada ? 'select-filled' : ''}`}
                         >
                           <option value="">Seleccione Servicio Social</option>
@@ -278,8 +312,18 @@ const eliminarEleccion = useCallback(async () => {
                             ))}
                         </select>
                         </div>
-          
-     {formularioCompleto && !solicitudEnviada && (
+
+    {!loadingConfigInicio && !inicioServicioSocialHabilitado && !trabajoId && (
+      <div className="respuesta-asesor-card">
+        <div className="respuesta-asesor-body">
+          <p className="texto-cursiva" style={{ color: "#d32f2f" }}>
+            El inicio de servicio social se encuentra deshabilitado temporalmente.
+            Cuando la universidad lo habilite, podrás realizar tu solicitud.
+          </p>
+        </div>
+      </div>
+    )}
+     {formularioCompleto && !solicitudEnviada && inicioServicioSocialHabilitado && (
       <div className="form-group">
         <button 
           className="btn-solicitar-aprobaciones"
