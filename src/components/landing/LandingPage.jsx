@@ -385,24 +385,32 @@ const smartDocFeatures = [
 
 const faqItems = [
 	{
-		question: '¿Como me registro en el sistema?',
-		answer: 'Ingresa con tus credenciales institucionales de la UDH. Si es tu primera vez, el sistema te guiara para completar tu perfil y seleccionar tu programa de servicio social.'
+		question: '¿A quiénes les corresponde realizar el Servicio Social Universitario y qué requisitos debo cumplir?',
+		answer: 'El SSU corresponde a los estudiantes que ingresaron a la Universidad de Huánuco desde el semestre 2021-1 en adelante. En la práctica, aplica para códigos que inician con 2021, 02021 o 12021. Además, el estudiante debe tener aprobados todos los cursos del 1.er al 7.º ciclo. Si está llevando cursos de 8.º ciclo, pero aún arrastra un curso del 7.º ciclo o de ciclos anteriores, todavía no puede realizar el SSU hasta regularizar esa situación. Si ingresó antes del 2021, no le corresponde realizarlo, salvo que haya realizado traslado interno desde el año 2021 en adelante; en ese caso, se considera la fecha del traslado y sí debe realizar el SSU.'
 	},
 	{
-		question: '¿Cuantas horas debo completar?',
-		answer: 'La cantidad de horas depende del reglamento de tu facultad y programa academico. Puedes revisarlo en tu panel o consultarlo con tu coordinador.'
+		question: '¿Cuánto tiempo dura el SSU?',
+		answer: 'El SSU se desarrolla durante el semestre académico y, de manera general, tiene una duración aproximada de 4 a 6 meses, según el plan de trabajo aprobado y la programación correspondiente.'
 	},
 	{
-		question: '¿Como se valida mi servicio?',
-		answer: 'Tu supervisor registra y valida tus actividades en la plataforma. Al cumplir los requisitos y horas, el sistema habilita la validacion final.'
+		question: '¿Cuáles son los pasos principales para realizar el SSU?',
+		answer: 'El estudiante debe registrarse en la plataforma, seleccionar la línea de acción o actividad, cargar el plan de trabajo, esperar la revisión y aprobación del docente supervisor, ejecutar las actividades, subir las evidencias y presentar el informe final.'
 	},
 	{
-		question: '¿Quien supervisa mi servicio social?',
-		answer: 'El seguimiento lo realiza un docente o supervisor asignado por tu programa, quien revisa tus avances y emite observaciones.'
+		question: '¿Qué es el plan de trabajo, quién lo aprueba y qué pasa si no se carga a tiempo?',
+		answer: 'El plan de trabajo es el documento donde se detallan las actividades que se realizarán durante el SSU. Es obligatorio y debe ser revisado y aprobado por el docente supervisor asignado. Si el estudiante no carga el plan o no logra su aprobación dentro del plazo establecido, su registro puede ser anulado y deberá realizar el SSU en el siguiente semestre académico.'
 	},
 	{
-		question: '¿Puedo cambiar de programa una vez iniciado?',
-		answer: 'Si, pero requiere una solicitud y aprobacion academica. El cambio se evalua segun tu avance, disponibilidad y lineamientos institucionales.'
+		question: '¿El SSU puede realizarse en grupo?',
+		answer: 'Sí. El SSU puede realizarse de forma individual o grupal, según lo permitido por la actividad o el criterio del docente supervisor. En caso sea grupal, solo el estudiante responsable registra el SSU en la plataforma; sin embargo, todos los integrantes deben verificar que el grupo esté correctamente registrado y que el plan de trabajo haya sido aprobado.'
+	},
+	{
+		question: '¿Qué son las evidencias y qué pasa si no se cargan?',
+		answer: 'Las evidencias son fotos que demuestran las actividades realizadas durante el SSU. Deben cargarse en la plataforma según las indicaciones y plazos establecidos. Si el estudiante no carga la evidencia, puede recibir una observación; si vuelve a incumplir por segunda vez, se puede proceder con la anulación del SSU.'
+	},
+	{
+		question: '¿Qué debo presentar al finalizar y cuándo se considera culminado el SSU?',
+		answer: 'Al finalizar las actividades, el estudiante debe presentar el informe final y cumplir con la carga de evidencias correspondientes. El SSU se considera culminado cuando las actividades, evidencias e informe final han sido revisados y aprobados. Luego de cumplir correctamente con el proceso, el estudiante recibirá la constancia correspondiente.'
 	}
 ];
 
