@@ -10,6 +10,8 @@ import SearchInput from '../../gestor/SearchInput';
 import PageSkeleton from '../../loaders/PageSkeleton';
 import GrupoDocenteModal from '../../modals/GrupoDocenteModal';
 import EvidenciaModal from '../../modals/EvidenciaModal';
+import CronogramaActividadesDocenteModal from '../../modals/CronogramaActividadesDocenteModal';
+import MotivoRechazoModal from '../../modals/MotivoRechazoModal';
 import { showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from '../../../UserContext';
 import {
@@ -480,109 +482,35 @@ function SeguimientoServicioDocente() {
         onClose={cerrarModalGrupo}
       />
 
-      {modalVisible && (
-        <div className="modal-cronograma-overlay">
-          <div className="modal-cronograma-content">
-            <h3 className="modal-evidencia-title" style={{ textAlign: 'center' }}>Cronograma de Actividades</h3>
-            {cronogramaSeleccionado.length > 0 ? (
-              <div className="modal-cronograma-table-wrapper">
-                <table className="modal-cronograma-table">
-                  <thead>
-                    <tr>
-                      <th>N°</th>
-                      <th>Actividad</th>
-                      <th>Justificación</th>
-                      <th>Fecha</th>
-                      <th>Fecha Fin</th>
-                      <th>Resultados</th>
-                      <th>Estado</th>
-                      <th>Evidencia</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cronogramaSeleccionado.map((item, index) => (
-                      <tr key={item.id}>
-                        <td>{index + 1}</td>
-                        <td>{item.actividad}</td>
-                        <td>{item.justificacion}</td>
-                        <td>{item.fecha}</td>
-                        <td>{item.fecha_fin || 'No registrada'}</td>
-                        <td>{item.resultados}</td>
-                        <td>
-                          {item.estado === 'aprobado' ? (
-                            <button className="btn-estado-aprobado" disabled>Aprobado</button>
-                          ) : item.estado === 'observado' ? (
-                            <button className="btn-estado-observado" disabled>Observado</button>
-                          ) : item.evidencia ? (
-                            <div className="estado-acciones">
-                              <button className="btn-aprobar-estado" disabled={isAprobando} onClick={() => handleAprobar(item.id)}>
-                                Aprobar
-                              </button>
-                              <button
-                                className="btn-observar-estado"
-                                disabled={isAprobando}
-                                onClick={() => handleAbrirObservacion(item.id)}
-                              >
-                                Observar
-                              </button>
-                            </div>
-                          ) : (
-                            <span style={{ fontSize: '12px', color: '#aaa' }}>Sin evidencia</span>
-                          )}
-                        </td>
-                        <td>
-                          {item.evidencia ? (
-                            <VerBoton onClick={() => handleVerEvidencia(item.evidencia)} />
-                          ) : (
-                            <span style={{ fontSize: '12px', color: '#aaa' }}>No enviada</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="modal-cronograma-empty">No hay cronograma disponible para este trabajo social.</p>
-            )}
-            <div className="modal-cronograma-actions">
-              <button className="modal-evidencia-btn-cerrar" onClick={handleCloseModal}>Cerrar</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CronogramaActividadesDocenteModal
+        visible={modalVisible}
+        cronogramaSeleccionado={cronogramaSeleccionado}
+        isAprobando={isAprobando}
+        onClose={handleCloseModal}
+        onAprobar={handleAprobar}
+        onObservar={handleAbrirObservacion}
+        onVerEvidencia={handleVerEvidencia}
+      />
 
       <EvidenciaModal
         visible={modalEvidenciaVisible}
         imagen={imagenEvidencia}
         onClose={handleCerrarModalEvidencia}
       />
-      {modalObservacionVisible && (
-        <div className="modal-observacion-overlay">
-          <div className="modal-observacion-content">
-            <h3>Observación</h3>
-            <textarea
-              ref={observacionRef}
-              required
-              className="modal-observacion-textarea"
-              value={observacion}
-              onChange={(e) => setObservacion(e.target.value)}
-              placeholder="Escribe tu observación aquí..."
-            />
-            <div className="modal-observacion-actions">
-              <button className="grupo-alumno-btn grupo-alumno-btn-save" onClick={handleEnviarObservacion}>
-                Enviar
-              </button>
-              <button
-                className="grupo-alumno-btn grupo-alumno-btn-cancel"
-                onClick={() => setModalObservacionVisible(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <MotivoRechazoModal
+        visible={modalObservacionVisible}
+        title="Motivo de Observación"
+        motivo={observacion}
+        onChange={(e) => setObservacion(e.target.value)}
+        onClose={() => setModalObservacionVisible(false)}
+        readOnly={false}
+        textareaRef={observacionRef}
+        placeholder="Escribe tu observación aquí..."
+        primaryActionLabel="Enviar"
+        onPrimaryAction={handleEnviarObservacion}
+        primaryActionDisabled={!observacion.trim()}
+        secondaryActionLabel="Cancelar"
+      />
 
       {isAprobando && (
         <FullScreenSpinner text={progresoAprobacion.mensaje || 'Generando documentos...'} />

@@ -17,7 +17,7 @@ import CheckCircleIcon from "../../../hooks/componentes/Icons/CheckCircleIcon";
 import InfoCircleSVG from "../../../hooks/componentes/Icons/InfoCircleSVG";
 import Spinner from 'components/ui/Spinner';
 import VerBoton from "../../../hooks/componentes/VerBoton";
-import ModalMotivoRechazoInforme from '../../modals/ModalMotivoRechazoInforme';
+import MotivoRechazoModal from '../../modals/MotivoRechazoModal';
 
 export default function InformeFinal({
   trabajoId,
@@ -611,10 +611,13 @@ useEffect(() => {
         </div>
       </div>
 
-      <ModalMotivoRechazoInforme
+      <MotivoRechazoModal
         visible={modalMotivoVisible}
         motivo={motivoRechazo}
         onClose={() => setModalMotivoVisible(false)}
+        title="MOTIVO DEL RECHAZO"
+        readOnly={true}
+        secondaryActionLabel="Cerrar"
       />
     </>
   );

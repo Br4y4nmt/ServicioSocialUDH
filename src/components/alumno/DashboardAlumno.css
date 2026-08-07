@@ -1080,12 +1080,12 @@
 
 .modal-observacion-content {
   background-color: #ffffff;
-  border-radius: 8px;
-  padding: 30px 40px;
-  width: 550px;
-  max-width: 95%;
-  min-height: 300px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 34px 42px;
+  width: 700px;
+  max-width: 94%;
+  min-height: 380px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
   animation: fadeInUp 0.3s ease-out;
 }
 .btn-enviar-evidenciasss {
@@ -1104,7 +1104,7 @@
 }
 
 .modal-observacion-content h3 {
-  font-size: 20px;
+  font-size: 17px;
   color: #2d3748;
   margin-bottom: 15px;
   text-align: center;

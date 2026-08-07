@@ -23,12 +23,8 @@ export function useActividadesCronograma({ datosCargados, activeSection }) {
   const [nuevaJustificacion, setNuevaJustificacion] = useState('');
   const [nuevosResultados, setNuevosResultados] = useState('');
   const [modalActividadVisible, setModalActividadVisible] = useState(false);
-
-  // ── Estado del seguimiento (desde API) ──
   const [actividadesSeguimiento, setActividadesSeguimiento] = useState([]);
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
-
-  // ── Valores derivados (memoizados) ──
   const hayObservaciones = useMemo(
     () => actividadesSeguimiento.some((a) => a.estado === 'observado' && a.observacion),
     [actividadesSeguimiento]
@@ -41,7 +37,6 @@ export function useActividadesCronograma({ datosCargados, activeSection }) {
     [actividadesSeguimiento]
   );
 
-  // ── Handlers ──
   const abrirModalActividad = useCallback(() => {
     setNuevaActividad('');
     setNuevaJustificacion('');
@@ -73,37 +68,139 @@ export function useActividadesCronograma({ datosCargados, activeSection }) {
     input.click();
   }, []);
 
-  const handleVolverASubir = useCallback(
-    async (actividad) => {
-      if (!actividad) {
-        Swal.fire('Error', 'No hay actividad seleccionada para eliminar la evidencia.', 'error');
-        return false;
-      }
+const handleVolverASubir = useCallback(
+  async (actividad) => {
+    if (!actividad) {
+      Swal.fire(
+        'Error',
+        'No hay actividad seleccionada.',
+        'error'
+      );
 
-      try {
-        await axios.delete(`/api/cronograma/evidencia/${actividad.id}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
+      return false;
+    }
 
-        alertSuccess('Éxito', 'La evidencia fue eliminada. Puedes volver a subir una nueva.');
+    // Verificar que siga observada
+    if (actividad.estado !== 'observado') {
+      Swal.fire(
+        'No disponible',
+        'Esta actividad no se encuentra observada.',
+        'warning'
+      );
 
-        setActividadesSeguimiento((prev) =>
-          prev.map((a) =>
-            a.id === actividad.id
-              ? { ...a, evidencia: null, estado: 'pendiente', archivoTemporalEvidencia: null }
-              : a
-          )
-        );
+      return false;
+    }
 
-        return true;
-      } catch (error) {
-        console.error(error);
-        Swal.fire('Error', 'No se pudo eliminar la evidencia.', 'error');
-        return false;
-      }
-    },
-    [user?.token]
-  );
+    // Si ya habilitó la corrección, no volver a hacerlo
+    if (actividad.correccion_habilitada) {
+      Swal.fire(
+        'Corrección ya habilitada',
+        'Ya puedes seleccionar y enviar una nueva evidencia.',
+        'info'
+      );
+
+      return true;
+    }
+
+    // Debe existir fecha límite
+    if (!actividad.fecha_limite_reenvio) {
+      Swal.fire(
+        'Sin plazo de corrección',
+        'No se encontró una fecha límite para volver a subir la evidencia.',
+        'warning'
+      );
+
+      return false;
+    }
+
+    const ahora = new Date();
+
+    const fechaLimiteReenvio = new Date(
+      actividad.fecha_limite_reenvio
+    );
+
+    // Validar que los 2 días no hayan vencido
+    if (ahora > fechaLimiteReenvio) {
+      Swal.fire(
+        'Plazo vencido',
+        'El plazo adicional para corregir esta evidencia ya finalizó.',
+        'error'
+      );
+
+      return false;
+    }
+
+    try {
+      // ==========================================
+      // GUARDAR EN LA BASE DE DATOS
+      // ==========================================
+
+      const res = await axios.patch(
+        `/api/cronograma/${actividad.id}/habilitar-correccion`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      // ==========================================
+      // ACTUALIZAR LISTA DEL FRONTEND
+      // ==========================================
+
+      setActividadesSeguimiento((prev) =>
+        prev.map((a) =>
+          a.id === actividad.id
+            ? {
+                ...a,
+                correccion_habilitada: true,
+                archivoTemporalEvidencia: null
+              }
+            : a
+        )
+      );
+
+      // ==========================================
+      // ACTUALIZAR ACTIVIDAD DEL MODAL
+      // ==========================================
+
+      setActividadSeleccionada((prev) =>
+        prev && prev.id === actividad.id
+          ? {
+              ...prev,
+              correccion_habilitada: true,
+              archivoTemporalEvidencia: null
+            }
+          : prev
+      );
+
+      alertSuccess(
+        'Corrección habilitada',
+        res.data?.message ||
+          'Selecciona una nueva evidencia y envíala antes de que venza el plazo.'
+      );
+
+      return true;
+
+    } catch (error) {
+      console.error(
+        'Error al habilitar corrección:',
+        error
+      );
+
+      Swal.fire(
+        'Error',
+        error.response?.data?.message ||
+          'No se pudo habilitar la corrección de la evidencia.',
+        'error'
+      );
+
+      return false;
+    }
+  },
+  [user?.token]
+);
 
   // ── Fetch actividades desde la BD ──
   useEffect(() => {

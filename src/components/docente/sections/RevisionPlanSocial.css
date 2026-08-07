@@ -25,9 +25,11 @@
 }
 
 .modal-cronograma-content {
-  max-height: 80vh;          
-  overflow-y: auto;         
-  overflow-x: hidden;        
+  width: 95%;
+  max-width: 1200px;   
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 8px;
   background: #ffffff;
   padding: 32px 36px;
@@ -148,32 +150,13 @@
   border-radius: 4px;
   margin: 10px auto 0;
 }
-.modal-evidencia-img {
-  width: 100%;
-  height: 400px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: #f8fafc;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.12),
-    0 6px 20px rgba(0, 0, 0, 0.08);
-  padding: 6px;
-  margin-bottom: 1.2rem;
-}
-
-.modal-evidencia-img:hover {
-  transform: none;
-}
-.modal-evidencia-actions {
-  margin-top: 0px;
-}
 
 .modal-evidencia-btn-cerrar {
   background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: #ffffff;
   border: none;
   padding: 10px 26px;
-  border-radius: 10px;
+  border-radius: 6px; /* antes 10px */
   font-size: 15px;
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
@@ -181,60 +164,7 @@
   transition: all 0.25s ease;
 }
 
-@media (max-width: 992px) {
-  .modal-evidencia-content.mejorado {
-    height: 650px;
-    max-height: 88vh;
-  }
-
-  .modal-evidencia-img {
-    width: 95%;
-    height: 300px;
-    border-radius: 10px;
-  }
-}
-
-/* Celulares */
-@media (max-width: 768px) {
-  .modal-evidencia-content.mejorado {
-    width: 94%;
-    height: 720px;
-    max-height: 92vh;
-    padding: 1.4rem 1.2rem;
-    border-radius: 16px;
-  }
-
-  .modal-evidencia-img {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-    display: block;
-  }
-}
-
 @media (max-width: 480px) {
-  .modal-evidencia-content.mejorado {
-    width: 95%;
-    height: 78vh;
-    max-height: 94vh;
-    padding: 1.2rem 1rem;
-    border-radius: 14px;
-  }
-
-  .modal-evidencia-img {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 0.8rem;
-    display: block;
-  }
 }
 .modal-evidencia-btn-cerrar:hover {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
@@ -281,7 +211,7 @@
 }
 
 .swal2-container {
-  z-index: 9999 !important;
+  z-index: 2147483647 !important;
 }
 
 .modal-observacion-textarea {
@@ -342,11 +272,7 @@
 background-color: #142e68;
 }
 
-.modal-observacion-content h3 {
-  margin-bottom: 12px;
-  font-weight: bold;
-  font-size: 16px;
-}
+
 
 .modal-observacion-content textarea {
   width: 100%;
