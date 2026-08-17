@@ -3,6 +3,7 @@ import axios from "axios";
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
 import "../DashboardGestor.css";
+import EditIcon from "../../../hooks/componentes/Icons/EditIcon";
 import { alertError} from "../../../hooks/alerts/alertas";
 import { showTopWarningToast, showTopSuccessToast } from '../../../hooks/alerts/useWelcomeToast';
 import { useUser } from "../../../UserContext";
@@ -192,15 +193,7 @@ function CambioAsesor() {
                           onClick={() => abrirModal(t)}
                           title="Cambiar asesor"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            fill="white"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1.25 1.25 0 0 0 0-1.77l-2.34-2.34a1.25 1.25 0 0 0-1.77 0l-1.83 1.83 3.75 3.75 1.19-1.19z" />
-                          </svg>
+                          <EditIcon />
                         </button>
                       </td>
                     </tr>

@@ -1,42 +1,68 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchInput from '../SearchInput';
 import { buscarSinTildes } from '../../../utils/textUtils';
-import DeleteIcon from "../../../hooks/componentes/Icons/DeleteIcon";
-import VerBoton from "../../../hooks/componentes/VerBoton";
+import EditIcon from '../../../hooks/componentes/Icons/EditIcon';
+import DeleteIcon from '../../../hooks/componentes/Icons/DeleteIcon';
+import VerBoton from '../../../hooks/componentes/VerBoton';
 import TablePagination from '../../ui/TablePagination';
 import PageSkeleton from '../../loaders/PageSkeleton';
+import SupervisorModal from '../../modals/SupervisorModal';
+import ProcesoTrabajoSocialModal from '../../modals/ProcesoTrabajoSocialModal';
 
-function SupervisorSection({
-  supervisores,
-  cargandoSupervisores,
-  busquedaSupervisor,
-  setBusquedaSupervisor,
-  programaSupervisor,
-  setProgramaSupervisor,
-  programas,
-  eliminarSupervisor
+function TrabajosSocialesSection({
+  trabajosSociales,
+  cargandoTrabajosSociales,
+  busquedaTrabajoSocial,
+  setBusquedaTrabajoSocial,
+
+  filtroVencidosActivo,
+  alternarFiltroVencidos,
+
+  eliminarTrabajoSocial,
+  eliminarIntegrante,
+
+  procesoTrabajoSocial,
+  cargandoProcesoTrabajoSocial,
+  errorProcesoTrabajoSocial,
+  fetchProcesoTrabajoSocial,
+  limpiarProcesoTrabajoSocial,
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [modalTrabajoAbierto, setModalTrabajoAbierto] =
+    useState(false);
+
+  const [trabajoSeleccionado, setTrabajoSeleccionado] =
+    useState(null);
+
+  const [modalProcesoAbierto, setModalProcesoAbierto] =
+    useState(false);
+
   const ITEMS_PER_PAGE = 30;
 
-  const supervisoresFiltrados = useMemo(
+
+  const trabajosSocialesFiltrados = useMemo(
     () =>
-      (supervisores || [])
-        .filter((sup) =>
-          buscarSinTildes(sup.estudiante?.nombre_estudiante || '', busquedaSupervisor || '')
+      (trabajosSociales || []).filter((trabajo) =>
+        buscarSinTildes(
+          trabajo.Estudiante?.nombre_estudiante || '',
+          busquedaTrabajoSocial || ''
         )
-        .filter((sup) => {
-          if (!programaSupervisor) return true;
-          const nombreProg =
-            sup.programa?.nombre_programa ||
-            sup.ProgramasAcademico?.nombre_programa ||
-            '';
-          return nombreProg.toLowerCase() === programaSupervisor.toLowerCase();
-        }),
-    [supervisores, busquedaSupervisor, programaSupervisor]
+      ),
+    [
+      trabajosSociales,
+      busquedaTrabajoSocial,
+    ]
   );
 
-  const totalPages = Math.max(1, Math.ceil(supervisoresFiltrados.length / ITEMS_PER_PAGE));
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      trabajosSocialesFiltrados.length /
+        ITEMS_PER_PAGE
+    )
+  );
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -46,160 +72,389 @@ function SupervisorSection({
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [busquedaSupervisor, programaSupervisor]);
+  }, [
+    busquedaTrabajoSocial,
+    filtroVencidosActivo,
+  ]);
 
-  const inicio = (currentPage - 1) * ITEMS_PER_PAGE;
-  const supervisoresPagina = supervisoresFiltrados.slice(inicio, inicio + ITEMS_PER_PAGE);
+  const inicio =
+    (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const trabajosSocialesPagina =
+    trabajosSocialesFiltrados.slice(
+      inicio,
+      inicio + ITEMS_PER_PAGE
+    );
+
+
+
+  const handleAlternarFiltroVencidos = async () => {
+    if (!alternarFiltroVencidos) return;
+
+    setCurrentPage(1);
+
+    await alternarFiltroVencidos();
+  };
+
+  const abrirModalTrabajo = (trabajo) => {
+    setTrabajoSeleccionado(trabajo);
+    setModalTrabajoAbierto(true);
+  };
+
+  const cerrarModalTrabajo = () => {
+    setModalTrabajoAbierto(false);
+    setTrabajoSeleccionado(null);
+  };
+
+
+  const handleEliminarTrabajo = async (trabajo) => {
+    if (!eliminarTrabajoSocial) {
+      return false;
+    }
+
+    return await eliminarTrabajoSocial(trabajo);
+  };
+
+
+  const handleEliminarIntegrante = async (
+    integrante,
+    trabajo
+  ) => {
+    if (!eliminarIntegrante) {
+      return false;
+    }
+
+    return await eliminarIntegrante(
+      integrante,
+      trabajo
+    );
+  };
+
+
+  const handleVerProceso = async (trabajo) => {
+    if (!trabajo?.id) return;
+
+    setModalProcesoAbierto(true);
+
+    if (fetchProcesoTrabajoSocial) {
+      await fetchProcesoTrabajoSocial(
+        trabajo.id
+      );
+    }
+  };
+
+  const cerrarModalProceso = () => {
+    setModalProcesoAbierto(false);
+
+    limpiarProcesoTrabajoSocial?.();
+  };
+
 
   return (
-    <div className="docentes-container">
-      <div className="docentes-card">
-        <div className="docentes-header">
-          <div className="docentes-header-left">
-            <h2>Desig. Docente Supervisor</h2>
-          </div>
+    <>
+      <div className="docentes-container">
+        <div className="docentes-card">
 
-          <div className="docentes-header-right">
-            <SearchInput
-              value={busquedaSupervisor}
-              onChange={setBusquedaSupervisor}
-              placeholder="Nombre del estudiante"
-              label="Buscar:"
-              className="docentes-search-label"
-            />
-          </div>
+          {/* ENCABEZADO */}
+          <div className="docentes-header">
 
-          <label className="docentes-search-label">
-            Buscar por Programa Académico:
-            <select
-              className="select-profesional"
-              value={programaSupervisor}
-              onChange={(e) => setProgramaSupervisor(e.target.value)}
-            >
-              <option value="">Todos</option>
-              {programas.map((prog) => (
-                <option key={prog.id_programa} value={prog.nombre_programa}>
-                  {prog.nombre_programa}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+            <div className="docentes-header-left">
+              <h2>
+                Gestión de Trabajos Sociales
+              </h2>
+            </div>
 
-        <div className="docentes-table-wrapper">
-          {cargandoSupervisores ? (
-            <PageSkeleton topBlocks={["sm", "md"]} xlRows={3} showChip lastXL />
-          ) : (
-            <>
-              <table className="docentes-table">
-                <thead className="docentes-table-thead">
-                  <tr>
-                    <th>Nº</th>
-                    <th>Nombre</th>
-                    <th>Programa Académico</th>
-                    <th>Estado</th>
-                    <th>Carta de Aceptación</th>
-                    <th>Supervisor</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
+            <div className="trabajos-sociales-herramientas">
 
-                <tbody>
-                  {supervisoresPagina.length > 0 ? (
-                    supervisoresPagina.map((sup, index) => {
-                      const nombre = (sup.estudiante?.nombre_estudiante || 'SIN NOMBRE').toUpperCase();
-                      const programa =
-                        (sup.programa?.nombre_programa ||
-                          sup.ProgramasAcademico?.nombre_programa ||
-                          'SIN PROGRAMA').toUpperCase();
-                      const supervisor =
-                        sup.supervisor?.nombre_supervisor ||
-                        sup.supervisor?.nombre ||
-                        'SIN SUPERVISOR';
-                      const cartaPdf = sup.carta_aceptacion_pdf || sup.carta_pdf || null;
+              <button
+                type="button"
+                className={`trabajos-filtro-vencidos ${
+                  filtroVencidosActivo
+                    ? 'activo'
+                    : ''
+                }`}
+                onClick={
+                  handleAlternarFiltroVencidos
+                }
+                disabled={
+                  cargandoTrabajosSociales
+                }
+                title={
+                  filtroVencidosActivo
+                    ? 'Volver a mostrar todos los trabajos sociales'
+                    : 'Mostrar trabajos con actividades vencidas sin evidencia'
+                }
+              >
+                <span className="trabajos-filtro-indicador" />
 
-                      return (
-                        <tr key={sup.id_supervisor || sup.id || index}>
-                          <td>{inicio + index + 1}</td>
-                          <td>{nombre}</td>
-                          <td>{programa}</td>
-                          <td>
-                            {(() => {
-                              const raw = (
-                                sup.estado ||
-                                sup.estado_plan_labor_social ||
-                                'pendiente'
-                              ).toLowerCase();
+                {filtroVencidosActivo
+                  ? 'Mostrar todos'
+                  : 'Vencidos sin evidencia'}
+              </button>
 
-                              let estado = raw === 'aceptado' ? 'aprobado' : raw;
-                              estado = ['aprobado', 'rechazado', 'pendiente'].includes(estado)
-                                ? estado
-                                : 'pendiente';
-
-                              const label = {
-                                aprobado: 'Aceptado',
-                                rechazado: 'Rechazado',
-                                pendiente: 'Pendiente',
-                              }[estado];
-
-                              return <span className={`badge-estado ${estado}`}>{label}</span>;
-                            })()}
-                          </td>
-                          <td>
-                            {cartaPdf ? (
-                              <VerBoton
-                                label="Ver"
-                                onClick={() =>
-                                  window.open(
-                                    `${process.env.REACT_APP_API_URL}/uploads/cartas_aceptacion/${cartaPdf}`,
-                                    "_blank",
-                                    "noopener,noreferrer"
-                                  )
-                                }
-                              />
-                            ) : (
-                              <span className="no-generado">NO GENERADO</span>
-                            )}
-                          </td>
-                          <td>{supervisor}</td>
-                          <td>
-                            <button
-                              onClick={() => eliminarSupervisor(sup.id || sup.id_supervisor)}
-                              className="facultades-btn eliminar"
-                              title="Eliminar designación"
-                            >
-                              <DeleteIcon />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan="7" style={{ textAlign: 'center', padding: '1rem' }}>
-                        No se encontraron designaciones.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-
-              <TablePagination
-                totalItems={supervisoresFiltrados.length}
-                itemsPerPage={ITEMS_PER_PAGE}
-                currentPage={currentPage}
-                onPageChange={(page) => {
-                  if (page >= 1 && page <= totalPages) {
-                    setCurrentPage(page);
-                  }
-                }}
+              <SearchInput
+                value={busquedaTrabajoSocial}
+                onChange={
+                  setBusquedaTrabajoSocial
+                }
+                placeholder="Nombre del estudiante"
+                label="Buscar:"
+                className="docentes-search-label"
               />
-            </>
+
+            </div>
+
+          </div>
+
+          {filtroVencidosActivo && (
+            <div className="trabajos-filtro-activo-info">
+              <span>
+                Mostrando únicamente trabajos sociales
+                con actividades vencidas y sin evidencia.
+              </span>
+            </div>
           )}
+
+          <div className="docentes-table-wrapper">
+
+            {cargandoTrabajosSociales ? (
+              <PageSkeleton
+                topBlocks={['sm', 'md']}
+                xlRows={3}
+                showChip
+                lastXL
+              />
+            ) : (
+              <>
+                <table className="docentes-table">
+
+                  <thead className="docentes-table-thead">
+                    <tr>
+                      <th>Nº</th>
+
+                      <th>
+                        Nombre del estudiante
+                      </th>
+
+                      <th>
+                        Programa Académico
+                      </th>
+
+                      <th>
+                        Tipo
+                      </th>
+
+                      <th>
+                        Supervisor
+                      </th>
+
+                      <th>
+                        Proceso
+                      </th>
+
+                      <th>
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {trabajosSocialesPagina.length > 0 ? (
+                      trabajosSocialesPagina.map(
+                        (
+                          trabajo,
+                          index
+                        ) => {
+                          const nombre = (
+                            trabajo
+                              .Estudiante
+                              ?.nombre_estudiante ||
+                            'SIN NOMBRE'
+                          ).toUpperCase();
+
+                          const programa = (
+                            trabajo
+                              .ProgramasAcademico
+                              ?.nombre_programa ||
+                            'SIN PROGRAMA'
+                          ).toUpperCase();
+
+                          const tipo = (
+                            trabajo
+                              .tipo_servicio_social ||
+                            'SIN TIPO'
+                          ).toUpperCase();
+
+                          const supervisor = (
+                            trabajo.Docente
+                              ?.nombre_docente ||
+                            'SIN SUPERVISOR'
+                          ).toUpperCase();
+
+                          return (
+                            <tr
+                              key={
+                                trabajo.id ||
+                                index
+                              }
+                            >
+                              <td>
+                                {inicio +
+                                  index +
+                                  1}
+                              </td>
+
+                              <td>
+                                {nombre}
+                              </td>
+
+                              <td>
+                                {programa}
+                              </td>
+
+                              <td>
+                                {tipo}
+                              </td>
+
+                              <td>
+                                {supervisor}
+                              </td>
+
+                              <td>
+                                <VerBoton
+                                  label="Ver"
+                                  onClick={() =>
+                                    handleVerProceso(
+                                      trabajo
+                                    )
+                                  }
+                                />
+                              </td>
+
+                              <td>
+                                <div
+                                  style={{
+                                    display:
+                                      'flex',
+                                    alignItems:
+                                      'center',
+                                    justifyContent:
+                                      'center',
+                                    gap: '8px',
+                                  }}
+                                >
+
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      abrirModalTrabajo(
+                                        trabajo
+                                      )
+                                    }
+                                    className="facultades-btn editar"
+                                    title="Ver detalle del trabajo social"
+                                    aria-label={`Ver detalle del trabajo social de ${nombre}`}
+                                  >
+                                    <EditIcon />
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleEliminarTrabajo(
+                                        trabajo
+                                      )
+                                    }
+                                    className="facultades-btn eliminar"
+                                    title="Eliminar trabajo social"
+                                    aria-label={`Eliminar trabajo social de ${nombre}`}
+                                  >
+                                    <DeleteIcon />
+                                  </button>
+
+                                </div>
+                              </td>
+
+                            </tr>
+                          );
+                        }
+                      )
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="7"
+                          style={{
+                            textAlign:
+                              'center',
+                            padding:
+                              '1.25rem',
+                          }}
+                        >
+                          {filtroVencidosActivo
+                            ? 'No hay trabajos sociales con actividades vencidas sin evidencia.'
+                            : 'No se encontraron trabajos sociales.'}
+                        </td>
+                      </tr>
+                    )}
+
+                  </tbody>
+
+                </table>
+
+                {/* PAGINACIÓN */}
+                <TablePagination
+                  totalItems={
+                    trabajosSocialesFiltrados.length
+                  }
+                  itemsPerPage={
+                    ITEMS_PER_PAGE
+                  }
+                  currentPage={
+                    currentPage
+                  }
+                  onPageChange={(page) => {
+                    if (
+                      page >= 1 &&
+                      page <= totalPages
+                    ) {
+                      setCurrentPage(page);
+                    }
+                  }}
+                />
+              </>
+            )}
+
+          </div>
         </div>
       </div>
-    </div>
+
+      <SupervisorModal
+        isOpen={modalTrabajoAbierto}
+        onClose={cerrarModalTrabajo}
+        trabajo={trabajoSeleccionado}
+        onEliminarIntegrante={
+          handleEliminarIntegrante
+        }
+      />
+
+      <ProcesoTrabajoSocialModal
+        isOpen={modalProcesoAbierto}
+        onClose={cerrarModalProceso}
+        proceso={
+          procesoTrabajoSocial
+        }
+        cargando={
+          cargandoProcesoTrabajoSocial
+        }
+        error={
+          errorProcesoTrabajoSocial
+        }
+      />
+    </>
   );
 }
 
-export default React.memo(SupervisorSection);
+export default React.memo(
+  TrabajosSocialesSection
+);

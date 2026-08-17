@@ -10,7 +10,7 @@ import useProgramas from '../../hooks/gestor/useProgramas';
 import useDocentes from '../../hooks/gestor/useDocentes';
 import useLabores from '../../hooks/gestor/useLabores';
 import useLineas from '../../hooks/gestor/useLineas';
-import useSupervisores from '../../hooks/gestor/useSupervisores';
+import useTrabajosSociales from '../../hooks/gestor/useTrabajosSociales.js';
 import useInformesFinales from '../../hooks/gestor/useInformesFinales';
 import useEstudiantes from '../../hooks/gestor/useEstudiantes';
 import useSeguimiento from '../../hooks/gestor/useSeguimiento';
@@ -39,16 +39,15 @@ function DashboardGestor() {
   const [activeSection, setActiveSection] = useState('dasborasd');
   const { user } = useUser();
   const token = user?.token;
-  
-  // Mostrar alerta de bienvenida al iniciar sesión
+
   useWelcomeToast();
-  
+
   const facultadesHook = useFacultades(token);
   const programasHook = useProgramas(token);
   const docentesHook = useDocentes(token);
   const laboresHook = useLabores(token);
   const lineasHook = useLineas(token);
-  const supervisoresHook = useSupervisores(token);
+  const trabajosSocialesHook = useTrabajosSociales(token);
   const informesHook = useInformesFinales(token);
   const estudiantesHook = useEstudiantes(token);
   const seguimientoHook = useSeguimiento(token);
@@ -57,7 +56,7 @@ function DashboardGestor() {
   const { fetchDocentes } = docentesHook;
   const { fetchLabores } = laboresHook;
   const { fetchLineas } = lineasHook;
-  const { fetchSupervisores } = supervisoresHook;
+  const { fetchTrabajosSociales } = trabajosSocialesHook;
   const { fetchInformesFinales } = informesHook;
   const { fetchEstudiantes } = estudiantesHook;
 
@@ -67,7 +66,7 @@ function DashboardGestor() {
     if (activeSection === 'docentes') fetchDocentes();
     if (activeSection === 'labores') fetchLabores();
     if (activeSection === 'lineas') fetchLineas();
-    if (activeSection === 'supervisores') fetchSupervisores();
+    if (activeSection === 'supervisores') fetchTrabajosSociales();
     if (activeSection === 'informes-finales') fetchInformesFinales();
     if (activeSection === 'estudiantes' || activeSection === 'seguimiento.trami') {
       fetchEstudiantes();
@@ -79,7 +78,7 @@ function DashboardGestor() {
     fetchDocentes,
     fetchLabores,
     fetchLineas,
-    fetchSupervisores,
+    fetchTrabajosSociales,
     fetchInformesFinales,
     fetchEstudiantes
   ]);
@@ -151,20 +150,50 @@ function DashboardGestor() {
               guardarEdicionPrograma={programasHook.guardarEdicionPrograma}
               crearPrograma={programasHook.crearPrograma}
             />
-          )}
-
-          {activeSection === 'supervisores' && (
-            <SupervisorSection
-              supervisores={supervisoresHook.supervisores}
-              cargandoSupervisores={supervisoresHook.cargandoSupervisores}
-              busquedaSupervisor={supervisoresHook.busquedaSupervisor}
-              setBusquedaSupervisor={supervisoresHook.setBusquedaSupervisor}
-              programaSupervisor={supervisoresHook.programaSupervisor}
-              setProgramaSupervisor={supervisoresHook.setProgramaSupervisor}
-              programas={programasHook.programas}
-              eliminarSupervisor={supervisoresHook.eliminarSupervisor}
-            />
-          )}
+            )}
+            {activeSection === 'supervisores' && (
+              <SupervisorSection
+                trabajosSociales={
+                  trabajosSocialesHook.trabajosSociales
+                }
+                cargandoTrabajosSociales={
+                  trabajosSocialesHook.cargandoTrabajosSociales
+                }
+                busquedaTrabajoSocial={
+                  trabajosSocialesHook.busquedaTrabajoSocial
+                }
+                setBusquedaTrabajoSocial={
+                  trabajosSocialesHook.setBusquedaTrabajoSocial
+                }
+                filtroVencidosActivo={
+                  trabajosSocialesHook.filtroVencidosActivo
+                }
+                alternarFiltroVencidos={
+                  trabajosSocialesHook.alternarFiltroVencidos
+                }
+                eliminarTrabajoSocial={
+                  trabajosSocialesHook.eliminarTrabajoSocial
+                }
+                eliminarIntegrante={
+                  trabajosSocialesHook.eliminarIntegrante
+                }
+                procesoTrabajoSocial={
+                  trabajosSocialesHook.procesoTrabajoSocial
+                }
+                cargandoProcesoTrabajoSocial={
+                  trabajosSocialesHook.cargandoProcesoTrabajoSocial
+                }
+                errorProcesoTrabajoSocial={
+                  trabajosSocialesHook.errorProcesoTrabajoSocial
+                }
+                fetchProcesoTrabajoSocial={
+                  trabajosSocialesHook.fetchProcesoTrabajoSocial
+                }
+                limpiarProcesoTrabajoSocial={
+                  trabajosSocialesHook.limpiarProcesoTrabajoSocial
+                }
+              />
+            )}
 
           {activeSection === 'informes-finales' && (
           <InformesFinalesSection

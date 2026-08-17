@@ -221,7 +221,7 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <SupervisorCheckIcon size={18} color="#2e9e7f" />
-                        Desig. de supervisor
+                        Gestión de Trabajos 
                       </span>
                     </li>
                     <li
