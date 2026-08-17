@@ -275,15 +275,15 @@ function ProcesoTrabajoSocialModal({
                         </div>
 
                         <div>
-                          <span>
-                            Fin
-                          </span>
+                        <span>
+                            Fecha de envío
+                        </span>
 
-                          <strong>
+                        <strong>
                             {formatearFecha(
-                              actividad.fecha_fin
+                            actividad.fecha_fin
                             )}
-                          </strong>
+                        </strong>
                         </div>
 
                         <div>
