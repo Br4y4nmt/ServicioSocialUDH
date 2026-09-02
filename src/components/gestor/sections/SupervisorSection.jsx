@@ -14,13 +14,12 @@ function TrabajosSocialesSection({
   cargandoTrabajosSociales,
   busquedaTrabajoSocial,
   setBusquedaTrabajoSocial,
-
   filtroVencidosActivo,
   alternarFiltroVencidos,
-
   eliminarTrabajoSocial,
   eliminarIntegrante,
-
+  agregandoIntegrante,
+  agregarIntegrante,
   procesoTrabajoSocial,
   cargandoProcesoTrabajoSocial,
   errorProcesoTrabajoSocial,
@@ -130,6 +129,14 @@ function TrabajosSocialesSection({
     );
   };
 
+const handleAgregarIntegrante = async (trabajo, codigo) => {
+  if (!agregarIntegrante) return null;
+
+  return await agregarIntegrante(
+    trabajo,
+    codigo
+  );
+};
 
   const handleVerProceso = async (trabajo) => {
     if (!trabajo?.id) return;
@@ -433,9 +440,9 @@ function TrabajosSocialesSection({
         isOpen={modalTrabajoAbierto}
         onClose={cerrarModalTrabajo}
         trabajo={trabajoSeleccionado}
-        onEliminarIntegrante={
-          handleEliminarIntegrante
-        }
+        agregandoIntegrante={agregandoIntegrante}
+        onAgregarIntegrante={handleAgregarIntegrante}
+        onEliminarIntegrante={handleEliminarIntegrante}
       />
 
       <ProcesoTrabajoSocialModal

@@ -155,47 +155,23 @@ function DashboardGestor() {
             />
             )}
             {activeSection === 'supervisores' && (
-              <SupervisorSection
-                trabajosSociales={
-                  trabajosSocialesHook.trabajosSociales
-                }
-                cargandoTrabajosSociales={
-                  trabajosSocialesHook.cargandoTrabajosSociales
-                }
-                busquedaTrabajoSocial={
-                  trabajosSocialesHook.busquedaTrabajoSocial
-                }
-                setBusquedaTrabajoSocial={
-                  trabajosSocialesHook.setBusquedaTrabajoSocial
-                }
-                filtroVencidosActivo={
-                  trabajosSocialesHook.filtroVencidosActivo
-                }
-                alternarFiltroVencidos={
-                  trabajosSocialesHook.alternarFiltroVencidos
-                }
-                eliminarTrabajoSocial={
-                  trabajosSocialesHook.eliminarTrabajoSocial
-                }
-                eliminarIntegrante={
-                  trabajosSocialesHook.eliminarIntegrante
-                }
-                procesoTrabajoSocial={
-                  trabajosSocialesHook.procesoTrabajoSocial
-                }
-                cargandoProcesoTrabajoSocial={
-                  trabajosSocialesHook.cargandoProcesoTrabajoSocial
-                }
-                errorProcesoTrabajoSocial={
-                  trabajosSocialesHook.errorProcesoTrabajoSocial
-                }
-                fetchProcesoTrabajoSocial={
-                  trabajosSocialesHook.fetchProcesoTrabajoSocial
-                }
-                limpiarProcesoTrabajoSocial={
-                  trabajosSocialesHook.limpiarProcesoTrabajoSocial
-                }
-              />
+            <SupervisorSection
+              trabajosSociales={trabajosSocialesHook.trabajosSociales}
+              cargandoTrabajosSociales={trabajosSocialesHook.cargandoTrabajosSociales}
+              busquedaTrabajoSocial={trabajosSocialesHook.busquedaTrabajoSocial}
+              setBusquedaTrabajoSocial={trabajosSocialesHook.setBusquedaTrabajoSocial}
+              filtroVencidosActivo={trabajosSocialesHook.filtroVencidosActivo}
+              alternarFiltroVencidos={trabajosSocialesHook.alternarFiltroVencidos}
+              eliminarTrabajoSocial={trabajosSocialesHook.eliminarTrabajoSocial}
+              eliminarIntegrante={trabajosSocialesHook.eliminarIntegrante}
+              agregandoIntegrante={trabajosSocialesHook.agregandoIntegrante}
+              agregarIntegrante={trabajosSocialesHook.agregarIntegrante}
+              procesoTrabajoSocial={trabajosSocialesHook.procesoTrabajoSocial}
+              cargandoProcesoTrabajoSocial={trabajosSocialesHook.cargandoProcesoTrabajoSocial}
+              errorProcesoTrabajoSocial={trabajosSocialesHook.errorProcesoTrabajoSocial}
+              fetchProcesoTrabajoSocial={trabajosSocialesHook.fetchProcesoTrabajoSocial}
+              limpiarProcesoTrabajoSocial={trabajosSocialesHook.limpiarProcesoTrabajoSocial}
+            />
             )}
 
           {activeSection === 'informes-finales' && (

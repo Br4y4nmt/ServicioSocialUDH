@@ -5,25 +5,29 @@ function SupervisorModal({
   isOpen,
   onClose,
   trabajo,
-  onEliminarIntegrante,
+  agregandoIntegrante = false,
+  onAgregarIntegrante,
+  onEliminarIntegrante
 }) {
   const [mostrarIntegrantes, setMostrarIntegrantes] = useState(false);
+  const [mostrarAgregar, setMostrarAgregar] = useState(false);
+  const [codigoNuevoIntegrante, setCodigoNuevoIntegrante] = useState('');
   const [integrantes, setIntegrantes] = useState([]);
   const [eliminandoIntegranteId, setEliminandoIntegranteId] = useState(null);
 
-    useEffect(() => {
+  useEffect(() => {
     if (isOpen && trabajo) {
-        setMostrarIntegrantes(false);
-
-        setIntegrantes(
+      setMostrarIntegrantes(false);
+      setMostrarAgregar(false);
+      setCodigoNuevoIntegrante('');
+      setIntegrantes(
         Array.isArray(trabajo.integrantes_grupo)
-            ? trabajo.integrantes_grupo
-            : []
-        );
-
-        setEliminandoIntegranteId(null);
+          ? trabajo.integrantes_grupo
+          : []
+      );
+      setEliminandoIntegranteId(null);
     }
-    }, [isOpen, trabajo]);
+  }, [isOpen, trabajo]);
 
   if (!isOpen || !trabajo) return null;
 
@@ -33,11 +37,16 @@ function SupervisorModal({
 
   const tipoServicio = (
     trabajo.tipo_servicio_social || 'individual'
-  )
-    .trim()
-    .toLowerCase();
+  ).trim().toLowerCase();
 
   const esGrupal = tipoServicio === 'grupal';
+
+  const estadoInformeFinal = String(
+    trabajo.estado_informe_final || ''
+  ).trim().toLowerCase();
+
+  const puedeAgregarIntegrante =
+    esGrupal && estadoInformeFinal === 'pendiente';
 
   const formatearFecha = (fecha) => {
     if (!fecha) return 'SIN FECHA';
@@ -53,8 +62,44 @@ function SupervisorModal({
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit',
+      minute: '2-digit'
     });
+  };
+
+  const handleCodigoChange = (e) => {
+    const value = e.target.value;
+
+    if (/^\d{0,10}$/.test(value)) {
+      setCodigoNuevoIntegrante(value);
+    }
+  };
+
+  const handleAgregarIntegrante = async (e) => {
+    e.preventDefault();
+
+    if (!onAgregarIntegrante || !codigoNuevoIntegrante.trim()) return;
+
+    const nuevoIntegrante = await onAgregarIntegrante(
+      trabajo,
+      codigoNuevoIntegrante.trim()
+    );
+
+    if (!nuevoIntegrante) return;
+
+    setIntegrantes((prev) => {
+      const existe = prev.some(
+        (item) =>
+          item.id_integrante === nuevoIntegrante.id_integrante ||
+          item.codigo === nuevoIntegrante.codigo
+      );
+
+      if (existe) return prev;
+
+      return [...prev, nuevoIntegrante];
+    });
+
+    setCodigoNuevoIntegrante('');
+    setMostrarAgregar(false);
   };
 
   const handleEliminarIntegrante = async (integrante) => {
@@ -76,8 +121,7 @@ function SupervisorModal({
 
       setIntegrantes((prev) =>
         prev.filter(
-          (item) =>
-            item.id_integrante !== integranteId
+          (item) => item.id_integrante !== integranteId
         )
       );
     } finally {
@@ -85,16 +129,22 @@ function SupervisorModal({
     }
   };
 
+  const handleCerrar = () => {
+    if (agregandoIntegrante || eliminandoIntegranteId) return;
+
+    setMostrarAgregar(false);
+    setCodigoNuevoIntegrante('');
+    onClose();
+  };
+
   return (
     <div className="programas-modal show">
       <div className="programas-modal-content supervisor-info-modal">
-
         <div className="supervisor-info-header">
           <div>
             <span className="supervisor-info-eyebrow">
               Servicio Social
             </span>
-
             <h3>Detalle del trabajo social</h3>
           </div>
         </div>
@@ -104,7 +154,6 @@ function SupervisorModal({
             <span className="supervisor-info-label">
               Estudiante principal
             </span>
-
             <strong className="supervisor-info-value">
               {nombreEstudiante}
             </strong>
@@ -114,7 +163,6 @@ function SupervisorModal({
             <span className="supervisor-info-label">
               Fecha de creación
             </span>
-
             <strong className="supervisor-info-value">
               {formatearFecha(trabajo.createdAt)}
             </strong>
@@ -139,9 +187,7 @@ function SupervisorModal({
                   type="button"
                   className="supervisor-ver-integrantes-btn"
                   onClick={() =>
-                    setMostrarIntegrantes(
-                      (prev) => !prev
-                    )
+                    setMostrarIntegrantes((prev) => !prev)
                   }
                 >
                   {mostrarIntegrantes
@@ -151,15 +197,34 @@ function SupervisorModal({
               )}
             </div>
           </div>
-
         </div>
 
         {esGrupal && mostrarIntegrantes && (
           <div className="supervisor-integrantes-section">
-
             <div className="supervisor-integrantes-header">
               <div>
-                <h4>Integrantes del grupo</h4>
+                <div className="supervisor-integrantes-title-row">
+                  <h4>Integrantes del grupo</h4>
+
+                  {puedeAgregarIntegrante && (
+                    <button
+                      type="button"
+                      className={`supervisor-agregar-integrante-btn ${
+                        mostrarAgregar ? 'activo' : ''
+                      }`}
+                      onClick={() => {
+                        setMostrarAgregar((prev) => !prev);
+                        setCodigoNuevoIntegrante('');
+                      }}
+                      disabled={agregandoIntegrante}
+                    >
+                      <span className="supervisor-agregar-integrante-icon">
+                        +
+                      </span>
+                      Agregar
+                    </button>
+                  )}
+                </div>
 
                 <span>
                   {integrantes.length}{' '}
@@ -170,13 +235,55 @@ function SupervisorModal({
               </div>
             </div>
 
+            {puedeAgregarIntegrante && mostrarAgregar && (
+              <form
+                className="supervisor-agregar-integrante-form"
+                onSubmit={handleAgregarIntegrante}
+              >
+                <div className="supervisor-agregar-integrante-field">
+                  <label htmlFor="codigo-nuevo-integrante">
+                    Código universitario
+                  </label>
+
+                  <div className="supervisor-agregar-integrante-control">
+                    <input
+                      id="codigo-nuevo-integrante"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      maxLength={10}
+                      value={codigoNuevoIntegrante}
+                      onChange={handleCodigoChange}
+                      placeholder="Ej. 2023110693"
+                      disabled={agregandoIntegrante}
+                      autoFocus
+                    />
+
+                    <button
+                      type="submit"
+                      disabled={
+                        agregandoIntegrante ||
+                        !codigoNuevoIntegrante.trim()
+                      }
+                    >
+                      {agregandoIntegrante
+                        ? 'Agregando...'
+                        : 'Agregar integrante'}
+                    </button>
+                  </div>
+
+                  <span className="supervisor-agregar-integrante-help">
+                    Ingresa únicamente el código universitario del estudiante.
+                  </span>
+                </div>
+              </form>
+            )}
+
             {integrantes.length > 0 ? (
               <div className="supervisor-integrantes-list">
-
                 {integrantes.map((integrante, index) => {
                   const nombreIntegrante = (
-                    integrante.nombre_completo ||
-                    'SIN NOMBRE'
+                    integrante.nombre_completo || 'SIN NOMBRE'
                   ).toUpperCase();
 
                   const eliminando =
@@ -192,13 +299,9 @@ function SupervisorModal({
                       }
                     >
                       <div className="supervisor-integrante-info">
-
-                        <strong>
-                          {nombreIntegrante}
-                        </strong>
+                        <strong>{nombreIntegrante}</strong>
 
                         <div className="supervisor-integrante-meta">
-
                           {integrante.codigo && (
                             <span>
                               Código: {integrante.codigo}
@@ -210,7 +313,6 @@ function SupervisorModal({
                               {integrante.programa_academico}
                             </span>
                           )}
-
                         </div>
                       </div>
 
@@ -219,11 +321,12 @@ function SupervisorModal({
                         className="facultades-btn eliminar"
                         title={`Eliminar a ${nombreIntegrante}`}
                         aria-label={`Eliminar integrante ${nombreIntegrante}`}
-                        disabled={eliminando}
+                        disabled={
+                          eliminando ||
+                          agregandoIntegrante
+                        }
                         onClick={() =>
-                          handleEliminarIntegrante(
-                            integrante
-                          )
+                          handleEliminarIntegrante(integrante)
                         }
                       >
                         <DeleteIcon />
@@ -231,14 +334,12 @@ function SupervisorModal({
                     </div>
                   );
                 })}
-
               </div>
             ) : (
               <div className="supervisor-integrantes-empty">
                 No hay integrantes registrados en este grupo.
               </div>
             )}
-
           </div>
         )}
 
@@ -246,12 +347,15 @@ function SupervisorModal({
           <button
             className="grupo-alumno-btn grupo-alumno-btn-cancel"
             type="button"
-            onClick={onClose}
+            onClick={handleCerrar}
+            disabled={
+              agregandoIntegrante ||
+              !!eliminandoIntegranteId
+            }
           >
             Cerrar
           </button>
         </div>
-
       </div>
     </div>
   );

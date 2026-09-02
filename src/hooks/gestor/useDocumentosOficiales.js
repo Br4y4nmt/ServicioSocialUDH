@@ -84,7 +84,7 @@ export default function useDocumentosOficiales(token) {
       }
 
       if (!titulo?.trim()) {
-        await alertError(
+        showTopErrorToast(
           'Datos incompletos',
           'Debes ingresar el título del documento.'
         );
@@ -93,7 +93,7 @@ export default function useDocumentosOficiales(token) {
       }
 
       if (!archivo) {
-        await alertError(
+        showTopErrorToast(
           'Datos incompletos',
           'Debes seleccionar un archivo PDF.'
         );
@@ -105,7 +105,7 @@ export default function useDocumentosOficiales(token) {
         archivo.type !== 'application/pdf' &&
         !archivo.name?.toLowerCase().endsWith('.pdf')
       ) {
-        await alertError(
+        showTopErrorToast(
           'Archivo no válido',
           'Solo se permiten archivos PDF.'
         );
@@ -136,7 +136,7 @@ export default function useDocumentosOficiales(token) {
 
         await fetchDocumentos();
 
-        await alertSuccess(
+        showTopSuccessToast(
           'Documento publicado',
           res.data?.message ||
             'El documento oficial fue publicado correctamente.'
@@ -153,7 +153,7 @@ export default function useDocumentosOficiales(token) {
           error.response?.data?.message ||
           'No se pudo publicar el documento oficial.';
 
-        await alertError(
+        showTopErrorToast(
           'Error al publicar',
           mensaje
         );
