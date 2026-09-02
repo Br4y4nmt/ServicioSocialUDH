@@ -14,6 +14,7 @@ import useTrabajosSociales from '../../hooks/gestor/useTrabajosSociales.js';
 import useInformesFinales from '../../hooks/gestor/useInformesFinales';
 import useEstudiantes from '../../hooks/gestor/useEstudiantes';
 import useSeguimiento from '../../hooks/gestor/useSeguimiento';
+import useDocumentosOficiales from '../../hooks/gestor/useDocumentosOficiales';
 import PageSkeleton from '../loaders/PageSkeleton';
 import './DashboardGestor.css';
 
@@ -32,7 +33,7 @@ const CambiosTiempo = lazy(() => import('./sections/CambiosTiempo.jsx'));
 const CambioAsesor = lazy(() => import('./sections/CambioAsesor.jsx'));
 const Dasborasd = lazy(() => import('./sections/Dashboard.jsx'));
 const EstudiantesConcluidos = lazy(() => import('./sections/EstudiantesConcluidos.jsx'));
-
+const DocumentosOficialesSection = lazy(() =>import('./sections/DocumentosOficialesSection.jsx'));
 
 function DashboardGestor() {
   const [collapsed, setCollapsed] = useState(false);
@@ -51,6 +52,7 @@ function DashboardGestor() {
   const informesHook = useInformesFinales(token);
   const estudiantesHook = useEstudiantes(token);
   const seguimientoHook = useSeguimiento(token);
+  const documentosHook = useDocumentosOficiales(token);
   const { fetchFacultades } = facultadesHook;
   const { fetchProgramas } = programasHook;
   const { fetchDocentes } = docentesHook;
@@ -59,6 +61,7 @@ function DashboardGestor() {
   const { fetchTrabajosSociales } = trabajosSocialesHook;
   const { fetchInformesFinales } = informesHook;
   const { fetchEstudiantes } = estudiantesHook;
+  const { fetchDocumentos } = documentosHook;
 
   useEffect(() => {
     if (activeSection === 'facultades') fetchFacultades();
@@ -68,9 +71,8 @@ function DashboardGestor() {
     if (activeSection === 'lineas') fetchLineas();
     if (activeSection === 'supervisores') fetchTrabajosSociales();
     if (activeSection === 'informes-finales') fetchInformesFinales();
-    if (activeSection === 'estudiantes' || activeSection === 'seguimiento.trami') {
-      fetchEstudiantes();
-    }
+    if (activeSection === 'estudiantes' || activeSection === 'seguimiento.trami') {fetchEstudiantes();}
+    if (activeSection === 'documentos-oficiales') {fetchDocumentos();}
   }, [
     activeSection,
     fetchFacultades,
@@ -80,7 +82,8 @@ function DashboardGestor() {
     fetchLineas,
     fetchTrabajosSociales,
     fetchInformesFinales,
-    fetchEstudiantes
+    fetchEstudiantes,
+    fetchDocumentos
   ]);
 
   const toggleSidebar = useCallback(() => {
@@ -341,6 +344,19 @@ function DashboardGestor() {
               crearLabor={laboresHook.crearLabor}
             />
           )}
+
+        {activeSection === 'documentos-oficiales' && (
+          <DocumentosOficialesSection
+            documentos={documentosHook.documentos}
+            cargandoDocumentos={documentosHook.cargandoDocumentos}
+            subiendoDocumento={documentosHook.subiendoDocumento}
+            editandoDocumento={documentosHook.editandoDocumento}
+            eliminandoDocumento={documentosHook.eliminandoDocumento}
+            subirDocumento={documentosHook.subirDocumento}
+            editarDocumento={documentosHook.editarDocumento}
+            eliminarDocumento={documentosHook.eliminarDocumento}
+          />
+        )}
 
           {activeSection === 'seguimiento.trami' && (
             <SeguimientoTramiteSection

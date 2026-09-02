@@ -21,12 +21,10 @@ export default function useTrabajosSociales(token) {
     setBusquedaTrabajoSocial,
   ] = useState('');
 
-
   const [
     filtroVencidosActivo,
     setFiltroVencidosActivo,
   ] = useState(false);
-
 
   const [
     procesoTrabajoSocial,
@@ -43,7 +41,6 @@ export default function useTrabajosSociales(token) {
     setErrorProcesoTrabajoSocial,
   ] = useState(null);
 
-
   const fetchTrabajosSociales = useCallback(
     async () => {
       if (!token) {
@@ -53,9 +50,7 @@ export default function useTrabajosSociales(token) {
 
         return [];
       }
-
       setCargandoTrabajosSociales(true);
-
       try {
         const res = await axios.get(
           '/api/trabajo-social/trabajos-sociales',
@@ -69,19 +64,15 @@ export default function useTrabajosSociales(token) {
         const data = Array.isArray(res.data)
           ? res.data
           : [];
-
         setTrabajosSociales(data);
         setFiltroVencidosActivo(false);
-
         return data;
       } catch (error) {
         console.error(
           'Error al cargar trabajos sociales:',
           error
         );
-
         setTrabajosSociales([]);
-
         return [];
       } finally {
         setCargandoTrabajosSociales(false);
@@ -100,9 +91,7 @@ export default function useTrabajosSociales(token) {
 
           return [];
         }
-
         setCargandoTrabajosSociales(true);
-
         try {
           const res = await axios.get(
             '/api/trabajo-social/vencidos-sin-evidencia',
@@ -208,14 +197,12 @@ export default function useTrabajosSociales(token) {
     [token]
   );
 
-
   const limpiarProcesoTrabajoSocial =
     useCallback(() => {
       setProcesoTrabajoSocial(null);
       setErrorProcesoTrabajoSocial(null);
       setCargandoProcesoTrabajoSocial(false);
     }, []);
-
 
   const eliminarTrabajoSocial = useCallback(
     async (trabajo) => {
@@ -260,14 +247,12 @@ export default function useTrabajosSociales(token) {
           }
         );
 
-
         setTrabajosSociales((prev) =>
           prev.filter(
             (trabajoActual) =>
               trabajoActual.id !== trabajoId
           )
         );
-
 
         setProcesoTrabajoSocial((prev) => {
           if (
@@ -305,7 +290,6 @@ export default function useTrabajosSociales(token) {
     },
     [token]
   );
-
 
   const eliminarIntegrante = useCallback(
     async (integrante, trabajo) => {

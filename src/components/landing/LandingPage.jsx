@@ -872,8 +872,8 @@ function LandingPage() {
 						<div className="landing-footer-links-col">
 							<h3 className="landing-footer-col-title">Recursos</h3>
 							<ul className="landing-footer-link-list">
-								<li><a href="https://serviciosocial.udh.edu.pe/">Guia de Usuario</a></li>
-								<li><a href="https://serviciosocial.udh.edu.pe/">Preguntas Frecuentes</a></li>
+								<li><a href="#proceso">Guia de Usuario</a></li>
+								<li><a href="#preguntas-frecuentes">Preguntas Frecuentes</a></li>
 								<li><a href="https://serviciosocial.udh.edu.pe/">Tutoriales</a></li>
 								<li><a href="https://serviciosocial.udh.edu.pe/">Reglamento</a></li>
 								<li><a href="https://wa.me/51956224252?text=Hola%20necesito%20soporte%20tecnico%20para%20la%20plataforma%20servicio%20social%20UDH" target="_blank" rel="noopener noreferrer">Soporte Tecnico</a></li>

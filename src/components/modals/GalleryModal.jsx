@@ -7,10 +7,7 @@ function GalleryModal({ open, onClose, item }) {
     function handleKey(e) {
       if (e.key === 'Escape') onClose();
     }
-
     if (open) document.addEventListener('keydown', handleKey);
-
-    // prevent body scrolling when modal is open
     const previousBodyOverflow = document.body.style.overflow;
     if (open) document.body.style.overflow = 'hidden';
 
@@ -49,7 +46,6 @@ function GalleryModal({ open, onClose, item }) {
               </p>
             )}
 
-            {/* show bullets below paragraph if provided */}
             {Array.isArray(item.bullets) && item.bullets.length > 0 ? (
               <ul className="gallery-modal-list">
                 {item.bullets.map((b, i) => (
@@ -63,7 +59,6 @@ function GalleryModal({ open, onClose, item }) {
                 ))}
               </ul>
             ) : null}
-{/* light separator under bullets */}
             {((Array.isArray(item.bullets) && item.bullets.length > 0) || Array.isArray(item.description)) && (
               <div className="gallery-modal-separator" aria-hidden="true" />
             )}

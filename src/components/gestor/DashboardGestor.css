@@ -316,6 +316,11 @@
   color: #2c885d;
   border-color: #A7EFCF;
 }
+.badge-estado.pendiente {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border-color: #FDE68A;
+}
 .badge-estado.rechazado {
   background-color: #F8D7DA;
   color: #a13039;
@@ -782,3 +787,191 @@ td select{
   100% { left: 120%; }
 }
 
+.documentos-modal-content {
+  width: min(560px, calc(100vw - 32px));
+  max-width: 560px;
+}
+
+.documentos-modal-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.documentos-modal-field > label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.documentos-modal-field .programas-modal-input,
+.documentos-modal-field .programas-modal-select {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.documentos-modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.documentos-upload-box:hover {
+  border-color: #2e9e7f;
+  background: #f5fbf9;
+  box-shadow: 0 3px 12px rgba(46, 158, 127, 0.08);
+}
+
+.documentos-upload-box:active {
+  transform: scale(0.995);
+}
+
+.documentos-upload-box.has-file {
+  border-style: solid;
+  border-color: #2e9e7f;
+  background: #f5fbf9;
+}
+
+.custom-file-upload {
+  width: 100%;
+  min-height: 190px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  box-sizing: border-box;
+  border: 2px dashed #c7cbd1;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.custom-file-upload:active {
+  transform: scale(0.995);
+}
+
+.custom-file-upload:hover {
+  border-color: #2e9e7f;
+  background: #f9fcfb;
+  box-shadow: 0 8px 22px rgba(15, 47, 84, 0.07);
+}
+
+.custom-file-upload-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.custom-file-upload-name {
+  max-width: 390px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #2e9e7f !important;
+  font-weight: 600 !important;
+}
+
+.custom-file-upload-text > span {
+  color: #556173;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.custom-file-upload-text small {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.custom-file-upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-file-upload input {
+  display: none;
+}
+
+.custom-file-upload.has-file {
+  border-style: solid;
+  border-color: #2e9e7f;
+  background: #f7fcfa;
+}
+
+.documentos-upload-icon-selected {
+  color: #2e9e7f;
+  background: #eaf7f3;
+  border-color: #b9e2d6;
+}
+
+.documentos-upload-info strong {
+  color: #25364a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.documentos-upload-info span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.documentos-upload-info small {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.documentos-upload-selected strong {
+  max-width: 390px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documentos-modal-orden {
+  max-width: 130px;
+}
+
+.documentos-modal-help {
+  margin-top: -2px;
+  color: #8a94a3;
+  font-size: 11px;
+}
+
+.programas-modal-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (max-width: 600px) {
+  .documentos-modal-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .documentos-upload-box {
+    min-height: 145px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .documentos-upload-selected strong {
+    max-width: 260px;
+  }
+
+  .documentos-modal-orden {
+    max-width: 100%;
+  }
+}

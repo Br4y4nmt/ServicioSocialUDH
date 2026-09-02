@@ -237,7 +237,7 @@ function ContactSection() {
 										name="correo_electronico"
 										value={formData.correo_electronico}
 										onChange={handleChange}
-										placeholder="tu@email.com"
+										placeholder="2000000000@udh.edu.pe"
 										className="landing-contact-input"
 										required
 									/>
@@ -257,7 +257,9 @@ function ContactSection() {
 										name="tipo_usuario"
 										value={formData.tipo_usuario}
 										onChange={handleChange}
-										className="landing-contact-select"
+										className={`landing-contact-select ${
+											!formData.tipo_usuario ? 'landing-contact-select-placeholder' : ''
+										}`}
 										style={{
 											width: '100%',
 											padding: '0.6rem',
@@ -269,15 +271,19 @@ function ContactSection() {
 										<option value="">
 											Selecciona...
 										</option>
+
 										<option value="ESTUDIANTE">
 											Estudiante
 										</option>
+
 										<option value="SUPERVISOR">
 											Supervisor
 										</option>
+
 										<option value="ADMINISTRATIVO">
 											Administrativo
 										</option>
+
 										<option value="OTRO">
 											Otro
 										</option>

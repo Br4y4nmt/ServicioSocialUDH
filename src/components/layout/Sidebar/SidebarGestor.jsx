@@ -43,7 +43,8 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
       "informes-finales",
       "estudiantes",
       "supervisores",
-      "estudiantes-concluidos"
+      "estudiantes-concluidos",
+      "documentos-oficiales"
     ].includes(activeSection)) {
       setOpenMenu(0);
     } else {
@@ -224,6 +225,19 @@ function SidebarGestor({ collapsed, onToggleSidebar, activeSection, setActiveSec
                         Gestión de Trabajos 
                       </span>
                     </li>
+                    <li
+                    className={
+                      activeSection === 'documentos-oficiales'
+                        ? 'sidebar-gestor-selected'
+                        : ''
+                    }
+                    onClick={() => setActiveSection('documentos-oficiales')}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <FinalReportIcon size={18} color="#2e9e7f" />
+                      Documentos Oficiales
+                    </span>
+                  </li>
                     <li
                       className={activeSection === 'seguimiento.trami' ? 'sidebar-gestor-selected' : ''}
                       onClick={() => setActiveSection('seguimiento.trami')}

@@ -1,4 +1,3 @@
-// src/components/modals/EditarEstadoModal.jsx
 import React from "react";
 
 function EditarEstadoModal({

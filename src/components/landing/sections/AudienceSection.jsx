@@ -5,7 +5,7 @@ import AnimatedSection from '../AnimatedSection';
 function AudienceSection({ audienceItems, renderAudienceIcon }) {
 	return (
 		<AnimatedSection>
-			<section className="landing-benefits" id="preguntas-frecuentes" style={{ padding: '6rem 0 7rem' }}>
+			<section className="landing-benefits" style={{ padding: '6rem 0 7rem' }}>
 			<div className="landing-audience-bg-shape top" aria-hidden="true" />
 			<div className="landing-audience-bg-shape bottom" aria-hidden="true" />
 
@@ -52,7 +52,7 @@ function AudienceSection({ audienceItems, renderAudienceIcon }) {
 									</ul>
 
 									<button type="button" className="landing-audience-info-btn">
-										Mas informacion
+										Mas información
 										<ArrowRightIcon />
 									</button>
 								</div>

@@ -407,14 +407,7 @@
 	margin-bottom: 0.75rem;
 	min-width: 0; 
 }
-.landing-smart-docs-feature-icon {
-	flex: 0 0 44px;
-	width: 44px;
-	height: 44px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
+
 .landing-service-benefit-text {
 	flex: 1 1 auto;
 	min-width: 0; 
@@ -466,11 +459,6 @@
 	.landing-service-benefit-desc {
 		font-size: 0.92rem;
 	}
-	.landing-smart-docs-feature-icon {
-		flex: 0 0 36px;
-		width: 36px;
-		height: 36px;
-	}
 
 	.landing-service-benefit-title {
 		text-align: center;
@@ -480,7 +468,7 @@
 .landing-benefits-visual {
 	position: relative;
 	overflow: hidden;
-	border-radius: 12px;
+	border-radius: 5px;
 	box-shadow: 0 24px 44px rgba(1, 27, 75, 0.2);
 }
 
@@ -489,6 +477,7 @@
 	height: min(70vw, 560px);
 	object-fit: cover;
 	display: block;
+	
 }
 
 .landing-benefits-image-overlay {
@@ -621,7 +610,7 @@
 	flex-shrink: 0;
 	width: 56px;
 	height: 56px;
-	border-radius: 12px;
+	border-radius: 5px;
 	background: rgba(57, 180, 158, 0.1);
 	color: #39b49e;
 	display: grid;
@@ -719,7 +708,7 @@
 .landing-gallery-card {
 	position: relative;
 	overflow: hidden;
-	border-radius: 15px;
+	border-radius: 4px !important;
 	aspect-ratio: 1 / 1;
 	box-shadow: 0 10px 22px rgba(15, 47, 84, 0.18);
 	transition: box-shadow 0.35s ease;
@@ -742,9 +731,9 @@
 .gallery-modal-content {
 	width: 900px;
 	max-width: 98%;
-	height: 520px; /* reduced modal height */
+	height: 520px; 
 	background: #ffffff;
-	border-radius: 10px;
+	border-radius: 4px;
 	overflow: hidden;
 	box-shadow: 0 25px 50px rgba(15, 47, 84, 0.25);
 	position: relative;
@@ -757,14 +746,14 @@
 	position: absolute;
 	top: 14px;
 	right: 14px;
-	background: #ffffff; /* color base */
+	background: #ffffff; 
 	border: none;
 	width: 38px;
 	height: 38px;
 	border-radius: 50%;
 	font-size: 23px;
 	cursor: pointer;
-	color: #020202; /* X blanca */
+	color: #020202; 
 	display: grid;
 	place-items: center;
 	box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -788,6 +777,7 @@
 	position: relative;
 	width: 50%;
 	height: 100%;
+	
 }
 
 .gallery-modal-image {
@@ -827,7 +817,7 @@
 	display: flex;
 	flex-direction: column;
 	margin-top: 10px;
-	justify-content: flex-start; /* keep title at the top */
+	justify-content: flex-start; 
 	overflow: auto; 
 }
 
@@ -837,7 +827,7 @@
 	background: rgba(56, 178, 156, 0.12);
 	color: #38b29c;
 	padding: 0.35rem 0.8rem;
-	border-radius: 999px;
+	border-radius: 5px;
 	font-size: 0.85rem;
 	font-weight: 640;
 	letter-spacing: 0.04em;
@@ -860,7 +850,7 @@
   margin: 0;
   text-rendering: optimizeLegibility;
 }
-/* when badge is placed over the image, position it bottom-left */
+
 .gallery-modal-image-wrapper .gallery-modal-badge {
 	position: absolute;
 	left: 14px;
@@ -940,7 +930,7 @@
 		max-width: 100%;
 		height: auto;
 		max-height: 96vh;
-		border-radius: 12px;
+		border-radius: 4px;
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
@@ -970,7 +960,7 @@
 		width: 100%;
 		padding: 1rem 1rem 1.25rem 1rem;
 		overflow: auto;
-		max-height: calc(96vh - 220px - 60px); /* leave space for header/close */
+		max-height: calc(96vh - 220px - 60px); 
 	}
 
 	.gallery-modal-close {
@@ -981,7 +971,6 @@
 		font-size: 22px;
 	}
 
-	/* When badge is over the image, make it sit inside the image flow on mobile */
 	.gallery-modal-image-wrapper .gallery-modal-badge {
 		position: absolute;
 		left: 12px;
@@ -1263,7 +1252,7 @@
 .landing-audience-card-shell {
 	position: relative;
 	height: 100%;
-	border-radius: 24px;
+	border-radius: 5px;
 	overflow: hidden;
 	box-shadow: 0 24px 45px rgba(15, 47, 84, 0.2);
 	transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -1321,7 +1310,7 @@
 .landing-audience-icon {
 	width: 48px;
 	height: 48px;
-	border-radius: 14px;
+	border-radius: 5px;
 	display: grid;
 	place-items: center;
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
@@ -1455,7 +1444,7 @@
 	margin-top: 1.5rem;
 	width: fit-content;
 	border: none;
-	border-radius: 12px;
+	border-radius: 5px;
 	padding: 0.72rem 1.1rem;
 	font-size: 0.9rem;
 	font-weight: 600;
@@ -1481,7 +1470,7 @@
 	position: absolute;
 	inset: 0;
 	border: 2px solid transparent;
-	border-radius: 24px;
+	border-radius: 5px;
 	opacity: 0;
 	transition: opacity 0.35s ease;
 }
@@ -1541,7 +1530,7 @@
 .landing-smart-docs-feature-icon {
 	width: 48px;
 	height: 48px;
-	border-radius: 12px;
+	border-radius: 5px;
 	background: rgba(57, 180, 158, 0.12);
 	color: #39b49e;
 	display: grid;
@@ -1607,7 +1596,7 @@
 .landing-faq-item {
 	background: #ffffff;
 	border: 1px solid #e2e8f0;
-	border-radius: 12px;
+	border-radius: 5px;
 	overflow: hidden;
 }
 
@@ -1698,7 +1687,7 @@
 .landing-contact-form {
 	background: #ffffff;
 	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+	border-radius: 4px;
 	padding: 1.5rem;
 	box-shadow: 0 18px 36px rgba(15, 47, 84, 0.1);
 	display: grid;
@@ -1709,12 +1698,36 @@
 	display: grid;
 	gap: 0.5rem;
 }
+/* Placeholder de inputs y textarea */
+.landing-contact-input::placeholder,
+.landing-contact-textarea::placeholder {
+	font-size: 13px;
+	color: #7b8190;
+}
+
+/* Tamaño normal del select */
+.landing-contact-select {
+	font-size: 15px;
+	border-radius: 4px;
+}
+
+/* Cuando aparece "Selecciona..." */
+.landing-contact-select-placeholder {
+	font-size: 13px;
+	color: #7b8190;
+}
+
+/* Las opciones reales mantienen tamaño normal */
+.landing-contact-select option {
+	font-size: 15px;
+	color: #000;
+}
 
 .landing-contact-input,
 .landing-contact-textarea {
 	width: 100%;
 	padding: 0.85rem 0.95rem;
-	border-radius: 10px;
+	border-radius: 4px;
 	border: 1px solid #d1d5db;
 	background: #ffffff;
 	font-size: 0.95rem;
@@ -1738,7 +1751,7 @@
 	width: 100%;
 	padding: 0.95rem 1.1rem;
 	border: 0;
-	border-radius: 6px;
+	border-radius: 5px;
 	background: #39b49e;
 	color: #ffffff;
 	font-size: 0.97rem;

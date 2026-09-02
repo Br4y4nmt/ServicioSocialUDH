@@ -1,52 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Reglamento.css';
+import { useUser } from '../../../UserContext';
 import VerBoton from '../../../hooks/componentes/VerBoton';
 import PdfIcon from '../../../hooks/componentes/PdfIcon';
-import DownloadIcon from "../../../hooks/componentes/Icons/DownloadIcon";
+import DownloadIcon from '../../../hooks/componentes/Icons/DownloadIcon';
 import CheckCircleFilledIcon from '../../../hooks/componentes/Icons/CheckCircleFilledIcon';
 
 function Reglamento() {
-  const documentos = [
-    {
-      id: 1,
-      titulo: 'REGLAMENTO OFICIAL DEL SERVICIO SOCIAL',
-      tipo: 'PDF',
-      cargado: '6/4/2026',
-      estado: 'Vigente',
-      url: 'https://drive.google.com/file/d/17gAI3ACdRPgheDtd1dhSvSA9szTmtsHT/view?usp=sharing',
-    },
-    {
-      id: 2,
-      titulo: 'PLAN DE TRABAJO SERVICIO SOCIAL',
-      tipo: 'PDF',
-      cargado: '6/4/2026',
-      estado: 'Vigente',
-      url: 'https://drive.google.com/file/d/13NCxoOYne46Wx46xydWWPR2tRf5HV8gq/view?usp=sharing',
-    },
-    {
-      id: 3,
-      titulo: 'REGLAMENTO GENERAL DE ESTUDIOS',
-      tipo: 'PDF',
-      cargado: '6/4/2026',
-      estado: 'Vigente',
-      url: 'https://drive.google.com/file/d/1vusDPWYiod_V3KslegCuMHFHuHPp3rew/view?usp=sharing',
-    },
-    {
-      id: 4,
-      titulo: 'CONVENIO DE COLABORACIÓN SSU',
-      tipo: 'PDF',
-      cargado: '14/5/2026',
-      estado: 'Vigente',
-      url: 'https://docs.google.com/document/d/12iYO-g07OXeD0a_3XWCnnVfry0YhbEAp/edit?usp=sharing&ouid=110596459322840430150&rtpof=true&sd=true',
-    },
-  ];
+  const { user } = useUser();
+  const token = user?.token;
+  const [documentos, setDocumentos] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-  const getGoogleDriveDownloadUrl = (url) => {
-    const match = url.match(/\/d\/([^/]+)/);
+  useEffect(() => {
+    const obtenerDocumentos = async () => {
+      if (!token) {
+        setDocumentos([]);
+        setCargando(false);
+        return;
+      }
 
-    if (!match?.[1]) return url;
+      try {
+        setCargando(true);
 
-    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+        const res = await axios.get('/api/documentos-oficiales', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setDocumentos(Array.isArray(res.data) ? res.data : []);
+      } catch (error) {
+        console.error('Error al obtener documentos oficiales:', error);
+        setDocumentos([]);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    obtenerDocumentos();
+  }, [token]);
+
+  const obtenerUrlDocumento = (rutaArchivo) => {
+    return `${process.env.REACT_APP_API_URL}${rutaArchivo}`;
+  };
+
+  const formatearFecha = (fecha) => {
+    if (!fecha) return '-';
+
+    return new Date(fecha).toLocaleDateString('es-PE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const descargarDocumento = async (doc) => {
+    try {
+      const url = obtenerUrlDocumento(doc.ruta_archivo);
+      const response = await axios.get(url, {
+        responseType: 'blob'
+      });
+
+      const blobUrl = window.URL.createObjectURL(response.data);
+      const enlace = document.createElement('a');
+
+      enlace.href = blobUrl;
+      enlace.download = doc.nombre_original || `${doc.titulo}.pdf`;
+      document.body.appendChild(enlace);
+      enlace.click();
+      enlace.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error al descargar documento:', error);
+    }
   };
 
   return (
@@ -61,7 +90,7 @@ function Reglamento() {
             style={{
               color: '#ffffff',
               fontSize: '1.2rem',
-              fontWeight: 600,
+              fontWeight: 600
             }}
           >
             DOCUMENTOS OFICIALES SERVICIO SOCIAL
@@ -71,7 +100,7 @@ function Reglamento() {
             style={{
               color: '#cbd5e1',
               fontSize: '0.86rem',
-              margin: '2px 0 0',
+              margin: '2px 0 0'
             }}
           >
             Consulta y descarga de documentos oficiales vigentes
@@ -81,60 +110,62 @@ function Reglamento() {
 
       <div className="reglamento-card-body">
         <div className="reglamento-list">
-          {documentos.map((doc) => (
-            <article className="reglamento-item" key={doc.id}>
-              <div className="documento-info reglamento-documento-info">
-                <PdfIcon />
+          {cargando ? (
+            <div className="reglamento-empty">
+              Cargando documentos oficiales...
+            </div>
+          ) : documentos.length > 0 ? (
+            documentos.map((doc) => (
+              <article className="reglamento-item" key={doc.id_documento}>
+                <div className="documento-info reglamento-documento-info">
+                  <PdfIcon />
 
-                <div className="reglamento-item-content">
-                  <span className="titulo-pdf">
-                    {doc.titulo}
-                  </span>
-
-                  <div className="reglamento-meta">
-                    <span>Tipo: {doc.tipo}</span>
-
-                    <span className="reglamento-meta-dot">•</span>
-
-                    <span>
-                      Cargado: {doc.cargado}
+                  <div className="reglamento-item-content">
+                    <span className="titulo-pdf">
+                      {doc.titulo}
                     </span>
+
+                    <div className="reglamento-meta">
+                      <span>Tipo: {doc.tipo || 'PDF'}</span>
+                      <span className="reglamento-meta-dot">•</span>
+                      <span>
+                        Cargado: {formatearFecha(doc.fecha_carga)}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <span className="estado-tramitado">
-                {doc.estado}
-              </span>
+                <span className="estado-tramitado">
+                  Vigente
+                </span>
 
-              <div className="reglamento-actions">
-                <VerBoton
-                  onClick={() =>
-                    window.open(
-                      doc.url,
-                      '_blank',
-                      'noopener,noreferrer'
-                    )
-                  }
-                />
+                <div className="reglamento-actions">
+                  <VerBoton
+                    onClick={() =>
+                      window.open(
+                        obtenerUrlDocumento(doc.ruta_archivo),
+                        '_blank',
+                        'noopener,noreferrer'
+                      )
+                    }
+                  />
 
-                <button
-                  type="button"
-                  className="reglamento-btn reglamento-btn-download"
-                  onClick={() =>
-                    window.open(
-                      getGoogleDriveDownloadUrl(doc.url),
-                      '_blank',
-                      'noopener,noreferrer'
-                    )
-                  }
-                  aria-label={`Descargar ${doc.titulo}`}
-                >
-                  <DownloadIcon width={18} height={18} />
-                </button>
-              </div>
-            </article>
-          ))}
+                  <button
+                    type="button"
+                    className="reglamento-btn reglamento-btn-download"
+                    onClick={() => descargarDocumento(doc)}
+                    aria-label={`Descargar ${doc.titulo}`}
+                  >
+                    <DownloadIcon width={18} height={18} />
+                  </button>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="reglamento-empty">
+              No hay documentos oficiales disponibles actualmente.
+            </div>
+          )}
         </div>
       </div>
     </section>

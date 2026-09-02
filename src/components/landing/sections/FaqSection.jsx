@@ -4,7 +4,7 @@ import AnimatedSection from '../AnimatedSection';
 function FaqSection({ faqItems, openFaqIndex, setOpenFaqIndex }) {
 	return (
 		<AnimatedSection>
-			<section className="landing-benefits" style={{ padding: '6rem 0 7rem' }}>
+			<section className="landing-benefits" id="preguntas-frecuentes" style={{ padding: '6rem 0 7rem' }}>
 			<div className="landing-faq-container">
 				<div className="landing-faq-heading">
 					<h2 className="landing-hero-title" style={{ fontSize: '38px' }}>Preguntas Frecuentes</h2>
