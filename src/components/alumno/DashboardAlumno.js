@@ -95,15 +95,13 @@ function DashboardAlumno() {
           )}
 
           {hook.activeSection === 'conformidad' && (
-            <ConformidadPlan
+              <ConformidadPlan
                 activeSection={hook.activeSection}
                 trabajoId={hook.planSeleccionado?.id}
                 estadoConformidad={hook.estadoConformidad}
                 nombreDocente={hook.nombreDocente}
                 nombreLaborSocial={hook.nombreLaborSocial}
-                abrirModalProyecto={hook.abrirModalProyecto}
                 cartaAceptacionPdf={hook.cartaAceptacionPdf}
-                setCartaAceptacionPdf={hook.setCartaAceptacionPdf}
                 introduccion={fp.introduccion}
                 setIntroduccion={fp.setIntroduccion}
                 justificacion={fp.justificacion}
@@ -154,12 +152,10 @@ function DashboardAlumno() {
                 setLineaAccion={fp.setLineaAccion}
                 handleFileChange={hook.handleFileChange}
                 archivoYaEnviado={hook.archivoYaEnviado}
-                setArchivoYaEnviado={hook.setArchivoYaEnviado}
                 handleGenerarPDF={hook.handleGenerarPDF}
                 nuevaFechaFin={ac.nuevaFechaFin}
                 setNuevaFechaFin={ac.setNuevaFechaFin}
                 pdfDescargado={hook.pdfDescargado}
-                proyectoFile={hook.proyectoFile}
                 handleSolicitarRevision={hook.handleSolicitarRevision}
               />
           )}

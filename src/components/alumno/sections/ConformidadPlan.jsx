@@ -20,7 +20,6 @@ function ConformidadPlan({
   estadoConformidad,
   nombreDocente,
   nombreLaborSocial,
-  abrirModalProyecto,
   onCorregirPlan,
   cartaAceptacionPdf,
   introduccion,
@@ -74,10 +73,8 @@ function ConformidadPlan({
   setPeriodoEstimado,
   handleFileChange,
   archivoYaEnviado,
-  setArchivoYaEnviado,
   handleGenerarPDF,
   pdfDescargado,
-  proyectoFile,
   handleSolicitarRevision,
   activeSection
 }) {
@@ -714,12 +711,6 @@ function ConformidadPlan({
       motivo={motivoRechazo}
       onClose={() => setModalMotivoVisible(false)}
     />
-
-    {proyectoFile && !archivoYaEnviado && (
-      <p className="archivo-seleccionado">
-        Archivo listo para enviar: <strong>{proyectoFile.name}</strong>
-      </p>
-    )}
 
     {estadoConformidad !== 'pendiente' && (
   <button

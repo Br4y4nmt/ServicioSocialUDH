@@ -265,35 +265,30 @@ const FilaTrabajo = memo(function FilaTrabajo({
 });
 
 function DashboardDocente() {
-  const {
-    isMobile,
-    collapsed,
-    activeSection,
-    setActiveSection,
-    loading,
-    trabajosSociales,
-    modalVisible,
-    modalGrupoVisible,
-    modalDeclinarVisible,
-    nuevoEstado,
-    setNuevoEstado,
-    integrantesGrupo,
-    trabajoEnProcesoId,
-    observacionDeclinar,
-    setObservacionDeclinar,
-    toggleSidebar,
-    handleCloseModal,
-    handleVerGrupo,
-    cerrarModalGrupo,
-    handleSave,
-    handleCambiarEstado,
-    handleDeclinar,
-    abrirModalDeclinar,
-    cerrarModalDeclinar,
-    accionModalDeclinar,
-    handleRechazarConObservacion,
-    navigate
-  } = useDashboardDocente();
+const {
+  isMobile,
+  collapsed,
+  activeSection,
+  setActiveSection,
+  loading,
+  trabajosSociales,
+  modalGrupoVisible,
+  modalDeclinarVisible,
+  integrantesGrupo,
+  trabajoEnProcesoId,
+  observacionDeclinar,
+  setObservacionDeclinar,
+  toggleSidebar,
+  handleVerGrupo,
+  cerrarModalGrupo,
+  handleCambiarEstado,
+  handleDeclinar,
+  abrirModalDeclinar,
+  cerrarModalDeclinar,
+  accionModalDeclinar,
+  handleRechazarConObservacion,
+  navigate
+} = useDashboardDocente();
 
   return (
     <>
@@ -326,23 +321,18 @@ function DashboardDocente() {
       </main>
 
       <Suspense fallback={null}>
-        <DocenteModals
-          modalVisible={modalVisible}
-          nuevoEstado={nuevoEstado}
-          setNuevoEstado={setNuevoEstado}
-          handleSave={handleSave}
-          handleCloseModal={handleCloseModal}
-          modalDeclinarVisible={modalDeclinarVisible}
-          observacionDeclinar={observacionDeclinar}
-          setObservacionDeclinar={setObservacionDeclinar}
-          cerrarModalDeclinar={cerrarModalDeclinar}
-          accionModalDeclinar={accionModalDeclinar}
-          handleDeclinar={handleDeclinar}
-          handleRechazarConObservacion={handleRechazarConObservacion}
-          modalGrupoVisible={modalGrupoVisible}
-          integrantesGrupo={integrantesGrupo}
-          cerrarModalGrupo={cerrarModalGrupo}
-        />
+      <DocenteModals
+        modalDeclinarVisible={modalDeclinarVisible}
+        observacionDeclinar={observacionDeclinar}
+        setObservacionDeclinar={setObservacionDeclinar}
+        cerrarModalDeclinar={cerrarModalDeclinar}
+        accionModalDeclinar={accionModalDeclinar}
+        handleDeclinar={handleDeclinar}
+        handleRechazarConObservacion={handleRechazarConObservacion}
+        modalGrupoVisible={modalGrupoVisible}
+        integrantesGrupo={integrantesGrupo}
+        cerrarModalGrupo={cerrarModalGrupo}
+      />
       </Suspense>
     </>
   );

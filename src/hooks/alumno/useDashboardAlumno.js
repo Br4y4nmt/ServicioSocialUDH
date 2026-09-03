@@ -6,7 +6,10 @@ import { useWelcomeToast } from '../alerts/useWelcomeToast';
 import { useFormularioPlan } from '../alumno/useFormularioPlan';
 import { useGrupoAlumno } from '../alumno/useGrupoAlumno';
 import { useActividadesCronograma } from '../alumno/useActividadesCronograma';
-import { generarPlanServicioSocialPDF } from '../../services/planPdfService';
+import {
+  generarPlanServicioSocialPDF,
+  guardarPlanServicioSocialPDF
+} from '../../services/planPdfService';
 import {
   alertInfo,
   alertSuccess,
@@ -63,8 +66,6 @@ export function useDashboardAlumno() {
   const [codigoUniversitario, setCodigoUniversitario] = useState('');
   const [tipoServicio, setTipoServicio] = useState('');
   const [nombreDocente, setNombreDocente] = useState('');
-  const [modalProyectoVisible, setModalProyectoVisible] = useState(false);
-  const [proyectoFile, setProyectoFile] = useState(null);
   const [pdfGenerado, setPdfGenerado] = useState(null);
   const [pdfDescargado, setPdfDescargado] = useState(false);
   const [imagenModal, setImagenModal] = useState(null);
@@ -72,27 +73,11 @@ export function useDashboardAlumno() {
   const [modalObservacionEstudianteVisible, setModalObservacionEstudianteVisible] = useState(false);
   const [observacionSeleccionada, setObservacionSeleccionada] = useState('');
 
-  
 
   useWelcomeToast();
 
   const toggleSidebar = useCallback(() => {
     setCollapsed(prev => !prev);
-  }, []);
-
-  const abrirModalProyecto = useCallback(() => setModalProyectoVisible(true), []);
-  const cerrarModalProyecto = useCallback(() => {
-    setProyectoFile(null);
-    setModalProyectoVisible(false);
-  }, []);
-
-  const handleProyectoFileChange = useCallback((e) => {
-    const file = e.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      setProyectoFile(file);
-    } else {
-      alert('Por favor selecciona un archivo PDF válido.');
-    }
   }, []);
 
   const handleFileChange = useCallback((e, tipo) => {
@@ -337,75 +322,74 @@ export function useDashboardAlumno() {
 
 
 
-  const handleSolicitarRevision = useCallback(async () => {
-    const usuario_id = user?.id;
-    const token = user?.token;
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+const handleSolicitarRevision = useCallback(async () => {
+  const token = user?.token;
 
-    const esFechaPasada = (value) => {
-      if (!value) return false;
-      const parts = String(value).split('-').map((part) => Number(part));
-      if (parts.length !== 3 || parts.some((part) => Number.isNaN(part))) return true;
-      const [year, month, day] = parts;
-      const date = new Date(year, month - 1, day);
-      date.setHours(0, 0, 0, 0);
-      return date < hoy;
-    };
+  if (!token) {
+    await alertError(
+      'Sesión inválida',
+      'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.'
+    );
+    return;
+  }
 
-    if (!usuario_id || !token) {
-      await alertError('Sesión inválida', 'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.');
-      return;
-    }
-    if (!proyectoFile) {
-      await alertWarning('Archivo no seleccionado', 'Por favor selecciona un archivo PDF antes de enviar.');
-      return;
-    }
-    if (Array.isArray(actividadesCronograma.actividades)) {
-      const hayFechasPasadas = actividadesCronograma.actividades.some(
-        (actividad) => esFechaPasada(actividad?.fecha) || esFechaPasada(actividad?.fechaFin)
-      );
+  if (!formularioPlan.imagenesAnexos?.cartaAceptacion) {
+    await alertWarning(
+      'Falta el ANEXO',
+      'Debes adjuntar el Convenio de Cooperación Institucional antes de enviar tu plan.'
+    );
+    return;
+  }
 
-      if (hayFechasPasadas) {
-        await alertWarning(
-          'Fechas inválidas',
-          'No puedes enviar el cronograma con fechas anteriores a hoy.'
-        );
-        return;
-      }
-    }
+  try {
+    await guardarPlanServicioSocialPDF(
+      {
+        imagenesAnexos: formularioPlan.imagenesAnexos,
+        actividades: actividadesCronograma.actividades,
+        nombreInstitucion: formularioPlan.nombreInstitucion,
+        nombreResponsable: formularioPlan.nombreResponsable,
+        fechaPresentacion: formularioPlan.fechaPresentacion,
+        periodoEstimado: formularioPlan.periodoEstimado,
+        introduccion: formularioPlan.introduccion,
+        justificacion: formularioPlan.justificacion,
+        objetivoGeneral: formularioPlan.objetivoGeneral,
+        objetivosEspecificos: formularioPlan.objetivosEspecificos,
+        nombreEntidad: formularioPlan.nombreEntidad,
+        misionVision: formularioPlan.misionVision,
+        areasIntervencion: formularioPlan.areasIntervencion,
+        ubicacionPoblacion: formularioPlan.ubicacionPoblacion,
+        areaInfluencia: formularioPlan.areaInfluencia,
+        metodologiaIntervencion: formularioPlan.metodologiaIntervencion,
+        recursosRequeridos: formularioPlan.recursosRequeridos,
+        resultadosEsperados: formularioPlan.resultadosEsperados,
+      },
+      token
+    );
 
-    try {
-      await axios.post(
-        `/api/cronograma/${usuario_id}`,
-        { actividades: actividadesCronograma.actividades },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    await alertSuccess(
+      'Solicitud enviada',
+      'Tu solicitud ha sido enviada correctamente.'
+    );
 
-      const formData = new FormData();
-      formData.append('archivo_plan_social', proyectoFile);
-      formData.append('usuario_id', usuario_id);
+    setArchivoYaEnviado(true);
+    setPdfDescargado(true);
+    setSolicitudEnviada(true);
 
-      await axios.post('/api/trabajo-social/subir-plan-social', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    await fetchTrabajoSocial();
+  } catch (error) {
+    console.error('Error al enviar proyecto:', error);
 
-      await alertSuccess('Solicitud enviada', 'Tu solicitud ha sido enviada correctamente.');
-      setArchivoYaEnviado(true);
-      setPdfDescargado(true);
-      await fetchTrabajoSocial();
-
-      setProyectoFile(null);
-      setSolicitudEnviada(true);
-    } catch (err) {
-      console.error('Error al enviar proyecto:', err);
-      const mensaje = err.response?.data?.message;
-      await alertError('Error al enviar proyecto', mensaje || 'Inténtalo más tarde.');
-    }
-  }, [user?.id, user?.token, proyectoFile, actividadesCronograma.actividades, fetchTrabajoSocial]);
+    await alertError(
+      'Error al enviar proyecto',
+      error.message || 'Inténtalo más tarde.'
+    );
+  }
+}, [
+  user?.token,
+  formularioPlan,
+  actividadesCronograma.actividades,
+  fetchTrabajoSocial
+]);
 
   const handleGoToNextSection = useCallback(() => {
     if (activeSection === 'designacion') {
@@ -648,50 +632,78 @@ if (status === 400 && Array.isArray(data?.detalles)) {
   fetchTrabajoSocial
 ]);
 
-  const handleGenerarPDF = useCallback(async () => {
-    const result = await generarPlanServicioSocialPDF({
-      imagenesAnexos: formularioPlan.imagenesAnexos,
-      actividades: actividadesCronograma.actividades,
-      nombreInstitucion: formularioPlan.nombreInstitucion,
-      nombreResponsable: formularioPlan.nombreResponsable,
-      lineaAccion: formularioPlan.lineaAccion,
-      fechaPresentacion: formularioPlan.fechaPresentacion,
-      periodoEstimado: formularioPlan.periodoEstimado,
-      introduccion: formularioPlan.introduccion,
-      justificacion: formularioPlan.justificacion,
-      objetivoGeneral: formularioPlan.objetivoGeneral,
-      objetivosEspecificos: formularioPlan.objetivosEspecificos,
-      nombreEntidad: formularioPlan.nombreEntidad,
-      misionVision: formularioPlan.misionVision,
-      areasIntervencion: formularioPlan.areasIntervencion,
-      ubicacionPoblacion: formularioPlan.ubicacionPoblacion,
-      areaInfluencia: formularioPlan.areaInfluencia,
-      metodologiaIntervencion: formularioPlan.metodologiaIntervencion,
-      recursosRequeridos: formularioPlan.recursosRequeridos,
-      resultadosEsperados: formularioPlan.resultadosEsperados,
-      nombreFacultad,
-      nombrePrograma,
-      nombreLaborSocial,
-      nombreCompleto,
-      codigoUniversitario,
-    });
+const handleGenerarPDF = useCallback(async () => {
+  const token = user?.token;
+
+  if (!token) {
+    await alertError(
+      'Sesión inválida',
+      'Tu sesión ha expirado o no es válida. Por favor inicia sesión de nuevo.'
+    );
+    return;
+  }
+
+  if (!formularioPlan.imagenesAnexos?.cartaAceptacion) {
+    await alertWarning(
+      'Falta el ANEXO',
+      'Debes adjuntar el Convenio de Cooperación Institucional antes de generar el PDF.'
+    );
+    return;
+  }
+
+  try {
+    const result = await generarPlanServicioSocialPDF(
+      {
+        imagenesAnexos: formularioPlan.imagenesAnexos,
+        actividades: actividadesCronograma.actividades,
+        nombreInstitucion: formularioPlan.nombreInstitucion,
+        nombreResponsable: formularioPlan.nombreResponsable,
+        fechaPresentacion: formularioPlan.fechaPresentacion,
+        periodoEstimado: formularioPlan.periodoEstimado,
+        introduccion: formularioPlan.introduccion,
+        justificacion: formularioPlan.justificacion,
+        objetivoGeneral: formularioPlan.objetivoGeneral,
+        objetivosEspecificos: formularioPlan.objetivosEspecificos,
+        nombreEntidad: formularioPlan.nombreEntidad,
+        misionVision: formularioPlan.misionVision,
+        areasIntervencion: formularioPlan.areasIntervencion,
+        ubicacionPoblacion: formularioPlan.ubicacionPoblacion,
+        areaInfluencia: formularioPlan.areaInfluencia,
+        metodologiaIntervencion: formularioPlan.metodologiaIntervencion,
+        recursosRequeridos: formularioPlan.recursosRequeridos,
+        resultadosEsperados: formularioPlan.resultadosEsperados,
+      },
+      token
+    );
 
     if (!result) return;
+    const { url } = result;
 
-    const { url, file } = result;
+    if (pdfGenerado) {
+      URL.revokeObjectURL(pdfGenerado);
+    }
+
     setPdfGenerado(url);
-    setProyectoFile(file);
     setPdfDescargado(true);
 
     const link = document.createElement('a');
     link.href = url;
     link.download = 'PLAN-SERVICIO-SOCIAL-UDH.pdf';
     link.click();
-  }, [
-    formularioPlan, actividadesCronograma.actividades,
-    nombreFacultad, nombrePrograma, nombreLaborSocial,
-    nombreCompleto, codigoUniversitario
-  ]);
+  } catch (error) {
+    console.error('Error al generar PDF:', error);
+
+    await alertError(
+      'Error al generar PDF',
+      error.message || 'No se pudo generar el plan de servicio social.'
+    );
+  }
+}, [
+  user?.token,
+  formularioPlan,
+  actividadesCronograma.actividades,
+  pdfGenerado
+]);
 
   const solicitarCartaTermino = useCallback(async () => {
     const token = user?.token;
@@ -717,60 +729,54 @@ if (status === 400 && Array.isArray(data?.detalles)) {
     }
   }, [user?.token, planSeleccionado?.id]);
 
-  return {
-
-    user,
-    collapsed,
-    isMobile,
-    toggleSidebar,
-    activeSection,
-    setActiveSection,
-    nombre,
-    formularioPlan,
-    grupoAlumno,
-    actividadesCronograma,
-    programas,
-    programaSeleccionado,
-    docentes,
-    labores,
-    docenteSeleccionado, setDocenteSeleccionado,
-    solicitudEnviada, setSolicitudEnviada,
-    laborSeleccionada, setLaborSeleccionada,
-    estadoPlan,
-    cartaAceptacionPdf, setCartaAceptacionPdf,
-    planSeleccionado, setPlanSeleccionado,
-    nombreLaborSocial, setNombreLaborSocial,
-    lineas,
-    estadoConformidad,
-    estadoSolicitudTermino,
-    lineaSeleccionada, setLineaSeleccionada,
-    facultadSeleccionada,
-    nombreFacultad,
-    nombrePrograma,
-    nombreCompleto,
-    handleCorregirPlan,
-    codigoUniversitario,
-    tipoServicio, setTipoServicio,
-    nombreDocente, setNombreDocente,
-    archivoYaEnviado,
-    setArchivoYaEnviado,
-    modalProyectoVisible, setModalProyectoVisible,
-    proyectoFile, setProyectoFile,
-    pdfGenerado,
-    pdfDescargado,
-    imagenModal, setImagenModal,
-    modalVisible, setModalVisible,
-    modalObservacionEstudianteVisible, setModalObservacionEstudianteVisible,
-    observacionSeleccionada, setObservacionSeleccionada,
-    handleFileChange,
-    abrirModalProyecto,
-    cerrarModalProyecto,
-    handleProyectoFileChange,
-    handleSolicitarRevision,
-    handleGoToNextSection,
-    handleSolicitarAprobacion,
-    handleGenerarPDF,
-    solicitarCartaTermino,
-    handleVolverASubir,
-  };
+ return {
+  user,
+  collapsed,
+  isMobile,
+  toggleSidebar,
+  activeSection,
+  setActiveSection,
+  nombre,
+  formularioPlan,
+  grupoAlumno,
+  actividadesCronograma,
+  programas,
+  programaSeleccionado,
+  docentes,
+  labores,
+  docenteSeleccionado, setDocenteSeleccionado,
+  solicitudEnviada, setSolicitudEnviada,
+  laborSeleccionada, setLaborSeleccionada,
+  estadoPlan,
+  cartaAceptacionPdf, setCartaAceptacionPdf,
+  planSeleccionado, setPlanSeleccionado,
+  nombreLaborSocial, setNombreLaborSocial,
+  lineas,
+  estadoConformidad,
+  estadoSolicitudTermino,
+  lineaSeleccionada, setLineaSeleccionada,
+  facultadSeleccionada,
+  nombreFacultad,
+  nombrePrograma,
+  nombreCompleto,
+  handleCorregirPlan,
+  codigoUniversitario,
+  tipoServicio, setTipoServicio,
+  nombreDocente, setNombreDocente,
+  archivoYaEnviado,
+  setArchivoYaEnviado,
+  pdfGenerado,
+  pdfDescargado,
+  imagenModal, setImagenModal,
+  modalVisible, setModalVisible,
+  modalObservacionEstudianteVisible, setModalObservacionEstudianteVisible,
+  observacionSeleccionada, setObservacionSeleccionada,
+  handleFileChange,
+  handleSolicitarRevision,
+  handleGoToNextSection,
+  handleSolicitarAprobacion,
+  handleGenerarPDF,
+  solicitarCartaTermino,
+  handleVolverASubir,
+};
 }

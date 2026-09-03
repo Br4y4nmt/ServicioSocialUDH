@@ -885,6 +885,10 @@
     font-size: 18px;
     font-weight: 600;
   }
+
+  .solicitar-revision-header .btn-ojo-ver-plan-docente {
+    margin-left: 10px;
+  }
   
   .info-icon {
     font-size: 16px;

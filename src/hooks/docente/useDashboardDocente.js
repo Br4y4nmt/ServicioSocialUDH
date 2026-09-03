@@ -7,10 +7,9 @@ import {
   alertSuccess,
   mostrarAlertaCompletarPerfilPrimeraVez,
   alertconfirmacion,
-  alertWarning,
   alertError,
 } from '../alerts/alertas';
-import { procesarAceptacionTrabajo } from '../../services/cartaAceptacionService';
+
 
 const debounce = (func, wait) => {
   let timeout;
@@ -25,18 +24,14 @@ export function useDashboardDocente() {
   const token = user?.token;
   const navigate = useNavigate();
   useWelcomeToast();
-
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
   const [collapsed, setCollapsed] = useState(() => window.innerWidth <= 768);
   const [activeSection, setActiveSection] = useState('revision');
   const [loading, setLoading] = useState(true);
   const [trabajosSociales, setTrabajosSociales] = useState([]);
-  const [firmaDocente, setFirmaDocente] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const [modalGrupoVisible, setModalGrupoVisible] = useState(false);
   const [modalDeclinarVisible, setModalDeclinarVisible] = useState(false);
   const [selectedTrabajo, setSelectedTrabajo] = useState(null);
-  const [nuevoEstado, setNuevoEstado] = useState('');
   const [integrantesGrupo, setIntegrantesGrupo] = useState([]);
   const [trabajoEnProcesoId, setTrabajoEnProcesoId] = useState(null);
   const [accionModalDeclinar, setAccionModalDeclinar] = useState('');
@@ -74,11 +69,10 @@ export function useDashboardDocente() {
         axios.get(`/api/docentes/usuario/${usuarioId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
-          .then(response => {
-            const docenteId = response.data.id_docente;
-            setFirmaDocente(response.data.firma);
+        .then(response => {
+          const docenteId = response.data.id_docente;
 
-            axios.get(`/api/trabajo-social/docente/${docenteId}`, {
+          axios.get(`/api/trabajo-social/docente/${docenteId}`, {
               headers: { Authorization: `Bearer ${token}` }
             })
               .then(res => {
@@ -109,9 +103,6 @@ export function useDashboardDocente() {
     setCollapsed(prev => !prev);
   }, []);
 
-  const handleCloseModal = useCallback(() => {
-    setModalVisible(false);
-  }, []);
 
   const handleVerGrupo = useCallback(async (trabajoId) => {
     try {
@@ -137,57 +128,11 @@ export function useDashboardDocente() {
     setIntegrantesGrupo([]);
   }, []);
 
-  const handleSave = useCallback(async () => {
-    if (!selectedTrabajo) return;
 
-    try {
-      await axios.put(
-        `/api/trabajo-social/${selectedTrabajo.id}`,
-        { estado_plan_labor_social: nuevoEstado },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (nuevoEstado === 'aceptado') {
-        await procesarAceptacionTrabajo({
-          trabajo: selectedTrabajo,
-          firmaDocente,
-          token
-        });
-
-        await alertSuccess('Trabajo aceptado', 'Has aceptado el plan de servicio social.');
-      }
-
-      setTrabajosSociales(prev =>
-        prev.map(trabajo =>
-          trabajo.id === selectedTrabajo.id
-            ? { ...trabajo, estado_plan_labor_social: nuevoEstado }
-            : trabajo
-        )
-      );
-
-      setModalVisible(false);
-      setSelectedTrabajo(null);
-      setNuevoEstado('');
-    } catch (error) {
-      console.error('Error al guardar cambios:', error);
-
-      if (error.message === 'SIN_DATOS_GRUPO') {
-        await alertWarning(
-          'Faltan datos del grupo',
-          'El grupo no tiene suficientes integrantes registrados.'
-        );
-      } else {
-        const mensajeBackend = error.response?.data?.message;
-        await alertError(
-          'No se pudo guardar los cambios',
-          mensajeBackend || 'Inténtalo más tarde.'
-        );
-      }
-    }
-  }, [selectedTrabajo, nuevoEstado, token, firmaDocente]);
-
-  const handleCambiarEstado = useCallback(async (trabajo, nuevoEstadoParam) => {
+const handleCambiarEstado = useCallback(
+  async (trabajo, nuevoEstadoParam) => {
     if (trabajoEnProcesoId !== null) return;
+
     setTrabajoEnProcesoId(trabajo.id);
 
     if (nuevoEstadoParam === 'aceptado') {
@@ -198,6 +143,7 @@ export function useDashboardDocente() {
         confirmButtonText: 'Sí, aceptar',
         cancelButtonText: 'Cancelar',
       });
+
       if (!result.isConfirmed) {
         setTrabajoEnProcesoId(null);
         return;
@@ -205,52 +151,58 @@ export function useDashboardDocente() {
     }
 
     try {
-      await axios.put(
-        `/api/trabajo-social/${trabajo.id}`,
-        { estado_plan_labor_social: nuevoEstadoParam },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
       if (nuevoEstadoParam === 'aceptado') {
-        try {
-          await procesarAceptacionTrabajo({
-            trabajo,
-            firmaDocente,
-            token
-          });
-        } catch (err) {
-          if (err.message === 'SIN_DATOS_GRUPO') {
-            await alertWarning(
-              'Faltan datos del grupo',
-              'El grupo no tiene suficientes integrantes registrados.'
-            );
-            return;
+        await axios.post(
+          `/api/trabajo-social/designacion/${trabajo.id}/aceptar`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-
-          console.error('Error al procesar aceptación:', err);
-          await alertError(
-            'Servidor UDH inalcanzable',
-            'La conexión con el servidor de la UDH falló. Intenta nuevamente más tarde.'
-          );
-          return;
-        }
+        );
+      } else {
+        await axios.put(
+          `/api/trabajo-social/${trabajo.id}`,
+          {
+            estado_plan_labor_social: nuevoEstadoParam
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
       }
 
       setTrabajosSociales(prev =>
         prev.map(t =>
           t.id === trabajo.id
-            ? { ...t, estado_plan_labor_social: nuevoEstadoParam }
+            ? {
+                ...t,
+                estado_plan_labor_social: nuevoEstadoParam
+              }
             : t
         )
       );
 
       await alertSuccess(
-        `Trabajo ${nuevoEstadoParam === 'aceptado' ? 'aceptado' : 'actualizado'}`,
+        `Trabajo ${
+          nuevoEstadoParam === 'aceptado'
+            ? 'aceptado'
+            : 'actualizado'
+        }`,
         `Has marcado este trabajo como ${nuevoEstadoParam}.`
       );
     } catch (error) {
-      console.error(`Error al cambiar estado a ${nuevoEstadoParam}:`, error);
-      const backendMessage = error.response?.data?.message;
+      console.error(
+        `Error al cambiar estado a ${nuevoEstadoParam}:`,
+        error
+      );
+
+      const backendMessage =
+        error.response?.data?.message;
+
       await alertError(
         'No se pudo cambiar el estado',
         backendMessage || 'Inténtalo más tarde.'
@@ -258,7 +210,12 @@ export function useDashboardDocente() {
     } finally {
       setTrabajoEnProcesoId(null);
     }
-  }, [trabajoEnProcesoId, token, firmaDocente]);
+  },
+  [
+    trabajoEnProcesoId,
+    token
+  ]
+);
 
   const handleDeclinar = useCallback(async () => {
     if (!observacionDeclinar.trim()) {
@@ -391,35 +348,23 @@ export function useDashboardDocente() {
     activeSection,
     setActiveSection,
     loading,
-
     accionModalDeclinar,
     handleRechazarConObservacion,
-
     trabajosSociales,
-    firmaDocente,
-
-    modalVisible,
     modalGrupoVisible,
     modalDeclinarVisible,
-
     selectedTrabajo,
-    nuevoEstado,
-    setNuevoEstado,
     integrantesGrupo,
     trabajoEnProcesoId,
     observacionDeclinar,
     setObservacionDeclinar,
-
     toggleSidebar,
-    handleCloseModal,
     handleVerGrupo,
     cerrarModalGrupo,
-    handleSave,
     handleCambiarEstado,
     handleDeclinar,
     abrirModalDeclinar,
     cerrarModalDeclinar,
-
     navigate
   };
 }
