@@ -257,13 +257,6 @@
   transform: translateY(-2px);
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;  
-  align-items: center;    
-  width: 100%;              
-  margin-top: 20px;        
-}
   .respuesta-acciones {
     display: flex;
     align-items: center;
@@ -325,11 +318,6 @@
   gap: 8px;
 }
 
-.icono-azul {
-  color: #3b82f6; 
-  font-size: 18px;
-}
-
 .respuesta-asesor-body p {
   color: #3d7f6f; 
   margin-bottom: 0px;    
@@ -340,12 +328,6 @@
   line-height: 1.4;
   font-size: 14.2px; 
 }
-
-  .botones-acciones-docente {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 12px;
-  }
 
 .boton-ver-pdf-conf {
   background-color: #011b4b;
@@ -743,15 +725,6 @@
   }
 } 
 
-.conformidad-plan {
-    display: block; 
-    margin: 0 0 40px 0; 
-    padding: 20px;
-    background-color: #f6f6f6;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 .plan-info {
   display: flex;
   justify-content: flex-start;
@@ -795,11 +768,6 @@
     font-weight: 500;
     color: #333;
     margin-bottom: 5px;
-  }
-
-  .conformidad-img img {
-    width: 200px;
-    max-width: 100%;
   }
 
   .plan-icon i {

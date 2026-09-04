@@ -41,19 +41,6 @@
     background-color: #f9f9f9;
   }
 
-.modal-evidencia-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(17, 24, 39, 0.55);
-  backdrop-filter: blur(5px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-  padding: 1.5rem;
-  animation: fadeInOverlay 0.3s ease;
-}
-
 .detalle-actividad-overlay {
   position: fixed;
   inset: 0;

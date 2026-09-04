@@ -146,15 +146,6 @@
   text-align: center; 
   vertical-align: middle; 
 }
-.revision-btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  margin-right: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  color: white;
-}
 
 .revision-btn.editar {
   background-color: #003366;
