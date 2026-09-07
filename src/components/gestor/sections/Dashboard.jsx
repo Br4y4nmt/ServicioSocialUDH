@@ -284,7 +284,7 @@ const fetchEstadoRegistro = useCallback(async () => {
   try {
     if (!token) return;
 
-    const res = await axios.get("/api/system-config/registro", {
+    const res = await axios.get("/api/admin/registro", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -298,7 +298,7 @@ const fetchEstadoInicioServicioSocial = useCallback(async () => {
   try {
     if (!token) return;
 
-    const res = await axios.get("/api/system-config/inicio-servicio-social", {
+    const res = await axios.get("/api/admin/inicio-servicio-social", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -331,7 +331,7 @@ const toggleRegistro = async () => {
     const nuevoValor = registroHabilitado ? 0 : 1;
 
     const res = await axios.put(
-      "/api/system-config/registro",
+      "/api/admin/registro",
       { registro_habilitado: nuevoValor },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -377,7 +377,7 @@ const toggleInicioServicioSocial = async () => {
     const nuevoValor = inicioServicioSocialHabilitado ? 0 : 1;
 
     const res = await axios.put(
-      "/api/system-config/inicio-servicio-social",
+      "/api/admin/inicio-servicio-social",
       { inicio_servicio_social_habilitado: nuevoValor },
       { headers: { Authorization: `Bearer ${token}` } }
     );

@@ -121,7 +121,7 @@ function ConformidadPlan({
       if (!token) return;
 
       const { data } = await axios.get(
-        "/api/system-config/inicio-servicio-social/alumno",
+        "/api/admin/inicio-servicio-social/alumno",
         {
           headers: {
             Authorization: `Bearer ${token}`,

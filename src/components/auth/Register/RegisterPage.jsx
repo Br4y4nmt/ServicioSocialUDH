@@ -48,12 +48,11 @@ const handleRegister = async (e) => {
   setIsSubmitting(true);
 
   try {
-    await axios.post('/api/auth/register', {
-      email: `${codigo}@udh.edu.pe`,
-      dni,
-      whatsapp,
-      codigo,
-    });
+  await axios.post('/api/auth/register', {
+    codigo,
+    dni,
+    whatsapp,
+  });
 
     await alertSuccess('Registro completo', 'Tu cuenta fue creada correctamente. Serás redirigido al inicio de sesión.');
     navigate('/login');

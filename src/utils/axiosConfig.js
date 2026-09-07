@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
-//axios.defaults.baseURL = 'http://localhost:5000';
+//  axios.defaults.baseURL = 'http://localhost:5000';
 axios.defaults.baseURL = 'https://serviciosocial.udh.edu.pe';
 
 let isHandlingSessionExpiry = false;
